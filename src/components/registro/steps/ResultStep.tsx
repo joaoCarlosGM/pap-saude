@@ -1,18 +1,24 @@
 "use client"
 
 import { RotateCcw, Save } from "lucide-react"
+import { calculateMeows } from "@/lib/meows"
+import type { RegistrationData } from "@/types/registration"
 
 type ResultStepProps = {
+  data: RegistrationData
   onRestart: () => void
   onSave: () => void
 }
 
 export default function ResultStep({
+  data,
   onRestart,
   onSave,
 }: ResultStepProps) {
+    const result = calculateMeows(data)
   return (
     <div>
+      {/* Cabeçalho */}
       <div className="mb-8">
         <h2 className="text-xl font-semibold text-slate-900">
           Resultado do Atendimento
@@ -30,7 +36,7 @@ export default function ResultStep({
           <div className="flex items-center gap-4">
             <div className="flex h-28 w-28 shrink-0 items-center justify-center rounded-xl border border-red-100 bg-white">
               <span className="text-6xl font-bold leading-none text-red-600">
-                12
+                  {result.score}
               </span>
             </div>
 
@@ -39,12 +45,12 @@ export default function ResultStep({
                 SCORE MEOWS
               </p>
 
-              <p className="mt-1 text-2xl font-bold text-red-600">
-                URGÊNCIA
+              <p className="mt-1 text-2xl font-bold text-slate-700">
+               {result.classification}
               </p>
 
               <p className="mt-1 text-sm text-slate-700">
-                Urgência
+                Aguardando regra de pontuação
               </p>
             </div>
           </div>
@@ -52,84 +58,48 @@ export default function ResultStep({
 
         {/* CONDUTA */}
         <div className="rounded-xl border border-slate-200 bg-slate-50 p-5">
-          <div className="flex items-center gap-3">
-            <span className="text-2xl" aria-hidden="true">
-              🚨
-            </span>
+          <h3 className="text-base font-semibold text-slate-900">
+            Conduta
+          </h3>
 
-            <h3 className="text-base font-semibold text-slate-900">
-              Acionamento imediato necessário
-            </h3>
-          </div>
-
-          <ul className="mt-4 list-disc space-y-2 pl-6 marker:text-red-500">
-            <li className="text-sm text-slate-600">
-              Acionar equipe médica responsável.
-            </li>
-
-            <li className="text-sm text-slate-600">
-              Realizar avaliação clínica imediata.
-            </li>
-
-            <li className="text-sm text-slate-600">
-              Manter monitorização dos sinais vitais.
-            </li>
-
-            <li className="text-sm text-slate-600">
-              Considerar encaminhamento para serviço de referência.
-            </li>
-          </ul>
+          <p className="mt-3 text-sm text-slate-600">
+            O resultado clínico será determinado após a aplicação da regra
+            MEOWS configurada no sistema.
+          </p>
         </div>
       </div>
 
-      {/* PARÂMETROS */}
-      <div className="mt-6">
-        <h3 className="text-base font-semibold text-slate-900">
-          PARÂMETROS QUE PONTUARAM
-        </h3>
+{/* PARÂMETROS */}
+<div className="mt-6">
+  <h3 className="text-base font-semibold text-slate-900">
+    PARÂMETROS AVALIADOS
+  </h3>
 
-        <div className="mt-4">
-          <div className="mb-3 flex items-center justify-between rounded-lg bg-slate-100 px-4 py-3">
-            <span className="text-sm text-slate-600">
-              PA Sistólica: 160 mmHg
-            </span>
-
-            <span className="text-sm font-bold text-red-500">
-              +3 pontos
-            </span>
-          </div>
-
-          <div className="mb-3 flex items-center justify-between rounded-lg bg-slate-100 px-4 py-3">
-            <span className="text-sm text-slate-600">
-              Frequência Cardíaca: 125 bpm
-            </span>
-
-            <span className="text-sm font-bold text-red-500">
-              +3 pontos
-            </span>
-          </div>
-
-          <div className="mb-3 flex items-center justify-between rounded-lg bg-slate-100 px-4 py-3">
-            <span className="text-sm text-slate-600">
-              Frequência Respiratória: 28 irpm
-            </span>
-
-            <span className="text-sm font-bold text-red-500">
-              +3 pontos
-            </span>
-          </div>
-
-          <div className="flex items-center justify-between rounded-lg bg-slate-100 px-4 py-3">
-            <span className="text-sm text-slate-600">
-              Saturação O₂: 92%
-            </span>
-
-            <span className="text-sm font-bold text-red-500">
-              +3 pontos
-            </span>
-          </div>
-        </div>
+  <div className="mt-4 space-y-2">
+    {result.parameters.length === 0 ? (
+      <div className="rounded-lg bg-slate-100 px-4 py-4">
+        <p className="text-sm text-slate-500">
+          Nenhum parâmetro pontuado.
+        </p>
       </div>
+    ) : (
+      result.parameters.map((item) => (
+        <div
+          key={item.parameter}
+          className="flex items-center justify-between rounded-lg bg-slate-100 px-4 py-3"
+        >
+          <span className="text-sm text-slate-600">
+            {item.parameter}: {item.value}
+          </span>
+
+          <span className="text-sm font-bold text-red-500">
+            +{item.points} pontos
+          </span>
+        </div>
+      ))
+    )}
+  </div>
+</div>
 
       {/* FOOTER */}
       <div className="mt-8 flex items-center justify-between border-t border-slate-200 pt-5">

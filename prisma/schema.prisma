@@ -1,0 +1,70 @@
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum AlertLevel {
+  GREEN
+  YELLOW
+  RED
+}
+
+enum ConsciousnessState {
+  ALERT
+  VOICE
+  PAIN
+  UNRESPONSIVE
+}
+
+model Patient {
+  id              String               @id @default(uuid())
+  cpf             String               @unique
+  fullName        String
+  birthDate       DateTime
+  phone           String?
+  address         String?
+  medicalRecordNo String?              @unique
+  createdAt       DateTime             @default(now())
+  updatedAt       DateTime             @updatedAt
+
+  admissions      Admission[]
+  evaluations     ClinicalEvaluation[]
+
+  @@map("patients")
+}
+
+model Admission {
+  id               String    @id @default(uuid())
+  patientId        String
+  patient          Patient   @relation(fields: [patientId], references: [id], onDelete: Cascade)
+  gestationalWeeks Int?
+  parity           String?
+  chiefComplaint   String
+  admissionDate    DateTime  @default(now())
+  dischargedAt     DateTime?
+
+  @@map("admissions")
+}
+
+model ClinicalEvaluation {
+  id               String             @id @default(uuid())
+  patientId        String
+  patient          Patient            @relation(fields: [patientId], references: [id], onDelete: Cascade)
+  respiratoryRate  Int
+  oxygenSaturation Int
+  temperature      Decimal            @db.Decimal(4, 1)
+  systolicBp       Int
+  diastolicBp      Int
+  heartRate        Int
+  consciousness    ConsciousnessState @default(ALERT)
+  meowsScore       Int
+  alertLevel       AlertLevel
+  clinicalNotes    String?
+  evaluatedAt      DateTime           @default(now())
+
+  @@map("clinical_evaluations")
+}

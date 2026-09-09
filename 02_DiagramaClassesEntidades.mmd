@@ -1,0 +1,37 @@
+classDiagram
+    direction LR
+
+    class Patient {
+        +String id (UUID) PK
+        +String cpf UK
+        +String fullName
+        +DateTime birthDate
+        +String phone
+        +String address
+        +DateTime createdAt
+    }
+
+    class Admission {
+        +String id (UUID) PK
+        +String patientId FK
+        +Int gestationalWeeks
+        +String parity
+        +String chiefComplaint
+        +DateTime admissionDate
+    }
+
+    class ClinicalEvaluation {
+        +String id (UUID) PK
+        +String patientId FK
+        +Int heartRate
+        +Int systolicBp
+        +Int diastolicBp
+        +Int respiratoryRate
+        +Decimal temperature
+        +Int meowsScore
+        +AlertLevel alertLevel
+        +DateTime evaluatedAt
+    }
+
+    Patient "1" --> "0..*" Admission : possui
+    Patient "1" --> "0..*" ClinicalEvaluation : recebe

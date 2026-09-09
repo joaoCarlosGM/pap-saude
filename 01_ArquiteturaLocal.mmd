@@ -1,0 +1,44 @@
+flowchart LR
+    %% Subgraph 1: Cliente
+    subgraph CLIENT["1. Camada Cliente (Browser)"]
+        direction TB
+        WIZARD["RegistrationWizard.tsx\n(Formulário React)"]
+        MEOWS["meows.ts\n(Score Fisiológico)"]
+        WIZARD <--> MEOWS
+    end
+
+    %% Subgraph 2: Runtime Node / Next.js
+    subgraph BACKEND["2. Runtime Servidor (Next.js / Node.js)"]
+        direction TB
+        ACTION["Server Action\nregisterClinicalAdmission()"]
+        PRISMA_CLIENT["Prisma Client Singleton\nsrc/lib/prisma.ts"]
+        RUST_ENGINE["Query Engine\n(Rust / Compilador SQL)"]
+        
+        ACTION --> PRISMA_CLIENT
+        PRISMA_CLIENT --> RUST_ENGINE
+    end
+
+    %% Subgraph 3: Banco de Dados Isolado
+    subgraph DATABASE["3. Banco de Dados (Docker / VPS Externa)"]
+        direction TB
+        PG_SERVICE["PostgreSQL 16 Engine\nPorta TCP: 5432"]
+        
+        subgraph RELATIONAL["Modelo Relacional (ACID)"]
+            direction LR
+            T_PATIENT[("patients\n(Dados Demográficos)")]
+            T_ADMISSION[("admissions\n(Acolhimento)")]
+            T_EVAL[("clinical_evaluations\n(MEOWS / Vitais)")]
+            
+            T_PATIENT --> T_ADMISSION
+            T_PATIENT --> T_EVAL
+        end
+        
+        STORAGE[("Volume Persistente\npostgres_data")]
+        
+        PG_SERVICE --> RELATIONAL
+        RELATIONAL --> STORAGE
+    end
+
+    %% Conexões de Rede Horizontais entre as camadas
+    WIZARD ==>|"1. Chamada RPC (HTTP POST Seguro)"| ACTION
+    RUST_ENGINE ==>|"2. Conexão TCP Socket (localhost:5432)"| PG_SERVICE
