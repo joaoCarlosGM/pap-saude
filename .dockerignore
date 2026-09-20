@@ -1,0 +1,39 @@
+# Dependências locais
+node_modules
+
+# Build local do Next.js
+.next
+
+# Git
+.git
+.gitignore
+
+# Variáveis de ambiente / segredos
+.env
+.env.*
+!.env.example
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Editor / sistema
+.vscode
+.idea
+.DS_Store
+
+# Docker Compose local
+docker-compose*.yml
+compose*.yml
+
+# Documentação ou arquivos auxiliares que não entram na aplicação
+*.md
+
+# Backups
+*.zip
+*.tar
+*.tar.gz
+*.sql
+*.dump
