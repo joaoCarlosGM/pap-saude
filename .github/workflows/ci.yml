@@ -1,4 +1,4 @@
-name: PAP Saúde CI
+name: PAP Saúde CI/CD
 
 on:
   push:
@@ -93,3 +93,36 @@ jobs:
             ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-migrator:prod
           cache-from: type=gha
           cache-to: type=gha,mode=max
+
+  deploy:
+    name: Deploy to VPS
+    if: github.event_name == 'push'
+    needs: publish
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Configure SSH
+        env:
+          VPS_SSH_KEY: ${{ secrets.VPS_SSH_KEY }}
+          VPS_HOST: ${{ secrets.VPS_HOST }}
+        run: |
+          mkdir -p ~/.ssh
+          chmod 700 ~/.ssh
+
+          printf '%s\n' "$VPS_SSH_KEY" > ~/.ssh/pap_deploy
+          chmod 600 ~/.ssh/pap_deploy
+
+          ssh-keyscan -H "$VPS_HOST" >> ~/.ssh/known_hosts
+          chmod 600 ~/.ssh/known_hosts
+
+      - name: Deploy application
+        env:
+          VPS_HOST: ${{ secrets.VPS_HOST }}
+          VPS_USER: ${{ secrets.VPS_USER }}
+          DEPLOY_SHA: ${{ github.sha }}
+        run: |
+          ssh \
+            -i ~/.ssh/pap_deploy \
+            -o IdentitiesOnly=yes \
+            "$VPS_USER@$VPS_HOST" \
+            "sudo -n /opt/pap-saude/scripts/deploy.sh '$DEPLOY_SHA'"
