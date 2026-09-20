@@ -40,11 +40,14 @@ jobs:
       - name: Build Next.js
         run: npm run build
 
-      - name: Build Docker image
-        run: docker build -t pap-saude:ci .
+      - name: Build Docker web image
+        run: docker build --target runner -t pap-saude:ci .
+
+      - name: Build Docker migrator image
+        run: docker build --target migrator -t pap-saude-migrator:ci .
 
   publish:
-    name: Publish Docker image
+    name: Publish Docker images
     if: github.event_name == 'push'
     needs: validate
     runs-on: ubuntu-latest
@@ -67,13 +70,26 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
-      - name: Build and publish image
+      - name: Build and publish web image
         uses: docker/build-push-action@v6
         with:
           context: .
+          target: runner
           push: true
           tags: |
             ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
             ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:prod
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Build and publish migrator image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          target: migrator
+          push: true
+          tags: |
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-migrator:${{ github.sha }}
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-migrator:prod
           cache-from: type=gha
           cache-to: type=gha,mode=max
