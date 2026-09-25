@@ -1,3 +1,15 @@
+import ChatLayout from "@/components/chat/ChatLayout"
+
+import {
+  mockChatConversations,
+} from "@/lib/mock-chat"
+
 export default function ChatPage() {
-  return <h1 className="text-2xl font-semibold">Chat IA</h1>
+  return (
+    <ChatLayout
+      initialConversations={
+        mockChatConversations
+      }
+    />
+  )
 }

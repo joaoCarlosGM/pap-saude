@@ -2,6 +2,8 @@
 
 import { useState } from "react"
 
+import { Card, CardContent } from "@/components/ui/Card"
+
 import Stepper from "./Stepper"
 import IdentificationStep from "./steps/IdentificationStep"
 import PregnancyStep from "./steps/PregnancyStep"
@@ -12,16 +14,13 @@ import ResultStep from "./steps/ResultStep"
 import type { RegistrationData } from "@/types/registration"
 
 const initialRegistration: RegistrationData = {
-  // Identificação
   cpf: "",
   nomeCompleto: "",
   dataNascimento: "",
 
-  // Gestação
   primeiroAtendimento: true,
   dum: "",
 
-  // Sinais vitais
   paSistolica: "",
   paDiastolica: "",
   frequenciaCardiaca: "",
@@ -32,7 +31,6 @@ const initialRegistration: RegistrationData = {
   debitoUrinario: "",
   proteinuria: "",
 
-  // Dados obstétricos
   alturaUterina: "",
   bcf: "",
   movimentacaoFetal: "",
@@ -40,7 +38,6 @@ const initialRegistration: RegistrationData = {
   sangramentoVaginal: "",
   pesoAtual: "",
 
-  // Dados clínicos
   queixasPrincipais: "",
   observacoesProfissional: "",
 }
@@ -65,7 +62,7 @@ export default function RegistrationWizard() {
   }
 
   const updateRegistration = (
-    data: Partial<RegistrationData>
+    data: Partial<RegistrationData>,
   ) => {
     setRegistration((current) => ({
       ...current,
@@ -78,51 +75,53 @@ export default function RegistrationWizard() {
   }
 
   return (
-    <div className="mx-auto w-full max-w-4xl rounded-xl border border-slate-200 bg-white p-6 shadow-sm md:p-8">
-      <Stepper currentStep={currentStep} />
+    <Card className="mx-auto w-full max-w-5xl">
+      <CardContent className="p-4 sm:p-6 lg:p-8">
+        <Stepper currentStep={currentStep} />
 
-      {currentStep === 1 && (
-        <IdentificationStep
-          data={registration}
-          onChange={updateRegistration}
-          onNext={nextStep}
-        />
-      )}
+        {currentStep === 1 && (
+          <IdentificationStep
+            data={registration}
+            onChange={updateRegistration}
+            onNext={nextStep}
+          />
+        )}
 
-      {currentStep === 2 && (
-        <PregnancyStep
-          data={registration}
-          onChange={updateRegistration}
-          onNext={nextStep}
-          onBack={previousStep}
-        />
-      )}
+        {currentStep === 2 && (
+          <PregnancyStep
+            data={registration}
+            onChange={updateRegistration}
+            onNext={nextStep}
+            onBack={previousStep}
+          />
+        )}
 
-      {currentStep === 3 && (
-        <VitalSignsStep
-          data={registration}
-          onChange={updateRegistration}
-          onNext={nextStep}
-          onBack={previousStep}
-        />
-      )}
+        {currentStep === 3 && (
+          <VitalSignsStep
+            data={registration}
+            onChange={updateRegistration}
+            onNext={nextStep}
+            onBack={previousStep}
+          />
+        )}
 
-      {currentStep === 4 && (
-        <ObstetricStep
-          data={registration}
-          onChange={updateRegistration}
-          onNext={nextStep}
-          onBack={previousStep}
-        />
-      )}
+        {currentStep === 4 && (
+          <ObstetricStep
+            data={registration}
+            onChange={updateRegistration}
+            onNext={nextStep}
+            onBack={previousStep}
+          />
+        )}
 
-      {currentStep === 5 && (
-        <ResultStep
-          data={registration}
-          onRestart={restart}
-          onSave={saveRegistration}
-        />
-      )}
-    </div>
+        {currentStep === 5 && (
+          <ResultStep
+            data={registration}
+            onRestart={restart}
+            onSave={saveRegistration}
+          />
+        )}
+      </CardContent>
+    </Card>
   )
 }
