@@ -105,6 +105,7 @@ jobs:
         env:
           VPS_SSH_KEY: ${{ secrets.VPS_SSH_KEY }}
           VPS_HOST: ${{ secrets.VPS_HOST }}
+          VPS_PORT: ${{ secrets.VPS_PORT }}
         run: |
           mkdir -p ~/.ssh
           chmod 700 ~/.ssh
@@ -112,16 +113,18 @@ jobs:
           printf '%s\n' "$VPS_SSH_KEY" > ~/.ssh/pap_deploy
           chmod 600 ~/.ssh/pap_deploy
 
-          ssh-keyscan -H "$VPS_HOST" >> ~/.ssh/known_hosts
+          ssh-keyscan -p "$VPS_PORT" -H "$VPS_HOST" >> ~/.ssh/known_hosts
           chmod 600 ~/.ssh/known_hosts
 
       - name: Deploy application
         env:
           VPS_HOST: ${{ secrets.VPS_HOST }}
           VPS_USER: ${{ secrets.VPS_USER }}
+          VPS_PORT: ${{ secrets.VPS_PORT }}
           DEPLOY_SHA: ${{ github.sha }}
         run: |
           ssh \
+            -p "$VPS_PORT" \
             -i ~/.ssh/pap_deploy \
             -o IdentitiesOnly=yes \
             "$VPS_USER@$VPS_HOST" \
