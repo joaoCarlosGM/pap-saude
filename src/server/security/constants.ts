@@ -24,3 +24,18 @@ export const LOGIN_FAILURE_WINDOW_SECONDS = 60 * 15;
 export const LOGIN_ORIGIN_DISTINCT_IDENTITY_LIMIT = 20;
 
 export const LOGIN_ORIGIN_BLOCK_SECONDS = 60 * 10;
+
+
+export const MFA_SECRET_KEY_ENV = "MFA_SECRET_ENCRYPTION_KEY";
+
+export const MFA_SECRET_KEY_ID_ENV = "MFA_SECRET_ENCRYPTION_KEY_ID";
+
+export const MFA_SECRET_CIPHER_VERSION = "v1";
+
+export const MFA_SECRET_DEFAULT_KEY_ID = "primary";
+
+export const MFA_SECRET_IV_BYTES = 12;
+
+export const MFA_SECRET_AUTH_TAG_BYTES = 16;
+
+export const MFA_SECRET_AAD = "pap-saude:mfa:totp-secret:v1";
