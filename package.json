@@ -6,7 +6,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "test:auth": "tsx --test tests/auth/**/*.test.ts",
+    "check:server": "tsc --noEmit && eslint \"src/server/**/*.ts\" \"tests/auth/**/*.test.ts\""
   },
   "dependencies": {
     "@capacitor/android": "^8.5.2",
@@ -36,6 +38,7 @@
     "eslint-config-next": "16.3.4",
     "prisma": "^7.10.0",
     "tailwindcss": "^4",
+    "tsx": "^4.23.15",
     "typescript": "^5"
   }
 }

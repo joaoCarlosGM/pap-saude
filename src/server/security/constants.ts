@@ -1,0 +1,17 @@
+export const PASSWORD_MIN_LENGTH = 12;
+
+export const PASSWORD_MAX_LENGTH = 256;
+
+export const ARGON2_OPTIONS = {
+  memoryCost: 65536,
+  timeCost: 3,
+  parallelism: 1,
+} as const;
+
+export const SESSION_TOKEN_BYTES = 32;
+
+export const SESSION_TTL_SECONDS = 60 * 60 * 8;
+
+export const SESSION_COOKIE_NAME = "pap_session";
+
+export const SESSION_COOKIE_PATH = "/";
