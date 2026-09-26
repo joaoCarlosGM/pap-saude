@@ -13,7 +13,8 @@
     "test:auth:session": "DATABASE_URL='postgresql://pap_user:pap_password@localhost:5432/pap_saude_f02b_test?schema=public' tsx --test tests/auth/session-service.integration.test.ts",
     "test:auth:integration": "bash scripts/test-auth-session.sh",
     "test:auth:password": "DATABASE_URL='postgresql://pap_user:pap_password@localhost:5432/pap_saude_f02b_test?schema=public' tsx --test tests/auth/password-authentication.integration.test.ts",
-    "test:auth:abuse": "DATABASE_URL='postgresql://pap_user:pap_password@localhost:5432/pap_saude_f02b_test?schema=public' tsx --test tests/auth/login-abuse.integration.test.ts"
+    "test:auth:abuse": "DATABASE_URL='postgresql://pap_user:pap_password@localhost:5432/pap_saude_f02b_test?schema=public' tsx --test tests/auth/login-abuse.integration.test.ts",
+    "test:auth:http": "DATABASE_URL='postgresql://pap_user:pap_password@localhost:5432/pap_saude_f02b_test?schema=public' tsx --test tests/auth/http-auth.integration.test.ts"
   },
   "dependencies": {
     "@capacitor/android": "^8.5.2",

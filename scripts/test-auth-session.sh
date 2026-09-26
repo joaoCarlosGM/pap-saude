@@ -101,6 +101,13 @@ DATABASE_URL="$TEST_URL" \
   tests/auth/login-abuse.integration.test.ts
 
 echo
+echo "==> HTTP authentication integration tests"
+
+DATABASE_URL="$TEST_URL" \
+  npx tsx --test \
+  tests/auth/http-auth.integration.test.ts
+
+echo
 echo "==> fixture cleanup"
 
 USERS="$(

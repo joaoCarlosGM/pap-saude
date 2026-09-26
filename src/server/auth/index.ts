@@ -7,3 +7,5 @@ export * from "./session.errors";
 export * from "./session.service";
 export * from "./login-abuse.service";
 export * from "./login.service";
+export * from "./http-auth";
+export * from "./http-auth.errors";
