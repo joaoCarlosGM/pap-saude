@@ -16,7 +16,7 @@ cleanup() {
 trap cleanup EXIT
 
 echo "========================================"
-echo " F02.2B SESSION INTEGRATION"
+echo " F02 AUTH INTEGRATION HARNESS"
 echo "========================================"
 
 cleanup
@@ -56,19 +56,42 @@ HAS_SESSIONS="$(
     "
 )"
 
+HAS_PASSWORDS="$(
+  docker exec "$DB_CONTAINER" \
+    psql -U "$DB_USER" -d "$DB_NAME" \
+    -Atc "
+      SELECT COUNT(*)
+      FROM information_schema.tables
+      WHERE table_schema='public'
+        AND table_name='password_credentials';
+    "
+)"
+
 if [[ "$HAS_SESSIONS" != "1" ]]; then
   echo "SAFETY FAILURE: sessions table missing"
+  exit 1
+fi
+
+if [[ "$HAS_PASSWORDS" != "1" ]]; then
+  echo "SAFETY FAILURE: password_credentials table missing"
   exit 1
 fi
 
 echo "database=$CURRENT_DB"
 
 echo
-echo "==> integration tests"
+echo "==> session integration tests"
 
 DATABASE_URL="$TEST_URL" \
   npx tsx --test \
   tests/auth/session-service.integration.test.ts
+
+echo
+echo "==> password authentication integration tests"
+
+DATABASE_URL="$TEST_URL" \
+  npx tsx --test \
+  tests/auth/password-authentication.integration.test.ts
 
 echo
 echo "==> fixture cleanup"
@@ -85,14 +108,21 @@ SESSIONS="$(
     -Atc 'SELECT COUNT(*) FROM sessions;'
 )"
 
-if [[ "$USERS" != "0" || "$SESSIONS" != "0" ]]; then
-  echo "TEST FAILURE: users=$USERS sessions=$SESSIONS"
+PASSWORDS="$(
+  docker exec "$DB_CONTAINER" \
+    psql -U "$DB_USER" -d "$DB_NAME" \
+    -Atc 'SELECT COUNT(*) FROM password_credentials;'
+)"
+
+if [[ "$USERS" != "0" || "$SESSIONS" != "0" || "$PASSWORDS" != "0" ]]; then
+  echo "TEST FAILURE:"
+  echo "users=$USERS sessions=$SESSIONS passwords=$PASSWORDS"
   exit 1
 fi
 
-echo "users=0 sessions=0"
+echo "users=0 sessions=0 passwords=0"
 
 echo
 echo "========================================"
-echo " F02.2B SESSION SERVICE: PASS"
+echo " F02 AUTH INTEGRATION: PASS"
 echo "========================================"

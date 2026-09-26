@@ -7,10 +7,12 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "test:auth": "npm run test:auth:crypto && npm run test:auth:session",
+    "test:auth": "npm run test:auth:crypto && npm run test:auth:integration",
     "check:server": "tsc --noEmit && eslint \"src/server/**/*.ts\" \"tests/auth/**/*.test.ts\"",
     "test:auth:crypto": "tsx --test tests/auth/crypto-core.test.ts",
-    "test:auth:session": "bash scripts/test-auth-session.sh"
+    "test:auth:session": "DATABASE_URL='postgresql://pap_user:pap_password@localhost:5432/pap_saude_f02b_test?schema=public' tsx --test tests/auth/session-service.integration.test.ts",
+    "test:auth:integration": "bash scripts/test-auth-session.sh",
+    "test:auth:password": "DATABASE_URL='postgresql://pap_user:pap_password@localhost:5432/pap_saude_f02b_test?schema=public' tsx --test tests/auth/password-authentication.integration.test.ts"
   },
   "dependencies": {
     "@capacitor/android": "^8.5.2",

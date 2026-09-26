@@ -19,6 +19,13 @@ export class InactiveUserError extends AuthenticationError {
   }
 }
 
+export class PasswordChangeRequiredError extends AuthenticationError {
+  constructor() {
+    super("Password change required");
+    this.name = "PasswordChangeRequiredError";
+  }
+}
+
 export class PasswordPolicyError extends Error {
   constructor(message: string) {
     super(message);

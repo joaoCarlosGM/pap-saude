@@ -17,3 +17,16 @@ export interface LoginCredentials {
   email: string;
   password: string;
 }
+
+export interface PasswordAuthenticationInput
+  extends LoginCredentials {
+  ipHash?: string | null;
+  userAgent?: string | null;
+  now?: Date;
+}
+
+export interface PasswordAuthenticationResult {
+  user: AuthenticatedUser;
+  session: SessionDescriptor;
+  sessionToken: string;
+}
