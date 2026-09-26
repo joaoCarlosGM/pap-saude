@@ -1,0 +1,18 @@
+export const RNDS_ACTIVATION_EVENT = "RNDS_INTEGRATION_ACTIVATED" as const;
+
+export const RNDS_STATUS_ORDER = [
+  "NOT_REQUESTED",
+  "REQUESTED",
+  "CONFIGURING",
+  "VALIDATING",
+  "HOMOLOGATION",
+  "PENDING_PAP_APPROVAL",
+  "APPROVED",
+  "ACTIVE",
+] as const;
+
+export const RNDS_EXCEPTION_STATES = [
+  "DEGRADED",
+  "SUSPENDED",
+  "DISABLED",
+] as const;
