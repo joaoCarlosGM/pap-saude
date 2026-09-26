@@ -12,6 +12,8 @@ export const SESSION_TOKEN_BYTES = 32;
 
 export const SESSION_TTL_SECONDS = 60 * 60 * 8;
 
+export const SESSION_LAST_SEEN_UPDATE_INTERVAL_SECONDS = 60 * 5;
+
 export const SESSION_COOKIE_NAME = "pap_session";
 
 export const SESSION_COOKIE_PATH = "/";

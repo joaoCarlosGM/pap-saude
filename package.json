@@ -7,8 +7,10 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "test:auth": "tsx --test tests/auth/**/*.test.ts",
-    "check:server": "tsc --noEmit && eslint \"src/server/**/*.ts\" \"tests/auth/**/*.test.ts\""
+    "test:auth": "npm run test:auth:crypto && npm run test:auth:session",
+    "check:server": "tsc --noEmit && eslint \"src/server/**/*.ts\" \"tests/auth/**/*.test.ts\"",
+    "test:auth:crypto": "tsx --test tests/auth/crypto-core.test.ts",
+    "test:auth:session": "bash scripts/test-auth-session.sh"
   },
   "dependencies": {
     "@capacitor/android": "^8.5.2",
@@ -16,6 +18,7 @@
     "@capacitor/core": "^8.5.2",
     "@hugeicons/core-free-icons": "^4.3.2",
     "@hugeicons/react": "^1.1.10",
+    "@prisma/adapter-pg": "^7.10.0",
     "@prisma/client": "^7.10.0",
     "argon2": "^0.45.1",
     "class-variance-authority": "^0.7.1",
@@ -23,6 +26,7 @@
     "lucide-react": "^1.43.0",
     "next": "16.3.4",
     "otpauth": "^9.5.2",
+    "pg": "^8.23.0",
     "radix-ui": "^1.6.7",
     "react": "19.2.8",
     "react-dom": "19.2.8",
