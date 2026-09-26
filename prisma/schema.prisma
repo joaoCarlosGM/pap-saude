@@ -1,4 +1,3 @@
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -20,51 +19,494 @@ enum ConsciousnessState {
   UNRESPONSIVE
 }
 
+enum OrganizationType {
+  PAP
+  MUNICIPALITY
+  HEALTH_UNIT
+}
+
+enum MembershipStatus {
+  INVITED
+  ACTIVE
+  SUSPENDED
+  DISABLED
+}
+
+enum AuditOutcome {
+  SUCCESS
+  FAILURE
+}
+
+enum PregnancyStatus {
+  ACTIVE
+  COMPLETED
+  INTERRUPTED
+}
+
+enum EncounterStatus {
+  DRAFT
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+}
+
+enum EdemaGrade {
+  NONE
+  ONE_PLUS
+  TWO_PLUS
+  THREE_PLUS
+  FOUR_PLUS
+}
+
+enum ProteinuriaResult {
+  NOT_PERFORMED
+  NEGATIVE
+  TRACE
+  ONE_PLUS
+  TWO_PLUS
+  THREE_PLUS
+  FOUR_PLUS
+}
+
+enum AllergyStatus {
+  ACTIVE
+  INACTIVE
+  RESOLVED
+  ENTERED_IN_ERROR
+}
+
+enum IntegrationEnvironment {
+  SANDBOX
+  HOMOLOGATION
+  PRODUCTION
+}
+
+enum RNDSIntegrationStatus {
+  NOT_REQUESTED
+  REQUESTED
+  CONFIGURING
+  VALIDATING
+  HOMOLOGATION
+  PENDING_PAP_APPROVAL
+  APPROVED
+  ACTIVE
+  DEGRADED
+  SUSPENDED
+  DISABLED
+}
+
+enum ValidationRunStatus {
+  PENDING
+  RUNNING
+  PASSED
+  FAILED
+  CANCELLED
+}
+
+enum ValidationResultStatus {
+  PASSED
+  FAILED
+  SKIPPED
+}
+
+enum IntegrationPolicyAction {
+  ALLOW
+  DENY
+}
+
+model User {
+  id          String   @id @default(uuid())
+  email       String   @unique
+  displayName String
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  memberships             Membership[]
+  roleAssignments         RoleAssignment[]
+  auditEvents             AuditEvent[]        @relation("AuditActor")
+  approvedRndIntegrations RNDSIntegration[]   @relation("RNDSApprovedBy")
+  validationRuns          RNDSValidationRun[] @relation("ValidationRunRequestedBy")
+
+  @@map("users")
+}
+
+model Organization {
+  id        String           @id @default(uuid())
+  type      OrganizationType
+  name      String
+  code      String?          @unique
+  parentId  String?
+  parent    Organization?    @relation("OrganizationTree", fields: [parentId], references: [id], onDelete: Restrict)
+  children  Organization[]   @relation("OrganizationTree")
+  isActive  Boolean          @default(true)
+  settings  Json?
+  createdAt DateTime         @default(now())
+  updatedAt DateTime         @updatedAt
+
+  memberships     Membership[]
+  roleAssignments RoleAssignment[]
+  patientLinks    PatientOrganization[]
+  encounters      Encounter[]
+  rndsIntegration RNDSIntegration?
+
+  @@index([parentId])
+  @@index([type, isActive])
+  @@map("organizations")
+}
+
+model Membership {
+  id             String           @id @default(uuid())
+  userId         String
+  organizationId String
+  status         MembershipStatus @default(INVITED)
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+
+  user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, organizationId])
+  @@index([organizationId, status])
+  @@map("memberships")
+}
+
+model Role {
+  id          String   @id @default(uuid())
+  key         String   @unique
+  name        String
+  description String?
+  system      Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  permissions     RolePermission[]
+  roleAssignments RoleAssignment[]
+
+  @@map("roles")
+}
+
+model Permission {
+  id          String   @id @default(uuid())
+  key         String   @unique
+  description String?
+  createdAt   DateTime @default(now())
+
+  roles RolePermission[]
+
+  @@map("permissions")
+}
+
+model RolePermission {
+  roleId       String
+  permissionId String
+
+  role       Role       @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  permission Permission @relation(fields: [permissionId], references: [id], onDelete: Cascade)
+
+  @@id([roleId, permissionId])
+  @@map("role_permissions")
+}
+
+model RoleAssignment {
+  id             String  @id @default(uuid())
+  userId         String
+  roleId         String
+  organizationId String?
+
+  user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role         Role          @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  organization Organization? @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, roleId, organizationId])
+  @@index([userId, organizationId])
+  @@map("role_assignments")
+}
+
 model Patient {
-  id              String               @id @default(uuid())
-  cpf             String               @unique
-  fullName        String
-  birthDate       DateTime
-  phone           String?
-  address         String?
-  medicalRecordNo String?              @unique
-  createdAt       DateTime             @default(now())
-  updatedAt       DateTime             @updatedAt
+  id        String   @id @default(uuid())
+  cpf       String?  @unique
+  cns       String?  @unique
+  fullName  String
+  birthDate DateTime
+  phone     String?
+  address   String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
-  admissions      Admission[]
-  evaluations     ClinicalEvaluation[]
+  organizations       PatientOrganization[]
+  pregnancies         Pregnancy[]
+  encounters          Encounter[]
+  allergies           Allergy[]
+  clinicalEvaluations ClinicalEvaluation[]
 
+  @@index([fullName, birthDate])
   @@map("patients")
 }
 
-model Admission {
-  id               String    @id @default(uuid())
-  patientId        String
-  patient          Patient   @relation(fields: [patientId], references: [id], onDelete: Cascade)
-  gestationalWeeks Int?
-  parity           String?
-  chiefComplaint   String
-  admissionDate    DateTime  @default(now())
-  dischargedAt     DateTime?
+model PatientOrganization {
+  id              String    @id @default(uuid())
+  patientId       String
+  organizationId  String
+  medicalRecordNo String?
+  isPrimary       Boolean   @default(false)
+  linkedAt        DateTime  @default(now())
+  unlinkedAt      DateTime?
 
-  @@map("admissions")
+  patient      Patient      @relation(fields: [patientId], references: [id], onDelete: Restrict)
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Restrict)
+
+  @@unique([patientId, organizationId])
+  @@unique([organizationId, medicalRecordNo])
+  @@index([organizationId, isPrimary])
+  @@map("patient_organizations")
 }
 
-model ClinicalEvaluation {
+model Pregnancy {
+  id                String          @id @default(uuid())
+  patientId         String
+  status            PregnancyStatus @default(ACTIVE)
+  lastMenstrualDate DateTime?
+  estimatedDueDate  DateTime?
+  firstPrenatalAt   DateTime?
+  gravida           Int?
+  parity            Int?
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
+
+  patient    Patient     @relation(fields: [patientId], references: [id], onDelete: Restrict)
+  encounters Encounter[]
+
+  @@index([patientId, status])
+  @@map("pregnancies")
+}
+
+model Encounter {
+  id             String          @id @default(uuid())
+  patientId      String
+  pregnancyId    String?
+  organizationId String
+  status         EncounterStatus @default(DRAFT)
+  chiefComplaint String?
+  occurredAt     DateTime        @default(now())
+  completedAt    DateTime?
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+
+  patient             Patient              @relation(fields: [patientId], references: [id], onDelete: Restrict)
+  pregnancy           Pregnancy?           @relation(fields: [pregnancyId], references: [id], onDelete: Restrict)
+  organization        Organization         @relation(fields: [organizationId], references: [id], onDelete: Restrict)
+  vitalSigns          VitalSigns?
+  obstetricData       ObstetricData?
+  clinicalEvaluations ClinicalEvaluation[]
+
+  @@index([organizationId, occurredAt])
+  @@index([patientId, occurredAt])
+  @@map("encounters")
+}
+
+model VitalSigns {
   id               String             @id @default(uuid())
-  patientId        String
-  patient          Patient            @relation(fields: [patientId], references: [id], onDelete: Cascade)
-  respiratoryRate  Int
-  oxygenSaturation Int
-  temperature      Decimal            @db.Decimal(4, 1)
+  encounterId      String             @unique
   systolicBp       Int
   diastolicBp      Int
   heartRate        Int
+  respiratoryRate  Int
+  temperature      Decimal?           @db.Decimal(4, 1)
+  oxygenSaturation Int?
   consciousness    ConsciousnessState @default(ALERT)
-  meowsScore       Int
-  alertLevel       AlertLevel
-  clinicalNotes    String?
-  evaluatedAt      DateTime           @default(now())
+  urineOutputMl    Int?
+  proteinuria      ProteinuriaResult  @default(NOT_PERFORMED)
+  recordedAt       DateTime           @default(now())
 
+  encounter Encounter @relation(fields: [encounterId], references: [id], onDelete: Cascade)
+
+  @@map("vital_signs")
+}
+
+model ObstetricData {
+  id              String     @id @default(uuid())
+  encounterId     String     @unique
+  uterineHeightCm Decimal?   @db.Decimal(5, 2)
+  fetalHeartRate  Int?
+  fetalMovement   Boolean?
+  edema           EdemaGrade @default(NONE)
+  bleeding        Boolean?
+  weightKg        Decimal?   @db.Decimal(6, 2)
+  complaints      String?
+  notes           String?
+
+  encounter Encounter @relation(fields: [encounterId], references: [id], onDelete: Cascade)
+
+  @@map("obstetric_data")
+}
+
+model Allergy {
+  id        String        @id @default(uuid())
+  patientId String
+  substance String
+  reaction  String?
+  severity  String?
+  status    AllergyStatus @default(ACTIVE)
+  notedAt   DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+
+  patient Patient @relation(fields: [patientId], references: [id], onDelete: Restrict)
+
+  @@index([patientId, status])
+  @@map("allergies")
+}
+
+model ClinicalEvaluation {
+  id            String     @id @default(uuid())
+  patientId     String
+  encounterId   String?
+  meowsScore    Int
+  alertLevel    AlertLevel
+  clinicalNotes String?
+  evaluatedAt   DateTime   @default(now())
+
+  patient   Patient    @relation(fields: [patientId], references: [id], onDelete: Restrict)
+  encounter Encounter? @relation(fields: [encounterId], references: [id], onDelete: Restrict)
+
+  @@index([patientId, evaluatedAt])
+  @@index([encounterId, evaluatedAt])
   @@map("clinical_evaluations")
+}
+
+model AuditEvent {
+  id             String       @id @default(uuid())
+  actorUserId    String?
+  organizationId String?
+  action         String
+  resourceType   String
+  resourceId     String?
+  outcome        AuditOutcome @default(SUCCESS)
+  reason         String?
+  requestId      String?
+  correlationId  String?
+  sessionId      String?
+  ipHash         String?
+  userAgent      String?
+  before         Json?
+  after          Json?
+  metadata       Json?
+  occurredAt     DateTime     @default(now())
+
+  actor User? @relation("AuditActor", fields: [actorUserId], references: [id], onDelete: SetNull)
+
+  @@index([organizationId, occurredAt])
+  @@index([actorUserId, occurredAt])
+  @@index([resourceType, resourceId])
+  @@index([correlationId, occurredAt])
+  @@map("audit_events")
+}
+
+model RNDSIntegration {
+  id            String                 @id @default(uuid())
+  healthUnitId  String                 @unique
+  environment   IntegrationEnvironment @default(SANDBOX)
+  status        RNDSIntegrationStatus  @default(NOT_REQUESTED)
+  statusMessage String?
+  requestedAt   DateTime?
+  approvedById  String?
+  approvedAt    DateTime?
+  activatedAt   DateTime?
+  suspendedAt   DateTime?
+  lastCheckedAt DateTime?
+  configuration Json?
+  createdAt     DateTime               @default(now())
+  updatedAt     DateTime               @updatedAt
+
+  healthUnit     Organization                   @relation(fields: [healthUnitId], references: [id], onDelete: Restrict)
+  approvedBy     User?                          @relation("RNDSApprovedBy", fields: [approvedById], references: [id], onDelete: SetNull)
+  policies       IntegrationPolicy[]
+  validationRuns RNDSValidationRun[]
+  transmissions  InteroperabilityTransmission[]
+
+  @@index([status, environment])
+  @@map("rnds_integrations")
+}
+
+model IntegrationPolicy {
+  id                String                  @id @default(uuid())
+  rndsIntegrationId String
+  resourceType      String
+  action            IntegrationPolicyAction
+  enabled           Boolean                 @default(true)
+  rules             Json?
+  createdAt         DateTime                @default(now())
+  updatedAt         DateTime                @updatedAt
+
+  rndsIntegration RNDSIntegration @relation(fields: [rndsIntegrationId], references: [id], onDelete: Cascade)
+
+  @@unique([rndsIntegrationId, resourceType])
+  @@map("integration_policies")
+}
+
+model RNDSValidationRun {
+  id                String              @id @default(uuid())
+  rndsIntegrationId String
+  requestedById     String?
+  status            ValidationRunStatus @default(PENDING)
+  version           String
+  startedAt         DateTime?
+  finishedAt        DateTime?
+  summary           Json?
+  createdAt         DateTime            @default(now())
+
+  rndsIntegration RNDSIntegration        @relation(fields: [rndsIntegrationId], references: [id], onDelete: Cascade)
+  requestedBy     User?                  @relation("ValidationRunRequestedBy", fields: [requestedById], references: [id], onDelete: SetNull)
+  results         RNDSValidationResult[]
+
+  @@index([rndsIntegrationId, createdAt])
+  @@map("rnds_validation_runs")
+}
+
+model RNDSValidationResult {
+  id        String                 @id @default(uuid())
+  runId     String
+  checkKey  String
+  status    ValidationResultStatus
+  message   String?
+  evidence  Json?
+  checkedAt DateTime               @default(now())
+
+  run RNDSValidationRun @relation(fields: [runId], references: [id], onDelete: Cascade)
+
+  @@unique([runId, checkKey])
+  @@map("rnds_validation_results")
+}
+
+enum TransmissionStatus {
+  QUEUED
+  SENDING
+  ACKNOWLEDGED
+  FAILED
+  RETRY_SCHEDULED
+  CANCELLED
+}
+
+model InteroperabilityTransmission {
+  id                String             @id @default(uuid())
+  rndsIntegrationId String
+  resourceType      String
+  resourceId        String
+  correlationId     String             @unique
+  status            TransmissionStatus @default(QUEUED)
+  attempt           Int                @default(0)
+  requestedAt       DateTime           @default(now())
+  lastAttemptAt     DateTime?
+  acknowledgedAt    DateTime?
+  externalReference String?
+  errorCode         String?
+  errorMetadata     Json?
+  createdAt         DateTime           @default(now())
+  updatedAt         DateTime           @updatedAt
+
+  rndsIntegration RNDSIntegration @relation(fields: [rndsIntegrationId], references: [id], onDelete: Restrict)
+
+  @@index([rndsIntegrationId, status, requestedAt])
+  @@index([resourceType, resourceId])
+  @@map("interoperability_transmissions")
 }
