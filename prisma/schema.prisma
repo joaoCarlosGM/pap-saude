@@ -128,6 +128,11 @@ model User {
   approvedRndIntegrations RNDSIntegration[]   @relation("RNDSApprovedBy")
   validationRuns          RNDSValidationRun[] @relation("ValidationRunRequestedBy")
 
+  passwordCredential PasswordCredential?
+  mfaFactors         MfaFactor[]
+  mfaRecoveryCodes   MfaRecoveryCode[]
+  sessions           Session[]
+
   @@map("users")
 }
 
@@ -509,4 +514,97 @@ model InteroperabilityTransmission {
   @@index([rndsIntegrationId, status, requestedAt])
   @@index([resourceType, resourceId])
   @@map("interoperability_transmissions")
+}
+
+// ============================================================
+// FOUNDATION 02 - IDENTITY & ACCESS
+// ============================================================
+
+enum PasswordAlgorithm {
+  ARGON2ID
+}
+
+enum MfaFactorType {
+  TOTP
+}
+
+enum MfaFactorStatus {
+  PENDING
+  ACTIVE
+  REVOKED
+}
+
+enum SessionRevocationReason {
+  LOGOUT
+  PASSWORD_CHANGED
+  MFA_RESET
+  ADMIN_REVOKED
+  USER_SUSPENDED
+  SECURITY_EVENT
+}
+
+model PasswordCredential {
+  id           String            @id @default(uuid())
+  userId       String            @unique
+  passwordHash String
+  algorithm    PasswordAlgorithm @default(ARGON2ID)
+  mustChange   Boolean           @default(false)
+  changedAt    DateTime          @default(now())
+  createdAt    DateTime          @default(now())
+  updatedAt    DateTime          @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("password_credentials")
+}
+
+model MfaFactor {
+  id              String          @id @default(uuid())
+  userId          String
+  type            MfaFactorType   @default(TOTP)
+  status          MfaFactorStatus @default(PENDING)
+  secretEncrypted String
+  label           String?
+  createdAt       DateTime        @default(now())
+  enabledAt       DateTime?
+  revokedAt       DateTime?
+  lastUsedAt      DateTime?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, status])
+  @@map("mfa_factors")
+}
+
+model MfaRecoveryCode {
+  id        String    @id @default(uuid())
+  userId    String
+  codeHash  String    @unique
+  createdAt DateTime  @default(now())
+  usedAt    DateTime?
+  revokedAt DateTime?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, usedAt])
+  @@map("mfa_recovery_codes")
+}
+
+model Session {
+  id               String                   @id @default(uuid())
+  userId           String
+  tokenHash        String                   @unique
+  createdAt        DateTime                 @default(now())
+  expiresAt        DateTime
+  lastSeenAt       DateTime                 @default(now())
+  revokedAt        DateTime?
+  revocationReason SessionRevocationReason?
+  ipHash           String?
+  userAgent        String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, revokedAt, expiresAt])
+  @@index([expiresAt])
+  @@map("sessions")
 }
