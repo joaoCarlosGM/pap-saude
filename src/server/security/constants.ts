@@ -17,3 +17,10 @@ export const SESSION_LAST_SEEN_UPDATE_INTERVAL_SECONDS = 60 * 5;
 export const SESSION_COOKIE_NAME = "pap_session";
 
 export const SESSION_COOKIE_PATH = "/";
+
+
+export const LOGIN_FAILURE_WINDOW_SECONDS = 60 * 15;
+
+export const LOGIN_ORIGIN_DISTINCT_IDENTITY_LIMIT = 20;
+
+export const LOGIN_ORIGIN_BLOCK_SECONDS = 60 * 10;

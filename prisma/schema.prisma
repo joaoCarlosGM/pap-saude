@@ -608,3 +608,22 @@ model Session {
   @@index([expiresAt])
   @@map("sessions")
 }
+
+enum LoginAttemptOutcome {
+  SUCCESS
+  FAILURE
+  THROTTLED
+}
+
+model LoginAttempt {
+  id           String              @id @default(uuid())
+  identityHash String
+  originHash   String
+  outcome      LoginAttemptOutcome
+  occurredAt   DateTime            @default(now())
+
+  @@index([identityHash, occurredAt])
+  @@index([originHash, occurredAt])
+  @@index([originHash, identityHash, occurredAt])
+  @@map("login_attempts")
+}

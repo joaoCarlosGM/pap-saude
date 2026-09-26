@@ -32,3 +32,11 @@ export class PasswordPolicyError extends Error {
     this.name = "PasswordPolicyError";
   }
 }
+
+
+export class LoginThrottledError extends AuthenticationError {
+  constructor() {
+    super("Authentication temporarily unavailable");
+    this.name = "LoginThrottledError";
+  }
+}

@@ -94,6 +94,13 @@ DATABASE_URL="$TEST_URL" \
   tests/auth/password-authentication.integration.test.ts
 
 echo
+echo "==> login abuse integration tests"
+
+DATABASE_URL="$TEST_URL" \
+  npx tsx --test \
+  tests/auth/login-abuse.integration.test.ts
+
+echo
 echo "==> fixture cleanup"
 
 USERS="$(
@@ -114,13 +121,25 @@ PASSWORDS="$(
     -Atc 'SELECT COUNT(*) FROM password_credentials;'
 )"
 
-if [[ "$USERS" != "0" || "$SESSIONS" != "0" || "$PASSWORDS" != "0" ]]; then
+LOGIN_ATTEMPTS="$(
+  docker exec "$DB_CONTAINER" \
+    psql -U "$DB_USER" -d "$DB_NAME" \
+    -Atc 'SELECT COUNT(*) FROM login_attempts;'
+)"
+
+AUDIT_EVENTS="$(
+  docker exec "$DB_CONTAINER" \
+    psql -U "$DB_USER" -d "$DB_NAME" \
+    -Atc 'SELECT COUNT(*) FROM audit_events;'
+)"
+
+if [[ "$USERS" != "0" || "$SESSIONS" != "0" || "$PASSWORDS" != "0" || "$LOGIN_ATTEMPTS" != "0" || "$AUDIT_EVENTS" != "0" ]]; then
   echo "TEST FAILURE:"
-  echo "users=$USERS sessions=$SESSIONS passwords=$PASSWORDS"
+  echo "users=$USERS sessions=$SESSIONS passwords=$PASSWORDS login_attempts=$LOGIN_ATTEMPTS audit_events=$AUDIT_EVENTS"
   exit 1
 fi
 
-echo "users=0 sessions=0 passwords=0"
+echo "users=0 sessions=0 passwords=0 login_attempts=0 audit_events=0"
 
 echo
 echo "========================================"
