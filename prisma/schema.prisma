@@ -25,6 +25,13 @@ enum OrganizationType {
   HEALTH_UNIT
 }
 
+enum OrganizationStatus {
+  PENDING_VERIFICATION
+  ACTIVE
+  SUSPENDED
+  ARCHIVED
+}
+
 enum MembershipStatus {
   INVITED
   ACTIVE
@@ -138,17 +145,23 @@ model User {
 }
 
 model Organization {
-  id        String           @id @default(uuid())
+  id        String             @id @default(uuid())
   type      OrganizationType
+  status    OrganizationStatus @default(PENDING_VERIFICATION)
   name      String
-  code      String?          @unique
+  code      String?            @unique
+  cnes      String?            @unique
+  cnpj      String?            @unique
+  city      String?
+  state     String?
+  address   String?
   parentId  String?
-  parent    Organization?    @relation("OrganizationTree", fields: [parentId], references: [id], onDelete: Restrict)
-  children  Organization[]   @relation("OrganizationTree")
-  isActive  Boolean          @default(true)
+  parent    Organization?      @relation("OrganizationTree", fields: [parentId], references: [id], onDelete: Restrict)
+  children  Organization[]     @relation("OrganizationTree")
+  isActive  Boolean            @default(true)
   settings  Json?
-  createdAt DateTime         @default(now())
-  updatedAt DateTime         @updatedAt
+  createdAt DateTime           @default(now())
+  updatedAt DateTime           @updatedAt
 
   memberships     Membership[]
   roleAssignments RoleAssignment[]
@@ -157,7 +170,9 @@ model Organization {
   rndsIntegration RNDSIntegration?
 
   @@index([parentId])
-  @@index([type, isActive])
+  @@index([type, status])
+  @@index([city, state])
+  @@index([name])
   @@map("organizations")
 }
 

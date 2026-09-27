@@ -148,6 +148,13 @@ DATABASE_URL="$TEST_URL" \
   tests/auth/mfa-reset.integration.test.ts
 
 echo
+echo "==> organization lifecycle integration tests"
+
+DATABASE_URL="$TEST_URL" \
+  npx tsx --test \
+  tests/auth/organization-lifecycle.integration.test.ts
+
+echo
 echo "==> fixture cleanup"
 
 USERS="$(
