@@ -6,6 +6,11 @@ DB_USER="pap_user"
 DB_NAME="pap_saude_f02b_test"
 TEST_URL="postgresql://pap_user:pap_password@localhost:5432/pap_saude_f02b_test?schema=public"
 
+export MFA_SECRET_ENCRYPTION_KEY="$(
+  node -e 'process.stdout.write(require("node:crypto").randomBytes(32).toString("base64url"))'
+)"
+export MFA_SECRET_ENCRYPTION_KEY_ID="f02-integration"
+
 cleanup() {
   docker exec "$DB_CONTAINER" \
     psql -U "$DB_USER" -d postgres \
@@ -108,6 +113,13 @@ DATABASE_URL="$TEST_URL" \
   tests/auth/http-auth.integration.test.ts
 
 echo
+echo "==> TOTP enrollment integration tests"
+
+DATABASE_URL="$TEST_URL" \
+  npx tsx --test \
+  tests/auth/totp-enrollment.integration.test.ts
+
+echo
 echo "==> fixture cleanup"
 
 USERS="$(
@@ -140,13 +152,19 @@ AUDIT_EVENTS="$(
     -Atc 'SELECT COUNT(*) FROM audit_events;'
 )"
 
-if [[ "$USERS" != "0" || "$SESSIONS" != "0" || "$PASSWORDS" != "0" || "$LOGIN_ATTEMPTS" != "0" || "$AUDIT_EVENTS" != "0" ]]; then
+MFA_FACTORS="$(
+  docker exec "$DB_CONTAINER" \
+    psql -U "$DB_USER" -d "$DB_NAME" \
+    -Atc 'SELECT COUNT(*) FROM mfa_factors;'
+)"
+
+if [[ "$USERS" != "0" || "$SESSIONS" != "0" || "$PASSWORDS" != "0" || "$LOGIN_ATTEMPTS" != "0" || "$AUDIT_EVENTS" != "0" || "$MFA_FACTORS" != "0" ]]; then
   echo "TEST FAILURE:"
-  echo "users=$USERS sessions=$SESSIONS passwords=$PASSWORDS login_attempts=$LOGIN_ATTEMPTS audit_events=$AUDIT_EVENTS"
+  echo "users=$USERS sessions=$SESSIONS passwords=$PASSWORDS login_attempts=$LOGIN_ATTEMPTS audit_events=$AUDIT_EVENTS mfa_factors=$MFA_FACTORS"
   exit 1
 fi
 
-echo "users=0 sessions=0 passwords=0 login_attempts=0 audit_events=0"
+echo "users=0 sessions=0 passwords=0 login_attempts=0 audit_events=0 mfa_factors=0"
 
 echo
 echo "========================================"

@@ -39,3 +39,18 @@ export const MFA_SECRET_IV_BYTES = 12;
 export const MFA_SECRET_AUTH_TAG_BYTES = 16;
 
 export const MFA_SECRET_AAD = "pap-saude:mfa:totp-secret:v1";
+
+
+export const MFA_TOTP_ISSUER = "PAP Saúde";
+
+export const MFA_TOTP_ALGORITHM = "SHA1";
+
+export const MFA_TOTP_DIGITS = 6;
+
+export const MFA_TOTP_PERIOD_SECONDS = 30;
+
+export const MFA_TOTP_WINDOW = 1;
+
+export const MFA_TOTP_SECRET_BYTES = 20;
+
+export const MFA_ENROLLMENT_TTL_SECONDS = 60 * 10;
