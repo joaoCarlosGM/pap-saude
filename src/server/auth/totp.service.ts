@@ -96,23 +96,6 @@ function normalizeTotpCode(
   return normalized;
 }
 
-async function revokePendingFactors(
-  userId: string,
-  now: Date,
-): Promise<void> {
-  await db.mfaFactor.updateMany({
-    where: {
-      userId,
-      type: MfaFactorType.TOTP,
-      status: MfaFactorStatus.PENDING,
-    },
-    data: {
-      status: MfaFactorStatus.REVOKED,
-      revokedAt: now,
-    },
-  });
-}
-
 export async function startTotpEnrollment(
   input: StartTotpEnrollmentInput,
 ): Promise<TotpEnrollment> {
