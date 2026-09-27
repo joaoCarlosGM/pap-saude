@@ -33,10 +33,35 @@ enum OrganizationStatus {
 }
 
 enum MembershipStatus {
+  REQUESTED
   INVITED
   ACTIVE
   SUSPENDED
   DISABLED
+}
+
+enum OrganizationCandidateStatus {
+  NEW
+  QUALIFYING
+  CONTACTED
+  INTERESTED
+  VALIDATING
+  APPROVED
+  REJECTED
+  DUPLICATE
+  CLOSED
+}
+
+enum OrganizationLeadTemperature {
+  COLD
+  WARM
+  HOT
+}
+
+enum OrganizationRequestStatus {
+  REQUESTED
+  WITHDRAWN
+  RESOLVED
 }
 
 enum AuditOutcome {
@@ -130,10 +155,11 @@ model User {
   updatedAt   DateTime @updatedAt
 
   memberships             Membership[]
+  organizationRequests    OrganizationRequest[]
   roleAssignments         RoleAssignment[]
-  auditEvents             AuditEvent[]        @relation("AuditActor")
-  approvedRndIntegrations RNDSIntegration[]   @relation("RNDSApprovedBy")
-  validationRuns          RNDSValidationRun[] @relation("ValidationRunRequestedBy")
+  auditEvents             AuditEvent[]          @relation("AuditActor")
+  approvedRndIntegrations RNDSIntegration[]     @relation("RNDSApprovedBy")
+  validationRuns          RNDSValidationRun[]   @relation("ValidationRunRequestedBy")
 
   passwordCredential PasswordCredential?
   mfaFactors         MfaFactor[]
@@ -164,6 +190,7 @@ model Organization {
   updatedAt DateTime           @updatedAt
 
   memberships     Membership[]
+  sourceCandidate OrganizationCandidate? @relation("CandidateConversion")
   roleAssignments RoleAssignment[]
   patientLinks    PatientOrganization[]
   encounters      Encounter[]
@@ -190,6 +217,50 @@ model Membership {
   @@unique([userId, organizationId])
   @@index([organizationId, status])
   @@map("memberships")
+}
+
+model OrganizationCandidate {
+  id                      String                      @id @default(uuid())
+  type                    OrganizationType
+  name                    String
+  normalizedName          String
+  dedupeKey               String                      @unique
+  cnes                    String?                     @unique
+  cnpj                    String?
+  city                    String?
+  state                   String?
+  address                 String?
+  status                  OrganizationCandidateStatus @default(NEW)
+  leadTemperature         OrganizationLeadTemperature @default(COLD)
+  convertedOrganizationId String?                     @unique
+  createdAt               DateTime                    @default(now())
+  updatedAt               DateTime                    @updatedAt
+
+  convertedOrganization Organization?         @relation("CandidateConversion", fields: [convertedOrganizationId], references: [id], onDelete: SetNull)
+  requests              OrganizationRequest[]
+
+  @@index([type, status])
+  @@index([leadTemperature, status])
+  @@index([city, state])
+  @@index([normalizedName])
+  @@map("organization_candidates")
+}
+
+model OrganizationRequest {
+  id                String                    @id @default(uuid())
+  candidateId       String
+  requestedByUserId String
+  status            OrganizationRequestStatus @default(REQUESTED)
+  createdAt         DateTime                  @default(now())
+  updatedAt         DateTime                  @updatedAt
+
+  candidate   OrganizationCandidate @relation(fields: [candidateId], references: [id], onDelete: Cascade)
+  requestedBy User                  @relation(fields: [requestedByUserId], references: [id], onDelete: Restrict)
+
+  @@unique([candidateId, requestedByUserId])
+  @@index([requestedByUserId, status])
+  @@index([candidateId, status])
+  @@map("organization_requests")
 }
 
 model Role {
