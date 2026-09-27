@@ -6,7 +6,7 @@ import {
 } from "./auth.errors";
 
 import {
-  authenticateWithPassword,
+  verifyPasswordCredentials,
 } from "./password-authentication.service";
 
 import {
@@ -18,8 +18,17 @@ import {
   recordLoginThrottle,
 } from "./login-abuse.service";
 
+import {
+  createMfaChallenge,
+  hasActiveTotpFactor,
+} from "./mfa-challenge.service";
+
+import {
+  createSession,
+} from "./session.service";
+
 import type {
-  PasswordAuthenticationResult,
+  LoginAuthenticationResult,
 } from "./auth.types";
 
 export interface ProtectedLoginInput {
@@ -32,18 +41,23 @@ export interface ProtectedLoginInput {
 
 export async function authenticateLogin(
   input: ProtectedLoginInput,
-): Promise<PasswordAuthenticationResult> {
-  const now = input.now ?? new Date();
+): Promise<LoginAuthenticationResult> {
+  const now =
+    input.now ?? new Date();
 
   const context = {
-    email: input.email,
-    origin: input.origin,
+    email:
+      input.email,
+    origin:
+      input.origin,
     userAgent:
       input.userAgent,
   };
 
   const hashes =
-    createLoginProtectionHashes(context);
+    createLoginProtectionHashes(
+      context,
+    );
 
   const throttle =
     await evaluateLoginThrottle(
@@ -62,10 +76,12 @@ export async function authenticateLogin(
   }
 
   try {
-    const result =
-      await authenticateWithPassword({
-        email: input.email,
-        password: input.password,
+    const verified =
+      await verifyPasswordCredentials({
+        email:
+          input.email,
+        password:
+          input.password,
         ipHash:
           hashes.originHash,
         userAgent:
@@ -73,13 +89,77 @@ export async function authenticateLogin(
         now,
       });
 
+    const requiresMfa =
+      await hasActiveTotpFactor(
+        verified.user.id,
+      );
+
+    /*
+     * A correct primary credential resets the effective
+     * credential-failure history, even when a second factor
+     * is still required.
+     */
     await recordLoginSuccess(
       context,
-      result.user.id,
+      verified.user.id,
       now,
     );
 
-    return result;
+    if (requiresMfa) {
+      const challenge =
+        await createMfaChallenge({
+          userId:
+            verified.user.id,
+          ipHash:
+            hashes.originHash,
+          userAgent:
+            input.userAgent,
+          now,
+        });
+
+      return {
+        status:
+          "MFA_REQUIRED",
+        user:
+          verified.user,
+        challengeToken:
+          challenge.token,
+        challengeExpiresAt:
+          challenge.expiresAt,
+      };
+    }
+
+    const createdSession =
+      await createSession({
+        userId:
+          verified.user.id,
+        ipHash:
+          hashes.originHash,
+        userAgent:
+          input.userAgent,
+        now,
+      });
+
+    return {
+      status:
+        "AUTHENTICATED",
+      user:
+        verified.user,
+      session: {
+        id:
+          createdSession.session.id,
+        userId:
+          createdSession.session.userId,
+        createdAt:
+          createdSession.session.createdAt,
+        expiresAt:
+          createdSession.session.expiresAt,
+        lastSeenAt:
+          createdSession.session.lastSeenAt,
+      },
+      sessionToken:
+        createdSession.token,
+    };
   } catch (error) {
     if (
       error instanceof

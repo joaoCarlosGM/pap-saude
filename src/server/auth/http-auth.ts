@@ -1,6 +1,8 @@
 import type { NextRequest } from "next/server";
 
 import {
+  MFA_CHALLENGE_COOKIE_NAME,
+  MFA_CHALLENGE_TTL_SECONDS,
   PASSWORD_MAX_LENGTH,
   SESSION_COOKIE_NAME,
   SESSION_COOKIE_PATH,
@@ -232,4 +234,97 @@ export function readSessionToken(
       SESSION_COOKIE_NAME,
     )?.value ?? null
   );
+}
+
+
+export function getMfaChallengeCookieOptions(
+  production = process.env.NODE_ENV === "production",
+) {
+  return {
+    httpOnly: true as const,
+    secure: production,
+    sameSite: "lax" as const,
+    path: SESSION_COOKIE_PATH,
+    maxAge: MFA_CHALLENGE_TTL_SECONDS,
+    priority: "high" as const,
+  };
+}
+
+export function getExpiredMfaChallengeCookieOptions(
+  production = process.env.NODE_ENV === "production",
+) {
+  return {
+    ...getMfaChallengeCookieOptions(
+      production,
+    ),
+    maxAge: 0,
+  };
+}
+
+export function readMfaChallengeToken(
+  request: NextRequest,
+): string | null {
+  return (
+    request.cookies.get(
+      MFA_CHALLENGE_COOKIE_NAME,
+    )?.value ?? null
+  );
+}
+
+export async function readMfaCodePayload(
+  request: Request,
+): Promise<{ code: string }> {
+  const contentType =
+    request.headers.get(
+      "content-type",
+    ) ?? "";
+
+  if (
+    !contentType
+      .toLowerCase()
+      .startsWith(
+        "application/json",
+      )
+  ) {
+    throw new InvalidLoginPayloadError();
+  }
+
+  let body: unknown;
+
+  try {
+    body =
+      await request.json();
+  } catch {
+    throw new InvalidLoginPayloadError();
+  }
+
+  if (
+    typeof body !== "object" ||
+    body === null ||
+    Array.isArray(body)
+  ) {
+    throw new InvalidLoginPayloadError();
+  }
+
+  const code =
+    (
+      body as Record<
+        string,
+        unknown
+      >
+    ).code;
+
+  if (
+    typeof code !== "string" ||
+    !/^\d{6}$/.test(
+      code.trim(),
+    )
+  ) {
+    throw new InvalidLoginPayloadError();
+  }
+
+  return {
+    code:
+      code.trim(),
+  };
 }

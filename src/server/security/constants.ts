@@ -54,3 +54,10 @@ export const MFA_TOTP_WINDOW = 1;
 export const MFA_TOTP_SECRET_BYTES = 20;
 
 export const MFA_ENROLLMENT_TTL_SECONDS = 60 * 10;
+
+
+export const MFA_CHALLENGE_TOKEN_BYTES = 32;
+
+export const MFA_CHALLENGE_TTL_SECONDS = 60 * 5;
+
+export const MFA_CHALLENGE_COOKIE_NAME = "pap_mfa_challenge";

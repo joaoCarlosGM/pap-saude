@@ -11,3 +11,6 @@ export * from "./http-auth";
 export * from "./http-auth.errors";
 export * from "./mfa.errors";
 export * from "./totp.service";
+export * from "./mfa-challenge.service";
+export * from "./mfa-login.service";
+export * from "./totp-login.service";

@@ -32,3 +32,32 @@ export class InvalidTotpCodeError extends MfaError {
     this.name = "InvalidTotpCodeError";
   }
 }
+
+
+export class InvalidMfaChallengeError extends MfaError {
+  constructor() {
+    super("Invalid MFA challenge");
+    this.name = "InvalidMfaChallengeError";
+  }
+}
+
+export class ExpiredMfaChallengeError extends MfaError {
+  constructor() {
+    super("MFA challenge expired");
+    this.name = "ExpiredMfaChallengeError";
+  }
+}
+
+export class ConsumedMfaChallengeError extends MfaError {
+  constructor() {
+    super("MFA challenge already consumed");
+    this.name = "ConsumedMfaChallengeError";
+  }
+}
+
+export class TotpReplayError extends MfaError {
+  constructor() {
+    super("TOTP code was already used");
+    this.name = "TotpReplayError";
+  }
+}

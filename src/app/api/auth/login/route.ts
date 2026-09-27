@@ -18,6 +18,7 @@ import {
 
 import {
   assertTrustedRequestOrigin,
+  getMfaChallengeCookieOptions,
   getRequestUserAgent,
   getSessionCookieOptions,
   readLoginPayload,
@@ -29,6 +30,7 @@ import {
 } from "@/server/auth/login.service";
 
 import {
+  MFA_CHALLENGE_COOKIE_NAME,
   SESSION_COOKIE_NAME,
 } from "@/server/security/constants";
 
@@ -72,12 +74,38 @@ export async function POST(
           getRequestUserAgent(request),
       });
 
+    if (
+      result.status ===
+      "MFA_REQUIRED"
+    ) {
+      const response = json(
+        {
+          authenticated: false,
+          mfaRequired: true,
+          challengeExpiresAt:
+            result.challengeExpiresAt,
+        },
+        200,
+      );
+
+      response.cookies.set(
+        MFA_CHALLENGE_COOKIE_NAME,
+        result.challengeToken,
+        getMfaChallengeCookieOptions(),
+      );
+
+      return response;
+    }
+
     const response = json(
       {
         authenticated: true,
+        mfaRequired: false,
         user: {
-          id: result.user.id,
-          email: result.user.email,
+          id:
+            result.user.id,
+          email:
+            result.user.email,
           displayName:
             result.user.displayName,
         },

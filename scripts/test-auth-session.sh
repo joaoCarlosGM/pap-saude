@@ -120,6 +120,20 @@ DATABASE_URL="$TEST_URL" \
   tests/auth/totp-enrollment.integration.test.ts
 
 echo
+echo "==> MFA login challenge integration tests"
+
+DATABASE_URL="$TEST_URL" \
+  npx tsx --test \
+  tests/auth/mfa-login.integration.test.ts
+
+echo
+echo "==> HTTP MFA integration tests"
+
+DATABASE_URL="$TEST_URL" \
+  npx tsx --test \
+  tests/auth/http-mfa.integration.test.ts
+
+echo
 echo "==> fixture cleanup"
 
 USERS="$(
@@ -158,13 +172,19 @@ MFA_FACTORS="$(
     -Atc 'SELECT COUNT(*) FROM mfa_factors;'
 )"
 
-if [[ "$USERS" != "0" || "$SESSIONS" != "0" || "$PASSWORDS" != "0" || "$LOGIN_ATTEMPTS" != "0" || "$AUDIT_EVENTS" != "0" || "$MFA_FACTORS" != "0" ]]; then
+MFA_CHALLENGES="$(
+  docker exec "$DB_CONTAINER" \
+    psql -U "$DB_USER" -d "$DB_NAME" \
+    -Atc 'SELECT COUNT(*) FROM mfa_challenges;'
+)"
+
+if [[ "$USERS" != "0" || "$SESSIONS" != "0" || "$PASSWORDS" != "0" || "$LOGIN_ATTEMPTS" != "0" || "$AUDIT_EVENTS" != "0" || "$MFA_FACTORS" != "0" || "$MFA_CHALLENGES" != "0" ]]; then
   echo "TEST FAILURE:"
-  echo "users=$USERS sessions=$SESSIONS passwords=$PASSWORDS login_attempts=$LOGIN_ATTEMPTS audit_events=$AUDIT_EVENTS mfa_factors=$MFA_FACTORS"
+  echo "users=$USERS sessions=$SESSIONS passwords=$PASSWORDS login_attempts=$LOGIN_ATTEMPTS audit_events=$AUDIT_EVENTS mfa_factors=$MFA_FACTORS mfa_challenges=$MFA_CHALLENGES"
   exit 1
 fi
 
-echo "users=0 sessions=0 passwords=0 login_attempts=0 audit_events=0 mfa_factors=0"
+echo "users=0 sessions=0 passwords=0 login_attempts=0 audit_events=0 mfa_factors=0 mfa_challenges=0"
 
 echo
 echo "========================================"

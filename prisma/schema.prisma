@@ -131,6 +131,7 @@ model User {
   passwordCredential PasswordCredential?
   mfaFactors         MfaFactor[]
   mfaRecoveryCodes   MfaRecoveryCode[]
+  mfaChallenges      MfaChallenge[]
   sessions           Session[]
 
   @@map("users")
@@ -626,4 +627,21 @@ model LoginAttempt {
   @@index([originHash, occurredAt])
   @@index([originHash, identityHash, occurredAt])
   @@map("login_attempts")
+}
+
+model MfaChallenge {
+  id         String    @id @default(uuid())
+  userId     String
+  tokenHash  String    @unique
+  createdAt  DateTime  @default(now())
+  expiresAt  DateTime
+  consumedAt DateTime?
+  ipHash     String?
+  userAgent  String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, consumedAt, expiresAt])
+  @@index([expiresAt])
+  @@map("mfa_challenges")
 }

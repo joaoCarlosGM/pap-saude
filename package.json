@@ -16,7 +16,9 @@
     "test:auth:abuse": "DATABASE_URL='postgresql://pap_user:pap_password@localhost:5432/pap_saude_f02b_test?schema=public' tsx --test tests/auth/login-abuse.integration.test.ts",
     "test:auth:http": "DATABASE_URL='postgresql://pap_user:pap_password@localhost:5432/pap_saude_f02b_test?schema=public' tsx --test tests/auth/http-auth.integration.test.ts",
     "test:auth:mfa-crypto": "tsx --test tests/auth/mfa-secret-encryption.test.ts",
-    "test:auth:totp-enrollment": "DATABASE_URL='postgresql://pap_user:pap_password@localhost:5432/pap_saude_f02b_test?schema=public' tsx --test tests/auth/totp-enrollment.integration.test.ts"
+    "test:auth:totp-enrollment": "DATABASE_URL='postgresql://pap_user:pap_password@localhost:5432/pap_saude_f02b_test?schema=public' tsx --test tests/auth/totp-enrollment.integration.test.ts",
+    "test:auth:mfa-login": "DATABASE_URL='postgresql://pap_user:pap_password@localhost:5432/pap_saude_f02b_test?schema=public' tsx --test tests/auth/mfa-login.integration.test.ts",
+    "test:auth:http-mfa": "DATABASE_URL='postgresql://pap_user:pap_password@localhost:5432/pap_saude_f02b_test?schema=public' tsx --test tests/auth/http-mfa.integration.test.ts"
   },
   "dependencies": {
     "@capacitor/android": "^8.5.2",

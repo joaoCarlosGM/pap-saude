@@ -23,6 +23,7 @@ import {
 import type {
   PasswordAuthenticationInput,
   PasswordAuthenticationResult,
+  PasswordCredentialVerificationResult,
 } from "./auth.types";
 
 const DUMMY_PASSWORD =
@@ -70,42 +71,55 @@ export async function upgradePasswordHashIfCurrent(
   return result.count === 1;
 }
 
-export async function authenticateWithPassword(
+export async function verifyPasswordCredentials(
   input: PasswordAuthenticationInput,
-): Promise<PasswordAuthenticationResult> {
-  const normalizedEmail = normalizeEmail(input.email ?? "");
-  const suppliedPassword = input.password ?? "";
+): Promise<PasswordCredentialVerificationResult> {
+  const normalizedEmail =
+    normalizeEmail(input.email ?? "");
 
-  if (!normalizedEmail || !suppliedPassword) {
-    const dummyHash = await getDummyPasswordHash();
+  const suppliedPassword =
+    input.password ?? "";
+
+  if (
+    !normalizedEmail ||
+    !suppliedPassword
+  ) {
+    const dummyHash =
+      await getDummyPasswordHash();
 
     await verifyPassword(
       dummyHash,
-      suppliedPassword || DUMMY_PASSWORD,
+      suppliedPassword ||
+        DUMMY_PASSWORD,
     );
 
     throw new InvalidCredentialsError();
   }
 
-  const user = await db.user.findUnique({
-    where: {
-      email: normalizedEmail,
-    },
-    include: {
-      passwordCredential: true,
-    },
-  });
+  const user =
+    await db.user.findUnique({
+      where: {
+        email:
+          normalizedEmail,
+      },
+      include: {
+        passwordCredential:
+          true,
+      },
+    });
 
-  const credential = user?.passwordCredential;
+  const credential =
+    user?.passwordCredential;
 
   const hashToVerify =
     credential?.passwordHash ??
     await getDummyPasswordHash();
 
-  const passwordMatches = await verifyPassword(
-    hashToVerify,
-    suppliedPassword,
-  );
+  const passwordMatches =
+    await verifyPassword(
+      hashToVerify,
+      suppliedPassword,
+    );
 
   if (
     !user ||
@@ -124,32 +138,64 @@ export async function authenticateWithPassword(
   }
 
   await upgradePasswordHashIfCurrent({
-    userId: user.id,
-    currentHash: credential.passwordHash,
-    password: suppliedPassword,
-  });
-
-  const createdSession = await createSession({
-    userId: user.id,
-    ipHash: input.ipHash,
-    userAgent: input.userAgent,
-    now: input.now,
+    userId:
+      user.id,
+    currentHash:
+      credential.passwordHash,
+    password:
+      suppliedPassword,
   });
 
   return {
     user: {
-      id: user.id,
-      email: user.email,
-      displayName: user.displayName,
-      isActive: user.isActive,
+      id:
+        user.id,
+      email:
+        user.email,
+      displayName:
+        user.displayName,
+      isActive:
+        user.isActive,
     },
+  };
+}
+
+export async function authenticateWithPassword(
+  input: PasswordAuthenticationInput,
+): Promise<PasswordAuthenticationResult> {
+  const verified =
+    await verifyPasswordCredentials(
+      input,
+    );
+
+  const createdSession =
+    await createSession({
+      userId:
+        verified.user.id,
+      ipHash:
+        input.ipHash,
+      userAgent:
+        input.userAgent,
+      now:
+        input.now,
+    });
+
+  return {
+    user:
+      verified.user,
     session: {
-      id: createdSession.session.id,
-      userId: createdSession.session.userId,
-      createdAt: createdSession.session.createdAt,
-      expiresAt: createdSession.session.expiresAt,
-      lastSeenAt: createdSession.session.lastSeenAt,
+      id:
+        createdSession.session.id,
+      userId:
+        createdSession.session.userId,
+      createdAt:
+        createdSession.session.createdAt,
+      expiresAt:
+        createdSession.session.expiresAt,
+      lastSeenAt:
+        createdSession.session.lastSeenAt,
     },
-    sessionToken: createdSession.token,
+    sessionToken:
+      createdSession.token,
   };
 }

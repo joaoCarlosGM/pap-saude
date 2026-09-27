@@ -30,3 +30,27 @@ export interface PasswordAuthenticationResult {
   session: SessionDescriptor;
   sessionToken: string;
 }
+
+
+export interface PasswordCredentialVerificationResult {
+  user: AuthenticatedUser;
+}
+
+export interface MfaChallengeDescriptor {
+  challengeToken: string;
+  expiresAt: Date;
+}
+
+export type LoginAuthenticationResult =
+  | {
+      status: "AUTHENTICATED";
+      user: AuthenticatedUser;
+      session: SessionDescriptor;
+      sessionToken: string;
+    }
+  | {
+      status: "MFA_REQUIRED";
+      user: AuthenticatedUser;
+      challengeToken: string;
+      challengeExpiresAt: Date;
+    };
