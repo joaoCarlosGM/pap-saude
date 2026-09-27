@@ -12,6 +12,10 @@ import {
 } from "./totp-login.service";
 
 import {
+  consumeRecoveryCode,
+} from "./recovery-code.service";
+
+import {
   ConsumedMfaChallengeError,
 } from "./mfa.errors";
 
@@ -59,6 +63,84 @@ export async function completeMfaLogin(
    * If session persistence fails, authentication fails closed and the
    * user must restart login rather than risk challenge replay.
    */
+  const createdSession =
+    await createSession({
+      userId:
+        challenge.userId,
+      ipHash:
+        challenge.ipHash,
+      userAgent:
+        challenge.userAgent,
+      now,
+    });
+
+  return {
+    user: {
+      id:
+        challenge.user.id,
+      email:
+        challenge.user.email,
+      displayName:
+        challenge.user.displayName,
+      isActive:
+        challenge.user.isActive,
+    },
+    session: {
+      id:
+        createdSession.session.id,
+      userId:
+        createdSession.session.userId,
+      createdAt:
+        createdSession.session.createdAt,
+      expiresAt:
+        createdSession.session.expiresAt,
+      lastSeenAt:
+        createdSession.session.lastSeenAt,
+    },
+    sessionToken:
+      createdSession.token,
+  };
+}
+
+
+export interface CompleteMfaLoginWithRecoveryCodeInput {
+  challengeToken: string;
+  recoveryCode: string;
+  now?: Date;
+}
+
+export async function completeMfaLoginWithRecoveryCode(
+  input: CompleteMfaLoginWithRecoveryCodeInput,
+) {
+  const now =
+    input.now ?? new Date();
+
+  const challenge =
+    await loadMfaChallenge(
+      input.challengeToken,
+      now,
+    );
+
+  /*
+   * Recovery credentials are consumed atomically using
+   * usedAt IS NULL + revokedAt IS NULL.
+   */
+  await consumeRecoveryCode(
+    challenge.userId,
+    input.recoveryCode,
+    now,
+  );
+
+  const consumed =
+    await consumeMfaChallenge(
+      challenge.id,
+      now,
+    );
+
+  if (!consumed) {
+    throw new ConsumedMfaChallengeError();
+  }
+
   const createdSession =
     await createSession({
       userId:

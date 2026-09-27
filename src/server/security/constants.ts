@@ -61,3 +61,11 @@ export const MFA_CHALLENGE_TOKEN_BYTES = 32;
 export const MFA_CHALLENGE_TTL_SECONDS = 60 * 5;
 
 export const MFA_CHALLENGE_COOKIE_NAME = "pap_mfa_challenge";
+
+
+export const MFA_RECOVERY_CODE_COUNT = 10;
+
+export const MFA_RECOVERY_CODE_BYTES = 10;
+
+export const MFA_RECOVERY_CODE_HASH_DOMAIN =
+  "pap-saude:mfa:recovery-code:v1";

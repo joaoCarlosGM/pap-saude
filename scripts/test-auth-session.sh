@@ -134,6 +134,13 @@ DATABASE_URL="$TEST_URL" \
   tests/auth/http-mfa.integration.test.ts
 
 echo
+echo "==> recovery code integration tests"
+
+DATABASE_URL="$TEST_URL" \
+  npx tsx --test \
+  tests/auth/recovery-code.integration.test.ts
+
+echo
 echo "==> fixture cleanup"
 
 USERS="$(
@@ -178,13 +185,19 @@ MFA_CHALLENGES="$(
     -Atc 'SELECT COUNT(*) FROM mfa_challenges;'
 )"
 
-if [[ "$USERS" != "0" || "$SESSIONS" != "0" || "$PASSWORDS" != "0" || "$LOGIN_ATTEMPTS" != "0" || "$AUDIT_EVENTS" != "0" || "$MFA_FACTORS" != "0" || "$MFA_CHALLENGES" != "0" ]]; then
+MFA_RECOVERY_CODES="$(
+  docker exec "$DB_CONTAINER" \
+    psql -U "$DB_USER" -d "$DB_NAME" \
+    -Atc 'SELECT COUNT(*) FROM mfa_recovery_codes;'
+)"
+
+if [[ "$USERS" != "0" || "$SESSIONS" != "0" || "$PASSWORDS" != "0" || "$LOGIN_ATTEMPTS" != "0" || "$AUDIT_EVENTS" != "0" || "$MFA_FACTORS" != "0" || "$MFA_CHALLENGES" != "0" || "$MFA_RECOVERY_CODES" != "0" ]]; then
   echo "TEST FAILURE:"
-  echo "users=$USERS sessions=$SESSIONS passwords=$PASSWORDS login_attempts=$LOGIN_ATTEMPTS audit_events=$AUDIT_EVENTS mfa_factors=$MFA_FACTORS mfa_challenges=$MFA_CHALLENGES"
+  echo "users=$USERS sessions=$SESSIONS passwords=$PASSWORDS login_attempts=$LOGIN_ATTEMPTS audit_events=$AUDIT_EVENTS mfa_factors=$MFA_FACTORS mfa_challenges=$MFA_CHALLENGES mfa_recovery_codes=$MFA_RECOVERY_CODES"
   exit 1
 fi
 
-echo "users=0 sessions=0 passwords=0 login_attempts=0 audit_events=0 mfa_factors=0 mfa_challenges=0"
+echo "users=0 sessions=0 passwords=0 login_attempts=0 audit_events=0 mfa_factors=0 mfa_challenges=0 mfa_recovery_codes=0"
 
 echo
 echo "========================================"

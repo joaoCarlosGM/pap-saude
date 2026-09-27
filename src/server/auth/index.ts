@@ -14,3 +14,4 @@ export * from "./totp.service";
 export * from "./mfa-challenge.service";
 export * from "./mfa-login.service";
 export * from "./totp-login.service";
+export * from "./recovery-code.service";

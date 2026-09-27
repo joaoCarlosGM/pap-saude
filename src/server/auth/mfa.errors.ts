@@ -61,3 +61,11 @@ export class TotpReplayError extends MfaError {
     this.name = "TotpReplayError";
   }
 }
+
+
+export class InvalidRecoveryCodeError extends MfaError {
+  constructor() {
+    super("Invalid recovery code");
+    this.name = "InvalidRecoveryCodeError";
+  }
+}
