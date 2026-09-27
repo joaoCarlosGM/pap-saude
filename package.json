@@ -19,7 +19,8 @@
     "test:auth:totp-enrollment": "DATABASE_URL='postgresql://pap_user:pap_password@localhost:5432/pap_saude_f02b_test?schema=public' tsx --test tests/auth/totp-enrollment.integration.test.ts",
     "test:auth:mfa-login": "DATABASE_URL='postgresql://pap_user:pap_password@localhost:5432/pap_saude_f02b_test?schema=public' tsx --test tests/auth/mfa-login.integration.test.ts",
     "test:auth:http-mfa": "DATABASE_URL='postgresql://pap_user:pap_password@localhost:5432/pap_saude_f02b_test?schema=public' tsx --test tests/auth/http-mfa.integration.test.ts",
-    "test:auth:recovery": "DATABASE_URL='postgresql://pap_user:pap_password@localhost:5432/pap_saude_f02b_test?schema=public' tsx --test tests/auth/recovery-code.integration.test.ts"
+    "test:auth:recovery": "DATABASE_URL='postgresql://pap_user:pap_password@localhost:5432/pap_saude_f02b_test?schema=public' tsx --test tests/auth/recovery-code.integration.test.ts",
+    "test:auth:mfa-reset": "DATABASE_URL='postgresql://pap_user:pap_password@localhost:5432/pap_saude_f02b_test?schema=public' tsx --test tests/auth/mfa-reset.integration.test.ts"
   },
   "dependencies": {
     "@capacitor/android": "^8.5.2",

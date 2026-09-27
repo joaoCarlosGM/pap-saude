@@ -141,6 +141,12 @@ export async function loadMfaChallenge(
   }
 
   if (
+    challenge.revokedAt !== null
+  ) {
+    throw new InvalidMfaChallengeError();
+  }
+
+  if (
     challenge.expiresAt.getTime()
     <= now.getTime()
   ) {
@@ -164,6 +170,8 @@ export async function consumeMfaChallenge(
         id:
           challengeId,
         consumedAt:
+          null,
+        revokedAt:
           null,
         expiresAt: {
           gt:

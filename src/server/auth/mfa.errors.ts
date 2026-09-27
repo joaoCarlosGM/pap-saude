@@ -69,3 +69,11 @@ export class InvalidRecoveryCodeError extends MfaError {
     this.name = "InvalidRecoveryCodeError";
   }
 }
+
+
+export class MfaResetTargetUnavailableError extends MfaError {
+  constructor() {
+    super("MFA reset target unavailable");
+    this.name = "MfaResetTargetUnavailableError";
+  }
+}

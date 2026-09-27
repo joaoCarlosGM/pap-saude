@@ -636,6 +636,7 @@ model MfaChallenge {
   createdAt  DateTime  @default(now())
   expiresAt  DateTime
   consumedAt DateTime?
+  revokedAt  DateTime?
   ipHash     String?
   userAgent  String?
 

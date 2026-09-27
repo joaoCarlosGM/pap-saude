@@ -141,6 +141,13 @@ DATABASE_URL="$TEST_URL" \
   tests/auth/recovery-code.integration.test.ts
 
 echo
+echo "==> MFA reset integration tests"
+
+DATABASE_URL="$TEST_URL" \
+  npx tsx --test \
+  tests/auth/mfa-reset.integration.test.ts
+
+echo
 echo "==> fixture cleanup"
 
 USERS="$(
