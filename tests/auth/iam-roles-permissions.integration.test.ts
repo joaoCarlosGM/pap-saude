@@ -595,3 +595,44 @@ test(
     )
   },
 )
+
+test(
+  "database rejects duplicate global role assignments",
+  async () => {
+    await bootstrapSystemIam()
+
+    const user = await createUser(
+      "global-db-constraint@example.test",
+    )
+
+    const role = await db.role.findUniqueOrThrow({
+      where: {
+        key: SYSTEM_ROLE_KEYS.COMMERCIAL,
+      },
+    })
+
+    await db.roleAssignment.create({
+      data: {
+        userId: user.id,
+        roleId: role.id,
+        organizationId: null,
+      },
+    })
+
+    await assert.rejects(
+      () =>
+        db.roleAssignment.create({
+          data: {
+            userId: user.id,
+            roleId: role.id,
+            organizationId: null,
+          },
+        }),
+    )
+
+    assert.equal(
+      await db.roleAssignment.count(),
+      1,
+    )
+  },
+)
