@@ -1,7 +1,6 @@
 "use client"
 
 import {
-  useEffect,
   useMemo,
   useState,
 } from "react"
@@ -54,28 +53,15 @@ export default function GestationalCalculatorModal({
   open,
   onClose,
 }: GestationalCalculatorModalProps) {
-  const [dum, setDum] = useState("")
-
-  useEffect(() => {
-    if (!open) {
-      return
-    }
-
+  const [dum, setDum] = useState(() => {
     const today = new Date()
 
-    const yyyy =
-      today.getFullYear()
+    const yyyy = today.getFullYear()
+    const mm = String(today.getMonth() + 1).padStart(2, "0")
+    const dd = String(today.getDate()).padStart(2, "0")
 
-    const mm = String(
-      today.getMonth() + 1,
-    ).padStart(2, "0")
-
-    const dd = String(
-      today.getDate(),
-    ).padStart(2, "0")
-
-    setDum(`${yyyy}-${mm}-${dd}`)
-  }, [open])
+    return `${yyyy}-${mm}-${dd}`
+  })
 
   const calculation = useMemo(() => {
     if (!dum) {
