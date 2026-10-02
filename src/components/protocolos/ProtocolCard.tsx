@@ -40,9 +40,6 @@ export default function ProtocolCard({
      * Enquanto não existe backend/arquivo real,
      * mantemos a ação visual sem inventar um PDF.
      */
-    console.log(
-      `Download solicitado: ${protocol.fileName}`,
-    )
   }
 
   return (

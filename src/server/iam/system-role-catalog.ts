@@ -1,0 +1,138 @@
+import {
+  PERMISSIONS,
+  type PermissionKey,
+} from "./permissions"
+
+export const SYSTEM_ROLE_KEYS = {
+  PAP_ADMIN: "PAP_ADMIN",
+  MUNICIPAL_ADMIN: "MUNICIPAL_ADMIN",
+  HEALTH_UNIT_ADMIN: "HEALTH_UNIT_ADMIN",
+  PROFESSIONAL: "PROFESSIONAL",
+  COMMERCIAL: "COMMERCIAL",
+} as const
+
+export type SystemRoleKey =
+  (typeof SYSTEM_ROLE_KEYS)[keyof typeof SYSTEM_ROLE_KEYS]
+
+export type SystemRoleDefinition = {
+  key: SystemRoleKey
+  name: string
+  description: string
+  scope: "GLOBAL" | "MUNICIPALITY" | "HEALTH_UNIT"
+  permissions: readonly PermissionKey[]
+}
+
+export const SYSTEM_ROLES: readonly SystemRoleDefinition[] = [
+  {
+    key: SYSTEM_ROLE_KEYS.PAP_ADMIN,
+    name: "PAP Administrator",
+    description:
+      "Global PAP platform administration without default clinical access.",
+    scope: "GLOBAL",
+    permissions: [
+      PERMISSIONS.ORGANIZATION_READ,
+      PERMISSIONS.ORGANIZATION_MANAGE,
+      PERMISSIONS.MEMBERSHIP_READ,
+      PERMISSIONS.MEMBERSHIP_MANAGE,
+      PERMISSIONS.USER_READ,
+      PERMISSIONS.USER_INVITE,
+      PERMISSIONS.USER_DISABLE,
+      PERMISSIONS.USER_SECURITY_MANAGE,
+      PERMISSIONS.ROLE_READ,
+      PERMISSIONS.ROLE_MANAGE,
+      PERMISSIONS.MFA_RESET,
+      PERMISSIONS.AUDIT_READ,
+      PERMISSIONS.COMMERCIAL_READ,
+      PERMISSIONS.COMMERCIAL_MANAGE,
+      PERMISSIONS.ORGANIZATION_ANALYTICS_READ,
+      PERMISSIONS.FEEDBACK_READ,
+      PERMISSIONS.FEEDBACK_MANAGE,
+      PERMISSIONS.RNDS_INTEGRATION_READ,
+      PERMISSIONS.RNDS_INTEGRATION_REQUEST,
+      PERMISSIONS.RNDS_INTEGRATION_VALIDATE,
+      PERMISSIONS.RNDS_INTEGRATION_APPROVE,
+    ],
+  },
+
+  {
+    key: SYSTEM_ROLE_KEYS.MUNICIPAL_ADMIN,
+    name: "Municipal Administrator",
+    description:
+      "Administrative role scoped to a municipality.",
+    scope: "MUNICIPALITY",
+    permissions: [
+      PERMISSIONS.ORGANIZATION_READ,
+      PERMISSIONS.ORGANIZATION_MANAGE,
+      PERMISSIONS.MEMBERSHIP_READ,
+      PERMISSIONS.MEMBERSHIP_MANAGE,
+      PERMISSIONS.USER_READ,
+      PERMISSIONS.USER_INVITE,
+      PERMISSIONS.USER_DISABLE,
+      PERMISSIONS.ROLE_READ,
+      PERMISSIONS.ORGANIZATION_ANALYTICS_READ,
+      PERMISSIONS.FEEDBACK_READ,
+      PERMISSIONS.FEEDBACK_MANAGE,
+      PERMISSIONS.RNDS_INTEGRATION_READ,
+      PERMISSIONS.RNDS_INTEGRATION_REQUEST,
+    ],
+  },
+
+  {
+    key: SYSTEM_ROLE_KEYS.HEALTH_UNIT_ADMIN,
+    name: "Health Unit Administrator",
+    description:
+      "Administrative role scoped to a health unit.",
+    scope: "HEALTH_UNIT",
+    permissions: [
+      PERMISSIONS.ORGANIZATION_READ,
+      PERMISSIONS.MEMBERSHIP_READ,
+      PERMISSIONS.MEMBERSHIP_MANAGE,
+      PERMISSIONS.USER_READ,
+      PERMISSIONS.USER_INVITE,
+      PERMISSIONS.ROLE_READ,
+      PERMISSIONS.ORGANIZATION_ANALYTICS_READ,
+      PERMISSIONS.FEEDBACK_READ,
+      PERMISSIONS.FEEDBACK_MANAGE,
+      PERMISSIONS.RNDS_INTEGRATION_READ,
+    ],
+  },
+
+  {
+    key: SYSTEM_ROLE_KEYS.PROFESSIONAL,
+    name: "Healthcare Professional",
+    description:
+      "Clinical role scoped to a health unit.",
+    scope: "HEALTH_UNIT",
+    permissions: [
+      PERMISSIONS.PATIENT_READ,
+      PERMISSIONS.PATIENT_CREATE,
+      PERMISSIONS.PATIENT_UPDATE_DEMOGRAPHICS,
+      PERMISSIONS.ENCOUNTER_READ,
+      PERMISSIONS.ENCOUNTER_CREATE,
+      PERMISSIONS.ENCOUNTER_UPDATE,
+      PERMISSIONS.ALLERGY_READ,
+      PERMISSIONS.ALLERGY_CREATE,
+    ],
+  },
+
+  {
+    key: SYSTEM_ROLE_KEYS.COMMERCIAL,
+    name: "Commercial",
+    description:
+      "Global PAP commercial role without clinical access.",
+    scope: "GLOBAL",
+    permissions: [
+      PERMISSIONS.ORGANIZATION_READ,
+      PERMISSIONS.COMMERCIAL_READ,
+      PERMISSIONS.COMMERCIAL_MANAGE,
+    ],
+  },
+] as const
+
+export function getSystemRoleDefinition(
+  key: string,
+): SystemRoleDefinition | undefined {
+  return SYSTEM_ROLES.find(
+    (role) => role.key === key,
+  )
+}

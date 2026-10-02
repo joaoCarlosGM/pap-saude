@@ -71,7 +71,6 @@ export default function RegistrationWizard() {
   }
 
   const saveRegistration = () => {
-    console.log("Registro salvo:", registration)
   }
 
   return (

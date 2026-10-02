@@ -25,11 +25,43 @@ enum OrganizationType {
   HEALTH_UNIT
 }
 
+enum OrganizationStatus {
+  PENDING_VERIFICATION
+  ACTIVE
+  SUSPENDED
+  ARCHIVED
+}
+
 enum MembershipStatus {
+  REQUESTED
   INVITED
   ACTIVE
   SUSPENDED
   DISABLED
+}
+
+enum OrganizationCandidateStatus {
+  NEW
+  QUALIFYING
+  CONTACTED
+  INTERESTED
+  VALIDATING
+  APPROVED
+  REJECTED
+  DUPLICATE
+  CLOSED
+}
+
+enum OrganizationLeadTemperature {
+  COLD
+  WARM
+  HOT
+}
+
+enum OrganizationRequestStatus {
+  REQUESTED
+  WITHDRAWN
+  RESOLVED
 }
 
 enum AuditOutcome {
@@ -114,6 +146,48 @@ enum IntegrationPolicyAction {
   DENY
 }
 
+enum ProductFeedbackCategory {
+  BUG
+  USABILITY
+  FEATURE_REQUEST
+  PERFORMANCE
+  SUPPORT
+  OTHER
+}
+
+enum ProductFeedbackStatus {
+  OPEN
+  TRIAGED
+  IN_PROGRESS
+  RESOLVED
+  DISMISSED
+}
+
+enum ProductFeedbackSource {
+  WEB
+  MOBILE
+  SUPPORT
+  ADMIN
+}
+
+enum OrganizationHealthAlertType {
+  LOW_ACTIVITY
+  LOW_SATISFACTION
+  FEEDBACK_BACKLOG
+}
+
+enum OrganizationHealthAlertSeverity {
+  INFO
+  WARNING
+  CRITICAL
+}
+
+enum OrganizationHealthAlertStatus {
+  OPEN
+  ACKNOWLEDGED
+  RESOLVED
+}
+
 model User {
   id          String   @id @default(uuid())
   email       String   @unique
@@ -123,35 +197,61 @@ model User {
   updatedAt   DateTime @updatedAt
 
   memberships             Membership[]
+  organizationRequests    OrganizationRequest[]
   roleAssignments         RoleAssignment[]
-  auditEvents             AuditEvent[]        @relation("AuditActor")
-  approvedRndIntegrations RNDSIntegration[]   @relation("RNDSApprovedBy")
-  validationRuns          RNDSValidationRun[] @relation("ValidationRunRequestedBy")
+  auditEvents             AuditEvent[]          @relation("AuditActor")
+  approvedRndIntegrations RNDSIntegration[]     @relation("RNDSApprovedBy")
+  validationRuns          RNDSValidationRun[]   @relation("ValidationRunRequestedBy")
+
+  passwordCredential    PasswordCredential?
+  mfaFactors            MfaFactor[]
+  mfaRecoveryCodes      MfaRecoveryCode[]
+  mfaChallenges         MfaChallenge[]
+  sessions              Session[]
+  productActivityEvents ProductActivityEvent[] @relation("ProductActivityActor")
+
+  submittedFeedback ProductFeedback[] @relation("ProductFeedbackActor")
+  resolvedFeedback  ProductFeedback[] @relation("ProductFeedbackResolver")
 
   @@map("users")
 }
 
 model Organization {
-  id        String           @id @default(uuid())
+  id        String             @id @default(uuid())
   type      OrganizationType
+  status    OrganizationStatus @default(PENDING_VERIFICATION)
   name      String
-  code      String?          @unique
+  code      String?            @unique
+  cnes      String?            @unique
+  cnpj      String?            @unique
+  city      String?
+  state     String?
+  address   String?
   parentId  String?
-  parent    Organization?    @relation("OrganizationTree", fields: [parentId], references: [id], onDelete: Restrict)
-  children  Organization[]   @relation("OrganizationTree")
-  isActive  Boolean          @default(true)
+  parent    Organization?      @relation("OrganizationTree", fields: [parentId], references: [id], onDelete: Restrict)
+  children  Organization[]     @relation("OrganizationTree")
+  isActive  Boolean            @default(true)
   settings  Json?
-  createdAt DateTime         @default(now())
-  updatedAt DateTime         @updatedAt
+  createdAt DateTime           @default(now())
+  updatedAt DateTime           @updatedAt
 
-  memberships     Membership[]
-  roleAssignments RoleAssignment[]
-  patientLinks    PatientOrganization[]
-  encounters      Encounter[]
-  rndsIntegration RNDSIntegration?
+  memberships           Membership[]
+  sourceCandidate       OrganizationCandidate?       @relation("CandidateConversion")
+  roleAssignments       RoleAssignment[]
+  patientLinks          PatientOrganization[]
+  encounters            Encounter[]
+  rndsIntegration       RNDSIntegration?
+  productActivityEvents ProductActivityEvent[]       @relation("ProductActivityOrganization")
+  metricSnapshots       OrganizationMetricSnapshot[]
+
+  productFeedback ProductFeedback[]
+
+  healthAlerts OrganizationHealthAlert[]
 
   @@index([parentId])
-  @@index([type, isActive])
+  @@index([type, status])
+  @@index([city, state])
+  @@index([name])
   @@map("organizations")
 }
 
@@ -169,6 +269,50 @@ model Membership {
   @@unique([userId, organizationId])
   @@index([organizationId, status])
   @@map("memberships")
+}
+
+model OrganizationCandidate {
+  id                      String                      @id @default(uuid())
+  type                    OrganizationType
+  name                    String
+  normalizedName          String
+  dedupeKey               String                      @unique
+  cnes                    String?                     @unique
+  cnpj                    String?
+  city                    String?
+  state                   String?
+  address                 String?
+  status                  OrganizationCandidateStatus @default(NEW)
+  leadTemperature         OrganizationLeadTemperature @default(COLD)
+  convertedOrganizationId String?                     @unique
+  createdAt               DateTime                    @default(now())
+  updatedAt               DateTime                    @updatedAt
+
+  convertedOrganization Organization?         @relation("CandidateConversion", fields: [convertedOrganizationId], references: [id], onDelete: SetNull)
+  requests              OrganizationRequest[]
+
+  @@index([type, status])
+  @@index([leadTemperature, status])
+  @@index([city, state])
+  @@index([normalizedName])
+  @@map("organization_candidates")
+}
+
+model OrganizationRequest {
+  id                String                    @id @default(uuid())
+  candidateId       String
+  requestedByUserId String
+  status            OrganizationRequestStatus @default(REQUESTED)
+  createdAt         DateTime                  @default(now())
+  updatedAt         DateTime                  @updatedAt
+
+  candidate   OrganizationCandidate @relation(fields: [candidateId], references: [id], onDelete: Cascade)
+  requestedBy User                  @relation(fields: [requestedByUserId], references: [id], onDelete: Restrict)
+
+  @@unique([candidateId, requestedByUserId])
+  @@index([requestedByUserId, status])
+  @@index([candidateId, status])
+  @@map("organization_requests")
 }
 
 model Role {
@@ -374,6 +518,115 @@ model ClinicalEvaluation {
   @@map("clinical_evaluations")
 }
 
+model OrganizationHealthAlert {
+  id              String                          @id @default(uuid())
+  organizationId  String
+  type            OrganizationHealthAlertType
+  severity        OrganizationHealthAlertSeverity
+  status          OrganizationHealthAlertStatus   @default(OPEN)
+  title           String
+  message         String
+  observedValue   Float?
+  thresholdValue  Float?
+  periodStart     DateTime?
+  periodEnd       DateTime?
+  details         Json?
+  firstDetectedAt DateTime                        @default(now())
+  lastDetectedAt  DateTime                        @default(now())
+  acknowledgedAt  DateTime?
+  resolvedAt      DateTime?
+  createdAt       DateTime                        @default(now())
+  updatedAt       DateTime                        @updatedAt
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  @@index([organizationId, status])
+  @@index([organizationId, severity])
+  @@index([type, status])
+  @@index([lastDetectedAt])
+  @@map("organization_health_alerts")
+}
+
+model ProductFeedback {
+  id                String                  @id @default(uuid())
+  organizationId    String
+  actorUserId       String?
+  resolvedByUserId  String?
+  category          ProductFeedbackCategory
+  status            ProductFeedbackStatus   @default(OPEN)
+  source            ProductFeedbackSource
+  satisfactionScore Int?
+  message           String?
+  resolutionNote    String?
+  createdAt         DateTime                @default(now())
+  updatedAt         DateTime                @updatedAt
+  triagedAt         DateTime?
+  startedAt         DateTime?
+  resolvedAt        DateTime?
+  dismissedAt       DateTime?
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  actor        User?        @relation("ProductFeedbackActor", fields: [actorUserId], references: [id], onDelete: SetNull)
+  resolvedBy   User?        @relation("ProductFeedbackResolver", fields: [resolvedByUserId], references: [id], onDelete: SetNull)
+
+  @@index([organizationId, createdAt])
+  @@index([organizationId, status, createdAt])
+  @@index([category, createdAt])
+  @@index([actorUserId, createdAt])
+  @@index([resolvedByUserId, resolvedAt])
+  @@map("product_feedback")
+}
+
+model OrganizationMetricSnapshot {
+  id                   String   @id @default(uuid())
+  organizationId       String
+  periodStart          DateTime
+  periodEnd            DateTime
+  eventCount           Int      @default(0)
+  activeUsers          Int      @default(0)
+  dashboardViews       Int      @default(0)
+  patientSearches      Int      @default(0)
+  encountersStarted    Int      @default(0)
+  encountersCompleted  Int      @default(0)
+  feedbackOpened       Int      @default(0)
+  organizationSwitches Int      @default(0)
+  featureUsage         Json?
+  generatedAt          DateTime @default(now())
+  updatedAt            DateTime @updatedAt
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  @@unique([organizationId, periodStart, periodEnd])
+  @@index([organizationId, periodStart])
+  @@index([periodStart, periodEnd])
+  @@map("organization_metric_snapshots")
+}
+
+model ProductActivityEvent {
+  id             String   @id @default(uuid())
+  actorUserId    String?
+  organizationId String?
+  eventKey       String
+  resourceType   String?
+  resourceId     String?
+  screen         String?
+  sessionId      String?
+  requestId      String?
+  correlationId  String?
+  metadata       Json?
+  occurredAt     DateTime @default(now())
+
+  actor        User?         @relation("ProductActivityActor", fields: [actorUserId], references: [id], onDelete: SetNull)
+  organization Organization? @relation("ProductActivityOrganization", fields: [organizationId], references: [id], onDelete: SetNull)
+
+  @@index([actorUserId, occurredAt])
+  @@index([organizationId, occurredAt])
+  @@index([eventKey, occurredAt])
+  @@index([resourceType, resourceId])
+  @@index([correlationId, occurredAt])
+  @@map("product_activity_events")
+}
+
 model AuditEvent {
   id             String       @id @default(uuid())
   actorUserId    String?
@@ -509,4 +762,134 @@ model InteroperabilityTransmission {
   @@index([rndsIntegrationId, status, requestedAt])
   @@index([resourceType, resourceId])
   @@map("interoperability_transmissions")
+}
+
+// ============================================================
+// FOUNDATION 02 - IDENTITY & ACCESS
+// ============================================================
+
+enum PasswordAlgorithm {
+  ARGON2ID
+}
+
+enum MfaFactorType {
+  TOTP
+}
+
+enum MfaFactorStatus {
+  PENDING
+  ACTIVE
+  REVOKED
+}
+
+enum SessionRevocationReason {
+  LOGOUT
+  PASSWORD_CHANGED
+  MFA_RESET
+  ADMIN_REVOKED
+  USER_SUSPENDED
+  SECURITY_EVENT
+}
+
+model PasswordCredential {
+  id           String            @id @default(uuid())
+  userId       String            @unique
+  passwordHash String
+  algorithm    PasswordAlgorithm @default(ARGON2ID)
+  mustChange   Boolean           @default(false)
+  changedAt    DateTime          @default(now())
+  createdAt    DateTime          @default(now())
+  updatedAt    DateTime          @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("password_credentials")
+}
+
+model MfaFactor {
+  id              String          @id @default(uuid())
+  userId          String
+  type            MfaFactorType   @default(TOTP)
+  status          MfaFactorStatus @default(PENDING)
+  secretEncrypted String
+  label           String?
+  createdAt       DateTime        @default(now())
+  enabledAt       DateTime?
+  revokedAt       DateTime?
+  lastUsedAt      DateTime?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, status])
+  @@map("mfa_factors")
+}
+
+model MfaRecoveryCode {
+  id        String    @id @default(uuid())
+  userId    String
+  codeHash  String    @unique
+  createdAt DateTime  @default(now())
+  usedAt    DateTime?
+  revokedAt DateTime?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, usedAt])
+  @@map("mfa_recovery_codes")
+}
+
+model Session {
+  id               String                   @id @default(uuid())
+  userId           String
+  tokenHash        String                   @unique
+  createdAt        DateTime                 @default(now())
+  expiresAt        DateTime
+  lastSeenAt       DateTime                 @default(now())
+  revokedAt        DateTime?
+  revocationReason SessionRevocationReason?
+  ipHash           String?
+  userAgent        String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, revokedAt, expiresAt])
+  @@index([expiresAt])
+  @@map("sessions")
+}
+
+enum LoginAttemptOutcome {
+  SUCCESS
+  FAILURE
+  THROTTLED
+}
+
+model LoginAttempt {
+  id           String              @id @default(uuid())
+  identityHash String
+  originHash   String
+  outcome      LoginAttemptOutcome
+  occurredAt   DateTime            @default(now())
+
+  @@index([identityHash, occurredAt])
+  @@index([originHash, occurredAt])
+  @@index([originHash, identityHash, occurredAt])
+  @@map("login_attempts")
+}
+
+model MfaChallenge {
+  id         String    @id @default(uuid())
+  userId     String
+  tokenHash  String    @unique
+  createdAt  DateTime  @default(now())
+  expiresAt  DateTime
+  consumedAt DateTime?
+  revokedAt  DateTime?
+  ipHash     String?
+  userAgent  String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, consumedAt, expiresAt])
+  @@index([expiresAt])
+  @@map("mfa_challenges")
 }

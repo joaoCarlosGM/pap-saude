@@ -1,21 +1,62 @@
 export const PERMISSIONS = {
-  PATIENT_READ: "patient.read",
-  PATIENT_CREATE: "patient.create",
-  PATIENT_UPDATE_DEMOGRAPHICS: "patient.update_demographics",
-  ENCOUNTER_READ: "encounter.read",
-  ENCOUNTER_CREATE: "encounter.create",
-  ENCOUNTER_UPDATE: "encounter.update",
-  ALLERGY_READ: "allergy.read",
-  ALLERGY_CREATE: "allergy.create",
-  AUDIT_READ: "audit.read",
+  // Organizations
+  ORGANIZATION_READ: "organization.read",
+  ORGANIZATION_MANAGE: "organization.manage",
+
+  // Memberships
+  MEMBERSHIP_READ: "membership.read",
+  MEMBERSHIP_MANAGE: "membership.manage",
+
+  // Users
+  USER_READ: "user.read",
   USER_INVITE: "user.invite",
   USER_DISABLE: "user.disable",
   USER_SECURITY_MANAGE: "user.security.manage",
-  ORGANIZATION_MANAGE: "organization.manage",
+
+  // Roles / IAM
+  ROLE_READ: "role.read",
+  ROLE_MANAGE: "role.manage",
+
+  // MFA
+  MFA_RESET: "mfa.reset",
+
+  // Audit
+  AUDIT_READ: "audit.read",
+
+  // Commercial
+  COMMERCIAL_READ: "commercial.read",
+  COMMERCIAL_MANAGE: "commercial.manage",
+
+  // Analytics
+  ORGANIZATION_ANALYTICS_READ: "analytics.organization.read",
+
+  // Feedback
+  FEEDBACK_READ: "feedback.read",
+  FEEDBACK_MANAGE: "feedback.manage",
+
+  // Patients
+  PATIENT_READ: "patient.read",
+  PATIENT_CREATE: "patient.create",
+  PATIENT_UPDATE_DEMOGRAPHICS: "patient.update_demographics",
+
+  // Encounters
+  ENCOUNTER_READ: "encounter.read",
+  ENCOUNTER_CREATE: "encounter.create",
+  ENCOUNTER_UPDATE: "encounter.update",
+
+  // Allergies
+  ALLERGY_READ: "allergy.read",
+  ALLERGY_CREATE: "allergy.create",
+
+  // RNDS
   RNDS_INTEGRATION_READ: "rnds.integration.read",
   RNDS_INTEGRATION_REQUEST: "rnds.integration.request",
   RNDS_INTEGRATION_VALIDATE: "rnds.integration.validate",
   RNDS_INTEGRATION_APPROVE: "rnds.integration.approve",
-} as const;
+} as const
 
-export type PermissionKey = (typeof PERMISSIONS)[keyof typeof PERMISSIONS];
+export type PermissionKey =
+  (typeof PERMISSIONS)[keyof typeof PERMISSIONS]
+
+export const ALL_PERMISSION_KEYS =
+  Object.values(PERMISSIONS) as PermissionKey[]
