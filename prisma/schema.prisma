@@ -170,6 +170,24 @@ enum ProductFeedbackSource {
   ADMIN
 }
 
+enum OrganizationHealthAlertType {
+  LOW_ACTIVITY
+  LOW_SATISFACTION
+  FEEDBACK_BACKLOG
+}
+
+enum OrganizationHealthAlertSeverity {
+  INFO
+  WARNING
+  CRITICAL
+}
+
+enum OrganizationHealthAlertStatus {
+  OPEN
+  ACKNOWLEDGED
+  RESOLVED
+}
+
 model User {
   id          String   @id @default(uuid())
   email       String   @unique
@@ -227,6 +245,8 @@ model Organization {
   metricSnapshots       OrganizationMetricSnapshot[]
 
   productFeedback ProductFeedback[]
+
+  healthAlerts OrganizationHealthAlert[]
 
   @@index([parentId])
   @@index([type, status])
@@ -496,6 +516,35 @@ model ClinicalEvaluation {
   @@index([patientId, evaluatedAt])
   @@index([encounterId, evaluatedAt])
   @@map("clinical_evaluations")
+}
+
+model OrganizationHealthAlert {
+  id              String                          @id @default(uuid())
+  organizationId  String
+  type            OrganizationHealthAlertType
+  severity        OrganizationHealthAlertSeverity
+  status          OrganizationHealthAlertStatus   @default(OPEN)
+  title           String
+  message         String
+  observedValue   Float?
+  thresholdValue  Float?
+  periodStart     DateTime?
+  periodEnd       DateTime?
+  details         Json?
+  firstDetectedAt DateTime                        @default(now())
+  lastDetectedAt  DateTime                        @default(now())
+  acknowledgedAt  DateTime?
+  resolvedAt      DateTime?
+  createdAt       DateTime                        @default(now())
+  updatedAt       DateTime                        @updatedAt
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  @@index([organizationId, status])
+  @@index([organizationId, severity])
+  @@index([type, status])
+  @@index([lastDetectedAt])
+  @@map("organization_health_alerts")
 }
 
 model ProductFeedback {

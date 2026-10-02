@@ -197,6 +197,13 @@ DATABASE_URL="$TEST_URL" \
   tests/auth/product-feedback.integration.test.ts
 
 echo
+echo "==> organization health alerts integration tests"
+
+DATABASE_URL="$TEST_URL" \
+  npx tsx --test \
+  tests/auth/organization-health.integration.test.ts
+
+echo
 echo "==> fixture cleanup"
 
 USERS="$(
