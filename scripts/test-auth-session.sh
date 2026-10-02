@@ -204,6 +204,13 @@ DATABASE_URL="$TEST_URL" \
   tests/auth/organization-health.integration.test.ts
 
 echo
+echo "==> HTTP authorization guards integration tests"
+
+DATABASE_URL="$TEST_URL" \
+  npx tsx --test \
+  tests/auth/http-guards.integration.test.ts
+
+echo
 echo "==> fixture cleanup"
 
 USERS="$(

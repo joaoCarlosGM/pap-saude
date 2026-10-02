@@ -92,17 +92,6 @@ async function createOrganization(
   })
 }
 
-async function createUser(
-  email: string,
-) {
-  return db.user.create({
-    data: {
-      email,
-      displayName: email,
-    },
-  })
-}
-
 async function submitRating(
   organizationId: string,
   score: number,
