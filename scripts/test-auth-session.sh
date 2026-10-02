@@ -176,6 +176,13 @@ DATABASE_URL="$TEST_URL" \
   tests/auth/authorization-scope.integration.test.ts
 
 echo
+echo "==> product activity integration tests"
+
+DATABASE_URL="$TEST_URL" \
+  npx tsx --test \
+  tests/auth/product-activity.integration.test.ts
+
+echo
 echo "==> fixture cleanup"
 
 USERS="$(

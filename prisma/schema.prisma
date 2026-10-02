@@ -161,11 +161,12 @@ model User {
   approvedRndIntegrations RNDSIntegration[]     @relation("RNDSApprovedBy")
   validationRuns          RNDSValidationRun[]   @relation("ValidationRunRequestedBy")
 
-  passwordCredential PasswordCredential?
-  mfaFactors         MfaFactor[]
-  mfaRecoveryCodes   MfaRecoveryCode[]
-  mfaChallenges      MfaChallenge[]
-  sessions           Session[]
+  passwordCredential    PasswordCredential?
+  mfaFactors            MfaFactor[]
+  mfaRecoveryCodes      MfaRecoveryCode[]
+  mfaChallenges         MfaChallenge[]
+  sessions              Session[]
+  productActivityEvents ProductActivityEvent[] @relation("ProductActivityActor")
 
   @@map("users")
 }
@@ -189,12 +190,13 @@ model Organization {
   createdAt DateTime           @default(now())
   updatedAt DateTime           @updatedAt
 
-  memberships     Membership[]
-  sourceCandidate OrganizationCandidate? @relation("CandidateConversion")
-  roleAssignments RoleAssignment[]
-  patientLinks    PatientOrganization[]
-  encounters      Encounter[]
-  rndsIntegration RNDSIntegration?
+  memberships           Membership[]
+  sourceCandidate       OrganizationCandidate? @relation("CandidateConversion")
+  roleAssignments       RoleAssignment[]
+  patientLinks          PatientOrganization[]
+  encounters            Encounter[]
+  rndsIntegration       RNDSIntegration?
+  productActivityEvents ProductActivityEvent[] @relation("ProductActivityOrganization")
 
   @@index([parentId])
   @@index([type, status])
@@ -464,6 +466,31 @@ model ClinicalEvaluation {
   @@index([patientId, evaluatedAt])
   @@index([encounterId, evaluatedAt])
   @@map("clinical_evaluations")
+}
+
+model ProductActivityEvent {
+  id             String   @id @default(uuid())
+  actorUserId    String?
+  organizationId String?
+  eventKey       String
+  resourceType   String?
+  resourceId     String?
+  screen         String?
+  sessionId      String?
+  requestId      String?
+  correlationId  String?
+  metadata       Json?
+  occurredAt     DateTime @default(now())
+
+  actor        User?         @relation("ProductActivityActor", fields: [actorUserId], references: [id], onDelete: SetNull)
+  organization Organization? @relation("ProductActivityOrganization", fields: [organizationId], references: [id], onDelete: SetNull)
+
+  @@index([actorUserId, occurredAt])
+  @@index([organizationId, occurredAt])
+  @@index([eventKey, occurredAt])
+  @@index([resourceType, resourceId])
+  @@index([correlationId, occurredAt])
+  @@map("product_activity_events")
 }
 
 model AuditEvent {
