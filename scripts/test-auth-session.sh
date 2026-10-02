@@ -162,6 +162,13 @@ DATABASE_URL="$TEST_URL" \
   tests/auth/organization-membership-discovery.integration.test.ts
 
 echo
+echo "==> IAM roles and permissions integration tests"
+
+DATABASE_URL="$TEST_URL" \
+  npx tsx --test \
+  tests/auth/iam-roles-permissions.integration.test.ts
+
+echo
 echo "==> fixture cleanup"
 
 USERS="$(
