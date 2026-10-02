@@ -191,12 +191,13 @@ model Organization {
   updatedAt DateTime           @updatedAt
 
   memberships           Membership[]
-  sourceCandidate       OrganizationCandidate? @relation("CandidateConversion")
+  sourceCandidate       OrganizationCandidate?       @relation("CandidateConversion")
   roleAssignments       RoleAssignment[]
   patientLinks          PatientOrganization[]
   encounters            Encounter[]
   rndsIntegration       RNDSIntegration?
-  productActivityEvents ProductActivityEvent[] @relation("ProductActivityOrganization")
+  productActivityEvents ProductActivityEvent[]       @relation("ProductActivityOrganization")
+  metricSnapshots       OrganizationMetricSnapshot[]
 
   @@index([parentId])
   @@index([type, status])
@@ -466,6 +467,31 @@ model ClinicalEvaluation {
   @@index([patientId, evaluatedAt])
   @@index([encounterId, evaluatedAt])
   @@map("clinical_evaluations")
+}
+
+model OrganizationMetricSnapshot {
+  id                   String   @id @default(uuid())
+  organizationId       String
+  periodStart          DateTime
+  periodEnd            DateTime
+  eventCount           Int      @default(0)
+  activeUsers          Int      @default(0)
+  dashboardViews       Int      @default(0)
+  patientSearches      Int      @default(0)
+  encountersStarted    Int      @default(0)
+  encountersCompleted  Int      @default(0)
+  feedbackOpened       Int      @default(0)
+  organizationSwitches Int      @default(0)
+  featureUsage         Json?
+  generatedAt          DateTime @default(now())
+  updatedAt            DateTime @updatedAt
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  @@unique([organizationId, periodStart, periodEnd])
+  @@index([organizationId, periodStart])
+  @@index([periodStart, periodEnd])
+  @@map("organization_metric_snapshots")
 }
 
 model ProductActivityEvent {

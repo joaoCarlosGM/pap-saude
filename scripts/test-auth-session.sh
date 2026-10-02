@@ -183,6 +183,13 @@ DATABASE_URL="$TEST_URL" \
   tests/auth/product-activity.integration.test.ts
 
 echo
+echo "==> organization metrics integration tests"
+
+DATABASE_URL="$TEST_URL" \
+  npx tsx --test \
+  tests/auth/organization-metrics.integration.test.ts
+
+echo
 echo "==> fixture cleanup"
 
 USERS="$(
