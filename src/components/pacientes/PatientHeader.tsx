@@ -5,23 +5,10 @@ import {
 
 import type {
   Patient,
-  PatientRisk,
 } from "@/types/paciente"
 
 type Props = {
   patient: Patient
-}
-
-function riskClasses(risk: PatientRisk) {
-  if (risk === "URGENCIA") {
-    return "bg-red-50 text-red-600"
-  }
-
-  if (risk === "ATENCAO") {
-    return "bg-amber-50 text-amber-600"
-  }
-
-  return "bg-emerald-50 text-emerald-600"
 }
 
 export default function PatientHeader({

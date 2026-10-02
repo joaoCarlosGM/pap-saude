@@ -1,7 +1,6 @@
 "use client"
 
 import {
-  useEffect,
   useMemo,
   useState,
 } from "react"
@@ -50,32 +49,29 @@ function getTrimester(weeks: number) {
   return "3º Trimestre"
 }
 
+function getTodayInputDate() {
+  const today = new Date()
+
+  const yyyy =
+    today.getFullYear()
+
+  const mm = String(
+    today.getMonth() + 1,
+  ).padStart(2, "0")
+
+  const dd = String(
+    today.getDate(),
+  ).padStart(2, "0")
+
+  return `${yyyy}-${mm}-${dd}`
+}
+
 export default function GestationalCalculatorModal({
   open,
   onClose,
 }: GestationalCalculatorModalProps) {
-  const [dum, setDum] = useState("")
-
-  useEffect(() => {
-    if (!open) {
-      return
-    }
-
-    const today = new Date()
-
-    const yyyy =
-      today.getFullYear()
-
-    const mm = String(
-      today.getMonth() + 1,
-    ).padStart(2, "0")
-
-    const dd = String(
-      today.getDate(),
-    ).padStart(2, "0")
-
-    setDum(`${yyyy}-${mm}-${dd}`)
-  }, [open])
+  const [dum, setDum] =
+    useState(getTodayInputDate)
 
   const calculation = useMemo(() => {
     if (!dum) {

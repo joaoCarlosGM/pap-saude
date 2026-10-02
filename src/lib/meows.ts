@@ -15,6 +15,8 @@ export type MeowsResult = {
 export function calculateMeows(
   data: RegistrationData
 ): MeowsResult {
+  void data
+
   const parameters: MeowsParameter[] = []
 
   /*
