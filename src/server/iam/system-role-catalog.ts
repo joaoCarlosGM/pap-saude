@@ -130,7 +130,9 @@ export const SYSTEM_ROLES: readonly SystemRoleDefinition[] = [
 ] as const
 
 export function getSystemRoleDefinition(
-  key: SystemRoleKey,
-) {
-  return SYSTEM_ROLES.find((role) => role.key === key)
+  key: string,
+): SystemRoleDefinition | undefined {
+  return SYSTEM_ROLES.find(
+    (role) => role.key === key,
+  )
 }
