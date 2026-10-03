@@ -368,15 +368,20 @@ model RoleAssignment {
 }
 
 model Patient {
-  id        String   @id @default(uuid())
-  cpf       String?  @unique
-  cns       String?  @unique
-  fullName  String
-  birthDate DateTime
-  phone     String?
-  address   String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id         String   @id @default(uuid())
+  cpf        String?  @unique
+  cns        String?  @unique
+  fullName   String
+  socialName String?
+  birthDate  DateTime
+  phone      String?
+  email      String?
+  address    String?
+  city       String?
+  state      String?
+  isActive   Boolean  @default(true)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 
   organizations       PatientOrganization[]
   pregnancies         Pregnancy[]
@@ -385,6 +390,8 @@ model Patient {
   clinicalEvaluations ClinicalEvaluation[]
 
   @@index([fullName, birthDate])
+  @@index([birthDate])
+  @@index([isActive])
   @@map("patients")
 }
 
