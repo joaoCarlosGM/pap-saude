@@ -58,6 +58,28 @@ DATABASE_URL="$TEST_URL" \
   npx tsx --test \
   tests/clinical/pregnancy-lifecycle.integration.test.ts
 
+printf '\n==> gestational dating\n'
+
+npx tsx --test \
+  tests/clinical/gestational-dating.test.ts
+
+printf '\n==> pregnancy consistency\n'
+
+npx tsx --test \
+  tests/clinical/pregnancy-consistency.test.ts
+
+printf '\n==> pregnancy authorization\n'
+
+DATABASE_URL="$TEST_URL" \
+  npx tsx --test \
+  tests/clinical/pregnancy-access.integration.test.ts
+
+printf '\n==> pregnancy end-to-end integration\n'
+
+DATABASE_URL="$TEST_URL" \
+  npx tsx --test \
+  tests/clinical/pregnancy-integration.integration.test.ts
+
 printf '\n==> fixture cleanup verification\n'
 
 PREGNANCIES="$(

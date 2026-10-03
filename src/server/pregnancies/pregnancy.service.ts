@@ -31,6 +31,10 @@ import {
   normalizePregnancyDate,
 } from "./pregnancy.validation";
 
+import {
+  validatePregnancyTimeline,
+} from "./pregnancy-consistency";
+
 const ACTIVE_SLOT =
   1;
 
@@ -171,6 +175,12 @@ export async function createPregnancy(
     normalizePregnancyCount(
       input.parity,
     );
+
+  validatePregnancyTimeline({
+    lastMenstrualDate,
+    estimatedDueDate,
+    firstPrenatalAt,
+  });
 
   try {
     return await db.pregnancy.create({
@@ -319,6 +329,21 @@ export async function updatePregnancy(
       );
   }
 
+  validatePregnancyTimeline({
+    lastMenstrualDate:
+      input.lastMenstrualDate !== undefined
+        ? data.lastMenstrualDate as Date | null
+        : pregnancy.lastMenstrualDate,
+    estimatedDueDate:
+      input.estimatedDueDate !== undefined
+        ? data.estimatedDueDate as Date | null
+        : pregnancy.estimatedDueDate,
+    firstPrenatalAt:
+      input.firstPrenatalAt !== undefined
+        ? data.firstPrenatalAt as Date | null
+        : pregnancy.firstPrenatalAt,
+  });
+
   return db.pregnancy.update({
     where: {
       id: pregnancyId,
@@ -356,6 +381,16 @@ async function endPregnancy(
   if (!endedAt) {
     throw new PregnancyAlreadyEndedError();
   }
+
+  validatePregnancyTimeline({
+    lastMenstrualDate:
+      pregnancy.lastMenstrualDate,
+    estimatedDueDate:
+      pregnancy.estimatedDueDate,
+    firstPrenatalAt:
+      pregnancy.firstPrenatalAt,
+    endedAt,
+  });
 
   return db.pregnancy.update({
     where: {

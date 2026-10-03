@@ -39,6 +39,11 @@ export const PERMISSIONS = {
   PATIENT_CREATE: "patient.create",
   PATIENT_UPDATE_DEMOGRAPHICS: "patient.update_demographics",
 
+  // Pregnancies
+  PREGNANCY_READ: "pregnancy.read",
+  PREGNANCY_CREATE: "pregnancy.create",
+  PREGNANCY_UPDATE: "pregnancy.update",
+
   // Encounters
   ENCOUNTER_READ: "encounter.read",
   ENCOUNTER_CREATE: "encounter.create",

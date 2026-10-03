@@ -30,7 +30,12 @@
     "audit:f03:patient": "bash scripts/audit-f03-patient.sh",
     "test:clinical:pregnancy:validation": "tsx --test tests/clinical/pregnancy-validation.test.ts",
     "test:clinical:pregnancy:lifecycle": "DATABASE_URL='postgresql://pap_user:pap_password@localhost:5432/pap_saude_f03_pregnancy_test?schema=public' tsx --test tests/clinical/pregnancy-lifecycle.integration.test.ts",
-    "test:f03:pregnancy": "bash scripts/test-f03-pregnancy.sh"
+    "test:f03:pregnancy": "bash scripts/test-f03-pregnancy.sh",
+    "test:clinical:pregnancy:dating": "tsx --test tests/clinical/gestational-dating.test.ts",
+    "test:clinical:pregnancy:consistency": "tsx --test tests/clinical/pregnancy-consistency.test.ts",
+    "test:clinical:pregnancy:access": "DATABASE_URL='postgresql://pap_user:pap_password@localhost:5432/pap_saude_f03_pregnancy_test?schema=public' tsx --test tests/clinical/pregnancy-access.integration.test.ts",
+    "test:clinical:pregnancy:integration": "DATABASE_URL='postgresql://pap_user:pap_password@localhost:5432/pap_saude_f03_pregnancy_test?schema=public' tsx --test tests/clinical/pregnancy-integration.integration.test.ts",
+    "audit:f03:pregnancy": "bash scripts/audit-f03-pregnancy.sh"
   },
   "dependencies": {
     "@capacitor/android": "^8.5.2",
