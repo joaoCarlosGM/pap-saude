@@ -479,9 +479,12 @@ model VitalSigns {
   urineOutputMl    Int?
   proteinuria      ProteinuriaResult  @default(NOT_PERFORMED)
   recordedAt       DateTime           @default(now())
+  createdAt        DateTime           @default(now())
+  updatedAt        DateTime           @updatedAt
 
-  encounter Encounter @relation(fields: [encounterId], references: [id], onDelete: Cascade)
+  encounter Encounter @relation(fields: [encounterId], references: [id], onDelete: Restrict)
 
+  @@index([recordedAt])
   @@map("vital_signs")
 }
 

@@ -49,6 +49,11 @@ export const PERMISSIONS = {
   ENCOUNTER_CREATE: "encounter.create",
   ENCOUNTER_UPDATE: "encounter.update",
 
+  // Vital signs
+  VITAL_SIGNS_READ: "vital_signs.read",
+  VITAL_SIGNS_CREATE: "vital_signs.create",
+  VITAL_SIGNS_UPDATE: "vital_signs.update",
+
   // Allergies
   ALLERGY_READ: "allergy.read",
   ALLERGY_CREATE: "allergy.create",
