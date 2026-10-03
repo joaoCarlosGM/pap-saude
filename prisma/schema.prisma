@@ -437,16 +437,19 @@ model Pregnancy {
 }
 
 model Encounter {
-  id             String          @id @default(uuid())
-  patientId      String
-  pregnancyId    String?
-  organizationId String
-  status         EncounterStatus @default(DRAFT)
-  chiefComplaint String?
-  occurredAt     DateTime        @default(now())
-  completedAt    DateTime?
-  createdAt      DateTime        @default(now())
-  updatedAt      DateTime        @updatedAt
+  id                 String          @id @default(uuid())
+  patientId          String
+  pregnancyId        String?
+  organizationId     String
+  status             EncounterStatus @default(DRAFT)
+  chiefComplaint     String?
+  occurredAt         DateTime        @default(now())
+  startedAt          DateTime?
+  completedAt        DateTime?
+  cancelledAt        DateTime?
+  cancellationReason String?
+  createdAt          DateTime        @default(now())
+  updatedAt          DateTime        @updatedAt
 
   patient             Patient              @relation(fields: [patientId], references: [id], onDelete: Restrict)
   pregnancy           Pregnancy?           @relation(fields: [pregnancyId], references: [id], onDelete: Restrict)
@@ -456,7 +459,10 @@ model Encounter {
   clinicalEvaluations ClinicalEvaluation[]
 
   @@index([organizationId, occurredAt])
+  @@index([organizationId, status, occurredAt])
   @@index([patientId, occurredAt])
+  @@index([pregnancyId, occurredAt])
+  @@index([status])
   @@map("encounters")
 }
 
