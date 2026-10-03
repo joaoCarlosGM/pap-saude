@@ -23,7 +23,10 @@
     "test:auth:mfa-reset": "DATABASE_URL='postgresql://pap_user:pap_password@localhost:5432/pap_saude_f02b_test?schema=public' tsx --test tests/auth/mfa-reset.integration.test.ts",
     "test:clinical:patient:validation": "tsx --test tests/clinical/patient-validation.test.ts",
     "test:clinical:patient": "DATABASE_URL='postgresql://pap_user:pap_password@localhost:5432/pap_saude_f02b_test?schema=public' tsx --test tests/clinical/patient-registry.integration.test.ts",
-    "test:f03:patient": "npm run test:clinical:patient:validation && npm run test:clinical:patient"
+    "test:f03:patient": "bash scripts/test-f03-patient.sh",
+    "test:clinical:patient:dedup": "DATABASE_URL='postgresql://pap_user:pap_password@localhost:5432/pap_saude_f02b_test?schema=public' tsx --test tests/clinical/patient-deduplication.integration.test.ts",
+    "test:clinical:patient:organization": "DATABASE_URL='postgresql://pap_user:pap_password@localhost:5432/pap_saude_f02b_test?schema=public' tsx --test tests/clinical/patient-organization.integration.test.ts",
+    "test:clinical:patient:access": "DATABASE_URL='postgresql://pap_user:pap_password@localhost:5432/pap_saude_f02b_test?schema=public' tsx --test tests/clinical/patient-access.integration.test.ts"
   },
   "dependencies": {
     "@capacitor/android": "^8.5.2",
