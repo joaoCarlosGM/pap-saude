@@ -422,13 +422,17 @@ model Pregnancy {
   firstPrenatalAt   DateTime?
   gravida           Int?
   parity            Int?
+  endedAt           DateTime?
+  activeSlot        Int?
   createdAt         DateTime        @default(now())
   updatedAt         DateTime        @updatedAt
 
   patient    Patient     @relation(fields: [patientId], references: [id], onDelete: Restrict)
   encounters Encounter[]
 
+  @@unique([patientId, activeSlot])
   @@index([patientId, status])
+  @@index([status])
   @@map("pregnancies")
 }
 
