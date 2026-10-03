@@ -35,7 +35,15 @@
     "test:clinical:pregnancy:consistency": "tsx --test tests/clinical/pregnancy-consistency.test.ts",
     "test:clinical:pregnancy:access": "DATABASE_URL='postgresql://pap_user:pap_password@localhost:5432/pap_saude_f03_pregnancy_test?schema=public' tsx --test tests/clinical/pregnancy-access.integration.test.ts",
     "test:clinical:pregnancy:integration": "DATABASE_URL='postgresql://pap_user:pap_password@localhost:5432/pap_saude_f03_pregnancy_test?schema=public' tsx --test tests/clinical/pregnancy-integration.integration.test.ts",
-    "audit:f03:pregnancy": "bash scripts/audit-f03-pregnancy.sh"
+    "audit:f03:pregnancy": "bash scripts/audit-f03-pregnancy.sh",
+    "test:clinical:encounter:validation": "tsx --test tests/clinical/encounter-validation.test.ts",
+    "test:clinical:encounter:lifecycle": "DATABASE_URL='postgresql://pap_user:pap_password@localhost:5432/pap_saude_f03_encounter_test?schema=public' tsx --test tests/clinical/encounter-lifecycle.integration.test.ts",
+    "test:clinical:encounter:access": "DATABASE_URL='postgresql://pap_user:pap_password@localhost:5432/pap_saude_f03_encounter_test?schema=public' tsx --test tests/clinical/encounter-access.integration.test.ts",
+    "test:clinical:encounter:integration": "DATABASE_URL='postgresql://pap_user:pap_password@localhost:5432/pap_saude_f03_encounter_test?schema=public' tsx --test tests/clinical/encounter-integration.integration.test.ts",
+    "test:f03:encounter": "bash scripts/test-f03-encounter.sh",
+    "guard:f03": "bash scripts/guard-f03-branch.sh",
+    "audit:f03": "bash scripts/audit-f03-master.sh",
+    "audit:f03:encounter": "bash scripts/audit-f03-encounter.sh"
   },
   "dependencies": {
     "@capacitor/android": "^8.5.2",
