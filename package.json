@@ -43,7 +43,9 @@
     "test:f03:encounter": "bash scripts/test-f03-encounter.sh",
     "guard:f03": "bash scripts/guard-f03-branch.sh",
     "audit:f03": "bash scripts/audit-f03-master.sh",
-    "audit:f03:encounter": "bash scripts/audit-f03-encounter.sh"
+    "audit:f03:encounter": "bash scripts/audit-f03-encounter.sh",
+    "test:f03:vital-signs": "bash scripts/test-f03-vital-signs.sh",
+    "audit:f03:vital-signs": "bash scripts/audit-f03-vital-signs.sh"
   },
   "dependencies": {
     "@capacitor/android": "^8.5.2",
