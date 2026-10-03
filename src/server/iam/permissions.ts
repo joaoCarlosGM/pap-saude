@@ -54,6 +54,11 @@ export const PERMISSIONS = {
   VITAL_SIGNS_CREATE: "vital_signs.create",
   VITAL_SIGNS_UPDATE: "vital_signs.update",
 
+  // Obstetric data
+  OBSTETRIC_DATA_READ: "obstetric_data.read",
+  OBSTETRIC_DATA_CREATE: "obstetric_data.create",
+  OBSTETRIC_DATA_UPDATE: "obstetric_data.update",
+
   // Allergies
   ALLERGY_READ: "allergy.read",
   ALLERGY_CREATE: "allergy.create",
