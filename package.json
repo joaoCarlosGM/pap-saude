@@ -47,7 +47,9 @@
     "test:f03:vital-signs": "bash scripts/test-f03-vital-signs.sh",
     "audit:f03:vital-signs": "bash scripts/audit-f03-vital-signs.sh",
     "test:f03:obstetric-data": "bash scripts/test-f03-obstetric-data.sh",
-    "audit:f03:obstetric-data": "bash scripts/audit-f03-obstetric-data.sh"
+    "audit:f03:obstetric-data": "bash scripts/audit-f03-obstetric-data.sh",
+    "test:f03:allergies-flags": "bash scripts/test-f03-allergies-flags.sh",
+    "audit:f03:allergies-flags": "bash scripts/audit-f03-allergies-flags.sh"
   },
   "dependencies": {
     "@capacitor/android": "^8.5.2",

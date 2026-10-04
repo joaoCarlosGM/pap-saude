@@ -62,6 +62,12 @@ export const PERMISSIONS = {
   // Allergies
   ALLERGY_READ: "allergy.read",
   ALLERGY_CREATE: "allergy.create",
+  ALLERGY_UPDATE: "allergy.update",
+
+  // Clinical flags
+  CLINICAL_FLAG_READ: "clinical_flag.read",
+  CLINICAL_FLAG_CREATE: "clinical_flag.create",
+  CLINICAL_FLAG_UPDATE: "clinical_flag.update",
 
   // RNDS
   RNDS_INTEGRATION_READ: "rnds.integration.read",
