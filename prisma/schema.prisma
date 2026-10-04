@@ -107,6 +107,12 @@ enum AllergyStatus {
   ENTERED_IN_ERROR
 }
 
+enum ClinicalFlagStatus {
+  ACTIVE
+  RESOLVED
+  ENTERED_IN_ERROR
+}
+
 enum IntegrationEnvironment {
   SANDBOX
   HOMOLOGATION
@@ -387,6 +393,7 @@ model Patient {
   pregnancies         Pregnancy[]
   encounters          Encounter[]
   allergies           Allergy[]
+  clinicalFlags       ClinicalFlag[]
   clinicalEvaluations ClinicalEvaluation[]
 
   @@index([fullName, birthDate])
@@ -517,12 +524,37 @@ model Allergy {
   severity  String?
   status    AllergyStatus @default(ACTIVE)
   notedAt   DateTime      @default(now())
+  endedAt   DateTime?
+  createdAt DateTime      @default(now())
   updatedAt DateTime      @updatedAt
 
   patient Patient @relation(fields: [patientId], references: [id], onDelete: Restrict)
 
   @@index([patientId, status])
+  @@index([patientId, notedAt])
   @@map("allergies")
+}
+
+model ClinicalFlag {
+  id         String             @id @default(uuid())
+  patientId  String
+  code       String
+  label      String
+  details    String?
+  status     ClinicalFlagStatus @default(ACTIVE)
+  activeSlot Int?               @default(1)
+  notedAt    DateTime           @default(now())
+  endedAt    DateTime?
+  createdAt  DateTime           @default(now())
+  updatedAt  DateTime           @updatedAt
+
+  patient Patient @relation(fields: [patientId], references: [id], onDelete: Restrict)
+
+  @@unique([patientId, code, activeSlot])
+  @@index([patientId, status])
+  @@index([patientId, notedAt])
+  @@index([status])
+  @@map("clinical_flags")
 }
 
 model ClinicalEvaluation {
