@@ -1,0 +1,91 @@
+{
+  "patient": {
+    "watch": [
+      "src/server/patients/",
+      "tests/clinical/patient"
+    ],
+    "command": "npm run test:f03:patient",
+    "dependents": [
+      "pregnancy",
+      "encounter",
+      "allergies-flags",
+      "clinical-governance"
+    ]
+  },
+  "pregnancy": {
+    "watch": [
+      "src/server/pregnancies/",
+      "tests/clinical/pregnancy"
+    ],
+    "command": "npm run test:f03:pregnancy",
+    "dependents": [
+      "encounter",
+      "clinical-governance"
+    ]
+  },
+  "encounter": {
+    "watch": [
+      "src/server/encounters/",
+      "tests/clinical/encounter"
+    ],
+    "command": "npm run test:f03:encounter",
+    "dependents": [
+      "vital-signs",
+      "obstetric-data",
+      "meows",
+      "clinical-governance"
+    ]
+  },
+  "vital-signs": {
+    "watch": [
+      "src/server/vital-signs/",
+      "tests/clinical/vital-signs"
+    ],
+    "command": "npm run test:f03:vital-signs",
+    "dependents": [
+      "meows",
+      "clinical-governance"
+    ]
+  },
+  "obstetric-data": {
+    "watch": [
+      "src/server/obstetric-data/",
+      "tests/clinical/obstetric-data"
+    ],
+    "command": "npm run test:f03:obstetric-data",
+    "dependents": [
+      "clinical-governance"
+    ]
+  },
+  "allergies-flags": {
+    "watch": [
+      "src/server/allergies/",
+      "src/server/clinical-flags/",
+      "tests/clinical/allergies-clinical-flags"
+    ],
+    "command": "npm run test:f03:allergies-flags",
+    "dependents": [
+      "clinical-governance"
+    ]
+  },
+  "meows": {
+    "watch": [
+      "src/server/meows/",
+      "tests/clinical/meows"
+    ],
+    "command": "npm run test:f03:meows-engine",
+    "dependents": [
+      "clinical-governance"
+    ]
+  },
+  "clinical-governance": {
+    "watch": [
+      "src/server/clinical-revision/",
+      "src/server/clinical-authorization/",
+      "tests/clinical/clinical-revision",
+      "tests/clinical/clinical-governance"
+    ],
+    "command": "npm run test:f03:clinical-governance",
+    "dependents": []
+  }
+}

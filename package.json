@@ -52,7 +52,11 @@
     "audit:f03:allergies-flags": "bash scripts/audit-f03-allergies-flags.sh",
     "test:f03:meows-policy": "tsx --test tests/clinical/meows-policy.test.ts",
     "test:f03:meows-engine": "bash scripts/test-f03-meows-engine.sh",
-    "audit:f03:meows-engine": "bash scripts/audit-f03-meows-engine.sh"
+    "audit:f03:meows-engine": "bash scripts/audit-f03-meows-engine.sh",
+    "test:f03:clinical-governance": "bash scripts/test-f03-clinical-governance.sh",
+    "test:f03:smart": "node scripts/testing/f03-smart-runner.mjs",
+    "test:f03:smart:force": "node scripts/testing/f03-smart-runner.mjs --force",
+    "audit:f03:clinical-governance": "bash scripts/audit-f03-clinical-governance.sh"
   },
   "dependencies": {
     "@capacitor/android": "^8.5.2",
