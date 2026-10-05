@@ -12,6 +12,13 @@ enum AlertLevel {
   RED
 }
 
+enum MeowsEvaluationStatus {
+  COMPLETE
+  INCOMPLETE
+  POLICY_UNRESOLVED
+  INVALID
+}
+
 enum ConsciousnessState {
   ALERT
   VOICE
@@ -558,19 +565,29 @@ model ClinicalFlag {
 }
 
 model ClinicalEvaluation {
-  id            String     @id @default(uuid())
-  patientId     String
-  encounterId   String?
-  meowsScore    Int
-  alertLevel    AlertLevel
-  clinicalNotes String?
-  evaluatedAt   DateTime   @default(now())
+  id                   String                @id @default(uuid())
+  patientId            String
+  encounterId          String?
+  status               MeowsEvaluationStatus
+  meowsScore           Int?
+  alertLevel           AlertLevel?
+  protocolId           String
+  protocolVersion      String
+  protocolStatus       String
+  clinicallyValidated  Boolean               @default(false)
+  componentScores      Json?
+  missingParameters    String[]              @default([])
+  unresolvedParameters String[]              @default([])
+  clinicalNotes        String?
+  evaluatedAt          DateTime              @default(now())
+  createdAt            DateTime              @default(now())
 
   patient   Patient    @relation(fields: [patientId], references: [id], onDelete: Restrict)
   encounter Encounter? @relation(fields: [encounterId], references: [id], onDelete: Restrict)
 
   @@index([patientId, evaluatedAt])
   @@index([encounterId, evaluatedAt])
+  @@index([status, evaluatedAt])
   @@map("clinical_evaluations")
 }
 
