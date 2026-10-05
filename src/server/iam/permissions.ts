@@ -69,6 +69,10 @@ export const PERMISSIONS = {
   CLINICAL_FLAG_CREATE: "clinical_flag.create",
   CLINICAL_FLAG_UPDATE: "clinical_flag.update",
 
+  // MEOWS
+  MEOWS_READ: "meows.read",
+  MEOWS_EVALUATE: "meows.evaluate",
+
   // RNDS
   RNDS_INTEGRATION_READ: "rnds.integration.read",
   RNDS_INTEGRATION_REQUEST: "rnds.integration.request",

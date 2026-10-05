@@ -49,7 +49,10 @@
     "test:f03:obstetric-data": "bash scripts/test-f03-obstetric-data.sh",
     "audit:f03:obstetric-data": "bash scripts/audit-f03-obstetric-data.sh",
     "test:f03:allergies-flags": "bash scripts/test-f03-allergies-flags.sh",
-    "audit:f03:allergies-flags": "bash scripts/audit-f03-allergies-flags.sh"
+    "audit:f03:allergies-flags": "bash scripts/audit-f03-allergies-flags.sh",
+    "test:f03:meows-policy": "tsx --test tests/clinical/meows-policy.test.ts",
+    "test:f03:meows-engine": "bash scripts/test-f03-meows-engine.sh",
+    "audit:f03:meows-engine": "bash scripts/audit-f03-meows-engine.sh"
   },
   "dependencies": {
     "@capacitor/android": "^8.5.2",
