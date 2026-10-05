@@ -402,6 +402,7 @@ model Patient {
   allergies           Allergy[]
   clinicalFlags       ClinicalFlag[]
   clinicalEvaluations ClinicalEvaluation[]
+  clinicalAuditEvents AuditEvent[]          @relation("ClinicalAuditPatient")
 
   @@index([fullName, birthDate])
   @@index([birthDate])
@@ -704,6 +705,7 @@ model AuditEvent {
   id             String       @id @default(uuid())
   actorUserId    String?
   organizationId String?
+  patientId      String?
   action         String
   resourceType   String
   resourceId     String?
@@ -719,9 +721,11 @@ model AuditEvent {
   metadata       Json?
   occurredAt     DateTime     @default(now())
 
-  actor User? @relation("AuditActor", fields: [actorUserId], references: [id], onDelete: SetNull)
+  actor   User?    @relation("AuditActor", fields: [actorUserId], references: [id], onDelete: SetNull)
+  patient Patient? @relation("ClinicalAuditPatient", fields: [patientId], references: [id], onDelete: Restrict)
 
   @@index([organizationId, occurredAt])
+  @@index([patientId, occurredAt])
   @@index([actorUserId, occurredAt])
   @@index([resourceType, resourceId])
   @@index([correlationId, occurredAt])

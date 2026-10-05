@@ -73,6 +73,10 @@ export const PERMISSIONS = {
   MEOWS_READ: "meows.read",
   MEOWS_EVALUATE: "meows.evaluate",
 
+  // Clinical revision
+  CLINICAL_REVISION_READ: "clinical_revision.read",
+  CLINICAL_REVISION_CREATE: "clinical_revision.create",
+
   // RNDS
   RNDS_INTEGRATION_READ: "rnds.integration.read",
   RNDS_INTEGRATION_REQUEST: "rnds.integration.request",
