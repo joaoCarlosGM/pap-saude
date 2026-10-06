@@ -1,9 +1,4 @@
-import AtendimentoFilters from "@/components/atendimentos/AtendimentoFilters"
-import AtendimentoTable from "@/components/atendimentos/AtendimentoTable"
-
-import { Card, CardContent } from "@/components/ui/Card"
-
-import { mockAtendimentos } from "@/lib/mock-atendimentos"
+import ClinicalEncounterList from "@/components/clinical/ClinicalEncounterList";
 
 export default function AtendimentosPage() {
   return (
@@ -14,19 +9,11 @@ export default function AtendimentosPage() {
         </h1>
 
         <p className="mt-1 text-sm text-slate-500">
-          Histórico de registros clínicos
+          Histórico real de registros clínicos da unidade
         </p>
       </header>
 
-      <Card>
-        <CardContent className="space-y-5 p-4 sm:p-5 lg:p-6">
-          <AtendimentoFilters />
-
-          <AtendimentoTable
-            atendimentos={mockAtendimentos}
-          />
-        </CardContent>
-      </Card>
+      <ClinicalEncounterList />
     </div>
-  )
+  );
 }

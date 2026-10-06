@@ -1,6 +1,4 @@
-import PatientList from "@/components/pacientes/PatientList"
-
-import { mockPacientes } from "@/lib/mock-pacientes"
+import ClinicalPatientList from "@/components/clinical/ClinicalPatientList";
 
 export default function PacientesPage() {
   return (
@@ -11,13 +9,11 @@ export default function PacientesPage() {
         </h1>
 
         <p className="mt-1 text-sm text-slate-500">
-          Gestantes acompanhadas
+          Gestantes acompanhadas na unidade ativa
         </p>
       </header>
 
-      <PatientList
-        patients={mockPacientes}
-      />
+      <ClinicalPatientList />
     </div>
-  )
+  );
 }

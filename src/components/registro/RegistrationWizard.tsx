@@ -1,17 +1,21 @@
-"use client"
+"use client";
 
-import { useState } from "react"
+import { useState } from "react";
 
-import { Card, CardContent } from "@/components/ui/Card"
+import { Card, CardContent } from "@/components/ui/Card";
 
-import Stepper from "./Stepper"
-import IdentificationStep from "./steps/IdentificationStep"
-import PregnancyStep from "./steps/PregnancyStep"
-import VitalSignsStep from "./steps/VitalSignsStep"
-import ObstetricStep from "./steps/ObstetricStep"
-import ResultStep from "./steps/ResultStep"
+import Stepper from "./Stepper";
+import IdentificationStep from "./steps/IdentificationStep";
+import PregnancyStep from "./steps/PregnancyStep";
+import VitalSignsStep from "./steps/VitalSignsStep";
+import ObstetricStep from "./steps/ObstetricStep";
+import ResultStep from "./steps/ResultStep";
 
-import type { RegistrationData } from "@/types/registration"
+import type { RegistrationData } from "@/types/registration";
+
+import type { MeowsEvaluation } from "@/lib/clinical-api";
+
+import { submitClinicalRegistration } from "@/lib/clinical-api";
 
 const initialRegistration: RegistrationData = {
   cpf: "",
@@ -40,38 +44,65 @@ const initialRegistration: RegistrationData = {
 
   queixasPrincipais: "",
   observacoesProfissional: "",
-}
+};
 
 export default function RegistrationWizard() {
-  const [currentStep, setCurrentStep] = useState(1)
+  const [currentStep, setCurrentStep] = useState(1);
 
   const [registration, setRegistration] =
-    useState<RegistrationData>(initialRegistration)
+    useState<RegistrationData>(initialRegistration);
+
+  const [saving, setSaving] = useState(false);
+
+  const [saveError, setSaveError] = useState<string | null>(null);
+
+  const [savedEvaluation, setSavedEvaluation] =
+    useState<MeowsEvaluation | null>(null);
 
   const nextStep = () => {
-    setCurrentStep((step) => Math.min(step + 1, 5))
-  }
+    setCurrentStep((step) => Math.min(step + 1, 5));
+  };
 
   const previousStep = () => {
-    setCurrentStep((step) => Math.max(step - 1, 1))
-  }
+    setCurrentStep((step) => Math.max(step - 1, 1));
+  };
 
   const restart = () => {
-    setRegistration(initialRegistration)
-    setCurrentStep(1)
-  }
+    setRegistration(initialRegistration);
+    setCurrentStep(1);
+    setSaveError(null);
+    setSavedEvaluation(null);
+  };
 
-  const updateRegistration = (
-    data: Partial<RegistrationData>,
-  ) => {
+  const updateRegistration = (data: Partial<RegistrationData>) => {
     setRegistration((current) => ({
       ...current,
       ...data,
-    }))
-  }
+    }));
+  };
 
-  const saveRegistration = () => {
-  }
+  const saveRegistration = async () => {
+    if (saving || savedEvaluation) {
+      return;
+    }
+
+    setSaving(true);
+    setSaveError(null);
+
+    try {
+      const result = await submitClinicalRegistration(registration);
+
+      setSavedEvaluation(result.meows);
+    } catch (error) {
+      setSaveError(
+        error instanceof Error
+          ? error.message
+          : "Não foi possível salvar o registro.",
+      );
+    } finally {
+      setSaving(false);
+    }
+  };
 
   return (
     <Card className="mx-auto w-full max-w-5xl">
@@ -118,9 +149,12 @@ export default function RegistrationWizard() {
             data={registration}
             onRestart={restart}
             onSave={saveRegistration}
+            saving={saving}
+            saveError={saveError}
+            savedEvaluation={savedEvaluation}
           />
         )}
       </CardContent>
     </Card>
-  )
+  );
 }

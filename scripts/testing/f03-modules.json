@@ -1,61 +1,40 @@
 {
   "patient": {
-    "watch": [
-      "src/server/patients/",
-      "tests/clinical/patient"
-    ],
+    "watch": ["src/server/patients/", "tests/clinical/patient"],
     "command": "npm run test:f03:patient",
     "dependents": [
       "pregnancy",
       "encounter",
       "allergies-flags",
-      "clinical-governance"
+      "clinical-governance",
+      "clinical-api-ui"
     ]
   },
   "pregnancy": {
-    "watch": [
-      "src/server/pregnancies/",
-      "tests/clinical/pregnancy"
-    ],
+    "watch": ["src/server/pregnancies/", "tests/clinical/pregnancy"],
     "command": "npm run test:f03:pregnancy",
-    "dependents": [
-      "encounter",
-      "clinical-governance"
-    ]
+    "dependents": ["encounter", "clinical-governance", "clinical-api-ui"]
   },
   "encounter": {
-    "watch": [
-      "src/server/encounters/",
-      "tests/clinical/encounter"
-    ],
+    "watch": ["src/server/encounters/", "tests/clinical/encounter"],
     "command": "npm run test:f03:encounter",
     "dependents": [
       "vital-signs",
       "obstetric-data",
       "meows",
-      "clinical-governance"
+      "clinical-governance",
+      "clinical-api-ui"
     ]
   },
   "vital-signs": {
-    "watch": [
-      "src/server/vital-signs/",
-      "tests/clinical/vital-signs"
-    ],
+    "watch": ["src/server/vital-signs/", "tests/clinical/vital-signs"],
     "command": "npm run test:f03:vital-signs",
-    "dependents": [
-      "meows",
-      "clinical-governance"
-    ]
+    "dependents": ["meows", "clinical-governance", "clinical-api-ui"]
   },
   "obstetric-data": {
-    "watch": [
-      "src/server/obstetric-data/",
-      "tests/clinical/obstetric-data"
-    ],
+    "watch": ["src/server/obstetric-data/", "tests/clinical/obstetric-data"],
     "command": "npm run test:f03:obstetric-data",
-    "dependents": [
-      "clinical-governance"
-    ]
+    "dependents": ["clinical-governance", "clinical-api-ui"]
   },
   "allergies-flags": {
     "watch": [
@@ -64,19 +43,12 @@
       "tests/clinical/allergies-clinical-flags"
     ],
     "command": "npm run test:f03:allergies-flags",
-    "dependents": [
-      "clinical-governance"
-    ]
+    "dependents": ["clinical-governance", "clinical-api-ui"]
   },
   "meows": {
-    "watch": [
-      "src/server/meows/",
-      "tests/clinical/meows"
-    ],
+    "watch": ["src/server/meows/", "tests/clinical/meows"],
     "command": "npm run test:f03:meows-engine",
-    "dependents": [
-      "clinical-governance"
-    ]
+    "dependents": ["clinical-governance", "clinical-api-ui"]
   },
   "clinical-governance": {
     "watch": [
@@ -86,6 +58,22 @@
       "tests/clinical/clinical-governance"
     ],
     "command": "npm run test:f03:clinical-governance",
+    "dependents": ["clinical-api-ui"]
+  },
+  "clinical-api-ui": {
+    "watch": [
+      "src/server/http/clinical-api.ts",
+      "src/server/http/clinical-api-response.ts",
+      "src/app/api/clinical/",
+      "src/lib/clinical-api/",
+      "src/components/clinical/",
+      "src/components/registro/",
+      "src/app/(dashboard)/pacientes/",
+      "src/app/(dashboard)/atendimentos/",
+      "tests/clinical/clinical-api-ui",
+      "scripts/test-f03-clinical-api-ui.sh"
+    ],
+    "command": "npm run test:f03:clinical-api-ui",
     "dependents": []
   }
 }
