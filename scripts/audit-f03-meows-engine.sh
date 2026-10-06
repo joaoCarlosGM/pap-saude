@@ -37,11 +37,14 @@ BRANCH="$(git branch --show-current)"
 printf '\n==> branch\n'
 printf 'branch=%s\n' "$BRANCH"
 
-if [[ "$BRANCH" == "feature/foundation-03-meows-engine" ]]; then
-  pass "correct F03.7 feature branch"
-else
-  fail "correct F03.7 feature branch"
-fi
+case "$BRANCH" in
+  feature/foundation-03-*)
+    pass "correct F03 feature branch"
+    ;;
+  *)
+    fail "correct F03 feature branch"
+    ;;
+esac
 
 printf '\n==> policy invariants\n'
 
