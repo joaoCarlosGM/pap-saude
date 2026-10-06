@@ -1,13 +1,13 @@
-"use client"
+"use client";
 
-import type { RegistrationData } from "@/types/registration"
+import type { RegistrationData } from "@/types/registration";
 
 type ObstetricStepProps = {
-  data: RegistrationData
-  onChange: (data: Partial<RegistrationData>) => void
-  onNext: () => void
-  onBack: () => void
-}
+  data: RegistrationData;
+  onChange: (data: Partial<RegistrationData>) => void;
+  onNext: () => void;
+  onBack: () => void;
+};
 
 export default function ObstetricStep({
   data,
@@ -24,8 +24,7 @@ export default function ObstetricStep({
         </h2>
 
         <p className="mt-1 text-sm text-slate-500">
-          Informe os dados obstétricos e clínicos relevantes para o
-          atendimento.
+          Informe os dados obstétricos e clínicos relevantes para o atendimento.
         </p>
       </div>
 
@@ -110,10 +109,9 @@ export default function ObstetricStep({
               }
               className="h-11 w-full rounded-lg border border-slate-300 bg-white px-4 text-sm text-slate-900 outline-none transition focus:border-pink-500 focus:ring-2 focus:ring-pink-100"
             >
-              <option value="">Selecione</option>
-              <option value="presente">Presente</option>
-              <option value="reduzida">Reduzida</option>
-              <option value="ausente">Ausente</option>
+              <option value="">Não informado</option>
+              <option value="true">Presente</option>
+              <option value="false">Ausente</option>
             </select>
           </div>
 
@@ -136,11 +134,12 @@ export default function ObstetricStep({
               }
               className="h-11 w-full rounded-lg border border-slate-300 bg-white px-4 text-sm text-slate-900 outline-none transition focus:border-pink-500 focus:ring-2 focus:ring-pink-100"
             >
-              <option value="">Selecione</option>
-              <option value="ausente">Ausente</option>
-              <option value="leve">Leve</option>
-              <option value="moderado">Moderado</option>
-              <option value="grave">Grave</option>
+              <option value="">Ausente</option>
+              <option value="NONE">Ausente</option>
+              <option value="ONE_PLUS">+</option>
+              <option value="TWO_PLUS">++</option>
+              <option value="THREE_PLUS">+++</option>
+              <option value="FOUR_PLUS">++++</option>
             </select>
           </div>
 
@@ -163,11 +162,9 @@ export default function ObstetricStep({
               }
               className="h-11 w-full rounded-lg border border-slate-300 bg-white px-4 text-sm text-slate-900 outline-none transition focus:border-pink-500 focus:ring-2 focus:ring-pink-100"
             >
-              <option value="">Selecione</option>
-              <option value="ausente">Ausente</option>
-              <option value="leve">Leve</option>
-              <option value="moderado">Moderado</option>
-              <option value="intenso">Intenso</option>
+              <option value="">Não informado</option>
+              <option value="false">Ausente</option>
+              <option value="true">Presente</option>
             </select>
           </div>
 
@@ -275,5 +272,5 @@ export default function ObstetricStep({
         </button>
       </div>
     </div>
-  )
+  );
 }

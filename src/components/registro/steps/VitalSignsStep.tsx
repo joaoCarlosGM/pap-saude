@@ -1,13 +1,13 @@
-"use client"
+"use client";
 
-import type { RegistrationData } from "@/types/registration"
+import type { RegistrationData } from "@/types/registration";
 
 type VitalSignsStepProps = {
-  data: RegistrationData
-  onChange: (data: Partial<RegistrationData>) => void
-  onNext: () => void
-  onBack: () => void
-}
+  data: RegistrationData;
+  onChange: (data: Partial<RegistrationData>) => void;
+  onNext: () => void;
+  onBack: () => void;
+};
 
 export default function VitalSignsStep({
   data,
@@ -19,9 +19,7 @@ export default function VitalSignsStep({
     <div>
       {/* Cabeçalho */}
       <div className="mb-8">
-        <h2 className="text-xl font-semibold text-slate-900">
-          Sinais Vitais
-        </h2>
+        <h2 className="text-xl font-semibold text-slate-900">Sinais Vitais</h2>
 
         <p className="mt-1 text-sm text-slate-500">
           Informe os sinais vitais para avaliação e cálculo do score MEOWS.
@@ -124,8 +122,7 @@ export default function VitalSignsStep({
               htmlFor="frequencia-respiratoria"
               className="mb-2 block text-sm font-medium text-slate-700"
             >
-              Frequência Respiratória{" "}
-              <span className="text-pink-500">*</span>
+              Frequência Respiratória <span className="text-pink-500">*</span>
             </label>
 
             <div className="relative">
@@ -227,10 +224,10 @@ export default function VitalSignsStep({
               className="h-11 w-full rounded-lg border border-slate-300 bg-white px-4 text-sm text-slate-900 outline-none transition focus:border-pink-500 focus:ring-2 focus:ring-pink-100"
             >
               <option value="">Selecione</option>
-              <option value="alerta">Alerta</option>
-              <option value="confusa">Confusa</option>
-              <option value="sonolenta">Sonolenta</option>
-              <option value="inconsciente">Inconsciente</option>
+              <option value="ALERT">Alerta</option>
+              <option value="VOICE">Resposta à voz</option>
+              <option value="PAIN">Resposta à dor</option>
+              <option value="UNRESPONSIVE">Não responsiva</option>
             </select>
           </div>
 
@@ -243,21 +240,25 @@ export default function VitalSignsStep({
               Débito Urinário
             </label>
 
-            <select
-              id="debito-urinario"
-              value={data.debitoUrinario}
-              onChange={(event) =>
-                onChange({
-                  debitoUrinario: event.target.value,
-                })
-              }
-              className="h-11 w-full rounded-lg border border-slate-300 bg-white px-4 text-sm text-slate-900 outline-none transition focus:border-pink-500 focus:ring-2 focus:ring-pink-100"
-            >
-              <option value="">Selecione</option>
-              <option value="normal">Normal</option>
-              <option value="reduzido">Reduzido</option>
-              <option value="ausente">Ausente</option>
-            </select>
+            <div className="relative">
+              <input
+                id="debito-urinario"
+                type="number"
+                min="0"
+                value={data.debitoUrinario}
+                onChange={(event) =>
+                  onChange({
+                    debitoUrinario: event.target.value,
+                  })
+                }
+                placeholder="Volume em mL"
+                className="h-11 w-full rounded-lg border border-slate-300 bg-white px-4 pr-12 text-sm text-slate-900 outline-none transition focus:border-pink-500 focus:ring-2 focus:ring-pink-100"
+              />
+
+              <span className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-xs text-slate-400">
+                mL
+              </span>
+            </div>
           </div>
 
           {/* Proteinúria */}
@@ -279,12 +280,13 @@ export default function VitalSignsStep({
               }
               className="h-11 w-full rounded-lg border border-slate-300 bg-white px-4 text-sm text-slate-900 outline-none transition focus:border-pink-500 focus:ring-2 focus:ring-pink-100"
             >
-              <option value="">Selecione</option>
-              <option value="negativa">Negativa</option>
-              <option value="tracos">Traços</option>
-              <option value="1+">1+</option>
-              <option value="2+">2+</option>
-              <option value="3+">3+</option>
+              <option value="">Não realizado</option>
+              <option value="NEGATIVE">Negativa</option>
+              <option value="TRACE">Traços</option>
+              <option value="ONE_PLUS">1+</option>
+              <option value="TWO_PLUS">2+</option>
+              <option value="THREE_PLUS">3+</option>
+              <option value="FOUR_PLUS">4+</option>
             </select>
           </div>
         </div>
@@ -309,5 +311,5 @@ export default function VitalSignsStep({
         </button>
       </div>
     </div>
-  )
+  );
 }
