@@ -1,6 +1,13 @@
 #!/usr/bin/env bash
 set -Eeuo pipefail
 
+if [[ "${F03_MASTER_ACTIVE:-0}" == "1" ]]; then
+  printf 'SAFETY FAILURE: recursive F03 master audit invocation detected\n'
+  exit 1
+fi
+
+export F03_MASTER_ACTIVE=1
+
 PASS_COUNT=0
 FAIL_COUNT=0
 
@@ -58,6 +65,10 @@ case "$BRANCH" in
 esac
 
 run_gate \
+  "SQL query safety" \
+  npm run guard:sql-injection
+
+run_gate \
   "Prisma schema validation" \
   npx prisma validate
 
@@ -109,7 +120,7 @@ for migration in sorted(root.iterdir()):
 
     dangerous = [
         "DROP DATABASE",
-        "DROP SCHEMA public",
+        "DROP SCHEMA PUBLIC",
     ]
 
     for token in dangerous:
@@ -142,11 +153,31 @@ const scripts = Object.keys(
   pkg.scripts || {},
 )
 
-const features = scripts
-  .filter((name) =>
-    /^test:f03:[a-z0-9-]+$/.test(name)
-  )
-  .sort()
+const packageJson =
+  require("./package.json")
+
+const packageScripts =
+  packageJson.scripts || {}
+
+const features =
+  Object.keys(packageScripts)
+    .filter((name) =>
+      /^test:f03:[a-z0-9-]+$/.test(name)
+    )
+    .filter((name) =>
+      name !== "test:f03:smart"
+    )
+    .filter((name) => {
+      const suffix =
+        name.slice(
+          "test:f03:".length,
+        )
+
+      return !packageScripts[
+        `audit:f03:${suffix}`
+      ]
+    })
+    .sort()
 
 for (const feature of features) {
   console.log(feature)
@@ -184,6 +215,9 @@ const scripts = Object.keys(
 const audits = scripts
   .filter((name) =>
     /^audit:f03:[a-z0-9-]+$/.test(name)
+  )
+  .filter((name) =>
+    name !== "audit:f03:final"
   )
   .sort()
 

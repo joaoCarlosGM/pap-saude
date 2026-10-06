@@ -58,7 +58,8 @@
     "test:f03:smart:force": "node scripts/testing/f03-smart-runner.mjs --force",
     "audit:f03:clinical-governance": "bash scripts/audit-f03-clinical-governance.sh",
     "test:f03:clinical-api-ui": "npm run guard:sql-injection && bash scripts/test-f03-clinical-api-ui.sh",
-    "guard:sql-injection": "node scripts/security/guard-sql-injection.mjs"
+    "guard:sql-injection": "node scripts/security/guard-sql-injection.mjs",
+    "audit:f03:final": "bash scripts/audit-f03-master.sh"
   },
   "dependencies": {
     "@capacitor/android": "^8.5.2",
