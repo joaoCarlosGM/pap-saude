@@ -35,6 +35,14 @@ import {
 } from "@/server/invitations/invitation.errors"
 
 import {
+  AdminRoleError,
+} from "@/server/admin/admin-role.errors"
+
+import {
+  RoleAssignmentError,
+} from "@/server/iam/role-assignment.errors"
+
+import {
   InvalidOrganizationHierarchyError,
   InvalidOrganizationIdentifierError,
   OrganizationAlreadyArchivedError,
@@ -181,6 +189,41 @@ export function adminErrorResponse(
       },
       {
         status: 401,
+        headers:
+          noStoreHeaders(),
+      },
+    )
+  }
+
+  if (
+    error instanceof
+    AdminRoleError
+  ) {
+    return NextResponse.json(
+      {
+        error:
+          error.code,
+      },
+      {
+        status:
+          error.status,
+        headers:
+          noStoreHeaders(),
+      },
+    )
+  }
+
+  if (
+    error instanceof
+    RoleAssignmentError
+  ) {
+    return NextResponse.json(
+      {
+        error:
+          error.code,
+      },
+      {
+        status: 409,
         headers:
           noStoreHeaders(),
       },

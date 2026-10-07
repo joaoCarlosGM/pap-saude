@@ -35,6 +35,18 @@ import {
 } from "../../src/app/api/admin/invitations/route"
 
 import {
+  GET as rolesGET,
+} from "../../src/app/api/admin/roles/route"
+
+import {
+  POST as roleAssignmentPOST,
+} from "../../src/app/api/admin/role-assignments/route"
+
+import {
+  DELETE as roleAssignmentDELETE,
+} from "../../src/app/api/admin/role-assignments/[assignmentId]/route"
+
+import {
   GET as invitationGET,
   POST as invitationAcceptPOST,
 } from "../../src/app/api/invitations/accept/route"
@@ -397,7 +409,9 @@ function requestFor(
 
   if (
     method === "POST" ||
-    method === "PATCH"
+    method === "PATCH" ||
+    method === "PUT" ||
+    method === "DELETE"
   ) {
     headers.set(
       "origin",
@@ -433,6 +447,17 @@ function requestFor(
         : {}),
     },
   )
+}
+
+function roleAssignmentContext(
+  assignmentId: string,
+) {
+  return {
+    params:
+      Promise.resolve({
+        assignmentId,
+      }),
+  }
 }
 
 function onboardingContext(
@@ -1742,6 +1767,549 @@ test(
     assert.equal(
       await db.userOnboardingProgress.count(),
       0,
+    )
+  },
+)
+
+
+test(
+  "PAP admin can list the system role matrix",
+  async () => {
+    const tree =
+      await createOrganizationTree()
+
+    const admin =
+      await createUser(
+        "roles-pap@example.test",
+        "Roles PAP",
+      )
+
+    await makePapAdmin(
+      admin.id,
+    )
+
+    const professional =
+      await createUser(
+        "roles-professional@example.test",
+        "Roles Professional",
+      )
+
+    await makeProfessional(
+      professional.id,
+      tree.unitA.id,
+    )
+
+    const token =
+      await sessionFor(
+        admin.id,
+      )
+
+    const response =
+      await rolesGET(
+        requestFor(
+          "GET",
+          "/api/admin/roles",
+          {
+            token,
+          },
+        ),
+      )
+
+    assert.equal(
+      response.status,
+      200,
+    )
+
+    const body =
+      await response.json()
+
+    assert.equal(
+      body.canManage,
+      true,
+    )
+
+    assert.equal(
+      body.roles.some(
+        (
+          role: {
+            key: string
+          },
+        ) =>
+          role.key ===
+          "PAP_ADMIN",
+      ),
+      true,
+    )
+
+    assert.equal(
+      body.roles.some(
+        (
+          role: {
+            key: string
+          },
+        ) =>
+          role.key ===
+          "PROFESSIONAL",
+      ),
+      true,
+    )
+
+    assert.equal(
+      body.assignments.some(
+        (
+          assignment: {
+            user: {
+              id: string
+            }
+          },
+        ) =>
+          assignment.user.id ===
+          professional.id,
+      ),
+      true,
+    )
+  },
+)
+
+test(
+  "municipal admin cannot see global or foreign role assignments",
+  async () => {
+    const tree =
+      await createOrganizationTree()
+
+    const papAdmin =
+      await createUser(
+        "roles-global@example.test",
+        "Global Admin",
+      )
+
+    await makePapAdmin(
+      papAdmin.id,
+    )
+
+    const municipal =
+      await createUser(
+        "roles-municipal@example.test",
+        "Municipal Admin",
+      )
+
+    await makeMunicipalAdmin(
+      municipal.id,
+      tree.municipalityA.id,
+    )
+
+    const professionalA =
+      await createUser(
+        "roles-a@example.test",
+        "Professional A",
+      )
+
+    const professionalB =
+      await createUser(
+        "roles-b@example.test",
+        "Professional B",
+      )
+
+    await makeProfessional(
+      professionalA.id,
+      tree.unitA.id,
+    )
+
+    await makeProfessional(
+      professionalB.id,
+      tree.unitB.id,
+    )
+
+    const token =
+      await sessionFor(
+        municipal.id,
+      )
+
+    const response =
+      await rolesGET(
+        requestFor(
+          "GET",
+          "/api/admin/roles",
+          {
+            token,
+          },
+        ),
+      )
+
+    assert.equal(
+      response.status,
+      200,
+    )
+
+    const body =
+      await response.json()
+
+    const visibleUsers =
+      new Set(
+        body.assignments.map(
+          (
+            assignment: {
+              user: {
+                id: string
+              }
+            },
+          ) =>
+            assignment.user.id,
+        ),
+      )
+
+    assert.equal(
+      visibleUsers.has(
+        professionalA.id,
+      ),
+      true,
+    )
+
+    assert.equal(
+      visibleUsers.has(
+        professionalB.id,
+      ),
+      false,
+    )
+
+    assert.equal(
+      visibleUsers.has(
+        papAdmin.id,
+      ),
+      false,
+    )
+
+    assert.equal(
+      body.canManage,
+      false,
+    )
+  },
+)
+
+test(
+  "PAP admin can assign scoped system role to an active member",
+  async () => {
+    const tree =
+      await createOrganizationTree()
+
+    const admin =
+      await createUser(
+        "role-assign-admin@example.test",
+        "Role Assign Admin",
+      )
+
+    await makePapAdmin(
+      admin.id,
+    )
+
+    const target =
+      await createUser(
+        "role-target@example.test",
+        "Role Target",
+      )
+
+    await db.membership.create({
+      data: {
+        userId:
+          target.id,
+
+        organizationId:
+          tree.unitA.id,
+
+        status:
+          MembershipStatus.ACTIVE,
+      },
+    })
+
+    const token =
+      await sessionFor(
+        admin.id,
+      )
+
+    const response =
+      await roleAssignmentPOST(
+        requestFor(
+          "POST",
+          "/api/admin/role-assignments",
+          {
+            token,
+
+            body: {
+              userId:
+                target.id,
+
+              roleKey:
+                "HEALTH_UNIT_ADMIN",
+
+              organizationId:
+                tree.unitA.id,
+            },
+          },
+        ),
+      )
+
+    assert.equal(
+      response.status,
+      201,
+    )
+
+    const persisted =
+      await db.roleAssignment.findFirst({
+        where: {
+          userId:
+            target.id,
+
+          organizationId:
+            tree.unitA.id,
+
+          role: {
+            key:
+              "HEALTH_UNIT_ADMIN",
+          },
+        },
+      })
+
+    assert.ok(
+      persisted,
+    )
+  },
+)
+
+test(
+  "municipal admin cannot escalate privileges through role assignment API",
+  async () => {
+    const tree =
+      await createOrganizationTree()
+
+    const municipal =
+      await createUser(
+        "role-no-escalation@example.test",
+        "No Escalation",
+      )
+
+    await makeMunicipalAdmin(
+      municipal.id,
+      tree.municipalityA.id,
+    )
+
+    const target =
+      await createUser(
+        "role-escalation-target@example.test",
+        "Escalation Target",
+      )
+
+    await db.membership.create({
+      data: {
+        userId:
+          target.id,
+
+        organizationId:
+          tree.unitA.id,
+
+        status:
+          MembershipStatus.ACTIVE,
+      },
+    })
+
+    const token =
+      await sessionFor(
+        municipal.id,
+      )
+
+    const response =
+      await roleAssignmentPOST(
+        requestFor(
+          "POST",
+          "/api/admin/role-assignments",
+          {
+            token,
+
+            body: {
+              userId:
+                target.id,
+
+              roleKey:
+                "HEALTH_UNIT_ADMIN",
+
+              organizationId:
+                tree.unitA.id,
+            },
+          },
+        ),
+      )
+
+    assert.equal(
+      response.status,
+      403,
+    )
+
+    assert.equal(
+      await db.roleAssignment.count({
+        where: {
+          userId:
+            target.id,
+
+          role: {
+            key:
+              "HEALTH_UNIT_ADMIN",
+          },
+        },
+      }),
+      0,
+    )
+  },
+)
+
+test(
+  "PAP admin can revoke a non-critical role assignment",
+  async () => {
+    const tree =
+      await createOrganizationTree()
+
+    const admin =
+      await createUser(
+        "role-revoke-admin@example.test",
+        "Revoke Admin",
+      )
+
+    await makePapAdmin(
+      admin.id,
+    )
+
+    const target =
+      await createUser(
+        "role-revoke-target@example.test",
+        "Revoke Target",
+      )
+
+    await makeProfessional(
+      target.id,
+      tree.unitA.id,
+    )
+
+    const assignment =
+      await db.roleAssignment.findFirstOrThrow({
+        where: {
+          userId:
+            target.id,
+
+          organizationId:
+            tree.unitA.id,
+
+          role: {
+            key:
+              "PROFESSIONAL",
+          },
+        },
+      })
+
+    const token =
+      await sessionFor(
+        admin.id,
+      )
+
+    const response =
+      await roleAssignmentDELETE(
+        requestFor(
+          "DELETE",
+          `/api/admin/role-assignments/${assignment.id}`,
+          {
+            token,
+          },
+        ),
+
+        roleAssignmentContext(
+          assignment.id,
+        ),
+      )
+
+    assert.equal(
+      response.status,
+      200,
+    )
+
+    assert.equal(
+      await db.roleAssignment.count({
+        where: {
+          id:
+            assignment.id,
+        },
+      }),
+      0,
+    )
+  },
+)
+
+test(
+  "last active PAP admin cannot be revoked",
+  async () => {
+    const admin =
+      await createUser(
+        "last-pap-admin@example.test",
+        "Last PAP Admin",
+      )
+
+    await makePapAdmin(
+      admin.id,
+    )
+
+    const assignment =
+      await db.roleAssignment.findFirstOrThrow({
+        where: {
+          userId:
+            admin.id,
+
+          organizationId:
+            null,
+
+          role: {
+            key:
+              "PAP_ADMIN",
+          },
+        },
+      })
+
+    const token =
+      await sessionFor(
+        admin.id,
+      )
+
+    const response =
+      await roleAssignmentDELETE(
+        requestFor(
+          "DELETE",
+          `/api/admin/role-assignments/${assignment.id}`,
+          {
+            token,
+          },
+        ),
+
+        roleAssignmentContext(
+          assignment.id,
+        ),
+      )
+
+    assert.equal(
+      response.status,
+      409,
+    )
+
+    const body =
+      await response.json()
+
+    assert.equal(
+      body.error,
+      "LAST_PAP_ADMIN",
+    )
+
+    assert.equal(
+      await db.roleAssignment.count({
+        where: {
+          id:
+            assignment.id,
+        },
+      }),
+      1,
     )
   },
 )
