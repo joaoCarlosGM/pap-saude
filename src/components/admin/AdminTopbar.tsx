@@ -98,6 +98,20 @@ export default function AdminTopbar({
         <button
           type="button"
           aria-label="Ajuda"
+          data-tour="admin-help"
+          onClick={() =>
+            window.dispatchEvent(
+              new CustomEvent(
+                "pap-tour:restart",
+                {
+                  detail: {
+                    tourKey:
+                      "admin-core",
+                  },
+                },
+              ),
+            )
+          }
           className="flex h-9 items-center gap-2 rounded-lg px-2 text-sm transition hover:bg-white/10 sm:px-3"
         >
           <HelpCircle

@@ -35,6 +35,7 @@ type NavigationItem = {
   icon:
     typeof LayoutDashboard
   requiredAny?: string[]
+  tourId?: string
 }
 
 const navigation:
@@ -46,6 +47,8 @@ const navigation:
         "/admin",
       icon:
         LayoutDashboard,
+      tourId:
+        "admin-overview",
     },
 
     {
@@ -58,6 +61,8 @@ const navigation:
       requiredAny: [
         "organization.read",
       ],
+      tourId:
+        "admin-organizations",
     },
 
     {
@@ -70,6 +75,8 @@ const navigation:
       requiredAny: [
         "user.read",
       ],
+      tourId:
+        "admin-users",
     },
 
     {
@@ -119,6 +126,8 @@ const navigation:
       requiredAny: [
         "analytics.organization.read",
       ],
+      tourId:
+        "admin-metrics",
     },
 
     {
@@ -131,6 +140,8 @@ const navigation:
       requiredAny: [
         "rnds.integration.read",
       ],
+      tourId:
+        "admin-integrations",
     },
 
     {
@@ -242,6 +253,9 @@ export default function AdminSidebar({
                     }
                     href={
                       item.href
+                    }
+                    data-tour={
+                      item.tourId
                     }
                     onClick={
                       onClose

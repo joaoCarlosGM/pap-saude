@@ -44,6 +44,11 @@ import {
 } from "../../src/server/auth/password"
 
 import {
+  GET as onboardingGET,
+  PATCH as onboardingPATCH,
+} from "../../src/app/api/onboarding/[tourKey]/route"
+
+import {
   createSession,
 } from "../../src/server/auth/session.service"
 
@@ -99,6 +104,7 @@ async function assertSafeDatabase() {
 async function clearFixtures() {
   await db.auditEvent.deleteMany()
   await db.productActivityEvent.deleteMany()
+  await db.userOnboardingProgress.deleteMany()
   await db.userInvitation.deleteMany()
   await db.session.deleteMany()
 
@@ -427,6 +433,17 @@ function requestFor(
         : {}),
     },
   )
+}
+
+function onboardingContext(
+  tourKey: string,
+) {
+  return {
+    params:
+      Promise.resolve({
+        tourKey,
+      }),
+  }
 }
 
 function organizationContext(
@@ -1351,6 +1368,380 @@ test(
     assert.equal(
       body.error,
       "INVALID_REQUEST_ORIGIN",
+    )
+  },
+)
+
+
+test(
+  "onboarding progress is private to the authenticated user",
+  async () => {
+    const userA =
+      await createUser(
+        "onboarding-a@example.test",
+        "Onboarding A",
+      )
+
+    const userB =
+      await createUser(
+        "onboarding-b@example.test",
+        "Onboarding B",
+      )
+
+    const tokenA =
+      await sessionFor(
+        userA.id,
+      )
+
+    const tokenB =
+      await sessionFor(
+        userB.id,
+      )
+
+    const start =
+      await onboardingPATCH(
+        requestFor(
+          "PATCH",
+          "/api/onboarding/admin-core",
+          {
+            token:
+              tokenA,
+
+            body: {
+              version:
+                1,
+
+              status:
+                "STARTED",
+
+              currentStep:
+                2,
+            },
+          },
+        ),
+
+        onboardingContext(
+          "admin-core",
+        ),
+      )
+
+    assert.equal(
+      start.status,
+      200,
+    )
+
+    const own =
+      await onboardingGET(
+        new NextRequest(
+          `${BASE_URL}/api/onboarding/admin-core?version=1`,
+          {
+            headers: {
+              cookie:
+                `${SESSION_COOKIE_NAME}=${tokenA}`,
+            },
+          },
+        ),
+
+        onboardingContext(
+          "admin-core",
+        ),
+      )
+
+    assert.equal(
+      own.status,
+      200,
+    )
+
+    const ownBody =
+      await own.json()
+
+    assert.equal(
+      ownBody.progress.currentStep,
+      2,
+    )
+
+    const other =
+      await onboardingGET(
+        new NextRequest(
+          `${BASE_URL}/api/onboarding/admin-core?version=1`,
+          {
+            headers: {
+              cookie:
+                `${SESSION_COOKIE_NAME}=${tokenB}`,
+            },
+          },
+        ),
+
+        onboardingContext(
+          "admin-core",
+        ),
+      )
+
+    const otherBody =
+      await other.json()
+
+    assert.equal(
+      otherBody.progress,
+      null,
+    )
+  },
+)
+
+test(
+  "onboarding completion persists and replay can restart it",
+  async () => {
+    const user =
+      await createUser(
+        "onboarding-state@example.test",
+        "Onboarding State",
+      )
+
+    const token =
+      await sessionFor(
+        user.id,
+      )
+
+    const complete =
+      await onboardingPATCH(
+        requestFor(
+          "PATCH",
+          "/api/onboarding/admin-core",
+          {
+            token,
+
+            body: {
+              version:
+                1,
+
+              status:
+                "COMPLETED",
+
+              currentStep:
+                5,
+            },
+          },
+        ),
+
+        onboardingContext(
+          "admin-core",
+        ),
+      )
+
+    assert.equal(
+      complete.status,
+      200,
+    )
+
+    let stored =
+      await db.userOnboardingProgress.findFirstOrThrow({
+        where: {
+          userId:
+            user.id,
+
+          tourKey:
+            "admin-core",
+
+          tourVersion:
+            1,
+        },
+      })
+
+    assert.equal(
+      stored.status,
+      "COMPLETED",
+    )
+
+    assert.ok(
+      stored.completedAt,
+    )
+
+    const restart =
+      await onboardingPATCH(
+        requestFor(
+          "PATCH",
+          "/api/onboarding/admin-core",
+          {
+            token,
+
+            body: {
+              version:
+                1,
+
+              status:
+                "STARTED",
+
+              currentStep:
+                0,
+            },
+          },
+        ),
+
+        onboardingContext(
+          "admin-core",
+        ),
+      )
+
+    assert.equal(
+      restart.status,
+      200,
+    )
+
+    stored =
+      await db.userOnboardingProgress.findFirstOrThrow({
+        where: {
+          userId:
+            user.id,
+
+          tourKey:
+            "admin-core",
+
+          tourVersion:
+            1,
+        },
+      })
+
+    assert.equal(
+      stored.status,
+      "STARTED",
+    )
+
+    assert.equal(
+      stored.completedAt,
+      null,
+    )
+
+    assert.equal(
+      stored.skippedAt,
+      null,
+    )
+  },
+)
+
+test(
+  "onboarding versions are independent",
+  async () => {
+    const user =
+      await createUser(
+        "onboarding-version@example.test",
+        "Onboarding Version",
+      )
+
+    const token =
+      await sessionFor(
+        user.id,
+      )
+
+    await onboardingPATCH(
+      requestFor(
+        "PATCH",
+        "/api/onboarding/admin-core",
+        {
+          token,
+
+          body: {
+            version:
+              1,
+
+            status:
+              "COMPLETED",
+
+            currentStep:
+              5,
+          },
+        },
+      ),
+
+      onboardingContext(
+        "admin-core",
+      ),
+    )
+
+    const versionTwo =
+      await onboardingGET(
+        new NextRequest(
+          `${BASE_URL}/api/onboarding/admin-core?version=2`,
+          {
+            headers: {
+              cookie:
+                `${SESSION_COOKIE_NAME}=${token}`,
+            },
+          },
+        ),
+
+        onboardingContext(
+          "admin-core",
+        ),
+      )
+
+    const body =
+      await versionTwo.json()
+
+    assert.equal(
+      body.progress,
+      null,
+    )
+  },
+)
+
+test(
+  "onboarding mutation rejects untrusted Origin",
+  async () => {
+    const user =
+      await createUser(
+        "onboarding-origin@example.test",
+        "Onboarding Origin",
+      )
+
+    const token =
+      await sessionFor(
+        user.id,
+      )
+
+    const response =
+      await onboardingPATCH(
+        requestFor(
+          "PATCH",
+          "/api/onboarding/admin-core",
+          {
+            token,
+
+            origin:
+              "https://evil.invalid",
+
+            body: {
+              version:
+                1,
+
+              status:
+                "STARTED",
+
+              currentStep:
+                0,
+            },
+          },
+        ),
+
+        onboardingContext(
+          "admin-core",
+        ),
+      )
+
+    assert.equal(
+      response.status,
+      403,
+    )
+
+    const body =
+      await response.json()
+
+    assert.equal(
+      body.error,
+      "INVALID_REQUEST_ORIGIN",
+    )
+
+    assert.equal(
+      await db.userOnboardingProgress.count(),
+      0,
     )
   },
 )
