@@ -69,3 +69,11 @@ export const MFA_RECOVERY_CODE_BYTES = 10;
 
 export const MFA_RECOVERY_CODE_HASH_DOMAIN =
   "pap-saude:mfa:recovery-code:v1";
+
+export const INVITATION_TOKEN_BYTES = 32;
+
+export const INVITATION_TTL_SECONDS =
+  60 * 60 * 48;
+
+export const INVITATION_TOKEN_HASH_DOMAIN =
+  "pap-saude:user-invitation:v1";

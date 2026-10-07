@@ -31,6 +31,10 @@ import {
 } from "@/server/auth/http-auth.errors"
 
 import {
+  InvitationError,
+} from "@/server/invitations/invitation.errors"
+
+import {
   InvalidOrganizationHierarchyError,
   InvalidOrganizationIdentifierError,
   OrganizationAlreadyArchivedError,
@@ -177,6 +181,24 @@ export function adminErrorResponse(
       },
       {
         status: 401,
+        headers:
+          noStoreHeaders(),
+      },
+    )
+  }
+
+  if (
+    error instanceof
+    InvitationError
+  ) {
+    return NextResponse.json(
+      {
+        error:
+          error.code,
+      },
+      {
+        status:
+          error.status,
         headers:
           noStoreHeaders(),
       },

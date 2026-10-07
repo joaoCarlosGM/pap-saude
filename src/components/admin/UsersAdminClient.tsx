@@ -5,6 +5,8 @@ import {
   useState,
 } from "react"
 
+import ProfessionalInviteForm from "@/components/admin/ProfessionalInviteForm"
+
 type AdminUser = {
   id: string
   email: string
@@ -135,6 +137,8 @@ export default function UsersAdminClient() {
           {error}
         </div>
       )}
+
+      <ProfessionalInviteForm />
 
       <div className="mt-7 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
         {loading ? (

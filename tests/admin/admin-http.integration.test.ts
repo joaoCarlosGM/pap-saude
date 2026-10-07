@@ -31,6 +31,19 @@ import {
 } from "../../src/app/api/admin/users/route"
 
 import {
+  POST as invitationsPOST,
+} from "../../src/app/api/admin/invitations/route"
+
+import {
+  GET as invitationGET,
+  POST as invitationAcceptPOST,
+} from "../../src/app/api/invitations/accept/route"
+
+import {
+  verifyPassword,
+} from "../../src/server/auth/password"
+
+import {
   createSession,
 } from "../../src/server/auth/session.service"
 
@@ -86,6 +99,7 @@ async function assertSafeDatabase() {
 async function clearFixtures() {
   await db.auditEvent.deleteMany()
   await db.productActivityEvent.deleteMany()
+  await db.userInvitation.deleteMany()
   await db.session.deleteMany()
 
   await db.roleAssignment.deleteMany()
@@ -949,6 +963,394 @@ test(
         },
       }),
       0,
+    )
+  },
+)
+
+
+test(
+  "professional invitation creates only an INVITED membership and stores no plaintext token",
+  async () => {
+    const tree =
+      await createOrganizationTree()
+
+    const admin =
+      await createUser(
+        "invite-admin@example.test",
+        "Invite Admin",
+      )
+
+    await makePapAdmin(
+      admin.id,
+    )
+
+    const token =
+      await sessionFor(
+        admin.id,
+      )
+
+    const response =
+      await invitationsPOST(
+        requestFor(
+          "POST",
+          "/api/admin/invitations",
+          {
+            token,
+
+            body: {
+              displayName:
+                "Profissional Convite",
+
+              email:
+                "PROFISSIONAL.CONVITE@example.test",
+
+              organizationId:
+                tree.unitA.id,
+            },
+          },
+        ),
+      )
+
+    assert.equal(
+      response.status,
+      201,
+    )
+
+    const body =
+      await response.json()
+
+    assert.equal(
+      body.invitation.email,
+      "profissional.convite@example.test",
+    )
+
+    assert.equal(
+      body.invitation.roleKey,
+      "PROFESSIONAL",
+    )
+
+    assert.ok(
+      body.developmentUrl,
+    )
+
+    const invitation =
+      await db.userInvitation.findUnique({
+        where: {
+          id:
+            body.invitation.id,
+        },
+      })
+
+    assert.ok(
+      invitation,
+    )
+
+    assert.equal(
+      invitation.status,
+      "PENDING",
+    )
+
+    assert.equal(
+      invitation.tokenHash.length,
+      64,
+    )
+
+    assert.equal(
+      invitation.tokenHash.includes(
+        "token=",
+      ),
+      false,
+    )
+
+    const membership =
+      await db.membership.findFirst({
+        where: {
+          organizationId:
+            tree.unitA.id,
+
+          user: {
+            email:
+              "profissional.convite@example.test",
+          },
+        },
+      })
+
+    assert.equal(
+      membership?.status,
+      "INVITED",
+    )
+  },
+)
+
+test(
+  "municipal admin cannot invite a professional into another municipality",
+  async () => {
+    const tree =
+      await createOrganizationTree()
+
+    const admin =
+      await createUser(
+        "invite-cross@example.test",
+        "Invite Cross",
+      )
+
+    await makeMunicipalAdmin(
+      admin.id,
+      tree.municipalityA.id,
+    )
+
+    const token =
+      await sessionFor(
+        admin.id,
+      )
+
+    const response =
+      await invitationsPOST(
+        requestFor(
+          "POST",
+          "/api/admin/invitations",
+          {
+            token,
+
+            body: {
+              displayName:
+                "Profissional B",
+
+              email:
+                "professional-cross@example.test",
+
+              organizationId:
+                tree.unitB.id,
+            },
+          },
+        ),
+      )
+
+    assert.equal(
+      response.status,
+      403,
+    )
+
+    assert.equal(
+      await db.userInvitation.count(),
+      0,
+    )
+  },
+)
+
+test(
+  "invitation activates password membership and professional role exactly once",
+  async () => {
+    const tree =
+      await createOrganizationTree()
+
+    const admin =
+      await createUser(
+        "activation-admin@example.test",
+        "Activation Admin",
+      )
+
+    await makePapAdmin(
+      admin.id,
+    )
+
+    const adminToken =
+      await sessionFor(
+        admin.id,
+      )
+
+    const inviteResponse =
+      await invitationsPOST(
+        requestFor(
+          "POST",
+          "/api/admin/invitations",
+          {
+            token:
+              adminToken,
+
+            body: {
+              displayName:
+                "Profissional Ativação",
+
+              email:
+                "activation@example.test",
+
+              organizationId:
+                tree.unitA.id,
+            },
+          },
+        ),
+      )
+
+    assert.equal(
+      inviteResponse.status,
+      201,
+    )
+
+    const inviteBody =
+      await inviteResponse.json()
+
+    const url =
+      new URL(
+        inviteBody.developmentUrl,
+      )
+
+    const invitationToken =
+      url.searchParams.get(
+        "token",
+      )
+
+    assert.ok(
+      invitationToken,
+    )
+
+    const inspectResponse =
+      await invitationGET(
+        requestFor(
+          "GET",
+          `/api/invitations/accept?token=${encodeURIComponent(invitationToken)}`,
+        ),
+      )
+
+    assert.equal(
+      inspectResponse.status,
+      200,
+    )
+
+    const inspectBody =
+      await inspectResponse.json()
+
+    assert.equal(
+      inspectBody.invitation.requiresPassword,
+      true,
+    )
+
+    const password =
+      "PAP-Invite-Test-2026!"
+
+    const acceptResponse =
+      await invitationAcceptPOST(
+        requestFor(
+          "POST",
+          "/api/invitations/accept",
+          {
+            body: {
+              token:
+                invitationToken,
+
+              password,
+            },
+          },
+        ),
+      )
+
+    assert.equal(
+      acceptResponse.status,
+      200,
+    )
+
+    const user =
+      await db.user.findUniqueOrThrow({
+        where: {
+          email:
+            "activation@example.test",
+        },
+
+        include: {
+          passwordCredential:
+            true,
+
+          memberships:
+            true,
+
+          roleAssignments: {
+            include: {
+              role:
+                true,
+            },
+          },
+        },
+      })
+
+    assert.ok(
+      user.passwordCredential,
+    )
+
+    assert.equal(
+      await verifyPassword(
+        user.passwordCredential!.passwordHash,
+        password,
+      ),
+      true,
+    )
+
+    assert.equal(
+      user.memberships[0]?.status,
+      "ACTIVE",
+    )
+
+    assert.equal(
+      user.roleAssignments[0]?.role.key,
+      "PROFESSIONAL",
+    )
+
+    const replay =
+      await invitationAcceptPOST(
+        requestFor(
+          "POST",
+          "/api/invitations/accept",
+          {
+            body: {
+              token:
+                invitationToken,
+
+              password,
+            },
+          },
+        ),
+      )
+
+    assert.equal(
+      replay.status,
+      410,
+    )
+  },
+)
+
+test(
+  "invitation acceptance rejects untrusted Origin",
+  async () => {
+    const response =
+      await invitationAcceptPOST(
+        requestFor(
+          "POST",
+          "/api/invitations/accept",
+          {
+            origin:
+              "https://evil.invalid",
+
+            body: {
+              token:
+                "not-a-valid-token",
+
+              password:
+                "PAP-Test-Password-2026",
+            },
+          },
+        ),
+      )
+
+    assert.equal(
+      response.status,
+      403,
+    )
+
+    const body =
+      await response.json()
+
+    assert.equal(
+      body.error,
+      "INVALID_REQUEST_ORIGIN",
     )
   },
 )

@@ -47,6 +47,12 @@ enum MembershipStatus {
   DISABLED
 }
 
+enum InvitationStatus {
+  PENDING
+  ACCEPTED
+  REVOKED
+}
+
 enum OrganizationCandidateStatus {
   NEW
   QUALIFYING
@@ -222,6 +228,8 @@ model User {
   mfaChallenges         MfaChallenge[]
   sessions              Session[]
   productActivityEvents ProductActivityEvent[] @relation("ProductActivityActor")
+  sentInvitations       UserInvitation[]       @relation("InvitationSender")
+  receivedInvitations   UserInvitation[]       @relation("InvitationUser")
 
   submittedFeedback ProductFeedback[] @relation("ProductFeedbackActor")
   resolvedFeedback  ProductFeedback[] @relation("ProductFeedbackResolver")
@@ -256,6 +264,7 @@ model Organization {
   rndsIntegration       RNDSIntegration?
   productActivityEvents ProductActivityEvent[]       @relation("ProductActivityOrganization")
   metricSnapshots       OrganizationMetricSnapshot[]
+  userInvitations       UserInvitation[]
 
   productFeedback ProductFeedback[]
 
@@ -282,6 +291,32 @@ model Membership {
   @@unique([userId, organizationId])
   @@index([organizationId, status])
   @@map("memberships")
+}
+
+model UserInvitation {
+  id              String           @id @default(uuid())
+  email           String
+  displayName     String
+  userId          String?
+  organizationId  String
+  roleKey         String
+  tokenHash       String           @unique
+  status          InvitationStatus @default(PENDING)
+  expiresAt       DateTime
+  acceptedAt      DateTime?
+  revokedAt       DateTime?
+  invitedByUserId String
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+
+  user         User?        @relation("InvitationUser", fields: [userId], references: [id], onDelete: SetNull)
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Restrict)
+  invitedBy    User         @relation("InvitationSender", fields: [invitedByUserId], references: [id], onDelete: Restrict)
+
+  @@index([email, status])
+  @@index([organizationId, status])
+  @@index([expiresAt])
+  @@map("user_invitations")
 }
 
 model OrganizationCandidate {
