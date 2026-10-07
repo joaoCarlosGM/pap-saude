@@ -60,7 +60,8 @@
     "test:f03:clinical-api-ui": "npm run guard:sql-injection && bash scripts/test-f03-clinical-api-ui.sh",
     "guard:sql-injection": "node scripts/security/guard-sql-injection.mjs",
     "audit:f03:final": "bash scripts/audit-f03-master.sh",
-    "test:f04:admin-core": "bash scripts/test-f04-admin-core.sh"
+    "test:f04:admin-core": "bash scripts/test-f04-admin-core.sh",
+    "audit:f04:admin-core": "bash scripts/audit-f04-admin-core.sh"
   },
   "dependencies": {
     "@capacitor/android": "^8.5.2",
