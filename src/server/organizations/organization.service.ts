@@ -487,3 +487,103 @@ export async function listOrganizationChildren(
     },
   });
 }
+
+export async function updateOrganizationDetails(
+  organizationId: string,
+  input: import("./types").UpdateOrganizationInput,
+): Promise<Organization> {
+  const organization =
+    await getOrganizationById(
+      organizationId,
+    );
+
+  if (
+    organization.status ===
+    OrganizationStatus.ARCHIVED
+  ) {
+    throw new OrganizationAlreadyArchivedError();
+  }
+
+  const name =
+    input.name === undefined
+      ? organization.name
+      : normalizeText(
+          input.name,
+          200,
+        );
+
+  if (!name) {
+    throw new InvalidOrganizationIdentifierError();
+  }
+
+  const cnes =
+    input.cnes === undefined
+      ? organization.cnes
+      : normalizeCnes(
+          input.cnes,
+        );
+
+  if (
+    organization.type !==
+      OrganizationType.HEALTH_UNIT &&
+    cnes !== null
+  ) {
+    throw new InvalidOrganizationIdentifierError();
+  }
+
+  const cnpj =
+    input.cnpj === undefined
+      ? organization.cnpj
+      : normalizeCnpj(
+          input.cnpj,
+        );
+
+  return db.organization.update({
+    where: {
+      id:
+        organizationId,
+    },
+
+    data: {
+      name,
+
+      code:
+        input.code ===
+        undefined
+          ? organization.code
+          : normalizeText(
+              input.code,
+              100,
+            ),
+
+      cnes,
+      cnpj,
+
+      city:
+        input.city ===
+        undefined
+          ? organization.city
+          : normalizeText(
+              input.city,
+              120,
+            ),
+
+      state:
+        input.state ===
+        undefined
+          ? organization.state
+          : normalizeState(
+              input.state,
+            ),
+
+      address:
+        input.address ===
+        undefined
+          ? organization.address
+          : normalizeText(
+              input.address,
+              500,
+            ),
+    },
+  });
+}
