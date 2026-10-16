@@ -67,7 +67,9 @@
     "test:f04:access-trust": "bash scripts/test-f04-access-trust.sh",
     "audit:f04:access-trust": "bash scripts/audit-f04-access-trust.sh",
     "test:f04:audit-idor": "bash scripts/test-f04-audit-idor.sh",
-    "audit:f04:audit-idor": "bash scripts/audit-f04-audit-idor.sh"
+    "audit:f04:audit-idor": "bash scripts/audit-f04-audit-idor.sh",
+    "test:f04:operations": "bash scripts/test-f04-operations.sh",
+    "audit:f04:operations": "bash scripts/audit-f04-operations.sh"
   },
   "dependencies": {
     "@capacitor/android": "^8.5.2",

@@ -8,6 +8,7 @@ import {
   Building2,
   FileClock,
   KeyRound,
+  Activity,
   LayoutDashboard,
   Plug,
   ShieldCheck,
@@ -122,6 +123,12 @@ const navigation:
       ],
     },
 
+    {
+      label: "Monitoramento",
+      href: "/admin/monitoramento",
+      icon: Activity,
+      requiredAny: ["analytics.organization.read"],
+    },
     {
       label:
         "Métricas",
