@@ -391,6 +391,9 @@ test(
       await listClinicalRevisionHistory({
         patientId:
           patient.id,
+
+        organizationId:
+          unit.id,
       });
 
     assert.equal(

@@ -7,6 +7,10 @@ import {
 } from "../db/client";
 
 import {
+  AccessDeniedError,
+} from "../iam/authorization.errors";
+
+import {
   ClinicalRevisionActorNotFoundError,
   ClinicalRevisionPatientNotFoundError,
 } from "./clinical-revision.errors";
@@ -144,6 +148,13 @@ export async function listClinicalRevisionHistory(
   input:
     ListClinicalRevisionInput,
 ) {
+  if (
+    typeof input.organizationId !== "string" ||
+    input.organizationId.trim().length === 0
+  ) {
+    throw new AccessDeniedError();
+  }
+
   await requirePatient(
     input.patientId,
   );
@@ -152,6 +163,9 @@ export async function listClinicalRevisionHistory(
     where: {
       patientId:
         input.patientId,
+
+      organizationId:
+        input.organizationId,
 
       action:
         "CLINICAL_REVISION",

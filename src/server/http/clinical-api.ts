@@ -1135,6 +1135,7 @@ async function patientRevisions(
 
   const items = await listClinicalRevisionHistory({
     patientId,
+    organizationId,
   });
 
   return clinicalJson({
