@@ -61,6 +61,7 @@
     "guard:sql-injection": "node scripts/security/guard-sql-injection.mjs",
     "audit:f03:final": "bash scripts/audit-f03-master.sh",
     "test:f04:admin-core": "bash scripts/test-f04-admin-core.sh",
+    "test:f04:role-governance": "bash scripts/test-f04-role-governance.sh",
     "audit:f04:admin-core": "bash scripts/audit-f04-admin-core.sh"
   },
   "dependencies": {

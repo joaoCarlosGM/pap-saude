@@ -38,3 +38,13 @@ export class UnsupportedAdminRoleError
     )
   }
 }
+
+export class ConcurrentAdminRoleMutationError
+  extends AdminRoleError {
+  constructor() {
+    super(
+      "ROLE_ASSIGNMENT_CONFLICT",
+      409,
+    )
+  }
+}

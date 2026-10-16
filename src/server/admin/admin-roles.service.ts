@@ -36,6 +36,7 @@ import {
 
 import {
   AdminRoleAssignmentNotFoundError,
+  ConcurrentAdminRoleMutationError,
   LastPapAdminError,
   UnsupportedAdminRoleError,
 } from "./admin-role.errors"
@@ -50,6 +51,37 @@ function isSystemRoleKey(
       role.key ===
       value,
   )
+}
+
+/**
+ * Keep the role mutation and its AuditEvent in the same database transaction.
+ * A serialization conflict is retried with fresh authorization-independent
+ * state, so two concurrent last-admin removals cannot both succeed.
+ */
+async function roleMutationTransaction<T>(
+  callback: (tx: Prisma.TransactionClient) => Promise<T>,
+): Promise<T> {
+  for (let attempt = 0; attempt < 3; attempt += 1) {
+    try {
+      return await db.$transaction(callback, {
+        isolationLevel:
+          Prisma.TransactionIsolationLevel.Serializable,
+      })
+    } catch (error) {
+      if (
+        !(error instanceof Prisma.PrismaClientKnownRequestError) ||
+        error.code !== "P2034"
+      ) {
+        throw error
+      }
+
+      if (attempt === 2) {
+        throw new ConcurrentAdminRoleMutationError()
+      }
+    }
+  }
+
+  throw new ConcurrentAdminRoleMutationError()
 }
 
 export async function getAdminRoleOverview(
@@ -261,65 +293,84 @@ export async function createAdminRoleAssignment(
     })
   }
 
-  const targetUser =
-    await db.user.findUnique({
-      where: {
-        id:
-          input.targetUserId,
-      },
+  return roleMutationTransaction(
+    async (tx) => {
+      const targetUser =
+        await tx.user.findUnique({
+          where: { id: input.targetUserId },
+          select: { id: true, isActive: true },
+        })
 
-      select: {
-        id: true,
-        isActive: true,
-      },
-    })
+      if (!targetUser?.isActive) {
+        throw new UnsupportedAdminRoleError()
+      }
 
-  if (
-    !targetUser?.isActive
-  ) {
-    throw new UnsupportedAdminRoleError()
-  }
+      if (definition.scope !== "GLOBAL") {
+        const membership =
+          await tx.membership.findUnique({
+            where: {
+              userId_organizationId: {
+                userId: input.targetUserId,
+                organizationId: input.organizationId!,
+              },
+            },
+            select: { status: true },
+          })
 
-  if (
-    definition.scope !==
-    "GLOBAL"
-  ) {
-    const membership =
-      await db.membership.findUnique({
-        where: {
-          userId_organizationId: {
-            userId:
-              input.targetUserId,
+        if (membership?.status !== MembershipStatus.ACTIVE) {
+          throw new UnsupportedAdminRoleError()
+        }
+      }
 
-            organizationId:
-              input.organizationId!,
-          },
-        },
-
-        select: {
-          status:
-            true,
-        },
+      const role = await tx.role.findUnique({
+        where: { key: input.roleKey },
+        select: { id: true },
       })
 
-    if (
-      membership?.status !==
-      MembershipStatus.ACTIVE
-    ) {
-      throw new UnsupportedAdminRoleError()
-    }
-  }
+      // assignSystemRole remains the canonical scope/type validator.
+      if (!role) {
+        throw new UnsupportedAdminRoleError()
+      }
 
-  return assignSystemRole({
-    userId:
-      input.targetUserId,
+      const existing = await tx.roleAssignment.findFirst({
+        where: {
+          userId: input.targetUserId,
+          roleId: role.id,
+          organizationId: input.organizationId ?? null,
+        },
+        select: { id: true },
+      })
 
-    roleKey:
-      input.roleKey,
+      const assignment = await assignSystemRole(
+        {
+          userId: input.targetUserId,
+          roleKey: input.roleKey as SystemRoleKey,
+          organizationId: input.organizationId,
+        },
+        tx,
+      )
 
-    organizationId:
-      input.organizationId,
-  })
+      // Idempotent assignments should not generate false audit events.
+      if (!existing) {
+        await tx.auditEvent.create({
+          data: {
+            actorUserId: input.actorUserId,
+            organizationId: assignment.organizationId,
+            action: "ROLE_ASSIGNED",
+            resourceType: "ROLE_ASSIGNMENT",
+            resourceId: assignment.id,
+            after: {
+              targetUserId: input.targetUserId,
+              roleKey: input.roleKey,
+              organizationId: assignment.organizationId,
+            },
+          },
+        })
+      }
+
+      return assignment
+    },
+  )
 }
 
 export async function revokeAdminRoleAssignment(
@@ -398,127 +449,70 @@ export async function revokeAdminRoleAssignment(
     })
   }
 
-  if (
-    assignment.role.key !==
-    SYSTEM_ROLE_KEYS.PAP_ADMIN
-  ) {
-    const result =
-      await db.roleAssignment.deleteMany({
-        where: {
-          id:
-            assignment.id,
+  return roleMutationTransaction(
+    async (tx) => {
+      const current = await tx.roleAssignment.findUnique({
+        where: { id: assignment.id },
+        include: {
+          user: { select: { id: true, isActive: true } },
+          role: { select: { key: true } },
         },
       })
 
-    if (
-      result.count !==
-      1
-    ) {
-      throw new AdminRoleAssignmentNotFoundError()
-    }
-
-    return {
-      revoked:
-        true,
-      assignmentId:
-        assignment.id,
-    }
-  }
-
-  return db.$transaction(
-    async (
-      tx,
-    ) => {
-      const current =
-        await tx.roleAssignment.findUnique({
-          where: {
-            id:
-              assignment.id,
-          },
-
-          include: {
-            user: {
-              select: {
-                isActive:
-                  true,
-              },
-            },
-
-            role: {
-              select: {
-                key: true,
-              },
-            },
-          },
-        })
-
-      if (
-        !current
-      ) {
+      if (!current) {
         throw new AdminRoleAssignmentNotFoundError()
       }
 
+      // Block any role/key substitution between authorization and delete.
       if (
-        current.role.key !==
-        SYSTEM_ROLE_KEYS.PAP_ADMIN
+        current.role.key !== assignment.role.key ||
+        current.organizationId !== assignment.organizationId ||
+        current.userId !== assignment.userId
       ) {
         throw new UnsupportedAdminRoleError()
       }
 
       if (
+        current.role.key === SYSTEM_ROLE_KEYS.PAP_ADMIN &&
         current.user.isActive
       ) {
-        const activePapAdmins =
-          await tx.roleAssignment.count({
-            where: {
-              organizationId:
-                null,
+        const activePapAdmins = await tx.roleAssignment.count({
+          where: {
+            organizationId: null,
+            role: { key: SYSTEM_ROLE_KEYS.PAP_ADMIN },
+            user: { isActive: true },
+          },
+        })
 
-              role: {
-                key:
-                  SYSTEM_ROLE_KEYS.PAP_ADMIN,
-              },
-
-              user: {
-                isActive:
-                  true,
-              },
-            },
-          })
-
-        if (
-          activePapAdmins <=
-          1
-        ) {
+        if (activePapAdmins <= 1) {
           throw new LastPapAdminError()
         }
       }
 
-      const deleted =
-        await tx.roleAssignment.deleteMany({
-          where: {
-            id:
-              current.id,
-          },
-        })
+      const deleted = await tx.roleAssignment.deleteMany({
+        where: { id: current.id },
+      })
 
-      if (
-        deleted.count !==
-        1
-      ) {
+      if (deleted.count !== 1) {
         throw new AdminRoleAssignmentNotFoundError()
       }
 
-      return {
-        revoked:
-          true,
-        assignmentId:
-          current.id,
-      }
-    },
-    {
-      isolationLevel:
-        Prisma.TransactionIsolationLevel.Serializable,
+      await tx.auditEvent.create({
+        data: {
+          actorUserId: input.actorUserId,
+          organizationId: current.organizationId,
+          action: "ROLE_REVOKED",
+          resourceType: "ROLE_ASSIGNMENT",
+          resourceId: current.id,
+          before: {
+            targetUserId: current.userId,
+            roleKey: current.role.key,
+            organizationId: current.organizationId,
+          },
+        },
+      })
+
+      return { revoked: true, assignmentId: current.id }
     },
   )
 }

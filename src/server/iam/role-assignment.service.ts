@@ -2,6 +2,7 @@ import {
   MembershipStatus,
   OrganizationStatus,
   OrganizationType,
+  Prisma,
 } from "@prisma/client"
 
 import { db } from "@/server/db/client"
@@ -43,8 +44,8 @@ export async function assignSystemRole(input: {
   userId: string
   roleKey: SystemRoleKey
   organizationId?: string | null
-}) {
-  const role = await db.role.findUnique({
+}, client: Prisma.TransactionClient = db) {
+  const role = await client.role.findUnique({
     where: {
       key: input.roleKey,
     },
@@ -64,7 +65,7 @@ export async function assignSystemRole(input: {
     }
 
     const existing =
-      await db.roleAssignment.findFirst({
+      await client.roleAssignment.findFirst({
         where: {
           userId: input.userId,
           roleId: role.id,
@@ -76,7 +77,7 @@ export async function assignSystemRole(input: {
       return existing
     }
 
-    return db.roleAssignment.create({
+    return client.roleAssignment.create({
       data: {
         userId: input.userId,
         roleId: role.id,
@@ -92,7 +93,7 @@ export async function assignSystemRole(input: {
   }
 
   const organization =
-    await db.organization.findUnique({
+    await client.organization.findUnique({
       where: {
         id: input.organizationId,
       },
@@ -125,7 +126,7 @@ export async function assignSystemRole(input: {
   }
 
   const membership =
-    await db.membership.findUnique({
+    await client.membership.findUnique({
       where: {
         userId_organizationId: {
           userId: input.userId,
@@ -141,7 +142,7 @@ export async function assignSystemRole(input: {
     throw new ActiveMembershipRequiredError()
   }
 
-  return db.roleAssignment.upsert({
+  return client.roleAssignment.upsert({
     where: {
       userId_roleId_organizationId: {
         userId: input.userId,
