@@ -14,6 +14,7 @@ import {
 import {
   db,
 } from "@/server/db/client"
+import { writeAdminAudit } from "@/server/audit/admin-audit-writer.service"
 
 import {
   hashPassword,
@@ -321,7 +322,7 @@ export async function createProfessionalInvitation(
           })
         }
 
-        return tx.userInvitation.create({
+        const created = await tx.userInvitation.create({
           data: {
             email,
             displayName,
@@ -344,6 +345,19 @@ export async function createProfessionalInvitation(
               input.invitedByUserId,
           },
         })
+        await writeAdminAudit({
+          actorUserId: input.invitedByUserId,
+          organizationId: organization.id,
+          action: "INVITATION_CREATED",
+          resourceType: "INVITATION",
+          resourceId: created.id,
+          after: {
+            id: created.id, status: created.status, roleKey: created.roleKey,
+            organizationId: organization.id, userId: created.userId,
+            expiresAt: created.expiresAt.toISOString(),
+          },
+        }, tx);
+        return created;
       },
     )
 
@@ -397,23 +411,20 @@ export async function createProfessionalInvitation(
           : undefined,
     }
   } catch (error) {
-    await db.userInvitation.updateMany({
-      where: {
-        id:
-          invitation.id,
-
-        status:
-          InvitationStatus.PENDING,
-      },
-
-      data: {
-        status:
-          InvitationStatus.REVOKED,
-
-        revokedAt:
-          new Date(),
-      },
-    })
+    await db.$transaction(async tx => {
+      const result = await tx.userInvitation.updateMany({
+        where: { id: invitation.id, status: InvitationStatus.PENDING },
+        data: { status: InvitationStatus.REVOKED, revokedAt: new Date() },
+      });
+      if (result.count === 1) await writeAdminAudit({
+        actorUserId: input.invitedByUserId,
+        organizationId: organization.id,
+        action: "INVITATION_REVOKED",
+        resourceType: "INVITATION",
+        resourceId: invitation.id,
+        after: { id: invitation.id, status: "REVOKED", organizationId: organization.id },
+      }, tx);
+    });
 
     throw error
   }
@@ -700,6 +711,17 @@ export async function acceptInvitation(
         update: {},
       })
 
+      await writeAdminAudit({
+        actorUserId: existing.user!.id,
+        organizationId: existing.organizationId,
+        action: "INVITATION_ACCEPTED",
+        resourceType: "INVITATION",
+        resourceId: existing.id,
+        after: {
+          id: existing.id, status: "ACCEPTED", roleKey: existing.roleKey,
+          organizationId: existing.organizationId, userId: existing.user!.id,
+        },
+      }, tx);
       return {
         userId:
           existing.user!.id,

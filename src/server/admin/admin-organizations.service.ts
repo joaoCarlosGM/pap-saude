@@ -1,11 +1,14 @@
 import {
   OrganizationStatus,
   OrganizationType,
+  Prisma,
 } from "@prisma/client"
 
 import {
   db,
 } from "@/server/db/client"
+import { writeAdminAudit } from "@/server/audit/admin-audit-writer.service"
+import { projectAdminSnapshot } from "@/server/audit/admin-audit-policy"
 
 import {
   PERMISSIONS,
@@ -117,7 +120,8 @@ export async function createAdminOrganization(
     input.parentId,
   )
 
-  return createOrganization({
+  return db.$transaction(async tx => {
+    const organization = await createOrganization({
     type:
       input.type,
 
@@ -147,7 +151,17 @@ export async function createAdminOrganization(
 
     status:
       OrganizationStatus.PENDING_VERIFICATION,
-  })
+    }, tx)
+    await writeAdminAudit({
+      actorUserId: userId,
+      organizationId: organization.id,
+      action: "ORGANIZATION_CREATED",
+      resourceType: "ORGANIZATION",
+      resourceId: organization.id,
+      after: organization,
+    }, tx);
+    return organization;
+  });
 }
 
 export async function mutateAdminOrganization(
@@ -184,43 +198,32 @@ export async function mutateAdminOrganization(
     organizationId,
   )
 
-  switch (
-    input.operation
-  ) {
-    case "ACTIVATE":
-      return activateOrganization(
-        organizationId,
-      )
-
-    case "SUSPEND":
-      return suspendOrganization(
-        organizationId,
-      )
-
-    case "ARCHIVE":
-      return archiveOrganization(
-        organizationId,
-      )
-
-    case "UPDATE":
-      return updateOrganizationDetails(
-        organizationId,
-        {
-          name:
-            input.name,
-          code:
-            input.code,
-          cnes:
-            input.cnes,
-          cnpj:
-            input.cnpj,
-          city:
-            input.city,
-          state:
-            input.state,
-          address:
-            input.address,
-        },
-      )
-  }
+  return db.$transaction(async tx => {
+    const before = await tx.organization.findUnique({ where: { id: organizationId } });
+    if (!before) throw new AccessDeniedError();
+    let after;
+    switch (input.operation) {
+      case "ACTIVATE": after = await activateOrganization(organizationId, tx); break;
+      case "SUSPEND": after = await suspendOrganization(organizationId, tx); break;
+      case "ARCHIVE": after = await archiveOrganization(organizationId, tx); break;
+      case "UPDATE":
+        after = await updateOrganizationDetails(organizationId, {
+          name: input.name, code: input.code, cnes: input.cnes, cnpj: input.cnpj,
+          city: input.city, state: input.state, address: input.address,
+        }, tx);
+        break;
+    }
+    if (JSON.stringify(projectAdminSnapshot("ORGANIZATION", before)) !==
+        JSON.stringify(projectAdminSnapshot("ORGANIZATION", after))) {
+      await writeAdminAudit({
+        actorUserId: userId, organizationId,
+        action: input.operation === "UPDATE" ? "ORGANIZATION_UPDATED" :
+          input.operation === "ACTIVATE" ? "ORGANIZATION_ACTIVATED" :
+          input.operation === "SUSPEND" ? "ORGANIZATION_SUSPENDED" : "ORGANIZATION_ARCHIVED",
+        resourceType: "ORGANIZATION", resourceId: organizationId,
+        before, after,
+      }, tx);
+    }
+    return after;
+  }, { isolationLevel: Prisma.TransactionIsolationLevel.Serializable });
 }

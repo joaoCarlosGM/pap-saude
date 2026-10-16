@@ -793,6 +793,8 @@ model AuditEvent {
   @@index([actorUserId, occurredAt])
   @@index([resourceType, resourceId])
   @@index([correlationId, occurredAt])
+  @@index([action, occurredAt])
+  @@index([outcome, occurredAt])
   @@map("audit_events")
 }
 
