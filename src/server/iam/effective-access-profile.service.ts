@@ -108,6 +108,7 @@ export async function getEffectiveAccessProfile(
               select: {
                 key: true,
                 name: true,
+                system: true,
 
                 permissions: {
                   select: {
@@ -181,7 +182,7 @@ export async function getEffectiveAccessProfile(
      * Unknown/custom roles remain fail-closed,
      * matching authorization.service.ts.
      */
-    if (!definition) {
+    if (!definition || !assignment.role.system) {
       continue
     }
 
@@ -207,6 +208,10 @@ export async function getEffectiveAccessProfile(
       if (
         !assignment.organizationId ||
         !assignment.organization ||
+        (definition.scope === "MUNICIPALITY" &&
+          assignment.organization.type !== "MUNICIPALITY") ||
+        (definition.scope === "HEALTH_UNIT" &&
+          assignment.organization.type !== "HEALTH_UNIT") ||
         !activeOrganizationIds.has(
           assignment.organizationId,
         ) ||

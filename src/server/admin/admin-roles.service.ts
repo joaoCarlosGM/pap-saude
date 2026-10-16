@@ -26,6 +26,8 @@ import {
   requirePermission,
 } from "@/server/iam/authorization.service"
 
+import { AccessDeniedError } from "@/server/iam/authorization.errors"
+
 import {
   getEffectiveAccessProfile,
 } from "@/server/iam/effective-access-profile.service"
@@ -419,34 +421,29 @@ export async function revokeAdminRoleAssignment(
     throw new UnsupportedAdminRoleError()
   }
 
-  if (
-    definition.scope ===
-    "GLOBAL"
-  ) {
-    await requirePermission({
-      userId:
-        input.actorUserId,
+  try {
+    if (definition.scope === "GLOBAL") {
+      await requirePermission({
+        userId: input.actorUserId,
+        permission: PERMISSIONS.ROLE_MANAGE,
+      })
+    } else {
+      if (!assignment.organizationId) {
+        throw new UnsupportedAdminRoleError()
+      }
 
-      permission:
-        PERMISSIONS.ROLE_MANAGE,
-    })
-  } else {
-    if (
-      !assignment.organizationId
-    ) {
-      throw new UnsupportedAdminRoleError()
+      await requirePermission({
+        userId: input.actorUserId,
+        permission: PERMISSIONS.ROLE_MANAGE,
+        organizationId: assignment.organizationId,
+      })
     }
-
-    await requirePermission({
-      userId:
-        input.actorUserId,
-
-      permission:
-        PERMISSIONS.ROLE_MANAGE,
-
-      organizationId:
-        assignment.organizationId,
-    })
+  } catch (error) {
+    if (error instanceof AccessDeniedError) {
+      // A foreign assignment must not be distinguishable from a missing one.
+      throw new AdminRoleAssignmentNotFoundError()
+    }
+    throw error
   }
 
   return roleMutationTransaction(

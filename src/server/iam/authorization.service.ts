@@ -168,6 +168,7 @@ export async function authorize(
         organization: {
           select: {
             id: true,
+            type: true,
             status: true,
             isActive: true,
           },
@@ -183,7 +184,23 @@ export async function authorize(
 
     // Unknown/custom roles are intentionally fail-closed
     // until their scope model is explicitly defined.
-    if (!definition) {
+    if (
+      !definition ||
+      !assignment.role.system ||
+      !definition.permissions.includes(input.permission)
+    ) {
+      // DB role-permission drift must never expand the canonical role catalogue.
+      continue
+    }
+
+    if (
+      (definition.scope === "GLOBAL" && assignment.organizationId !== null) ||
+      (definition.scope === "MUNICIPALITY" &&
+        assignment.organization?.type !== OrganizationType.MUNICIPALITY) ||
+      (definition.scope === "HEALTH_UNIT" &&
+        assignment.organization?.type !== OrganizationType.HEALTH_UNIT)
+    ) {
+      // Ignore malformed persisted scope rather than granting access.
       continue
     }
 
