@@ -9,8 +9,11 @@ import {
 
 import {
   MembershipStatus,
+  MfaFactorStatus,
+  MfaFactorType,
   OrganizationStatus,
   OrganizationType,
+  SessionRevocationReason,
 } from "@prisma/client"
 
 import {
@@ -37,6 +40,11 @@ import {
 import {
   GET as rolesGET,
 } from "../../src/app/api/admin/roles/route"
+
+import {
+  GET as securityGET,
+  POST as securityPOST,
+} from "../../src/app/api/admin/security/route"
 
 import {
   POST as roleAssignmentPOST,
@@ -2307,6 +2315,618 @@ test(
         where: {
           id:
             assignment.id,
+        },
+      }),
+      1,
+    )
+  },
+)
+
+
+test(
+  "PAP admin security posture exposes no credential secrets",
+  async () => {
+    const admin =
+      await createUser(
+        "security-overview-admin@example.test",
+        "Security Overview Admin",
+      )
+
+    await makePapAdmin(
+      admin.id,
+    )
+
+    const target =
+      await createUser(
+        "security-overview-target@example.test",
+        "Security Overview Target",
+      )
+
+    const enabledAt =
+      new Date()
+
+    await db.mfaFactor.create({
+      data: {
+        userId:
+          target.id,
+
+        type:
+          MfaFactorType.TOTP,
+
+        status:
+          MfaFactorStatus.ACTIVE,
+
+        secretEncrypted:
+          "TOP-SECRET-MFA-CIPHERTEXT",
+
+        createdAt:
+          enabledAt,
+
+        enabledAt,
+      },
+    })
+
+    await db.mfaRecoveryCode.create({
+      data: {
+        userId:
+          target.id,
+
+        codeHash:
+          "recovery-secret-hash-security-overview",
+      },
+    })
+
+    await createSession({
+      userId:
+        target.id,
+
+      ipHash:
+        "sensitive-ip-hash",
+
+      userAgent:
+        "Security Test Browser",
+    })
+
+    const token =
+      await sessionFor(
+        admin.id,
+      )
+
+    const response =
+      await securityGET(
+        requestFor(
+          "GET",
+          "/api/admin/security",
+          {
+            token,
+          },
+        ),
+      )
+
+    assert.equal(
+      response.status,
+      200,
+    )
+
+    const body =
+      await response.json()
+
+    const targetView =
+      body.users.find(
+        (
+          user: {
+            id: string
+          },
+        ) =>
+          user.id ===
+          target.id,
+      )
+
+    assert.ok(
+      targetView,
+    )
+
+    assert.equal(
+      targetView.mfa.activeFactors,
+      1,
+    )
+
+    assert.equal(
+      targetView.mfa.unusedRecoveryCodes,
+      1,
+    )
+
+    assert.equal(
+      targetView.sessions.active,
+      1,
+    )
+
+    const serialized =
+      JSON.stringify(
+        body,
+      )
+
+    assert.equal(
+      serialized.includes(
+        "TOP-SECRET-MFA-CIPHERTEXT",
+      ),
+      false,
+    )
+
+    assert.equal(
+      serialized.includes(
+        "recovery-secret-hash-security-overview",
+      ),
+      false,
+    )
+
+    assert.equal(
+      serialized.includes(
+        "sensitive-ip-hash",
+      ),
+      false,
+    )
+
+    assert.equal(
+      serialized.includes(
+        "tokenHash",
+      ),
+      false,
+    )
+  },
+)
+
+test(
+  "municipal admin cannot access global security console",
+  async () => {
+    const tree =
+      await createOrganizationTree()
+
+    const municipal =
+      await createUser(
+        "security-municipal@example.test",
+        "Security Municipal",
+      )
+
+    await makeMunicipalAdmin(
+      municipal.id,
+      tree.municipalityA.id,
+    )
+
+    const token =
+      await sessionFor(
+        municipal.id,
+      )
+
+    const response =
+      await securityGET(
+        requestFor(
+          "GET",
+          "/api/admin/security",
+          {
+            token,
+          },
+        ),
+      )
+
+    assert.equal(
+      response.status,
+      403,
+    )
+  },
+)
+
+test(
+  "PAP admin can revoke one target session without revoking the others",
+  async () => {
+    const admin =
+      await createUser(
+        "security-revoke-admin@example.test",
+        "Security Revoke Admin",
+      )
+
+    await makePapAdmin(
+      admin.id,
+    )
+
+    const target =
+      await createUser(
+        "security-revoke-target@example.test",
+        "Security Revoke Target",
+      )
+
+    const first =
+      await createSession({
+        userId:
+          target.id,
+
+        userAgent:
+          "Target Browser One",
+      })
+
+    const second =
+      await createSession({
+        userId:
+          target.id,
+
+        userAgent:
+          "Target Browser Two",
+      })
+
+    const token =
+      await sessionFor(
+        admin.id,
+      )
+
+    const response =
+      await securityPOST(
+        requestFor(
+          "POST",
+          "/api/admin/security",
+          {
+            token,
+
+            body: {
+              action:
+                "REVOKE_SESSION",
+
+              targetUserId:
+                target.id,
+
+              sessionId:
+                first.session.id,
+            },
+          },
+        ),
+      )
+
+    assert.equal(
+      response.status,
+      200,
+    )
+
+    const revoked =
+      await db.session.findUniqueOrThrow({
+        where: {
+          id:
+            first.session.id,
+        },
+      })
+
+    const preserved =
+      await db.session.findUniqueOrThrow({
+        where: {
+          id:
+            second.session.id,
+        },
+      })
+
+    assert.equal(
+      revoked.revocationReason,
+      SessionRevocationReason.ADMIN_REVOKED,
+    )
+
+    assert.ok(
+      revoked.revokedAt,
+    )
+
+    assert.equal(
+      preserved.revokedAt,
+      null,
+    )
+
+    assert.equal(
+      await db.auditEvent.count({
+        where: {
+          action:
+            "SESSION_REVOKED",
+
+          resourceId:
+            first.session.id,
+
+          actorUserId:
+            admin.id,
+        },
+      }),
+      1,
+    )
+  },
+)
+
+test(
+  "PAP admin can revoke all sessions of another user",
+  async () => {
+    const admin =
+      await createUser(
+        "security-all-admin@example.test",
+        "Security All Admin",
+      )
+
+    await makePapAdmin(
+      admin.id,
+    )
+
+    const target =
+      await createUser(
+        "security-all-target@example.test",
+        "Security All Target",
+      )
+
+    await createSession({
+      userId:
+        target.id,
+    })
+
+    await createSession({
+      userId:
+        target.id,
+    })
+
+    const token =
+      await sessionFor(
+        admin.id,
+      )
+
+    const response =
+      await securityPOST(
+        requestFor(
+          "POST",
+          "/api/admin/security",
+          {
+            token,
+
+            body: {
+              action:
+                "REVOKE_ALL_SESSIONS",
+
+              targetUserId:
+                target.id,
+            },
+          },
+        ),
+      )
+
+    assert.equal(
+      response.status,
+      200,
+    )
+
+    const activeTargetSessions =
+      await db.session.count({
+        where: {
+          userId:
+            target.id,
+
+          revokedAt:
+            null,
+        },
+      })
+
+    assert.equal(
+      activeTargetSessions,
+      0,
+    )
+
+    const actorSession =
+      await db.session.findFirstOrThrow({
+        where: {
+          userId:
+            admin.id,
+        },
+
+        orderBy: {
+          createdAt:
+            "desc",
+        },
+      })
+
+    assert.equal(
+      actorSession.revokedAt,
+      null,
+    )
+
+    assert.equal(
+      await db.auditEvent.count({
+        where: {
+          action:
+            "USER_SESSIONS_REVOKED",
+
+          resourceId:
+            target.id,
+
+          actorUserId:
+            admin.id,
+        },
+      }),
+      1,
+    )
+  },
+)
+
+test(
+  "PAP admin MFA reset revokes factors recovery credentials challenges and sessions",
+  async () => {
+    const admin =
+      await createUser(
+        "security-mfa-admin@example.test",
+        "Security MFA Admin",
+      )
+
+    await makePapAdmin(
+      admin.id,
+    )
+
+    const target =
+      await createUser(
+        "security-mfa-target@example.test",
+        "Security MFA Target",
+      )
+
+    const now =
+      new Date()
+
+    const factor =
+      await db.mfaFactor.create({
+        data: {
+          userId:
+            target.id,
+
+          type:
+            MfaFactorType.TOTP,
+
+          status:
+            MfaFactorStatus.ACTIVE,
+
+          secretEncrypted:
+            "encrypted-reset-test-secret",
+
+          createdAt:
+            now,
+
+          enabledAt:
+            now,
+        },
+      })
+
+    const recovery =
+      await db.mfaRecoveryCode.create({
+        data: {
+          userId:
+            target.id,
+
+          codeHash:
+            "mfa-reset-recovery-hash",
+        },
+      })
+
+    const challenge =
+      await db.mfaChallenge.create({
+        data: {
+          userId:
+            target.id,
+
+          tokenHash:
+            "mfa-reset-challenge-hash",
+
+          expiresAt:
+            new Date(
+              now.getTime() +
+                300000,
+            ),
+        },
+      })
+
+    const targetSession =
+      await createSession({
+        userId:
+          target.id,
+      })
+
+    const token =
+      await sessionFor(
+        admin.id,
+      )
+
+    const response =
+      await securityPOST(
+        requestFor(
+          "POST",
+          "/api/admin/security",
+          {
+            token,
+
+            body: {
+              action:
+                "RESET_MFA",
+
+              targetUserId:
+                target.id,
+
+              reason:
+                "Security test reset",
+            },
+          },
+        ),
+      )
+
+    assert.equal(
+      response.status,
+      200,
+    )
+
+    const [
+      factorAfter,
+      recoveryAfter,
+      challengeAfter,
+      sessionAfter,
+    ] =
+      await Promise.all([
+        db.mfaFactor.findUniqueOrThrow({
+          where: {
+            id:
+              factor.id,
+          },
+        }),
+
+        db.mfaRecoveryCode.findUniqueOrThrow({
+          where: {
+            id:
+              recovery.id,
+          },
+        }),
+
+        db.mfaChallenge.findUniqueOrThrow({
+          where: {
+            id:
+              challenge.id,
+          },
+        }),
+
+        db.session.findUniqueOrThrow({
+          where: {
+            id:
+              targetSession.session.id,
+          },
+        }),
+      ])
+
+    assert.equal(
+      factorAfter.status,
+      MfaFactorStatus.REVOKED,
+    )
+
+    assert.ok(
+      factorAfter.revokedAt,
+    )
+
+    assert.ok(
+      recoveryAfter.revokedAt,
+    )
+
+    assert.ok(
+      challengeAfter.revokedAt,
+    )
+
+    assert.equal(
+      sessionAfter.revocationReason,
+      SessionRevocationReason.MFA_RESET,
+    )
+
+    assert.ok(
+      sessionAfter.revokedAt,
+    )
+
+    assert.equal(
+      await db.auditEvent.count({
+        where: {
+          action:
+            "MFA_RESET",
+
+          resourceId:
+            target.id,
+
+          actorUserId:
+            admin.id,
         },
       }),
       1,

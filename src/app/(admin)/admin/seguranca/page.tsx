@@ -1,11 +1,7 @@
-import AdminPlaceholder from "@/components/admin/AdminPlaceholder"
+import SecurityAdminClient from "@/components/admin/SecurityAdminClient"
 
 export default function SecurityAdminPage() {
   return (
-    <AdminPlaceholder
-      eyebrow="F04.5"
-      title="Segurança"
-      description="MFA, sessões, recuperação de conta, revogações e controles administrativos de segurança."
-    />
+    <SecurityAdminClient />
   )
 }

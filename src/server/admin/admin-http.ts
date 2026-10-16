@@ -39,6 +39,10 @@ import {
 } from "@/server/admin/admin-role.errors"
 
 import {
+  AdminSecurityError,
+} from "@/server/admin/admin-security.errors"
+
+import {
   RoleAssignmentError,
 } from "@/server/iam/role-assignment.errors"
 
@@ -189,6 +193,24 @@ export function adminErrorResponse(
       },
       {
         status: 401,
+        headers:
+          noStoreHeaders(),
+      },
+    )
+  }
+
+  if (
+    error instanceof
+    AdminSecurityError
+  ) {
+    return NextResponse.json(
+      {
+        error:
+          error.code,
+      },
+      {
+        status:
+          error.status,
         headers:
           noStoreHeaders(),
       },

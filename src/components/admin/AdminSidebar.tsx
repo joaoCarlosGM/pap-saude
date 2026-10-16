@@ -92,6 +92,12 @@ const navigation:
     },
 
     {
+      label: "Minha segurança",
+      href: "/admin/minha-seguranca",
+      icon: KeyRound,
+    },
+
+    {
       label:
         "Segurança",
       href:

@@ -228,6 +228,7 @@ model User {
   approvedRndIntegrations RNDSIntegration[]     @relation("RNDSApprovedBy")
   validationRuns          RNDSValidationRun[]   @relation("ValidationRunRequestedBy")
 
+  passwordResetTokens    PasswordResetToken[]
   passwordCredential    PasswordCredential?
   mfaFactors            MfaFactor[]
   mfaRecoveryCodes      MfaRecoveryCode[]
@@ -1032,4 +1033,23 @@ model MfaChallenge {
   @@index([userId, consumedAt, expiresAt])
   @@index([expiresAt])
   @@map("mfa_challenges")
+}
+
+// F04.5F - one-time password reset, no plaintext credentials in storage.
+model PasswordResetToken {
+  id          String    @id @default(uuid())
+  userId      String
+  tokenHash   String    @unique
+  originHash  String
+  createdAt   DateTime  @default(now())
+  expiresAt   DateTime
+  consumedAt  DateTime?
+  revokedAt   DateTime?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, createdAt])
+  @@index([originHash, createdAt])
+  @@index([expiresAt])
+  @@map("password_reset_tokens")
 }

@@ -63,7 +63,9 @@
     "test:f04:admin-core": "bash scripts/test-f04-admin-core.sh",
     "test:f04:role-governance": "bash scripts/test-f04-role-governance.sh",
     "test:f04:role-adversarial": "bash scripts/test-f04-role-adversarial.sh",
-    "audit:f04:admin-core": "bash scripts/audit-f04-admin-core.sh"
+    "audit:f04:admin-core": "bash scripts/audit-f04-admin-core.sh",
+    "test:f04:access-trust": "bash scripts/test-f04-access-trust.sh",
+    "audit:f04:access-trust": "bash scripts/audit-f04-access-trust.sh"
   },
   "dependencies": {
     "@capacitor/android": "^8.5.2",

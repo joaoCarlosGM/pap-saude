@@ -273,58 +273,20 @@ export function readMfaChallengeToken(
 
 export async function readMfaCodePayload(
   request: Request,
-): Promise<{ code: string }> {
-  const contentType =
-    request.headers.get(
-      "content-type",
-    ) ?? "";
-
-  if (
-    !contentType
-      .toLowerCase()
-      .startsWith(
-        "application/json",
-      )
-  ) {
-    throw new InvalidLoginPayloadError();
-  }
-
-  let body: unknown;
-
-  try {
-    body =
-      await request.json();
-  } catch {
-    throw new InvalidLoginPayloadError();
-  }
-
-  if (
-    typeof body !== "object" ||
-    body === null ||
-    Array.isArray(body)
-  ) {
-    throw new InvalidLoginPayloadError();
-  }
-
-  const code =
-    (
-      body as Record<
-        string,
-        unknown
-      >
-    ).code;
-
-  if (
-    typeof code !== "string" ||
-    !/^\d{6}$/.test(
-      code.trim(),
-    )
-  ) {
-    throw new InvalidLoginPayloadError();
-  }
-
-  return {
-    code:
-      code.trim(),
-  };
+): Promise<{ code:string; recovery:boolean }> {
+  const contentType=request.headers.get("content-type")??"";
+  if(!contentType.toLowerCase().startsWith("application/json")) throw new InvalidLoginPayloadError();
+  const length=request.headers.get("content-length");
+  if(length && (!Number.isFinite(Number(length)) || Number(length)>4096 || Number(length)<0)) throw new InvalidLoginPayloadError();
+  const raw=await request.text();
+  if(Buffer.byteLength(raw,"utf8")>4096) throw new InvalidLoginPayloadError();
+  let body:unknown;
+  try {body=JSON.parse(raw);}catch{throw new InvalidLoginPayloadError();}
+  if(!body || typeof body!=="object" || Array.isArray(body)) throw new InvalidLoginPayloadError();
+  const value=body as Record<string,unknown>;
+  const code=value.code;
+  if(typeof code!=="string") throw new InvalidLoginPayloadError();
+  if(/^\d{6}$/.test(code.trim())) return {code:code.trim(),recovery:false};
+  if(/^[A-Fa-f0-9-]{20,32}$/.test(code.trim())) return {code:code.trim(),recovery:true};
+  throw new InvalidLoginPayloadError();
 }

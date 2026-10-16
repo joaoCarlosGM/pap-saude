@@ -287,7 +287,7 @@ export async function confirmTotpEnrollment(
          * TOTP per user. Revoke the old factor first, then
          * promote the pending factor inside one transaction.
          */
-        await tx.mfaFactor.updateMany({
+        const replaced = await tx.mfaFactor.updateMany({
           where: {
             userId:
               input.userId,
@@ -303,6 +303,11 @@ export async function confirmTotpEnrollment(
               now,
           },
         });
+
+        if (replaced.count > 0) {
+          await tx.mfaRecoveryCode.updateMany({where:{userId:input.userId,usedAt:null,revokedAt:null},data:{revokedAt:now}});
+          await tx.mfaChallenge.updateMany({where:{userId:input.userId,consumedAt:null,revokedAt:null},data:{revokedAt:now}});
+        }
 
         const result =
           await tx.mfaFactor.updateMany({
