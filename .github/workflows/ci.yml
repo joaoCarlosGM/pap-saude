@@ -99,7 +99,9 @@ jobs:
 
       - name: Verify isolated migrator image
         run: |
-          docker run --rm --entrypoint sh pap-saude-migrator:ci -ec '
+          docker run --rm \
+            -e DATABASE_URL=postgresql://ci_no_connect:ci_no_connect@127.0.0.1:5432/pap_saude_cli_validation_only?schema=public \
+            --entrypoint sh pap-saude-migrator:ci -ec '
             test -x node_modules/.bin/prisma
             test ! -d node_modules/shadcn
             test ! -d node_modules/braces

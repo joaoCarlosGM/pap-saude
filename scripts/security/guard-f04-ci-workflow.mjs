@@ -74,4 +74,8 @@ assert.match(functionalMigratorTest, /_prisma_migrations/);
 assert.match(functionalMigratorTest, /trap cleanup EXIT/);
 assert.match(functionalMigratorTest, /for run in 1 2/);
 
+assert.match(
+  workflow,
+  /-e DATABASE_URL=postgresql:\/\/ci_no_connect:ci_no_connect@127\.0\.0\.1:5432\/pap_saude_cli_validation_only\?schema=public/
+);
 console.log("PASS F04.10 CI workflow guard: gates + branch isolation + fail-closed Prisma");
