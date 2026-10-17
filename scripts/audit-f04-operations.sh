@@ -11,6 +11,7 @@ npm run test:f04:role-adversarial
 npm run test:f04:role-governance
 npm run test:f04:admin-core
 npm run test:f03:clinical-api-ui
+npx next typegen
 npx tsc --noEmit
 npx eslint \
   src/server/admin/operations-scope.service.ts \

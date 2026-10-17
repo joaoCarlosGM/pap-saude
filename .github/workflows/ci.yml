@@ -66,6 +66,9 @@ jobs:
       - name: Generate Prisma client
         run: npx prisma generate
 
+      - name: Generate Next.js route types
+        run: npx next typegen
+
       - name: Verify Prisma fails closed without DATABASE_URL
         run: |
           if env -u DATABASE_URL npx tsx -e 'import "./prisma.config.ts";' \

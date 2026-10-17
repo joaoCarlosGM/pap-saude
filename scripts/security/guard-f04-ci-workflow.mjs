@@ -32,4 +32,7 @@ assert.match(dockerfile, /ci_no_connect:ci_no_connect@127\.0\.0\.1/);
 assert.match(prisma, /DATABASE_URL must be configured explicitly/);
 assert.doesNotMatch(prisma, /process\.env\.DATABASE_URL\s*\?\?/);
 assert.match(test, /GITHUB_ACTIONS/);
+const integratedAudit = readFileSync("scripts/audit-f04-operations.sh", "utf8");
+assert.match(workflow, /run: npx next typegen/);
+assert.match(integratedAudit, /npx next typegen\s*\nnpx tsc --noEmit/);
 console.log("PASS F04.10 CI workflow guard: gates + branch isolation + fail-closed Prisma");
