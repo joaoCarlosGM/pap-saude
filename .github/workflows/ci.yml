@@ -41,6 +41,9 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Audit production dependencies
+        run: npm audit --omit=dev --audit-level=high
+
       - name: Start disposable PostgreSQL
         run: |
           docker run --rm -d --name pap_saude_db \

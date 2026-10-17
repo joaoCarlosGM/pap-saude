@@ -12,6 +12,7 @@ for (const token of [
   "      - prod",
   "      - develop",
   "      - feature/foundation-04-admin-core",
+  "run: npm audit --omit=dev --audit-level=high",
   "run: npm run audit:f04:operations",
   "run: node scripts/security/guard-f04-ci-workflow.mjs",
   "docker run --rm -d --name pap_saude_db",
