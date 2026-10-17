@@ -3,6 +3,7 @@ set -Eeuo pipefail
 printf '\n=== F04.7-9: INTEGRATED AUDIT ===\n'
 npm run guard:sql-injection
 npx prisma validate
+npm run test:f04:db-integrity
 npm run test:f04:operations
 npm run test:f04:audit-idor
 npm run test:f04:access-trust

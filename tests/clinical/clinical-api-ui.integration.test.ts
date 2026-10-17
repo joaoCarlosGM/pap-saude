@@ -73,7 +73,13 @@ async function clearFixtures(): Promise<void> {
   await db.role.deleteMany();
 
   await db.membership.deleteMany();
-  await db.organization.deleteMany();
+  for (const type of [
+    OrganizationType.HEALTH_UNIT,
+    OrganizationType.MUNICIPALITY,
+    OrganizationType.PAP,
+  ]) {
+    await db.organization.deleteMany({ where: { type } });
+  }
   await db.user.deleteMany();
 }
 
@@ -89,18 +95,42 @@ async function createUser(email: string) {
 }
 
 async function createUnit(suffix: string) {
-  return db.organization.create({
-    data: {
-      type: OrganizationType.HEALTH_UNIT,
+  return db.$transaction(async (tx) => {
+    const pap = await tx.organization.upsert({
+      where: { code: "F03_CLINICAL_API_PAP" },
+      update: {},
+      create: {
+        code: "F03_CLINICAL_API_PAP",
+        type: OrganizationType.PAP,
+        status: OrganizationStatus.ACTIVE,
+        name: "PAP Clinical API",
+        isActive: true,
+      },
+    });
 
-      status: OrganizationStatus.ACTIVE,
+    const municipality = await tx.organization.upsert({
+      where: { code: "F03_CLINICAL_API_MUN" },
+      update: {},
+      create: {
+        code: "F03_CLINICAL_API_MUN",
+        type: OrganizationType.MUNICIPALITY,
+        status: OrganizationStatus.ACTIVE,
+        name: "Municipio Clinical API",
+        parentId: pap.id,
+        isActive: true,
+      },
+    });
 
-      name: `UBS Clinical API ${suffix}`,
-
-      cnes: `73${suffix.padStart(5, "0")}`,
-
-      isActive: true,
-    },
+    return tx.organization.create({
+      data: {
+        type: OrganizationType.HEALTH_UNIT,
+        status: OrganizationStatus.ACTIVE,
+        name: `UBS Clinical API ${suffix}`,
+        cnes: `73${suffix.padStart(5, "0")}`,
+        parentId: municipality.id,
+        isActive: true,
+      },
+    });
   });
 }
 

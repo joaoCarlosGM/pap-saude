@@ -15,6 +15,10 @@ DATABASE_URL="$TEST_URL" npx prisma migrate deploy
 DATABASE_URL="$TEST_URL" npx prisma generate
 CURRENT_DB="$(docker exec "$DB_CONTAINER" psql -U "$DB_USER" -d "$DB_NAME" -Atc 'SELECT current_database();')"
 if [[ "$CURRENT_DB" != "$DB_NAME" ]]; then printf 'SAFETY FAILURE: %s\n' "$CURRENT_DB"; exit 1; fi
+
+# Legacy suites clear audit rows between cases; bypass only within allowlisted throwaway DBs.
+bash scripts/testing/allow-audit-test-cleanup.sh "$DB_CONTAINER" "$DB_USER" "$DB_NAME"
+
 printf '\n==> integration suite\n'
 DATABASE_URL="$TEST_URL" AUTH_ALLOWED_ORIGINS='http://localhost:3000' npx tsx --test tests/auth/f04-access-trust.integration.test.ts
 printf '\nF04.5 INTEGRATION: PASS\n'

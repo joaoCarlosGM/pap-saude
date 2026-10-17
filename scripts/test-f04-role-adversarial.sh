@@ -32,6 +32,10 @@ if [[ "$CURRENT_DB" != "$DB_NAME" ]]; then
   exit 1
 fi
 
+# Legacy suites clear audit rows between cases; bypass only within allowlisted throwaway DBs.
+bash scripts/testing/allow-audit-test-cleanup.sh "$DB_CONTAINER" "$DB_USER" "$DB_NAME"
+
+
 printf '\n==> H tests\n'
 DATABASE_URL="$TEST_URL" AUTH_ALLOWED_ORIGINS='http://localhost:3000' \
   npx tsx --test tests/admin/role-adversarial.integration.test.ts

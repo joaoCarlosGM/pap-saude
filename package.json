@@ -69,7 +69,8 @@
     "test:f04:audit-idor": "bash scripts/test-f04-audit-idor.sh",
     "audit:f04:audit-idor": "bash scripts/audit-f04-audit-idor.sh",
     "test:f04:operations": "bash scripts/test-f04-operations.sh",
-    "audit:f04:operations": "bash scripts/audit-f04-operations.sh"
+    "audit:f04:operations": "bash scripts/audit-f04-operations.sh",
+    "test:f04:db-integrity": "bash scripts/test-f04-db-invariants.sh"
   },
   "dependencies": {
     "@capacitor/android": "^8.5.2",
