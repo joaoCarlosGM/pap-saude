@@ -18,10 +18,14 @@ RUN npm ci
 # ============================================================
 FROM base AS builder
 
+# Fake, non-secret URL used only during image compilation. It must never
+# reach the runtime image; runtime DATABASE_URL is provided at deployment.
+ENV DATABASE_URL="postgresql://ci_no_connect:ci_no_connect@127.0.0.1:5432/pap_saude_build_only?schema=public"
+
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
-RUN npm run build
+RUN npx prisma generate && npm run build
 
 # ============================================================
 # 4. RUNTIME / PRODUÇÃO

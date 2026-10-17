@@ -1,16 +1,19 @@
 name: PAP Saúde CI/CD
 
+# Tests run on the F04 branch and merge candidates; only prod pushes can publish/deploy.
 on:
   push:
     branches:
       - prod
+      - develop
+      - feature/foundation-04-admin-core
   pull_request:
     branches:
+      - develop
       - prod
 
 permissions:
   contents: read
-  packages: write
 
 env:
   REGISTRY: ghcr.io
@@ -18,8 +21,12 @@ env:
 
 jobs:
   validate:
-    name: Validate and build
+    name: F04 security, migrations and production builds
     runs-on: ubuntu-latest
+    timeout-minutes: 50
+    # These are disposable CI-only credentials, never production credentials.
+    env:
+      DATABASE_URL: postgresql://pap_user:pap_password@127.0.0.1:5432/pap_saude?schema=public
 
     steps:
       - name: Checkout repository
@@ -34,11 +41,46 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Lint
-        run: npm run lint
+      - name: Start disposable PostgreSQL
+        run: |
+          docker run --rm -d --name pap_saude_db \
+            -e POSTGRES_USER=pap_user \
+            -e POSTGRES_PASSWORD=pap_password \
+            -e POSTGRES_DB=pap_saude \
+            -p 127.0.0.1:5432:5432 postgres:16-alpine
+          for attempt in $(seq 1 60); do
+            if docker exec pap_saude_db \
+              psql -U pap_user -d pap_saude -Atqc 'SELECT 1' \
+              2>/dev/null | grep -qx '1'; then
+              echo 'PASS disposable PostgreSQL ready'
+              exit 0
+            fi
+            sleep 1
+          done
+          echo 'FAIL disposable PostgreSQL not ready' >&2
+          exit 1
 
-      - name: Build Next.js
-        run: npm run build
+      - name: Generate Prisma client
+        run: npx prisma generate
+
+      - name: Verify Prisma fails closed without DATABASE_URL
+        run: |
+          if env -u DATABASE_URL npx tsx -e 'import "./prisma.config.ts";' \
+            > /tmp/f04-prisma-config-check.log 2>&1; then
+            echo 'FAIL: Prisma accepted missing DATABASE_URL' >&2
+            exit 1
+          fi
+          grep -q 'DATABASE_URL must be configured explicitly' \
+            /tmp/f04-prisma-config-check.log
+
+      - name: Verify CI release guard
+        run: node scripts/security/guard-f04-ci-workflow.mjs
+
+      # This single command includes the protected-database invariant suite,
+      # migration-on-fresh-database tests, SQL guard, IAM/MFA, anti-IDOR,
+      # clinical API/UI, TypeScript, ESLint and the Next.js production build.
+      - name: F04 integrated security and clinical regression gate
+        run: npm run audit:f04:operations
 
       - name: Build Docker web image
         run: docker build --target runner -t pap-saude:ci .
@@ -46,9 +88,13 @@ jobs:
       - name: Build Docker migrator image
         run: docker build --target migrator -t pap-saude-migrator:ci .
 
+      - name: Stop disposable PostgreSQL
+        if: always()
+        run: docker rm -f pap_saude_db >/dev/null 2>&1 || true
+
   publish:
     name: Publish Docker images
-    if: github.event_name == 'push'
+    if: github.event_name == 'push' && github.ref == 'refs/heads/prod'
     needs: validate
     runs-on: ubuntu-latest
 
@@ -96,7 +142,7 @@ jobs:
 
   deploy:
     name: Deploy to VPS
-    if: github.event_name == 'push'
+    if: github.event_name == 'push' && github.ref == 'refs/heads/prod'
     needs: publish
     runs-on: ubuntu-latest
 

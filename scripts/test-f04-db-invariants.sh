@@ -17,9 +17,20 @@ cleanup() {
 trap cleanup EXIT
 
 printf '\n=== F04.10 A/B/E — DATABASE INTEGRITY REGRESSIONS ===\n'
-[[ "$(git branch --show-current)" == 'feature/foundation-04-admin-core' ]] || {
-  printf 'FAIL: wrong branch\n' >&2; exit 1;
-}
+# Local runs remain locked to the F04 feature branch. In GitHub Actions,
+# PR merge refs have detached HEAD, so use the event and trusted repo context.
+if [[ "${GITHUB_ACTIONS:-}" == 'true' && "${GITHUB_REPOSITORY:-}" == 'joaoCarlosGM/pap-saude' ]]; then
+  case "${GITHUB_EVENT_NAME:-}:${GITHUB_REF:-}:${GITHUB_BASE_REF:-}" in
+    push:refs/heads/prod:*|push:refs/heads/develop:*|push:refs/heads/feature/foundation-04-admin-core:*|\
+    pull_request:refs/pull/*:develop|pull_request:refs/pull/*:prod)
+      printf 'PASS: verified GitHub Actions branch context\n' ;;
+    *) printf 'FAIL: unexpected GitHub Actions context\n' >&2; exit 1 ;;
+  esac
+else
+  [[ "$(git branch --show-current)" == 'feature/foundation-04-admin-core' ]] || {
+    printf 'FAIL: wrong local branch\n' >&2; exit 1;
+  }
+fi
 EXISTING="$(docker exec "$DB_CONTAINER" psql -X -U "$DB_USER" -d postgres -Atqc \
   "SELECT 1 FROM pg_database WHERE datname='${DB_NAME}';")"
 [[ "$EXISTING" != 1 ]] || { printf 'FAIL: test database exists, refusing to overwrite\n' >&2; exit 1; }
