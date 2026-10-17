@@ -35,4 +35,43 @@ assert.match(test, /GITHUB_ACTIONS/);
 const integratedAudit = readFileSync("scripts/audit-f04-operations.sh", "utf8");
 assert.match(workflow, /run: npx next typegen/);
 assert.match(integratedAudit, /npx next typegen\s*\nnpx tsc --noEmit/);
+const migratorPackage = JSON.parse(
+  readFileSync("docker/migrator/package.json", "utf8")
+);
+const migratorLock = JSON.parse(
+  readFileSync("docker/migrator/package-lock.json", "utf8")
+);
+const rootLock = JSON.parse(readFileSync("package-lock.json", "utf8"));
+
+assert.deepEqual(Object.keys(migratorPackage.dependencies), ["prisma"]);
+assert.equal(
+  migratorPackage.dependencies.prisma,
+  rootLock.packages["node_modules/prisma"].version
+);
+assert.equal(
+  migratorLock.packages["node_modules/prisma"].version,
+  migratorPackage.dependencies.prisma
+);
+assert.match(dockerfile, /FROM base AS migrator-deps/);
+assert.match(
+  dockerfile,
+  /COPY --from=migrator-deps \/app\/node_modules \.\/node_modules/
+);
+assert.match(
+  workflow,
+  /npm audit --prefix docker\/migrator --include=dev --audit-level=high/
+);
+assert.match(workflow, /Verify isolated migrator image/);
+
+const functionalMigratorTest = readFileSync(
+  "scripts/test-f04-migrator-image.sh", "utf8"
+);
+assert.match(
+  workflow,
+  /run: bash scripts\/test-f04-migrator-image\.sh pap-saude-migrator:ci/
+);
+assert.match(functionalMigratorTest, /_prisma_migrations/);
+assert.match(functionalMigratorTest, /trap cleanup EXIT/);
+assert.match(functionalMigratorTest, /for run in 1 2/);
+
 console.log("PASS F04.10 CI workflow guard: gates + branch isolation + fail-closed Prisma");

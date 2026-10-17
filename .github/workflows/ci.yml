@@ -44,6 +44,9 @@ jobs:
       - name: Audit production dependencies
         run: npm audit --omit=dev --audit-level=high
 
+      - name: Audit isolated migrator dependencies
+        run: npm audit --prefix docker/migrator --include=dev --audit-level=high
+
       - name: Start disposable PostgreSQL
         run: |
           docker run --rm -d --name pap_saude_db \
@@ -93,6 +96,18 @@ jobs:
 
       - name: Build Docker migrator image
         run: docker build --target migrator -t pap-saude-migrator:ci .
+
+      - name: Verify isolated migrator image
+        run: |
+          docker run --rm --entrypoint sh pap-saude-migrator:ci -ec '
+            test -x node_modules/.bin/prisma
+            test ! -d node_modules/shadcn
+            test ! -d node_modules/braces
+            node_modules/.bin/prisma --version >/dev/null
+          '
+
+      - name: Verify migrator migrations and idempotency
+        run: bash scripts/test-f04-migrator-image.sh pap-saude-migrator:ci
 
       - name: Stop disposable PostgreSQL
         if: always()

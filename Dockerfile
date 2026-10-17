@@ -54,13 +54,18 @@ CMD ["node", "server.js"]
 # ============================================================
 # 5. DATABASE MIGRATOR
 # ============================================================
+FROM base AS migrator-deps
+
+COPY docker/migrator/package.json docker/migrator/package-lock.json ./
+RUN npm ci --omit=dev --no-audit --no-fund
+
 FROM base AS migrator
 
 ENV NODE_ENV=production
 
-COPY --from=deps /app/node_modules ./node_modules
-COPY package.json package-lock.json ./
+COPY --from=migrator-deps /app/node_modules ./node_modules
+COPY docker/migrator/package.json docker/migrator/package-lock.json ./
 COPY prisma.config.ts ./
 COPY prisma ./prisma
 
-CMD ["npx", "prisma", "migrate", "deploy"]
+CMD ["/app/node_modules/.bin/prisma", "migrate", "deploy"]
