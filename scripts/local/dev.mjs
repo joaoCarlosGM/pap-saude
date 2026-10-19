@@ -176,7 +176,18 @@ async function main() {
     env = environment(c);
   if (command === "start") {
     dockerGuard();
+    // Validate both existing resources before creating or starting anything.
+    const container = inspectOwned("container", LOCAL_CONTAINER);
+    if (container) assertLocalContainer(container);
     const volume = inspectOwned("volume", LOCAL_VOLUME);
+    if (volume && (volume.Driver !== "local" || Object.keys(volume.Options || {}).length))
+      throw new Error("LOCAL_PLAIN_VOLUME_REQUIRED");
+    if (container && !volume) throw new Error("LOCAL_VOLUME_MISSING");
+    const consumers = docker([
+      "ps", "-aq", "--no-trunc", "--filter", `volume=${LOCAL_VOLUME}`,
+    ]).split("\n").filter(Boolean);
+    if (consumers.some((id) => id !== container?.Id))
+      throw new Error("LOCAL_VOLUME_HAS_OTHER_CONSUMERS");
     if (!volume)
       docker([
         "volume",
@@ -185,7 +196,18 @@ async function main() {
         "pap.local=admin-beta1",
         LOCAL_VOLUME,
       ]);
-    const container = inspectOwned("container", LOCAL_CONTAINER);
+    // Only an owned, genuinely empty volume may receive the initial DB marker.
+    // Inspect read-only, without PostgreSQL's entrypoint or network access. A
+    // failed inspection aborts rather than treating an unreadable volume as empty.
+    const contents = docker([
+      "run", "--rm", "--network", "none", "--read-only",
+      "--entrypoint", "sh", "-v", `${LOCAL_VOLUME}:/data:ro`,
+      "postgres:16-alpine", "-ec",
+      'entries=$(ls -A /data); if [ -z "$entries" ]; then echo empty; elif [ -f /data/PG_VERSION ]; then echo initialized; else echo populated; fi',
+    ]);
+    const wasEmpty = contents === "empty";
+    if (!wasEmpty && contents !== "initialized")
+      throw new Error("LOCAL_VOLUME_INSPECTION_FAILED");
     if (!container) {
       const u = assertLocalUrl(c.databaseUrl);
       const envFile = resolve(privateDir, "postgres.env");
@@ -237,7 +259,7 @@ async function main() {
     // The only SQL allowed before marker verification, inside our labelled local container.
     const started = inspectOwned("container", LOCAL_CONTAINER);
     assertLocalContainer(started);
-    if (!volume && !container)
+    if (wasEmpty)
       docker(
         [
           "exec",

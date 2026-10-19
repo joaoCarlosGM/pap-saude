@@ -73,7 +73,70 @@ try {
   )
     throw new Error("LOCAL_SECRET_REGENERATION_FORBIDDEN");
   started = true;
+  const expectStartRefusal = () => {
+    const result = spawnSync(process.execPath, ["scripts/local/dev.mjs", "start"], {
+      cwd: workspace, env: clean, stdio: "ignore",
+    });
+    if (result.status !== 1) throw new Error("EXPECTED_LOCAL_START_REFUSAL");
+  };
+  // Foreign resources are never adopted, started, relabelled or removed by CLI.
+  run(["docker", "volume", "create", "--label", "pap.local=foreign-test", LOCAL_VOLUME]);
+  try {
+    const before = run(["docker", "volume", "inspect", LOCAL_VOLUME]);
+    expectStartRefusal();
+    if (run(["docker", "volume", "inspect", LOCAL_VOLUME]) !== before)
+      throw new Error("FOREIGN_VOLUME_MODIFIED");
+  } finally {
+    // This fixture was explicitly created above by this test, never an operator resource.
+    run(["docker", "volume", "rm", LOCAL_VOLUME]);
+  }
+  // Regression: interruption after volume creation, before container creation.
+  run(["docker", "volume", "create", "--label", "pap.local=admin-beta1", LOCAL_VOLUME]);
+  // Nonempty, uninitialized volumes are not safe initialization candidates.
+  run(["docker", "run", "--rm", "--network", "none", "--entrypoint", "sh",
+    "-v", `${LOCAL_VOLUME}:/data`, "postgres:16-alpine", "-ec", "printf preserve > /data/sentinel"]);
+  expectStartRefusal();
+  const preserved = run(["docker", "run", "--rm", "--network", "none", "--read-only", "--entrypoint", "sh",
+    "-v", `${LOCAL_VOLUME}:/data:ro`, "postgres:16-alpine", "-ec", "cat /data/sentinel; test $(ls -A /data | wc -l) -eq 1"]);
+  if (preserved !== "preserve") throw new Error("UNINITIALIZED_DATA_MODIFIED");
+  run(["docker", "volume", "rm", LOCAL_VOLUME]);
+  run(["docker", "volume", "create", "--label", "pap.local=admin-beta1", LOCAL_VOLUME]);
+  // A foreign container occupying the fixed name must remain stopped and unchanged.
+  run(["docker", "create", "--name", LOCAL_CONTAINER, "--label", "pap.local=foreign-test", "postgres:16-alpine"]);
+  try {
+    const before = run(["docker", "inspect", LOCAL_CONTAINER]);
+    expectStartRefusal();
+    if (run(["docker", "inspect", LOCAL_CONTAINER]) !== before)
+      throw new Error("FOREIGN_CONTAINER_MODIFIED");
+  } finally {
+    run(["docker", "rm", "-v", LOCAL_CONTAINER]);
+  }
+  run(["docker", "create", "--name", workspace.split("/").pop() + "-consumer", "-v",
+    `${LOCAL_VOLUME}:/data:ro`, "postgres:16-alpine"]);
+  try {
+    expectStartRefusal();
+  } finally {
+    run(["docker", "rm", "-v", workspace.split("/").pop() + "-consumer"]);
+  }
   cli("start");
+  const sql = (statement) => run([
+    "docker", "exec", LOCAL_CONTAINER, "psql", "-X", "-U", "pap_local",
+    "-d", "pap_admin_beta1_local", "-At", "-v", "ON_ERROR_STOP=1", "-c", statement,
+  ]).trim();
+  const marker = () => sql("SELECT shobj_description(oid,'pg_database') FROM pg_database WHERE datname=current_database()");
+  if (marker() !== "pap-local-admin-beta1") throw new Error("VOLUME_ONLY_RECOVERY_FAILED");
+  // A second fresh test-only volume and a container created but never started.
+  run(["docker", "rm", "-f", LOCAL_CONTAINER]);
+  run(["docker", "volume", "rm", LOCAL_VOLUME]);
+  run(["docker", "volume", "create", "--label", "pap.local=admin-beta1", LOCAL_VOLUME]);
+  run([
+    "docker", "create", "--name", LOCAL_CONTAINER, "--label", "pap.local=admin-beta1",
+    "--env-file", join(workspace, ".local/pap-admin/postgres.env"),
+    "-p", "127.0.0.1:15432:5432", "-v", `${LOCAL_VOLUME}:/var/lib/postgresql/data`,
+    "postgres:16-alpine",
+  ]);
+  cli("start");
+  if (marker() !== "pap-local-admin-beta1") throw new Error("UNSTARTED_CONTAINER_RECOVERY_FAILED");
   cli("migrate");
   cli("migrate");
   const c = JSON.parse(
@@ -101,6 +164,18 @@ try {
     ],
     { cwd: workspace, env, stdio: "inherit" },
   );
+  // Populated unmarked databases must never be adopted or have data changed.
+  sql("CREATE TABLE local_recovery_sentinel(value text); INSERT INTO local_recovery_sentinel VALUES ('preserve')");
+  cli("start");
+  if (marker() !== "pap-local-admin-beta1" || sql("SELECT value FROM local_recovery_sentinel") !== "preserve")
+    throw new Error("EXISTING_MARKED_DATA_MODIFIED");
+  sql("COMMENT ON DATABASE pap_admin_beta1_local IS NULL");
+  const rejected = spawnSync(process.execPath, ["scripts/local/dev.mjs", "start"], {
+    cwd: workspace, env: clean, stdio: "ignore",
+  });
+  if (rejected.status !== 1 || marker() !== "" || sql("SELECT value FROM local_recovery_sentinel") !== "preserve")
+    throw new Error("POPULATED_UNMARKED_DATABASE_WAS_MODIFIED");
+  console.log("PASS interrupted volume/container recovery and refusal to mark populated databases.");
   console.log(
     "PASS isolated local setup, migration replay, IAM, operator provisioning, MFA bootstrap and offline demo invitations.",
   );

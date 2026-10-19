@@ -90,6 +90,21 @@ conexões somente por loopback. O launcher recusa Docker por SSH/TCP, recursos c
 nomes ocupados sem a label correta, bind de porta/volume divergente, DATABASE_URL
 herdada divergente, bancos sem marker e execução com NODE_ENV=production. Não há
 comando de reset, drop de database, remoção de volume ou alteração de banco remoto.
+Se a primeira execução for interrompida após criar o volume ou antes de iniciar o
+container, repita `npm run local:start`. A recuperação valida a propriedade de
+ambos os recursos, o contrato do container, o volume local sem opções e a ausência
+de outros containers consumidores. Uma inspeção somente leitura, sem rede nem
+entrypoint PostgreSQL, comprova que o volume está vazio antes de permitir o
+marcador inicial. A existência anterior do volume não impede essa recuperação.
+
+Volumes não vazios nunca recebem automaticamente o marcador. Dados sem
+`PG_VERSION` são recusados antes de iniciar PostgreSQL; um cluster inicializado
+sem o marcador válido também é recusado na verificação, sem apagar dados nem
+reescrever comentários. Isso inclui interrupção durante `initdb` ou entre a
+inicialização do cluster e o marcador: exige inspeção manual do laboratório pelo
+operador, em vez de reset ou adoção automática. A recuperação não altera senhas,
+chaves MFA, migrations ou registros existentes.
+
 O papel PostgreSQL do laboratório é proprietário/superuser do cluster isolado;
 não use isso como modelo de permissões de produção.
 
