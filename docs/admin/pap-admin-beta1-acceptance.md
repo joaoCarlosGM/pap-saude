@@ -218,3 +218,78 @@ merge em develop/prod/PROD ou deploy nesta missão.
 - `875f15d`: diretório paginado, fechamento da rota alternativa de convite, limites e refinamentos V3.
 - `da89d6a`: testes de upgrade/jornada/contratos, CI e navegador reproduzível.
 - Commit deste relatório: matriz, resultados e capturas sintéticas.
+
+## Revisão de segurança MFA — base d5e110ae71b6
+
+**Falha identificada e reproduzida:** `requireAdminSession` validava somente a
+sessão primária. As rotas Beta e o convite legado exigiam MFA, mas POST de
+organizações, PATCH de estado, atribuição/revogação de papéis e ações sobre
+sessões/MFA de terceiros ainda aceitavam a sessão sem segundo fator. O teste
+adversarial anterior à correção reproduziu criação de organização com 201 onde
+deveria haver 403, exclusivamente no banco descartável de revisão.
+
+**Correção:** MFA obrigatório no guard administrativo comum, usado pelas rotas
+legadas; `requireBetaSession` é um alias desse mesmo guard, sem política paralela.
+Além da sessão válida, exige fator TOTP ACTIVE, `enabledAt` definido e evidência
+`session.mfaVerifiedAt` posterior ou igual à ativação do fator e à criação da sessão,
+sem timestamp futuro. Fator revogado/ausente, novo fator ativado após a prova,
+sessão primária ou sessão anterior ao enrollment falham com
+`403 ADMIN_MFA_REQUIRED` e `Cache-Control: no-store`. Sessão ausente/expirada/revogada
+continua 401. IAM, escopo, origem/CSRF e regras transacionais continuam obrigatórios;
+MFA não confere nenhuma permissão adicional. Não houve alteração de schema ou
+migration nesta revisão.
+
+| Superfície privilegiada | Política após revisão |
+|---|---|
+| `/api/admin/organizations`, inclusive GET/POST | Guard comum + IAM |
+| `/api/admin/organizations/[organizationId]` PATCH: UPDATE/ACTIVATE/SUSPEND/ARCHIVE | Guard comum + IAM/escopo/origem |
+| `/api/admin/role-assignments` POST e `/[assignmentId]` DELETE | Guard comum + IAM/escopo/origem |
+| `/api/admin/security` GET e POST: REVOKE_SESSION/REVOKE_ALL_SESSIONS/RESET_MFA | Guard comum + IAM/origem/regras de proteção |
+| Usuários, roles, auditoria, operações/integrações/métricas legados e convites | Guard comum + IAM/escopo |
+| Solicitações, convites, métricas e diretório Beta | Mesmo guard comum + IAM/escopo |
+
+**Exceções de bootstrap deliberadas, sem concessão administrativa:**
+`GET /api/admin/context` apenas resolve o próprio perfil e permite navegar até
+Minha segurança; não é endpoint de mutação. `/api/auth/security` continua usando
+sessão da própria conta, com senha/reauth/TOTP conforme a ação e restrição de
+owner, permitindo START_MFA e CONFIRM_MFA iniciais. Login, challenge/verify,
+recuperação por código, recuperação de senha, logout e onboarding não foram
+submetidos ao guard administrativo. A ativação do fator não transforma a sessão
+primária em sessão MFA: é necessário concluir novo login com TOTP ou código de
+recuperação. O frontend reconhece o erro comum e orienta esse caminho.
+
+**Testes adicionados:** `tests/admin/admin-mfa.integration.test.ts`, executado pelo
+harness `scripts/test-admin-mfa.sh`, em `pap_saude_admin_mfa_test` com label
+explicitamente descartável. Matriz HTTP cobre 12 leituras e 16 mutações/variantes,
+com PAP_ADMIN real no IAM. Repete a negação antes do enrollment, durante PENDING,
+com fator ativo sem prova na sessão, após revogação e após substituição do fator.
+Cada rodada compara organizações, role assignments, estado de sessão/fatores do
+alvo, convites e auditoria, comprovando ausência de efeitos privilegiados.
+Também verifica 401 sem sessão, contexto e configuração inicial via HTTP,
+login real TOTP, login real com recovery code e negação IAM mesmo com MFA.
+Resultado inicial após correção: **8/8** testes, nenhum skip.
+
+O inventário AST `tests/security/admin-mfa-inventory.test.mjs` exige guard
+administrativo aguardado em todos os handlers de `/api/admin`, com uma única
+exceção explícita para GET context. Duas mutações de código removem as chamadas
+de guard em rotas antigas/novas e são detectadas: **2/2** testes passaram.
+Não substitui os testes HTTP; evita esquecer novas superfícies no futuro.
+
+Os testes F04 existentes receberam fixtures explícitas de sessão MFA para seus
+atores positivos, preservando todos os asserts IAM/IDOR/auditoria. Credenciais e
+fatores de alvos usados nos testes de reset/revogação não foram alterados pelo
+helper. As cerimônias reais são testadas separadamente. O comando Beta 1 inclui
+agora a jornada existente, upgrade, regressão MFA e inventário; o CI existente
+executa o conjunto. Resultados completos do SHA corrigido serão registrados no
+PR junto aos links de CI, incluindo F04/F03/auth, tipos, lint/build e Docker/CVEs.
+
+Mantido **NO-GO para produção/Beta homologada** pelos gates operacionais externos
+já registrados. Revisão sem VPS, sem dados reais, sem merge ou deploy.
+
+Resultados locais já executados nesta revisão: comando Beta ampliado **29/29**
+(1 upgrade + 18 jornada/template + 8 MFA HTTP + 2 inventário), F04 integrado
+**78/78**, incluindo admin HTTP **26/26**, TypeScript e lint sem warnings e build
+Next de produção. Guard CI/SSH **2/2**. A reprodução anterior, resultados e hashes
+desses logs estão em [mfa-review-validation.json](evidence/mfa-review-validation.json).
+F03 e autenticação são executados em sequência por compartilharem um banco nos
+harnesses legados; os resultados finais completos e CI do HEAD ficam no PR.
