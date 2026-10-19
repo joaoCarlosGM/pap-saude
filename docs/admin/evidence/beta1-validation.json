@@ -1,0 +1,93 @@
+{
+  "generatedAt": "2026-10-19T13:19:49.813980+00:00",
+  "baseline": "9b9f4951ebeca4121acecb435659727bf0fa3c97",
+  "baselineCi": "https://github.com/joaoCarlosGM/pap-saude/actions/runs/39253051569",
+  "productionDecision": "NO-GO; external homologation required",
+  "prototypeSha256": "138aa47b817aefaa7af4eeb777710b3fe1518a66bdd14f805cf9cfb1f0458b72",
+  "logs": {
+    "npm-ci": {
+      "sha256": "224f3b4e04162709b7d617c201872826b1c0ece75de7d4f6cf9a6473c305137f",
+      "passingTests": 0,
+      "failingTests": 0
+    },
+    "prisma-validate": {
+      "sha256": "5a5dfd1f843f80d6aaf2604064f6fc9fb6b7d560face18a1741eb32c32bd7435",
+      "passingTests": 0,
+      "failingTests": 0
+    },
+    "prisma-generate": {
+      "sha256": "35f08f567731b1b70dbc6747f2f93fd920e4329e669ab8862bcb129f293119ac",
+      "passingTests": 0,
+      "failingTests": 0
+    },
+    "typegen": {
+      "sha256": "d51d6d06be4756a91e9910f05d692a4914979cbf4e058907ca57980542d1b8c9",
+      "passingTests": 0,
+      "failingTests": 0
+    },
+    "tsc": {
+      "sha256": "76162e465989f3f070a9de8db711fbf358e53b74d09ce1bbdb57c727e4c4a16d",
+      "passingTests": 0,
+      "failingTests": 0
+    },
+    "lint": {
+      "sha256": "a1c2b610c1998028f54ffb82053418530dfc96c543e31d539b5f9cf1ba05b24b",
+      "passingTests": 0,
+      "failingTests": 0
+    },
+    "build": {
+      "sha256": "49e56f625aa27a8d54ab6db7d27f7ab2df0a1445dc35f22a31a038409d63d2ec",
+      "passingTests": 0,
+      "failingTests": 0
+    },
+    "journey": {
+      "sha256": "84616dbc54d4bb6986a4f429cf02c80f556af21d32b2e5e38d5ad3a1f5a589f6",
+      "passingTests": 19,
+      "failingTests": 0
+    },
+    "f04": {
+      "sha256": "bbfb767d78b72c641345c2def1d3ea62e8b06ab3043a997c8c88c3cfcc299b92",
+      "passingTests": 78,
+      "failingTests": 0
+    },
+    "f03": {
+      "sha256": "a09ecc294dfda10ee022ab45a38a39b2bd41b29d18918878a221c2e2eee38953",
+      "passingTests": 203,
+      "failingTests": 0
+    },
+    "auth": {
+      "sha256": "6f03076dd8a595a15f8e12fb52dcada8893c30724b1a46e2de106d943cb35cad",
+      "passingTests": 202,
+      "failingTests": 0
+    },
+    "db-roles": {
+      "sha256": "fe4d5bdc96750dd1d45c218abcfcaa1d7edf28b588276c22b306400cfb793cad",
+      "passingTests": 0,
+      "failingTests": 0
+    },
+    "preflight": {
+      "sha256": "d397a6b9f6f797257e5c8eadbf411bdddf56b6d8db99c5976a8a1508e92d99d0",
+      "passingTests": 1,
+      "failingTests": 0
+    },
+    "admin-core-final": {
+      "sha256": "f8be165686ab25093030ac0aa9dc0987c35217913cfd6f162683a9443235be00",
+      "passingTests": 26,
+      "failingTests": 0
+    },
+    "browser-final": {
+      "sha256": "094eb3c67db3d30f724c2fece465a063e114a0b3feb544362b5642c0a8dfc56e",
+      "passingTests": 0,
+      "failingTests": 0
+    }
+  },
+  "screenshots": {
+    "dashboard-desktop.png": "aa84ccf7c7ea2c156f4ac464ae1a3729318b8bcbe0a804a5120bcb6f4f65b5fe",
+    "dashboard-mobile.png": "d7c5c830acc6849dfa678ebd8f60416dc154a70d863b9ec01dce0794176b991e",
+    "public-desktop.png": "96a1b1273305ba3b2f1b9e25f53b73504550d167adfbbd40320a4c08e9fcee49",
+    "public-mobile.png": "fb6b7acf431f21d3c4dda6e7d25ecaf5ad1e372b6fba260790037448473a1417",
+    "request-review-desktop.png": "97d7a78284fbef4c395f78621878ff6000a2be63dd035728fc7d08ac67147152",
+    "sidebar-mobile.png": "593576577434e86273831eaa4c03d002b31d571cf236491e6c4b536283cc8738"
+  },
+  "implementationCommit": "da89d6a"
+}
