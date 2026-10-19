@@ -29,6 +29,7 @@ COPY . .
 
 RUN --mount=type=secret,id=build_ca \
     if [ -f /run/secrets/build_ca ]; then export NODE_EXTRA_CA_CERTS=/run/secrets/build_ca; fi; \
+    if [ -f /run/secrets/build_ca ]; then cat /run/secrets/build_ca >> /etc/ssl/cert.pem; fi; \
     npx prisma generate && npm run build
 
 # ============================================================
@@ -42,7 +43,7 @@ ENV NEXT_TELEMETRY_DISABLED=1
 RUN addgroup --system --gid 1001 nodejs \
     && adduser --system --uid 1001 nextjs
 
-COPY --from=builder /app/public ./public
+COPY --from=builder --chown=nextjs:nodejs /app/public ./public
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 
@@ -71,11 +72,11 @@ FROM base AS migrator
 
 ENV NODE_ENV=production
 
-COPY --from=migrator-deps /app/node_modules ./node_modules
-COPY docker/migrator/package.json docker/migrator/package-lock.json ./
-COPY prisma.config.ts ./
-COPY prisma ./prisma
-COPY docker/migrator/migrate.mjs ./migrate.mjs
+COPY --chown=node:node --from=migrator-deps /app/node_modules ./node_modules
+COPY --chown=node:node docker/migrator/package.json docker/migrator/package-lock.json ./
+COPY --chown=node:node prisma.config.ts ./
+COPY --chown=node:node prisma ./prisma
+COPY --chown=node:node docker/migrator/migrate.mjs ./migrate.mjs
 
 USER node
 

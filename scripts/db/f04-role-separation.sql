@@ -28,7 +28,7 @@ BEGIN
 END $guard$;
 -- public schema grants affect this database only; inventory other users first.
 REVOKE CREATE ON SCHEMA public FROM PUBLIC;
-GRANT CONNECT ON DATABASE :DBNAME TO :"runtime_role", :"migrator_role";
+GRANT CONNECT ON DATABASE :"DBNAME" TO :"runtime_role", :"migrator_role";
 GRANT USAGE ON SCHEMA public TO :"runtime_role";
 GRANT USAGE, CREATE ON SCHEMA public TO :"migrator_role";
 GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA public TO :"runtime_role";

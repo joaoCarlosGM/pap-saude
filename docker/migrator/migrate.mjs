@@ -13,6 +13,7 @@ export async function preflightLegacyData(client) {
         if (result.rows[0].populated) throw new Error('LEGACY_DATA_BLOCKED: preserve and restore-test backup; approved data mapping required');
       }
     }
+  return legacy.rows[0].present;
 }
 
 async function main() {
@@ -22,7 +23,12 @@ async function main() {
   try {
     // Serializes cooperating migrators; operators MUST also quiesce legacy writers.
     await client.query("SELECT pg_advisory_lock(4101027)");
-    await preflightLegacyData(client);
+    const legacy = await preflightLegacyData(client);
+    if (legacy) {
+      if (process.env.F04_LEGACY_MAINTENANCE !== 'writers-stopped') throw new Error('MAINTENANCE_REQUIRED');
+      const sessions = await client.query("SELECT count(*)::int AS count FROM pg_stat_activity WHERE datname=current_database() AND pid<>pg_backend_pid() AND backend_type='client backend'");
+      if (sessions.rows[0].count !== 0) throw new Error('LEGACY_CONNECTIONS_PRESENT');
+    }
     const code = await new Promise((resolve, reject) => {
       const child = spawn('/app/node_modules/.bin/prisma', ['migrate', 'deploy'], { stdio: 'inherit' });
       child.on('error', reject);
@@ -35,4 +41,9 @@ async function main() {
     console.log(`PASS migration history: ${expected.length}`);
   } finally { await client.end(); }
 }
-if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) main().catch(() => { console.error('MIGRATOR_ABORTED: legacy data, connection, schema or migration failure; review isolated logs. Web must remain stopped.'); process.exitCode = 1; });
+if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) main().catch(error => {
+  const known = ['LEGACY_DATA_BLOCKED', 'MIGRATION_FAILED', 'MIGRATION_HISTORY_INVALID', 'MAINTENANCE_REQUIRED', 'LEGACY_CONNECTIONS_PRESENT'];
+  const code = error instanceof Error ? error.message.split(':')[0] : '';
+  console.error(`MIGRATOR_ABORTED ${known.includes(code) ? code : 'CONNECTION_OR_CONFIG_ERROR'}: web must remain stopped`);
+  process.exitCode = 1;
+});

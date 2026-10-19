@@ -87,7 +87,9 @@ jobs:
             /tmp/f04-prisma-config-check.log
 
       - name: Verify CI release guard
-        run: node scripts/security/guard-f04-ci-workflow.mjs
+        run: |
+          node scripts/security/guard-f04-ci-workflow.mjs
+          node --test tests/security/f04-ci-workflow.test.mjs
 
       # This single command includes the protected-database invariant suite,
       # migration-on-fresh-database tests, SQL guard, IAM/MFA, anti-IDOR,
@@ -100,6 +102,9 @@ jobs:
 
       - name: Full F03 regression without cached results
         run: npm run test:f03:smart:force
+
+      - name: Authentication and MFA regression
+        run: npm run test:auth
 
       - name: Build Docker web image
         run: docker build --target runner -t pap-saude:ci .
@@ -120,6 +125,9 @@ jobs:
 
       - name: Verify migrator migrations and idempotency
         run: bash scripts/test-f04-migrator-image.sh pap-saude-migrator:ci
+
+      - name: Verify runtime web image with least-privilege database role
+        run: bash scripts/test-f04-web-image.sh pap-saude:ci pap-saude-migrator:ci
 
       - name: Stop disposable PostgreSQL
         if: always()

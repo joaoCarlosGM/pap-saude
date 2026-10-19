@@ -14,7 +14,7 @@ for (const token of [
   "      - feature/foundation-04-admin-core",
   "run: npm audit --omit=dev --audit-level=high",
   "run: npm run audit:f04:operations",
-  "run: node scripts/security/guard-f04-ci-workflow.mjs",
+  "node scripts/security/guard-f04-ci-workflow.mjs",
   "docker run --rm -d --name pap_saude_db",
   "Verify Prisma fails closed without DATABASE_URL",
   "if: github.event_name == 'push' && github.ref == 'refs/heads/prod'",
@@ -55,7 +55,7 @@ assert.equal(
 assert.match(dockerfile, /FROM base AS migrator-deps/);
 assert.match(
   dockerfile,
-  /COPY --from=migrator-deps \/app\/node_modules \.\/node_modules/
+  /COPY (?:--chown=node:node )?--from=migrator-deps \/app\/node_modules \.\/node_modules/
 );
 assert.match(
   workflow,

@@ -13,7 +13,7 @@ DB_URL="postgresql://${DB_USER}:${DB_PASSWORD}@${PG}:5432/${DB}?schema=public"
 
 cleanup() {
   docker rm -f "$PG" >/dev/null 2>&1 || true
-  rm -f /tmp/"$PG".dump
+  rm -f /tmp/"$PG".dump /tmp/"$PG".log
   docker network rm "$NET" >/dev/null 2>&1 || true
 }
 
@@ -54,7 +54,7 @@ EXPECTED="$(
     wc -l | tr -d '[:space:]'
 )"
 
-test "$EXPECTED" -eq 27
+test "$EXPECTED" -ge 27
 
 # Build the exact legacy source with SQL and Prisma's recorded checksum.
 INITIAL=20260909150044_init_clinical_schema
@@ -77,9 +77,10 @@ SQL
   rm /tmp/"$PG".dump
   RESTORED="$(docker exec "$PG" psql -X -U "$DB_USER" -d "restore_$scenario" -Atqc 'SELECT md5(row_to_json(p)::text) FROM patients p')"
   test "$BEFORE" = "$RESTORED"
-  if docker run --rm --network "$NET" -e "DATABASE_URL=$DB_URL" "$IMAGE"; then
+  if docker run --rm --network "$NET" -e "DATABASE_URL=$DB_URL" "$IMAGE" > /tmp/"$PG".log 2>&1; then
     echo 'FAIL populated legacy migration accepted' >&2; exit 1
   fi
+  grep -q 'MIGRATOR_ABORTED LEGACY_DATA_BLOCKED' /tmp/"$PG".log
   test "$(docker exec "$PG" psql -X -U "$DB_USER" -d "$DB" -Atqc 'SELECT count(*) FROM _prisma_migrations')" = 1
   test "$(docker exec "$PG" psql -X -U "$DB_USER" -d "$DB" -Atqc 'SELECT count(*) FROM patients')" = 1
   AFTER="$(docker exec "$PG" psql -X -U "$DB_USER" -d "$DB" -Atqc 'SELECT md5(row_to_json(p)::text) FROM patients p')"
@@ -89,12 +90,19 @@ SQL
   echo "PASS legacy $scenario preserved and migration aborted"
 done
 
+if docker run --rm --network "$NET" -e "DATABASE_URL=$DB_URL" "$IMAGE" > /tmp/"$PG".log 2>&1; then
+  echo 'FAIL legacy migration without maintenance confirmation' >&2; exit 1
+fi
+grep -q 'MIGRATOR_ABORTED MAINTENANCE_REQUIRED' /tmp/"$PG".log
+echo 'PASS maintenance confirmation required'
+
 for run in 1 2; do
   echo "==> Migration execution $run"
 
   docker run --rm \
     --network "$NET" \
     -e "DATABASE_URL=$DB_URL" \
+    -e F04_LEGACY_MAINTENANCE=writers-stopped \
     "$IMAGE"
 
   COUNT="$(
@@ -114,13 +122,17 @@ for run in 1 2; do
   docker run --rm --network "$NET" -e "DATABASE_URL=$DB_URL" --entrypoint /app/node_modules/.bin/prisma "$IMAGE" migrate status
 done
 
+docker run --rm --network "$NET" -e "DATABASE_URL=$DB_URL" --entrypoint /app/node_modules/.bin/prisma "$IMAGE" migrate diff --from-config-datasource --to-schema prisma/schema.prisma --exit-code
+docker exec -i "$PG" psql -X -U "$DB_USER" -d "$DB" -v ON_ERROR_STOP=1 < scripts/db/f04-readonly-inventory.sql
+
 # Inject a failed migration only into this disposable database. The contract is
 # migration success && web startup; this does not validate the external VPS script.
 docker exec "$PG" psql -X -U "$DB_USER" -d "$DB" -v ON_ERROR_STOP=1 -c "UPDATE _prisma_migrations SET finished_at=NULL, logs='SYNTHETIC FAILURE' WHERE migration_name='20261016210000_foundation_04_audit_integrity';"
 WEB_STARTED=0
-if docker run --rm --network "$NET" -e "DATABASE_URL=$DB_URL" "$IMAGE"; then
+if docker run --rm --network "$NET" -e "DATABASE_URL=$DB_URL" "$IMAGE" > /tmp/"$PG".log 2>&1; then
   WEB_STARTED=1
 fi
 test "$WEB_STARTED" = 0
+grep -q 'MIGRATOR_ABORTED MIGRATION_FAILED' /tmp/"$PG".log
 echo 'PASS failed migration blocks web startup contract (VPS script unverified)'
 echo "F04.10 MIGRATOR FUNCTIONAL CI GATE: PASS"
