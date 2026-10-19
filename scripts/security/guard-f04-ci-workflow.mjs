@@ -43,7 +43,7 @@ const migratorLock = JSON.parse(
 );
 const rootLock = JSON.parse(readFileSync("package-lock.json", "utf8"));
 
-assert.deepEqual(Object.keys(migratorPackage.dependencies), ["prisma"]);
+assert.deepEqual(Object.keys(migratorPackage.dependencies), ["pg", "prisma"]);
 assert.equal(
   migratorPackage.dependencies.prisma,
   rootLock.packages["node_modules/prisma"].version
@@ -79,3 +79,29 @@ assert.match(
   /-e DATABASE_URL=postgresql:\/\/ci_no_connect:ci_no_connect@127\.0\.0\.1:5432\/pap_saude_cli_validation_only\?schema=public/
 );
 console.log("PASS F04.10 CI workflow guard: gates + branch isolation + fail-closed Prisma");
+
+assert.match(workflow, /environment: production/);
+assert.match(workflow, /StrictHostKeyChecking=yes/);
+assert.doesNotMatch(workflow, /ssh-keyscan/);
+assert.match(dockerfile, /USER node/);
+assert.match(dockerfile, /HEALTHCHECK/);
+assert.match(readFileSync(".dockerignore", "utf8"), /!prisma\/migrations\/\*\*\/migration\.sql/);
+
+// Parse the actual jobs: matching a comment/string alone is not a release guard.
+const { parse } = await import('yaml');
+const ci = parse(workflow);
+assert.equal(ci.permissions.contents, 'read');
+assert.ok(!('pull_request_target' in ci.on));
+for (const name of ['publish', 'deploy']) {
+  assert.equal(ci.jobs[name].if, "github.event_name == 'push' && github.ref == 'refs/heads/prod'");
+}
+assert.equal(ci.jobs.publish.needs, 'validate');
+assert.equal(ci.jobs.deploy.needs, 'publish');
+assert.equal(ci.jobs.deploy.environment, 'production');
+assert.ok(ci.on.push.branches.includes('codex/f04-10-release-hardening'));
+for (const job of Object.values(ci.jobs)) {
+  for (const step of job.steps ?? []) {
+    if (step.uses) assert.match(step.uses, /@[0-9a-f]{40}$/, 'Actions must be pinned');
+  }
+}
+console.log('PASS parsed CI release dependencies, exact event guards and immutable action refs');

@@ -7,6 +7,7 @@ on:
       - prod
       - develop
       - feature/foundation-04-admin-core
+      - codex/f04-10-release-hardening
   pull_request:
     branches:
       - develop
@@ -30,10 +31,10 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
           node-version: 22
           cache: npm
@@ -49,7 +50,7 @@ jobs:
 
       - name: Start disposable PostgreSQL
         run: |
-          docker run --rm -d --name pap_saude_db \
+          docker run --rm -d --name pap_saude_db --label pap.disposable=f0410 \
             -e POSTGRES_USER=pap_user \
             -e POSTGRES_PASSWORD=pap_password \
             -e POSTGRES_DB=pap_saude \
@@ -65,6 +66,9 @@ jobs:
           done
           echo 'FAIL disposable PostgreSQL not ready' >&2
           exit 1
+
+      - name: Legacy data preflight and synthetic backup restore
+        run: node --test tests/security/f04-migration-preflight.test.mjs
 
       - name: Generate Prisma client
         run: npx prisma generate
@@ -90,6 +94,12 @@ jobs:
       # clinical API/UI, TypeScript, ESLint and the Next.js production build.
       - name: F04 integrated security and clinical regression gate
         run: npm run audit:f04:operations
+
+      - name: PostgreSQL runtime and migrator separation
+        run: bash scripts/test-f04-role-separation.sh
+
+      - name: Full F03 regression without cached results
+        run: npm run test:f03:smart:force
 
       - name: Build Docker web image
         run: docker build --target runner -t pap-saude:ci .
@@ -127,20 +137,20 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
 
       - name: Login to GHCR
-        uses: docker/login-action@v3
+        uses: docker/login-action@c94ce9fb468520275223c153574b00df6fe4bcc9 # v3
         with:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
+        uses: docker/setup-buildx-action@8d2750c68a42422c14e847fe6c8ac0403b4cbd6f # v3
 
       - name: Build and publish web image
-        uses: docker/build-push-action@v6
+        uses: docker/build-push-action@10e90e3645eae34f1e60eeb005ba3a3d33f178e8 # v6
         with:
           context: .
           target: runner
@@ -152,7 +162,7 @@ jobs:
           cache-to: type=gha,mode=max
 
       - name: Build and publish migrator image
-        uses: docker/build-push-action@v6
+        uses: docker/build-push-action@10e90e3645eae34f1e60eeb005ba3a3d33f178e8 # v6
         with:
           context: .
           target: migrator
@@ -167,11 +177,13 @@ jobs:
     name: Deploy to VPS
     if: github.event_name == 'push' && github.ref == 'refs/heads/prod'
     needs: publish
+    environment: production
     runs-on: ubuntu-latest
 
     steps:
       - name: Configure SSH
         env:
+          VPS_KNOWN_HOSTS: ${{ secrets.VPS_KNOWN_HOSTS }}
           VPS_SSH_KEY: ${{ secrets.VPS_SSH_KEY }}
           VPS_HOST: ${{ secrets.VPS_HOST }}
           VPS_PORT: ${{ secrets.VPS_PORT }}
@@ -182,7 +194,8 @@ jobs:
           printf '%s\n' "$VPS_SSH_KEY" > ~/.ssh/pap_deploy
           chmod 600 ~/.ssh/pap_deploy
 
-          ssh-keyscan -p "$VPS_PORT" -H "$VPS_HOST" >> ~/.ssh/known_hosts
+          test -n "$VPS_KNOWN_HOSTS"
+          printf '%s\n' "$VPS_KNOWN_HOSTS" > ~/.ssh/known_hosts
           chmod 600 ~/.ssh/known_hosts
 
       - name: Deploy application
@@ -195,6 +208,8 @@ jobs:
           ssh \
             -p "$VPS_PORT" \
             -i ~/.ssh/pap_deploy \
+            -o StrictHostKeyChecking=yes
+            -o BatchMode=yes
             -o IdentitiesOnly=yes \
             "$VPS_USER@$VPS_HOST" \
             "sudo -n /opt/pap-saude/scripts/deploy.sh '$DEPLOY_SHA'"
