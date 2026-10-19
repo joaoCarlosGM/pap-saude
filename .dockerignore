@@ -40,3 +40,6 @@ compose*.yml
 # Migration SQL is required by the isolated migrator.
 !prisma/migrations/**/migration.sql
 .test-audit
+
+# Local operator credentials, encryption keys and demo invitation tokens
+.local

@@ -1,3 +1,4 @@
+import { captureLocalDemoMail } from "./local-demo-mail";
 import { EmailDeliveryError } from "@/server/invitations/invitation.errors";
 function escapeHtml(value: string) {
   return value
@@ -60,6 +61,17 @@ export async function sendInvitationEmail(
   const expected = invitationBaseUrl();
   if (new URL(input.invitationUrl).origin !== expected)
     throw new EmailDeliveryError();
+  if (process.env.PAP_EMAIL_PROVIDER === "local-demo") {
+    try {
+      await captureLocalDemoMail({
+        to: input.to,
+        ...invitationTemplate(input),
+      });
+    } catch {
+      throw new EmailDeliveryError();
+    }
+    return { mode: "DEVELOPMENT" };
+  }
   if (process.env.PAP_EMAIL_PROVIDER?.trim().toLowerCase() !== "resend") {
     if (process.env.NODE_ENV === "production") throw new EmailDeliveryError();
     return { mode: "DEVELOPMENT" };
