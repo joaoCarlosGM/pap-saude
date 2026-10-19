@@ -17,17 +17,17 @@ cleanup() {
 trap cleanup EXIT
 
 printf '\n=== F04.10 A/B/E — DATABASE INTEGRITY REGRESSIONS ===\n'
-# Local runs remain locked to the F04 feature branch. In GitHub Actions,
+# Local runs are allowlisted to the reviewed F04/Beta mission branches. In GitHub Actions,
 # PR merge refs have detached HEAD, so use the event and trusted repo context.
 if [[ "${GITHUB_ACTIONS:-}" == 'true' && "${GITHUB_REPOSITORY:-}" == 'joaoCarlosGM/pap-saude' ]]; then
   case "${GITHUB_EVENT_NAME:-}:${GITHUB_REF:-}:${GITHUB_BASE_REF:-}" in
-    push:refs/heads/prod:*|push:refs/heads/develop:*|push:refs/heads/feature/foundation-04-admin-core:*|push:refs/heads/codex/f04-10-release-hardening:*|\
+    push:refs/heads/prod:*|push:refs/heads/develop:*|push:refs/heads/feature/foundation-04-admin-core:*|push:refs/heads/codex/f04-10-release-hardening:*|push:refs/heads/codex/pap-admin-beta1:*|\
     pull_request:refs/pull/*:develop|pull_request:refs/pull/*:prod)
       printf 'PASS: verified GitHub Actions branch context\n' ;;
     *) printf 'FAIL: unexpected GitHub Actions context\n' >&2; exit 1 ;;
   esac
 else
-  [[ "$(git branch --show-current)" == 'feature/foundation-04-admin-core' || "$(git branch --show-current)" == 'codex/f04-10-release-hardening' ]] || {
+  [[ "$(git branch --show-current)" == 'feature/foundation-04-admin-core' || "$(git branch --show-current)" == 'codex/f04-10-release-hardening' || "$(git branch --show-current)" == 'codex/pap-admin-beta1' ]] || {
     printf 'FAIL: wrong local branch\n' >&2; exit 1;
   }
 fi

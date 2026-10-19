@@ -8,6 +8,7 @@ on:
       - develop
       - feature/foundation-04-admin-core
       - codex/f04-10-release-hardening
+      - codex/pap-admin-beta1
   pull_request:
     branches:
       - develop
@@ -100,6 +101,9 @@ jobs:
       # clinical API/UI, TypeScript, ESLint and the Next.js production build.
       - name: F04 integrated security and clinical regression gate
         run: npm run audit:f04:operations
+
+      - name: PAP Admin Beta 1 institutional and adversarial journey
+        run: npm run test:admin:beta1
 
       - name: PostgreSQL runtime and migrator separation
         run: bash scripts/test-f04-role-separation.sh
