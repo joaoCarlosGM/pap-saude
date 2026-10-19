@@ -1,5 +1,7 @@
 # F04.10 — Database integrity findings and correction (candidate)
 
+Historical findings; see [the mission release audit](f04-10-release-audit-report.md) for current local validation and remaining external gates.
+
 ## Confirmed on clean PostgreSQL database before remediation
 - `AUDIT_UPDATE` allowed: HIGH.
 - `AUDIT_DELETE` allowed: HIGH.
