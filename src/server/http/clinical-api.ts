@@ -618,7 +618,7 @@ async function encounterResource(
     }
 
     if (body.action === "complete") {
-      const encounter = await completeEncounter(encounterId);
+      const encounter = await completeEncounter(encounterId, auth.user.id);
 
       return clinicalJson({
         encounter,

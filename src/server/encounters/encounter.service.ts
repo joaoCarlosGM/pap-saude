@@ -230,6 +230,7 @@ export async function startEncounter(
 
 export async function completeEncounter(
   encounterId: string,
+  actorUserId?: string,
 ) {
   const encounter =
     await requireEncounter(
@@ -253,15 +254,11 @@ export async function completeEncounter(
     throw new InvalidEncounterTransitionError();
   }
 
-  return db.encounter.update({
-    where: {
-      id: encounterId,
-    },
-    data: {
-      status:
-        EncounterStatus.COMPLETED,
-      completedAt,
-    },
+  return db.$transaction(async tx => {
+    const changed = await tx.encounter.updateMany({where:{id:encounterId,status:EncounterStatus.IN_PROGRESS},data:{status:EncounterStatus.COMPLETED,completedAt}});
+    if (changed.count !== 1) throw new InvalidEncounterTransitionError();
+    if (actorUserId) await tx.productActivityEvent.create({data:{eventKey:"encounter.completed",actorUserId,organizationId:encounter.organizationId,metadata:{source:"clinical-api",version:"beta1"},occurredAt:completedAt}});
+    return tx.encounter.findUniqueOrThrow({where:{id:encounterId}});
   });
 }
 
