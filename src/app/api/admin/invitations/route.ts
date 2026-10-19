@@ -8,10 +8,11 @@ import {
 } from "@/server/auth/http-auth"
 
 import {
-  adminErrorResponse,
   readAdminJson,
-  requireAdminSession,
 } from "@/server/admin/admin-http"
+
+import { requireBetaSession, betaError } from "@/server/admin-beta/http"
+import { betaRateLimit } from "@/server/admin-beta/policy"
 
 import {
   createProfessionalInvitation,
@@ -32,9 +33,11 @@ export async function POST(
     )
 
     const session =
-      await requireAdminSession(
+      await requireBetaSession(
         request,
       )
+
+    await betaRateLimit("invites",session.user.id,30)
 
     const body =
       await readAdminJson(
@@ -80,7 +83,7 @@ export async function POST(
       },
     )
   } catch (error) {
-    return adminErrorResponse(
+    return betaError(
       error,
     )
   }

@@ -396,6 +396,13 @@ async function sessionFor(
   return session.token
 }
 
+// Invitation mutations now require a session issued after verified MFA.
+// The complete real enrollment/login ceremony is exercised in the Beta journey suite.
+async function invitationSessionFor(userId:string){
+ await db.mfaFactor.create({data:{userId,type:"TOTP",status:"ACTIVE",secretEncrypted:"synthetic-fixture-only",enabledAt:new Date(Date.now()-1000)}});
+ return (await createSession({userId,mfaVerified:true})).token;
+}
+
 function requestFor(
   method: string,
   pathname: string,
@@ -1035,7 +1042,7 @@ test(
     )
 
     const token =
-      await sessionFor(
+      await invitationSessionFor(
         admin.id,
       )
 
@@ -1150,7 +1157,7 @@ test(
     )
 
     const token =
-      await sessionFor(
+      await invitationSessionFor(
         admin.id,
       )
 
@@ -1205,7 +1212,7 @@ test(
     )
 
     const adminToken =
-      await sessionFor(
+      await invitationSessionFor(
         admin.id,
       )
 
