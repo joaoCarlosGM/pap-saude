@@ -108,7 +108,7 @@ export default function AdminShell({
     useState(false)
 
   return (
-    <div className="flex min-h-screen bg-slate-50">
+    <div className="flex min-h-screen bg-[#09282c]">
       <AdminSidebar
         open={
           sidebarOpen
@@ -123,7 +123,7 @@ export default function AdminShell({
         }
       />
 
-      <div className="flex min-w-0 flex-1 flex-col">
+      <div className="flex min-w-0 flex-1 flex-col overflow-hidden bg-[#f5f7f6] md:mt-2 md:rounded-tl-3xl">
         <AdminTopbar
           onMenuClick={() =>
             setSidebarOpen(

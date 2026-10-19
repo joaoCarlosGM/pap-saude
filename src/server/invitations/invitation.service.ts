@@ -29,9 +29,6 @@ import {
   PERMISSIONS,
 } from "@/server/iam/permissions"
 
-import {
-  SYSTEM_ROLE_KEYS,
-} from "@/server/iam/system-role-catalog"
 
 import {
   requireAdminOrganizationAccess,
@@ -44,11 +41,10 @@ import {
 } from "@/server/security/constants"
 
 import {
-  sendInvitationEmail,
+  sendInvitationEmail, invitationBaseUrl,
 } from "@/server/email/email.service"
 
 import {
-  EmailDeliveryError,
   InvalidInvitationError,
   InvitationConflictError,
   InvitationPayloadError,
@@ -95,36 +91,14 @@ function normalizeDisplayName(
   return normalized
 }
 
-function publicBaseUrl() {
-  const configured =
-    process.env.PAP_PUBLIC_URL
-      ?.trim()
-      .replace(
-        /\/+$/,
-        "",
-      )
-
-  if (configured) {
-    return configured
-  }
-
-  if (
-    process.env.NODE_ENV ===
-    "production"
-  ) {
-    throw new EmailDeliveryError()
-  }
-
-  return "http://localhost:3000"
-}
-
-export async function createProfessionalInvitation(
+async function createInvitation(
   input: {
     invitedByUserId: string
     organizationId: string
     email: string
     displayName: string
     now?: Date
+    roleKey: "PROFESSIONAL" | "HEALTH_UNIT_ADMIN"
   },
 ) {
   await requireAdminOrganizationAccess(
@@ -139,6 +113,13 @@ export async function createProfessionalInvitation(
     input.organizationId,
   )
 
+  if (input.roleKey === "HEALTH_UNIT_ADMIN") {
+    const { requirePapReviewer } = await import("@/server/admin-beta/policy");
+    await requirePapReviewer(input.invitedByUserId);
+    const approved = await db.organizationCandidate.findFirst({ where: { convertedOrganizationId: input.organizationId, status: "APPROVED", consentedAt: { not: null } } });
+    if (!approved || approved.contactEmail !== input.email.trim().toLowerCase()) throw new InvitationPayloadError();
+  }
+  const baseUrl = invitationBaseUrl();
   const organization =
     await db.organization.findUnique({
       where: {
@@ -173,7 +154,8 @@ export async function createProfessionalInvitation(
 
   if (
     !email ||
-    email.length > 320
+    !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) ||
+    email.length > 254
   ) {
     throw new InvitationPayloadError()
   }
@@ -211,6 +193,12 @@ export async function createProfessionalInvitation(
       async (
         tx,
       ) => {
+        // Serialize invite/accept/revoke and bootstrap per organization.
+        await tx.organization.update({where:{id:organization.id},data:{updatedAt:new Date()}});
+
+        const currentOrg = await tx.organization.findUnique({where:{id:organization.id}});
+        if (!currentOrg?.isActive || currentOrg.status !== "ACTIVE") throw new InvitationPayloadError();
+        if (input.roleKey === "HEALTH_UNIT_ADMIN" && await tx.roleAssignment.findFirst({where:{organizationId:organization.id,role:{key:"HEALTH_UNIT_ADMIN"}}})) throw new InvitationConflictError();
         let user =
           await tx.user.findUnique({
             where: {
@@ -281,7 +269,7 @@ export async function createProfessionalInvitation(
             organizationId:
               organization.id,
             roleKey:
-              SYSTEM_ROLE_KEYS.PROFESSIONAL,
+              input.roleKey,
             status:
               InvitationStatus.PENDING,
           },
@@ -332,8 +320,9 @@ export async function createProfessionalInvitation(
               organization.id,
 
             roleKey:
-              SYSTEM_ROLE_KEYS.PROFESSIONAL,
+              input.roleKey,
 
+            deliveryStatus: "SENDING",
             tokenHash,
 
             status:
@@ -362,7 +351,7 @@ export async function createProfessionalInvitation(
     )
 
   const invitationUrl =
-    `${publicBaseUrl()}/convite?token=${encodeURIComponent(token)}`
+    `${baseUrl}/convite?token=${encodeURIComponent(token)}`
 
   try {
     const delivery =
@@ -376,8 +365,13 @@ export async function createProfessionalInvitation(
           organization.name,
 
         invitationUrl,
+        invitationId: invitation.id,
       })
 
+    await db.$transaction(async tx => {
+      await tx.userInvitation.update({where:{id:invitation.id},data:{deliveryStatus:delivery.mode === "RESEND" ? "SENT" : "DEVELOPMENT",providerMessageId:delivery.mode === "RESEND" ? delivery.providerMessageId : null,deliveryAttemptedAt:new Date()}});
+      await writeAdminAudit({actorUserId:input.invitedByUserId,organizationId:organization.id,action:"INVITATION_DELIVERY",resourceType:"INVITATION",resourceId:invitation.id,reason:delivery.mode === "RESEND" ? "PROVIDER_ACCEPTED" : "DEVELOPMENT_ONLY"},tx);
+    });
     return {
       invitation: {
         id:
@@ -414,7 +408,7 @@ export async function createProfessionalInvitation(
     await db.$transaction(async tx => {
       const result = await tx.userInvitation.updateMany({
         where: { id: invitation.id, status: InvitationStatus.PENDING },
-        data: { status: InvitationStatus.REVOKED, revokedAt: new Date() },
+        data: { status: InvitationStatus.REVOKED, revokedAt: new Date(), deliveryStatus: "FAILED", deliveryAttemptedAt: new Date() },
       });
       if (result.count === 1) await writeAdminAudit({
         actorUserId: input.invitedByUserId,
@@ -554,8 +548,8 @@ export async function acceptInvitation(
     existing.expiresAt <=
       now ||
     !existing.user ||
-    existing.roleKey !==
-      SYSTEM_ROLE_KEYS.PROFESSIONAL ||
+    !existing.user.isActive ||
+    !["PROFESSIONAL", "HEALTH_UNIT_ADMIN"].includes(existing.roleKey) ||
     existing.organization.type !==
       OrganizationType.HEALTH_UNIT ||
     existing.organization.status !==
@@ -594,6 +588,10 @@ export async function acceptInvitation(
     async (
       tx,
     ) => {
+      await tx.organization.update({where:{id:existing.organizationId},data:{updatedAt:new Date()}});
+      const currentUser = await tx.user.findUnique({where:{id:existing.user!.id}});
+      const currentOrg = await tx.organization.findUnique({where:{id:existing.organizationId}});
+      if (!currentUser?.isActive || !currentOrg?.isActive || currentOrg.status !== "ACTIVE") throw new InvalidInvitationError();
       const consumed =
         await tx.userInvitation.updateMany({
           where: {
@@ -675,7 +673,7 @@ export async function acceptInvitation(
         await tx.role.findUnique({
           where: {
             key:
-              SYSTEM_ROLE_KEYS.PROFESSIONAL,
+              existing.roleKey,
           },
         })
 
@@ -730,8 +728,15 @@ export async function acceptInvitation(
           existing.organizationId,
 
         roleKey:
-          SYSTEM_ROLE_KEYS.PROFESSIONAL,
+          existing.roleKey,
       }
     },
   )
+}
+
+export function createProfessionalInvitation(input: {invitedByUserId:string;organizationId:string;email:string;displayName:string;now?:Date}) {
+  return createInvitation({...input,roleKey:"PROFESSIONAL"});
+}
+export function createHealthUnitAdminInvitation(input: {invitedByUserId:string;organizationId:string;email:string;displayName:string;now?:Date}) {
+  return createInvitation({...input,roleKey:"HEALTH_UNIT_ADMIN"});
 }

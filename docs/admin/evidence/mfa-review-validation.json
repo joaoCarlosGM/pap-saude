@@ -1,0 +1,52 @@
+{
+  "baseCommit": "d5e110ae71b6c9d5756e34f2f4fab82a9372f240",
+  "reproduction": "POST /api/admin/organizations returned 201 for a password-only PAP_ADMIN session before the fix, in a disposable database",
+  "policy": "shared requireAdminSession; active TOTP factor and verified session evidence; IAM still required",
+  "administrativeRouteFiles": 17,
+  "deniedHttpVariantsPerRound": 28,
+  "deniedRounds": 5,
+  "logs": {
+    "red": {
+      "sha256": "430d1671d3f7b79cc1a75cfef31d503fd5a8193f32700d08861717bfa8b38a8e",
+      "passingTests": 2,
+      "failingTests": 6
+    },
+    "mfa-http": {
+      "sha256": "4ae106704bcee2866cd730643be780eb86c35a5278f84efd45fa635b3d56f7f0",
+      "passingTests": 8,
+      "failingTests": 0
+    },
+    "inventory": {
+      "sha256": "ee84fd01646b3ef78ca372758eece829dcb9e518364772a020a56781570d8a26",
+      "passingTests": 2,
+      "failingTests": 0
+    },
+    "beta": {
+      "sha256": "d1767d579b64f551035fc40f7a360c2dfd7c02a329dac507a7114bf637cf65bd",
+      "passingTests": 29,
+      "failingTests": 0
+    },
+    "f04": {
+      "sha256": "a3d2eec9f3c0b6ec028a675c95a2e63dd82f265593aeaf70e2f3c509bfad228a",
+      "passingTests": 78,
+      "failingTests": 0
+    },
+    "typescript": {
+      "sha256": "76162e465989f3f070a9de8db711fbf358e53b74d09ce1bbdb57c727e4c4a16d",
+      "passingTests": 0,
+      "failingTests": 0
+    },
+    "lint": {
+      "sha256": "a1c2b610c1998028f54ffb82053418530dfc96c543e31d539b5f9cf1ba05b24b",
+      "passingTests": 0,
+      "failingTests": 0
+    },
+    "ci-guard": {
+      "sha256": "ddf87e269148fe2a7d9ae83aa35738f4e277f47aa148bbfeac9053ce498f7ff6",
+      "passingTests": 2,
+      "failingTests": 0
+    }
+  },
+  "remoteRegressionEvidence": "Final SHA and complete push/PR CI run outcomes recorded in PR #2",
+  "productionDecision": "NO-GO: external homologation gates unchanged"
+}

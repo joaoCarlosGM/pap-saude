@@ -1,3 +1,4 @@
+import { createAdminMfaSessionFixture } from "../helpers/admin-mfa-session"
 import assert from "node:assert/strict"
 
 import {
@@ -382,19 +383,10 @@ async function makeProfessional(
   })
 }
 
-async function sessionFor(
-  userId: string,
-) {
-  const session =
-    await createSession({
-      userId,
-
-      userAgent:
-        "PAP-F04-Admin-Test",
-    })
-
-  return session.token
+async function sessionFor(userId:string) {
+  return (await createAdminMfaSessionFixture(userId)).token;
 }
+const invitationSessionFor = sessionFor;
 
 function requestFor(
   method: string,
@@ -1035,7 +1027,7 @@ test(
     )
 
     const token =
-      await sessionFor(
+      await invitationSessionFor(
         admin.id,
       )
 
@@ -1150,7 +1142,7 @@ test(
     )
 
     const token =
-      await sessionFor(
+      await invitationSessionFor(
         admin.id,
       )
 
@@ -1205,7 +1197,7 @@ test(
     )
 
     const adminToken =
-      await sessionFor(
+      await invitationSessionFor(
         admin.id,
       )
 

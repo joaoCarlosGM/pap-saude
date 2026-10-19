@@ -1,0 +1,97 @@
+"use client";
+import { useState } from "react";
+export default function Page() {
+  const [busy, setBusy] = useState(false),
+    [message, setMessage] = useState(""),
+    [done, setDone] = useState(false);
+  return (
+    <main className="min-h-screen bg-[#064f50] px-4 py-10">
+      <section className="mx-auto max-w-3xl rounded-3xl bg-white p-6 shadow-xl sm:p-10">
+        <p className="font-bold text-[#064f50]">PAP Saúde</p>
+        <h1 className="my-4 text-3xl font-semibold">
+          Solicitar adesão institucional
+        </h1>
+        <p className="mb-6 text-slate-600">
+          Informe os dados da UBS e do responsável. Nossa equipe validará a
+          instituição e o município antes de liberar qualquer acesso.
+        </p>
+        {done ? (
+          <p role="status" className="rounded-xl bg-teal-50 p-5">
+            Solicitação recebida. Se elegível, o responsável será contatado após
+            análise. Reenvios não criam prioridade nem acesso.
+          </p>
+        ) : (
+          <form
+            className="grid gap-4 sm:grid-cols-2"
+            onSubmit={async (e) => {
+              e.preventDefault();
+              setBusy(true);
+              setMessage("");
+              const form = new FormData(e.currentTarget),
+                body = Object.fromEntries(form);
+              try {
+                const r = await fetch("/api/organization-requests", {
+                  method: "POST",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify({
+                    ...body,
+                    consent: form.get("consent") === "on",
+                  }),
+                });
+                if (!r.ok)
+                  throw new Error(
+                    r.status === 429
+                      ? "Muitas solicitações. Tente mais tarde."
+                      : "Confira os campos e tente novamente.",
+                  );
+                setDone(true);
+              } catch (err) {
+                setMessage((err as Error).message);
+              } finally {
+                setBusy(false);
+              }
+            }}
+          >
+            {[
+              ["name", "Nome da UBS", 200],
+              ["city", "Município", 120],
+              ["state", "UF", 2],
+              ["address", "Endereço", 500],
+              ["cnes", "CNES (7 dígitos, se aplicável)", 7],
+              ["cnpj", "CNPJ (14 dígitos, se aplicável)", 14],
+              ["contactName", "Nome do responsável", 200],
+              ["contactEmail", "E-mail institucional do responsável", 254],
+              ["contactPhone", "Telefone de contato", 20],
+            ].map(([name, label, max]) => (
+              <label key={name} className="text-sm font-medium">
+                {label}
+                <input
+                  name={String(name)}
+                  type={name === "contactEmail" ? "email" : "text"}
+                  maxLength={Number(max)}
+                  required={!["cnes", "cnpj"].includes(String(name))}
+                  className="mt-1 w-full rounded-xl border border-slate-300 p-3"
+                />
+              </label>
+            ))}
+            <label className="flex gap-3 text-sm sm:col-span-2">
+              <input required name="consent" type="checkbox" />
+              Autorizo o uso destes dados de contato para análise e comunicação
+              sobre a adesão. Não envie informações de pacientes. O envio não
+              cria conta nem autoriza acesso.
+            </label>
+            <p role="alert" className="text-red-700 sm:col-span-2">
+              {message}
+            </p>
+            <button
+              disabled={busy}
+              className="rounded-xl bg-[#064f50] p-3 font-medium text-white disabled:opacity-50 sm:col-span-2"
+            >
+              {busy ? "Enviando…" : "Enviar para análise"}
+            </button>
+          </form>
+        )}
+      </section>
+    </main>
+  );
+}

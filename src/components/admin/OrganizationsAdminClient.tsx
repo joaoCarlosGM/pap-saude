@@ -69,6 +69,9 @@ function typeLabel(
 }
 
 export default function OrganizationsAdminClient() {
+  const [search,setSearch]=useState("");
+  const [page,setPage]=useState(1);
+
   const [
     organizations,
     setOrganizations,
@@ -301,6 +304,7 @@ export default function OrganizationsAdminClient() {
       | "SUSPEND"
       | "ARCHIVE",
   ) {
+    if (!window.confirm("Confirmar alteração de estado desta organização?")) return
     setError(null)
 
     try {
@@ -342,7 +346,7 @@ export default function OrganizationsAdminClient() {
   return (
     <section className="mx-auto max-w-7xl">
       <p className="text-xs font-semibold uppercase tracking-[0.18em] text-pink-500">
-        F04.2
+        PAP Admin Beta 1
       </p>
 
       <div className="mt-2 flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
@@ -566,6 +570,8 @@ export default function OrganizationsAdminClient() {
             <h2 className="font-semibold text-slate-950">
               Estrutura disponível
             </h2>
+            <label className="mt-3 block text-sm">Buscar organização <input className="ml-2 rounded-xl border p-2" value={search} maxLength={100} onChange={e=>{setSearch(e.target.value);setPage(1);}}/></label>
+            <div className="mt-3 flex gap-4 text-sm"><button disabled={page===1} onClick={()=>setPage(p=>p-1)}>Anterior</button><span>Página {page}</span><button disabled={page*20>=organizations.filter(o=>o.name.toLowerCase().includes(search.toLowerCase())).length} onClick={()=>setPage(p=>p+1)}>Próxima</button></div>
           </div>
 
           {loading ? (
@@ -581,7 +587,7 @@ export default function OrganizationsAdminClient() {
             </div>
           ) : (
             <div className="divide-y divide-slate-100">
-              {organizations.map(
+              {organizations.filter(o=>o.name.toLowerCase().includes(search.toLowerCase())).slice((page-1)*20,page*20).map(
                 (
                   organization,
                 ) => (

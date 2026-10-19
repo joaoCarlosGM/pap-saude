@@ -52,6 +52,12 @@ import {
   OrganizationAlreadyArchivedError,
 } from "@/server/organizations/organization.errors"
 
+import { db } from "@/server/db/client"
+
+export class AdminMfaRequiredError extends Error {
+  constructor() { super("ADMIN_MFA_REQUIRED") }
+}
+
 const MAX_ADMIN_BODY_BYTES =
   32 * 1024
 
@@ -67,9 +73,18 @@ export async function requireAdminSession(
     throw new InvalidSessionError()
   }
 
-  return validateSession(
-    token,
-  )
+  const result = await validateSession(token)
+  const verifiedAt = result.session.mfaVerifiedAt
+  const factor = await db.mfaFactor.findFirst({
+    where: { userId: result.user.id, type: "TOTP", status: "ACTIVE" },
+    orderBy: { enabledAt: "desc" },
+    select: { enabledAt: true },
+  })
+  if (!verifiedAt || !factor?.enabledAt || factor.enabledAt > verifiedAt ||
+      verifiedAt < result.session.createdAt || verifiedAt > new Date()) {
+    throw new AdminMfaRequiredError()
+  }
+  return result
 }
 
 export async function readAdminJson(
@@ -176,6 +191,11 @@ function noStoreHeaders() {
 export function adminErrorResponse(
   error: unknown,
 ) {
+  if (error instanceof AdminMfaRequiredError) {
+    return NextResponse.json({ error: "ADMIN_MFA_REQUIRED" }, {
+      status: 403, headers: noStoreHeaders(),
+    })
+  }
   if (
     error instanceof
       InvalidSessionError ||

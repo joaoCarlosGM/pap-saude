@@ -23,5 +23,6 @@ export default function LoginSecurity(){
   {mode==="CHANGE"&&<label className="block">Nova senha<input className="mt-1 block w-full rounded border p-2" type="password" autoComplete="new-password" value={newPassword} onChange={e=>setNewPassword(e.target.value)}/></label>}
   <button onClick={()=>void submit()} className="w-full rounded bg-teal-800 p-2 text-white">{mode==="LOGIN"?"Entrar":mode==="MFA"?"Confirmar MFA":"Atualizar senha"}</button>
   <a className="block text-sm text-teal-700" href="/recuperar-senha">Esqueci minha senha</a>
+  <a className="block text-sm text-teal-700 underline" href="/solicitar-adesao">Solicitar adesão de uma UBS</a>
  </div></main>;
 }

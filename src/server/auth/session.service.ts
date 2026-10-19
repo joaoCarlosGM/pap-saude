@@ -24,6 +24,7 @@ export interface CreateSessionInput {
   ipHash?: string | null;
   userAgent?: string | null;
   now?: Date;
+  mfaVerified?: boolean;
 }
 
 export interface CreatedSession {
@@ -61,6 +62,7 @@ export async function createSession(
   const session = await db.session.create({
     data: {
       userId: input.userId,
+      mfaVerifiedAt: input.mfaVerified ? now : null,
       tokenHash,
       createdAt: now,
       lastSeenAt: now,

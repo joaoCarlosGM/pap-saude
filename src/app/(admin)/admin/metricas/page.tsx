@@ -1,2 +1,2 @@
-import OperationsAdminClient from "@/components/admin/OperationsAdminClient";
-export default function Page() { return <OperationsAdminClient mode="metrics" />; }
+import BetaDashboardClient from "@/components/admin/BetaDashboardClient";
+export default function Page(){return <BetaDashboardClient/>;}
