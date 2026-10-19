@@ -16,11 +16,11 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 - Reuse current F01–F04 modules and existing Prisma migrations; do not recreate or rewrite historical migration files.
 - Strict multitenancy: PAP -> MUNICIPALITY -> HEALTH_UNIT; User identity is global, Membership and RoleAssignment are scoped, and PAP_ADMIN has no implicit clinical-record access.
 - Security controls are mandatory: server-side RBAC, tenant isolation, MFA where required, one-time hashed invitation tokens, and append-only audited events. Never weaken checks to make tests pass.
-- For the F04.10 hardening work, all database and Docker execution must be against isolated, disposable local/CI systems. Do not connect to, migrate, alter, restart, or deploy to the real VPS or production database.
+- For all development missions, run database/Docker tests only against isolated disposable local/CI systems. Never connect to, migrate, alter, restart, or deploy to the real VPS/production database without explicit operator approval and a separately reviewed deployment plan.
 - Do not merge or push to prod, PROD, or develop without explicit human authorization. A push to lowercase prod may publish images and deploy automatically; uppercase PROD is a different branch.
 - Do not disclose or commit secrets, production environment files, raw database contents, patient information, or tokens. Use only fake CI credentials and synthetic data.
 - Keep commits small; run relevant tests, TypeScript, lint, migration checks, container checks and security regressions. Every PASS needs execution evidence; otherwise label NOT RUN or BLOCKED.
 - Never claim migration rollback reverses database changes. Require tested backup restoration / roll-forward and human GO/NO-GO before production release.
-- For the current mission, follow docs/codex/MISSAO-01-F04-10.md. Later missions must use their own task documents.
+- The active mission is selected by its branch-specific docs/codex/MISSAO-*.md; on codex/pap-admin-beta1 follow docs/codex/MISSAO-02-PAP-ADMIN-BETA1.md. Prior mission 01 is completed and serves as the baseline, not as the active task.
 
 <!-- END:pap-saude-project-rules -->
