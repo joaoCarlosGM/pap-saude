@@ -16,6 +16,7 @@ for (const token of [
   "run: npm run audit:f04:operations",
   "run: npm run test:f03:smart:force",
   "run: npm run test:auth",
+  "run: bash scripts/test-f04-postgres-readiness.sh",
   "run: bash scripts/security/scan-f04-images.sh pap-saude:ci pap-saude-migrator:ci",
   "run: bash scripts/test-f04-web-image.sh pap-saude:ci pap-saude-migrator:ci",
   "node scripts/security/guard-f04-ci-workflow.mjs",

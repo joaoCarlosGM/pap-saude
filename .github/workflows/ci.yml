@@ -56,7 +56,8 @@ jobs:
             -e POSTGRES_DB=pap_saude \
             -p 127.0.0.1:5432:5432 postgres:16-alpine
           for attempt in $(seq 1 60); do
-            if docker exec pap_saude_db \
+            if docker exec pap_saude_db pg_isready -h 127.0.0.1 -U pap_user -d pap_saude >/dev/null 2>&1 && \
+              docker exec pap_saude_db \
               psql -U pap_user -d pap_saude -Atqc 'SELECT 1' \
               2>/dev/null | grep -qx '1'; then
               echo 'PASS disposable PostgreSQL ready'
@@ -66,6 +67,9 @@ jobs:
           done
           echo 'FAIL disposable PostgreSQL not ready' >&2
           exit 1
+
+      - name: Verify PostgreSQL final-server readiness
+        run: bash scripts/test-f04-postgres-readiness.sh
 
       - name: Legacy data preflight and synthetic backup restore
         run: node --test tests/security/f04-migration-preflight.test.mjs

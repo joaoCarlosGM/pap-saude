@@ -12,10 +12,12 @@ cleanup() {
 trap cleanup EXIT
 docker network create "$NET" >/dev/null
 docker run --rm -d --name "$PG" --network "$NET" -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=synthetic_only -e POSTGRES_DB=postgres postgres:16-alpine >/dev/null
+READY=0
 for attempt in $(seq 1 60); do
- if docker exec "$PG" pg_isready -U postgres >/dev/null 2>&1; then break; fi
+ if docker exec "$PG" pg_isready -h 127.0.0.1 -U postgres >/dev/null 2>&1; then READY=1; break; fi
  sleep 1
 done
+[[ "$READY" == 1 ]] || { echo "FAIL final PostgreSQL TCP server not ready" >&2; exit 1; }
 docker exec "$PG" psql -X -U postgres -v ON_ERROR_STOP=1 -c "CREATE ROLE pap_migrator LOGIN PASSWORD 'synthetic_only';"
 docker exec "$PG" psql -X -U postgres -v ON_ERROR_STOP=1 -c 'CREATE DATABASE pap_f0410_web OWNER pap_migrator;'
 # Prisma deploy runs as a non-superuser database owner, never the runtime role.

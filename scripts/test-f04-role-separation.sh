@@ -5,10 +5,12 @@ PG="pap-f0410-roles-$$-$RANDOM"
 cleanup() { docker rm -f "$PG" >/dev/null 2>&1 || true; }
 trap cleanup EXIT
 docker run --rm -d --name "$PG" -e POSTGRES_HOST_AUTH_METHOD=trust postgres:16-alpine >/dev/null
+READY=0
 for attempt in $(seq 1 60); do
-  if docker exec "$PG" pg_isready -U postgres >/dev/null 2>&1; then break; fi
+  if docker exec "$PG" pg_isready -h 127.0.0.1 -U postgres >/dev/null 2>&1; then READY=1; break; fi
   sleep 1
 done
+[[ "$READY" == 1 ]] || { echo "FAIL final PostgreSQL TCP server not ready" >&2; exit 1; }
 sql() { docker exec -i "$PG" psql -X -U postgres -d pap_f0410_roles -v ON_ERROR_STOP=1 "$@"; }
 # CREATE DATABASE cannot run inside a transaction block.
 docker exec "$PG" psql -X -U postgres -v ON_ERROR_STOP=1 -c 'CREATE ROLE pap_migrator NOLOGIN;'

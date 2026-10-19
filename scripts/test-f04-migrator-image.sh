@@ -37,7 +37,7 @@ READY=0
 
 for attempt in $(seq 1 60); do
   if docker exec "$PG" \
-    pg_isready -U "$DB_USER" -d "$DB" \
+    pg_isready -h 127.0.0.1 -U "$DB_USER" -d "$DB" \
     >/dev/null 2>&1; then
     READY=1
     break
