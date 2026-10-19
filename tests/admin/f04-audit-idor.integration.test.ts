@@ -7,7 +7,7 @@ import { db } from "../../src/server/db/client";
 import { bootstrapSystemIam } from "../../src/server/iam/bootstrap.service";
 import { assignSystemRole } from "../../src/server/iam/role-assignment.service";
 import { SYSTEM_ROLE_KEYS } from "../../src/server/iam/system-role-catalog";
-import { createSession } from "../../src/server/auth/session.service";
+import { createAdminMfaSessionFixture } from "../helpers/admin-mfa-session";
 import { SESSION_COOKIE_NAME } from "../../src/server/security/constants";
 import { writeAdminAudit } from "../../src/server/audit/admin-audit-writer.service";
 import { listAdminAuditEvents } from "../../src/server/audit/admin-audit-query.service";
@@ -42,7 +42,7 @@ async function tree() {
   return { pap, a, b, unitA, unitB };
 }
 async function request(userId: string | null, path = "/api/admin/audit") {
-  const token = userId ? (await createSession({ userId })).token : null;
+  const token = userId ? (await createAdminMfaSessionFixture(userId)).token : null;
   return new NextRequest(`${BASE_URL}${path}`, { headers: token ? { cookie: `${SESSION_COOKIE_NAME}=${token}` } : undefined });
 }
 before(async () => {

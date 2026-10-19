@@ -1,3 +1,4 @@
+import { createAdminMfaSessionFixture } from "../helpers/admin-mfa-session"
 import assert from "node:assert/strict"
 
 import {
@@ -382,26 +383,10 @@ async function makeProfessional(
   })
 }
 
-async function sessionFor(
-  userId: string,
-) {
-  const session =
-    await createSession({
-      userId,
-
-      userAgent:
-        "PAP-F04-Admin-Test",
-    })
-
-  return session.token
+async function sessionFor(userId:string) {
+  return (await createAdminMfaSessionFixture(userId)).token;
 }
-
-// Invitation mutations now require a session issued after verified MFA.
-// The complete real enrollment/login ceremony is exercised in the Beta journey suite.
-async function invitationSessionFor(userId:string){
- await db.mfaFactor.create({data:{userId,type:"TOTP",status:"ACTIVE",secretEncrypted:"synthetic-fixture-only",createdAt:new Date(Date.now()-2000),enabledAt:new Date(Date.now()-1000)}});
- return (await createSession({userId,mfaVerified:true})).token;
-}
+const invitationSessionFor = sessionFor;
 
 function requestFor(
   method: string,

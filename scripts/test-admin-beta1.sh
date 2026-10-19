@@ -16,3 +16,5 @@ npx prisma migrate deploy # idempotent replay through Prisma history
 npx prisma migrate diff --from-config-datasource --to-schema prisma/schema.prisma --exit-code
 node --test tests/security/beta1-schema-upgrade.test.mjs
 npx tsx --test tests/admin-beta/*.test.ts
+bash scripts/test-admin-mfa.sh
+node --test tests/security/admin-mfa-inventory.test.mjs

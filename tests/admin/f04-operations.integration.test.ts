@@ -7,7 +7,7 @@ import { db } from "../../src/server/db/client";
 import { bootstrapSystemIam } from "../../src/server/iam/bootstrap.service";
 import { assignSystemRole } from "../../src/server/iam/role-assignment.service";
 import { SYSTEM_ROLE_KEYS } from "../../src/server/iam/system-role-catalog";
-import { createSession } from "../../src/server/auth/session.service";
+import { createAdminMfaSessionFixture } from "../helpers/admin-mfa-session";
 import { SESSION_COOKIE_NAME } from "../../src/server/security/constants";
 import { PRODUCT_ACTIVITY_EVENTS } from "../../src/server/activity/activity-events";
 import { GET as metricsGET } from "../../src/app/api/admin/operations/metrics/route";
@@ -55,7 +55,7 @@ async function municipal(orgId: string) {
 }
 async function admin() { const actor = await user(); await assignSystemRole({ userId: actor.id, roleKey: SYSTEM_ROLE_KEYS.PAP_ADMIN }); return actor; }
 async function request(userId: string | null, path: string) {
-  const token = userId ? (await createSession({ userId })).token : null;
+  const token = userId ? (await createAdminMfaSessionFixture(userId)).token : null;
   return new NextRequest(`${BASE_URL}${path}`, { headers: token ? { cookie: `${SESSION_COOKIE_NAME}=${token}` } : undefined });
 }
 
