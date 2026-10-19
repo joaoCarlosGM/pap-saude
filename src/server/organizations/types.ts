@@ -39,3 +39,13 @@ export interface SearchOrganizationsInput {
   parentId?: string;
   limit?: number;
 }
+
+export interface UpdateOrganizationInput {
+  name?: string
+  code?: string | null
+  cnes?: string | null
+  cnpj?: string | null
+  city?: string | null
+  state?: string | null
+  address?: string | null
+}

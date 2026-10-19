@@ -47,6 +47,18 @@ enum MembershipStatus {
   DISABLED
 }
 
+enum InvitationStatus {
+  PENDING
+  ACCEPTED
+  REVOKED
+}
+
+enum OnboardingStatus {
+  STARTED
+  COMPLETED
+  SKIPPED
+}
+
 enum OrganizationCandidateStatus {
   NEW
   QUALIFYING
@@ -216,12 +228,16 @@ model User {
   approvedRndIntegrations RNDSIntegration[]     @relation("RNDSApprovedBy")
   validationRuns          RNDSValidationRun[]   @relation("ValidationRunRequestedBy")
 
+  passwordResetTokens    PasswordResetToken[]
   passwordCredential    PasswordCredential?
   mfaFactors            MfaFactor[]
   mfaRecoveryCodes      MfaRecoveryCode[]
   mfaChallenges         MfaChallenge[]
   sessions              Session[]
-  productActivityEvents ProductActivityEvent[] @relation("ProductActivityActor")
+  productActivityEvents ProductActivityEvent[]   @relation("ProductActivityActor")
+  sentInvitations       UserInvitation[]         @relation("InvitationSender")
+  receivedInvitations   UserInvitation[]         @relation("InvitationUser")
+  onboardingProgress    UserOnboardingProgress[]
 
   submittedFeedback ProductFeedback[] @relation("ProductFeedbackActor")
   resolvedFeedback  ProductFeedback[] @relation("ProductFeedbackResolver")
@@ -256,6 +272,7 @@ model Organization {
   rndsIntegration       RNDSIntegration?
   productActivityEvents ProductActivityEvent[]       @relation("ProductActivityOrganization")
   metricSnapshots       OrganizationMetricSnapshot[]
+  userInvitations       UserInvitation[]
 
   productFeedback ProductFeedback[]
 
@@ -282,6 +299,53 @@ model Membership {
   @@unique([userId, organizationId])
   @@index([organizationId, status])
   @@map("memberships")
+}
+
+model UserOnboardingProgress {
+  id          String           @id @default(uuid())
+  userId      String
+  tourKey     String
+  tourVersion Int
+  status      OnboardingStatus @default(STARTED)
+  currentStep Int              @default(0)
+  startedAt   DateTime         @default(now())
+  completedAt DateTime?
+  skippedAt   DateTime?
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, tourKey, tourVersion])
+  @@index([userId, status])
+  @@index([tourKey, tourVersion])
+  @@map("user_onboarding_progress")
+}
+
+model UserInvitation {
+  id              String           @id @default(uuid())
+  email           String
+  displayName     String
+  userId          String?
+  organizationId  String
+  roleKey         String
+  tokenHash       String           @unique
+  status          InvitationStatus @default(PENDING)
+  expiresAt       DateTime
+  acceptedAt      DateTime?
+  revokedAt       DateTime?
+  invitedByUserId String
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+
+  user         User?        @relation("InvitationUser", fields: [userId], references: [id], onDelete: SetNull)
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Restrict)
+  invitedBy    User         @relation("InvitationSender", fields: [invitedByUserId], references: [id], onDelete: Restrict)
+
+  @@index([email, status])
+  @@index([organizationId, status])
+  @@index([expiresAt])
+  @@map("user_invitations")
 }
 
 model OrganizationCandidate {
@@ -729,6 +793,8 @@ model AuditEvent {
   @@index([actorUserId, occurredAt])
   @@index([resourceType, resourceId])
   @@index([correlationId, occurredAt])
+  @@index([action, occurredAt])
+  @@index([outcome, occurredAt])
   @@map("audit_events")
 }
 
@@ -969,4 +1035,23 @@ model MfaChallenge {
   @@index([userId, consumedAt, expiresAt])
   @@index([expiresAt])
   @@map("mfa_challenges")
+}
+
+// F04.5F - one-time password reset, no plaintext credentials in storage.
+model PasswordResetToken {
+  id          String    @id @default(uuid())
+  userId      String
+  tokenHash   String    @unique
+  originHash  String
+  createdAt   DateTime  @default(now())
+  expiresAt   DateTime
+  consumedAt  DateTime?
+  revokedAt   DateTime?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, createdAt])
+  @@index([originHash, createdAt])
+  @@index([expiresAt])
+  @@map("password_reset_tokens")
 }

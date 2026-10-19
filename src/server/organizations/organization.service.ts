@@ -2,6 +2,7 @@ import {
   OrganizationStatus,
   OrganizationType,
   type Organization,
+  Prisma,
 } from "@prisma/client";
 
 import { db } from "@/server/db/client";
@@ -103,6 +104,7 @@ function normalizeCnpj(
 async function validateParentHierarchy(
   type: OrganizationType,
   parentId: string | null,
+  client: Prisma.TransactionClient = db,
 ): Promise<void> {
   if (type === OrganizationType.PAP) {
     if (parentId !== null) {
@@ -117,7 +119,7 @@ async function validateParentHierarchy(
   }
 
   const parent =
-    await db.organization.findUnique({
+    await client.organization.findUnique({
       where: {
         id:
           parentId,
@@ -157,6 +159,7 @@ async function validateParentHierarchy(
 
 export async function createOrganization(
   input: CreateOrganizationInput,
+  client: Prisma.TransactionClient = db,
 ): Promise<Organization> {
   const name =
     normalizeText(
@@ -177,6 +180,7 @@ export async function createOrganization(
   await validateParentHierarchy(
     input.type,
     parentId,
+    client,
   );
 
   const cnes =
@@ -199,7 +203,7 @@ export async function createOrganization(
     throw new InvalidOrganizationIdentifierError();
   }
 
-  return db.organization.create({
+  return client.organization.create({
     data: {
       type:
         input.type,
@@ -240,9 +244,10 @@ export async function createOrganization(
 
 export async function getOrganizationById(
   organizationId: string,
+  client: Prisma.TransactionClient = db,
 ): Promise<Organization> {
   const organization =
-    await db.organization.findUnique({
+    await client.organization.findUnique({
       where: {
         id:
           organizationId,
@@ -258,10 +263,12 @@ export async function getOrganizationById(
 
 export async function activateOrganization(
   organizationId: string,
+  client: Prisma.TransactionClient = db,
 ): Promise<Organization> {
   const organization =
     await getOrganizationById(
       organizationId,
+      client,
     );
 
   if (
@@ -271,7 +278,7 @@ export async function activateOrganization(
     throw new OrganizationAlreadyArchivedError();
   }
 
-  return db.organization.update({
+  return client.organization.update({
     where: {
       id:
         organizationId,
@@ -287,10 +294,12 @@ export async function activateOrganization(
 
 export async function suspendOrganization(
   organizationId: string,
+  client: Prisma.TransactionClient = db,
 ): Promise<Organization> {
   const organization =
     await getOrganizationById(
       organizationId,
+      client,
     );
 
   if (
@@ -300,7 +309,7 @@ export async function suspendOrganization(
     throw new OrganizationAlreadyArchivedError();
   }
 
-  return db.organization.update({
+  return client.organization.update({
     where: {
       id:
         organizationId,
@@ -316,10 +325,12 @@ export async function suspendOrganization(
 
 export async function archiveOrganization(
   organizationId: string,
+  client: Prisma.TransactionClient = db,
 ): Promise<Organization> {
   const organization =
     await getOrganizationById(
       organizationId,
+      client,
     );
 
   if (
@@ -330,7 +341,7 @@ export async function archiveOrganization(
   }
 
   const activeChildren =
-    await db.organization.count({
+    await client.organization.count({
       where: {
         parentId:
           organizationId,
@@ -345,7 +356,7 @@ export async function archiveOrganization(
     throw new InvalidOrganizationHierarchyError();
   }
 
-  return db.organization.update({
+  return client.organization.update({
     where: {
       id:
         organizationId,
@@ -484,6 +495,108 @@ export async function listOrganizationChildren(
     orderBy: {
       name:
         "asc",
+    },
+  });
+}
+
+export async function updateOrganizationDetails(
+  organizationId: string,
+  input: import("./types").UpdateOrganizationInput,
+  client: Prisma.TransactionClient = db,
+): Promise<Organization> {
+  const organization =
+    await getOrganizationById(
+      organizationId,
+      client,
+    );
+
+  if (
+    organization.status ===
+    OrganizationStatus.ARCHIVED
+  ) {
+    throw new OrganizationAlreadyArchivedError();
+  }
+
+  const name =
+    input.name === undefined
+      ? organization.name
+      : normalizeText(
+          input.name,
+          200,
+        );
+
+  if (!name) {
+    throw new InvalidOrganizationIdentifierError();
+  }
+
+  const cnes =
+    input.cnes === undefined
+      ? organization.cnes
+      : normalizeCnes(
+          input.cnes,
+        );
+
+  if (
+    organization.type !==
+      OrganizationType.HEALTH_UNIT &&
+    cnes !== null
+  ) {
+    throw new InvalidOrganizationIdentifierError();
+  }
+
+  const cnpj =
+    input.cnpj === undefined
+      ? organization.cnpj
+      : normalizeCnpj(
+          input.cnpj,
+        );
+
+  return client.organization.update({
+    where: {
+      id:
+        organizationId,
+    },
+
+    data: {
+      name,
+
+      code:
+        input.code ===
+        undefined
+          ? organization.code
+          : normalizeText(
+              input.code,
+              100,
+            ),
+
+      cnes,
+      cnpj,
+
+      city:
+        input.city ===
+        undefined
+          ? organization.city
+          : normalizeText(
+              input.city,
+              120,
+            ),
+
+      state:
+        input.state ===
+        undefined
+          ? organization.state
+          : normalizeState(
+              input.state,
+            ),
+
+      address:
+        input.address ===
+        undefined
+          ? organization.address
+          : normalizeText(
+              input.address,
+              500,
+            ),
     },
   });
 }

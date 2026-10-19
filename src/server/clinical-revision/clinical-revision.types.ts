@@ -44,6 +44,7 @@ export type RecordClinicalRevisionInput = {
 
 export type ListClinicalRevisionInput = {
   patientId: string;
+  organizationId: string;
   resourceType?:
     ClinicalRevisionResourceType;
   resourceId?: string;

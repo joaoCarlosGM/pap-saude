@@ -1,16 +1,20 @@
 name: PAP Saúde CI/CD
 
+# Tests run on the F04 branch and merge candidates; only prod pushes can publish/deploy.
 on:
   push:
     branches:
       - prod
+      - develop
+      - feature/foundation-04-admin-core
+      - codex/f04-10-release-hardening
   pull_request:
     branches:
+      - develop
       - prod
 
 permissions:
   contents: read
-  packages: write
 
 env:
   REGISTRY: ghcr.io
@@ -18,15 +22,19 @@ env:
 
 jobs:
   validate:
-    name: Validate and build
+    name: F04 security, migrations and production builds
     runs-on: ubuntu-latest
+    timeout-minutes: 50
+    # These are disposable CI-only credentials, never production credentials.
+    env:
+      DATABASE_URL: postgresql://pap_user:pap_password@127.0.0.1:5432/pap_saude?schema=public
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
           node-version: 22
           cache: npm
@@ -34,11 +42,73 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Lint
-        run: npm run lint
+      - name: Audit production dependencies
+        run: npm audit --omit=dev --audit-level=high
 
-      - name: Build Next.js
-        run: npm run build
+      - name: Audit isolated migrator dependencies
+        run: npm audit --prefix docker/migrator --include=dev --audit-level=high
+
+      - name: Start disposable PostgreSQL
+        run: |
+          docker run --rm -d --name pap_saude_db --label pap.disposable=f0410 \
+            -e POSTGRES_USER=pap_user \
+            -e POSTGRES_PASSWORD=pap_password \
+            -e POSTGRES_DB=pap_saude \
+            -p 127.0.0.1:5432:5432 postgres:16-alpine
+          for attempt in $(seq 1 60); do
+            if docker exec pap_saude_db pg_isready -h 127.0.0.1 -U pap_user -d pap_saude >/dev/null 2>&1 && \
+              docker exec pap_saude_db \
+              psql -U pap_user -d pap_saude -Atqc 'SELECT 1' \
+              2>/dev/null | grep -qx '1'; then
+              echo 'PASS disposable PostgreSQL ready'
+              exit 0
+            fi
+            sleep 1
+          done
+          echo 'FAIL disposable PostgreSQL not ready' >&2
+          exit 1
+
+      - name: Verify PostgreSQL final-server readiness
+        run: bash scripts/test-f04-postgres-readiness.sh
+
+      - name: Legacy data preflight and synthetic backup restore
+        run: node --test tests/security/f04-migration-preflight.test.mjs
+
+      - name: Generate Prisma client
+        run: npx prisma generate
+
+      - name: Generate Next.js route types
+        run: npx next typegen
+
+      - name: Verify Prisma fails closed without DATABASE_URL
+        run: |
+          if env -u DATABASE_URL npx tsx -e 'import "./prisma.config.ts";' \
+            > /tmp/f04-prisma-config-check.log 2>&1; then
+            echo 'FAIL: Prisma accepted missing DATABASE_URL' >&2
+            exit 1
+          fi
+          grep -q 'DATABASE_URL must be configured explicitly' \
+            /tmp/f04-prisma-config-check.log
+
+      - name: Verify CI release guard
+        run: |
+          node scripts/security/guard-f04-ci-workflow.mjs
+          node --test tests/security/f04-ci-workflow.test.mjs
+
+      # This single command includes the protected-database invariant suite,
+      # migration-on-fresh-database tests, SQL guard, IAM/MFA, anti-IDOR,
+      # clinical API/UI, TypeScript, ESLint and the Next.js production build.
+      - name: F04 integrated security and clinical regression gate
+        run: npm run audit:f04:operations
+
+      - name: PostgreSQL runtime and migrator separation
+        run: bash scripts/test-f04-role-separation.sh
+
+      - name: Full F03 regression without cached results
+        run: npm run test:f03:smart:force
+
+      - name: Authentication and MFA regression
+        run: npm run test:auth
 
       - name: Build Docker web image
         run: docker build --target runner -t pap-saude:ci .
@@ -46,9 +116,33 @@ jobs:
       - name: Build Docker migrator image
         run: docker build --target migrator -t pap-saude-migrator:ci .
 
+      - name: Verify isolated migrator image
+        run: |
+          docker run --rm \
+            -e DATABASE_URL=postgresql://ci_no_connect:ci_no_connect@127.0.0.1:5432/pap_saude_cli_validation_only?schema=public \
+            --entrypoint sh pap-saude-migrator:ci -ec '
+            test -x node_modules/.bin/prisma
+            test ! -d node_modules/shadcn
+            test ! -d node_modules/braces
+            node_modules/.bin/prisma --version >/dev/null
+          '
+
+      - name: Verify migrator migrations and idempotency
+        run: bash scripts/test-f04-migrator-image.sh pap-saude-migrator:ci
+
+      - name: Verify runtime web image with least-privilege database role
+        run: bash scripts/test-f04-web-image.sh pap-saude:ci pap-saude-migrator:ci
+
+      - name: Scan runtime and migrator images for HIGH and CRITICAL vulnerabilities
+        run: bash scripts/security/scan-f04-images.sh pap-saude:ci pap-saude-migrator:ci
+
+      - name: Stop disposable PostgreSQL
+        if: always()
+        run: docker rm -f pap_saude_db >/dev/null 2>&1 || true
+
   publish:
     name: Publish Docker images
-    if: github.event_name == 'push'
+    if: github.event_name == 'push' && github.ref == 'refs/heads/prod'
     needs: validate
     runs-on: ubuntu-latest
 
@@ -58,20 +152,20 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
 
       - name: Login to GHCR
-        uses: docker/login-action@v3
+        uses: docker/login-action@c94ce9fb468520275223c153574b00df6fe4bcc9 # v3
         with:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
+        uses: docker/setup-buildx-action@8d2750c68a42422c14e847fe6c8ac0403b4cbd6f # v3
 
       - name: Build and publish web image
-        uses: docker/build-push-action@v6
+        uses: docker/build-push-action@10e90e3645eae34f1e60eeb005ba3a3d33f178e8 # v6
         with:
           context: .
           target: runner
@@ -83,7 +177,7 @@ jobs:
           cache-to: type=gha,mode=max
 
       - name: Build and publish migrator image
-        uses: docker/build-push-action@v6
+        uses: docker/build-push-action@10e90e3645eae34f1e60eeb005ba3a3d33f178e8 # v6
         with:
           context: .
           target: migrator
@@ -96,13 +190,15 @@ jobs:
 
   deploy:
     name: Deploy to VPS
-    if: github.event_name == 'push'
+    if: github.event_name == 'push' && github.ref == 'refs/heads/prod'
     needs: publish
+    environment: production
     runs-on: ubuntu-latest
 
     steps:
       - name: Configure SSH
         env:
+          VPS_KNOWN_HOSTS: ${{ secrets.VPS_KNOWN_HOSTS }}
           VPS_SSH_KEY: ${{ secrets.VPS_SSH_KEY }}
           VPS_HOST: ${{ secrets.VPS_HOST }}
           VPS_PORT: ${{ secrets.VPS_PORT }}
@@ -113,7 +209,8 @@ jobs:
           printf '%s\n' "$VPS_SSH_KEY" > ~/.ssh/pap_deploy
           chmod 600 ~/.ssh/pap_deploy
 
-          ssh-keyscan -p "$VPS_PORT" -H "$VPS_HOST" >> ~/.ssh/known_hosts
+          test -n "$VPS_KNOWN_HOSTS"
+          printf '%s\n' "$VPS_KNOWN_HOSTS" > ~/.ssh/known_hosts
           chmod 600 ~/.ssh/known_hosts
 
       - name: Deploy application
@@ -126,6 +223,8 @@ jobs:
           ssh \
             -p "$VPS_PORT" \
             -i ~/.ssh/pap_deploy \
+            -o StrictHostKeyChecking=yes \
+            -o BatchMode=yes \
             -o IdentitiesOnly=yes \
             "$VPS_USER@$VPS_HOST" \
             "sudo -n /opt/pap-saude/scripts/deploy.sh '$DEPLOY_SHA'"

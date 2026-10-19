@@ -14,6 +14,7 @@ import {
   ExpiredMfaChallengeError,
   InvalidMfaChallengeError,
   InvalidTotpCodeError,
+  InvalidRecoveryCodeError,
   MfaFactorUnavailableError,
   TotpReplayError,
 } from "@/server/auth/mfa.errors";
@@ -29,6 +30,7 @@ import {
 
 import {
   completeMfaLogin,
+  completeMfaLoginWithRecoveryCode,
 } from "@/server/auth/mfa-login.service";
 
 import {
@@ -105,11 +107,9 @@ export async function POST(
       );
 
     const result =
-      await completeMfaLogin({
-        challengeToken,
-        code:
-          payload.code,
-      });
+      await (payload.recovery ? completeMfaLoginWithRecoveryCode({
+        challengeToken,recoveryCode:payload.code,
+      }) : completeMfaLogin({challengeToken,code:payload.code}));
 
     const response =
       json(
@@ -171,6 +171,7 @@ export async function POST(
     if (
       error instanceof
         InvalidTotpCodeError ||
+      error instanceof InvalidRecoveryCodeError ||
       error instanceof
         TotpReplayError
     ) {

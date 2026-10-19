@@ -73,7 +73,13 @@ async function clearFixtures(): Promise<void> {
   await db.role.deleteMany();
 
   await db.membership.deleteMany();
-  await db.organization.deleteMany();
+  for (const type of [
+    OrganizationType.HEALTH_UNIT,
+    OrganizationType.MUNICIPALITY,
+    OrganizationType.PAP,
+  ]) {
+    await db.organization.deleteMany({ where: { type } });
+  }
   await db.user.deleteMany();
 }
 
@@ -89,18 +95,42 @@ async function createUser(email: string) {
 }
 
 async function createUnit(suffix: string) {
-  return db.organization.create({
-    data: {
-      type: OrganizationType.HEALTH_UNIT,
+  return db.$transaction(async (tx) => {
+    const pap = await tx.organization.upsert({
+      where: { code: "F03_CLINICAL_API_PAP" },
+      update: {},
+      create: {
+        code: "F03_CLINICAL_API_PAP",
+        type: OrganizationType.PAP,
+        status: OrganizationStatus.ACTIVE,
+        name: "PAP Clinical API",
+        isActive: true,
+      },
+    });
 
-      status: OrganizationStatus.ACTIVE,
+    const municipality = await tx.organization.upsert({
+      where: { code: "F03_CLINICAL_API_MUN" },
+      update: {},
+      create: {
+        code: "F03_CLINICAL_API_MUN",
+        type: OrganizationType.MUNICIPALITY,
+        status: OrganizationStatus.ACTIVE,
+        name: "Municipio Clinical API",
+        parentId: pap.id,
+        isActive: true,
+      },
+    });
 
-      name: `UBS Clinical API ${suffix}`,
-
-      cnes: `73${suffix.padStart(5, "0")}`,
-
-      isActive: true,
-    },
+    return tx.organization.create({
+      data: {
+        type: OrganizationType.HEALTH_UNIT,
+        status: OrganizationStatus.ACTIVE,
+        name: `UBS Clinical API ${suffix}`,
+        cnes: `73${suffix.padStart(5, "0")}`,
+        parentId: municipality.id,
+        isActive: true,
+      },
+    });
   });
 }
 
@@ -661,4 +691,82 @@ test("SQL-injection-shaped patient search input does not broaden organization re
   assert.deepEqual(body.items, []);
 
   assert.equal(await db.patient.count(), 1);
+});
+
+test("clinical revision history separates two UBS linked to the same patient", async () => {
+  const { unit: unitA, token: tokenA } = await authenticatedFixture("00009");
+  const { unit: unitB, token: tokenB } = await authenticatedFixture("00010");
+
+  const patient = await createPatient({
+    fullName: "Paciente Compartilhada",
+    birthDate: "2000-01-01",
+  });
+
+  for (const unit of [unitA, unitB]) {
+    await linkPatientToOrganization({
+      patientId: patient.id,
+      organizationId: unit.id,
+    });
+  }
+
+  const encounterA = await createEncounter({
+    patientId: patient.id,
+    organizationId: unitA.id,
+  });
+  const encounterB = await createEncounter({
+    patientId: patient.id,
+    organizationId: unitB.id,
+  });
+
+  const revisionA = await callPost(["revisions"], {
+    token: tokenA,
+    organizationId: unitA.id,
+    body: {
+      resourceType: "ENCOUNTER",
+      resourceId: encounterA.id,
+      reason: "Revisao da UBS A",
+      before: { chiefComplaint: "A1" },
+      after: { chiefComplaint: "A2" },
+    },
+  });
+  assert.equal(revisionA.status, 201);
+
+  const revisionB = await callPost(["revisions"], {
+    token: tokenB,
+    organizationId: unitB.id,
+    body: {
+      resourceType: "ENCOUNTER",
+      resourceId: encounterB.id,
+      reason: "Revisao da UBS B",
+      before: { chiefComplaint: "B1" },
+      after: { chiefComplaint: "B2" },
+    },
+  });
+  assert.equal(revisionB.status, 201);
+
+  const revisionsA = await callGet(["patients", patient.id, "revisions"], {
+    token: tokenA,
+    organizationId: unitA.id,
+  });
+  assert.equal(revisionsA.status, 200);
+  const bodyA = await revisionsA.json();
+  assert.equal(bodyA.items.length, 1);
+  assert.equal(bodyA.items[0]?.organizationId, unitA.id);
+  assert.equal(bodyA.items[0]?.resourceId, encounterA.id);
+
+  const revisionsB = await callGet(["patients", patient.id, "revisions"], {
+    token: tokenB,
+    organizationId: unitB.id,
+  });
+  assert.equal(revisionsB.status, 200);
+  const bodyB = await revisionsB.json();
+  assert.equal(bodyB.items.length, 1);
+  assert.equal(bodyB.items[0]?.organizationId, unitB.id);
+  assert.equal(bodyB.items[0]?.resourceId, encounterB.id);
+
+  const unauthorized = await callGet(["patients", patient.id, "revisions"], {
+    token: tokenA,
+    organizationId: unitB.id,
+  });
+  assert.equal(unauthorized.status, 403);
 });

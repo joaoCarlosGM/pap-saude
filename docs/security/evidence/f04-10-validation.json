@@ -1,0 +1,148 @@
+{
+  "date": "2026-10-19",
+  "branch": "codex/f04-10-release-hardening",
+  "base_commit": "fd42d91e3169727bd772d713e73659e7d23a22c2",
+  "implementation_commit": "c3e1ff621c0ef187e49011378d902cec3bc9acf1",
+  "production_decision": "NO-GO",
+  "local_suites": {
+    "operations-final.log": {
+      "tests": 78,
+      "pass": 78,
+      "fail": 0,
+      "skipped": 0,
+      "cancelled": 0
+    },
+    "smart.log": {
+      "tests": 203,
+      "pass": 203,
+      "fail": 0,
+      "skipped": 0,
+      "cancelled": 0
+    },
+    "auth.log": {
+      "tests": 202,
+      "pass": 202,
+      "fail": 0,
+      "skipped": 0,
+      "cancelled": 0
+    },
+    "security-final.log": {
+      "tests": 2,
+      "pass": 2,
+      "fail": 0,
+      "skipped": 0,
+      "cancelled": 0
+    }
+  },
+  "images": {
+    "pap-saude:mission": {
+      "id": "sha256:0629e776bd7b815e7110f9648242b9d4f7d39db0dc2047cf767cb41048e3f7f9",
+      "user": "nextjs",
+      "trivy_high_critical_exit": 0
+    },
+    "pap-saude-migrator:mission": {
+      "id": "sha256:cedd1e8e3c39e8147432d4eedc050432115e646c3640c4259add74add32aa8ff",
+      "user": "node",
+      "trivy_high_critical_exit": 0
+    }
+  },
+  "log_sha256": {
+    "npm-ci-final.log": "143caa886bf55d1e8617225fcd5789c3a16479d7fd2bba59904a960f58f18b06",
+    "prisma-validate.log": "5a5dfd1f843f80d6aaf2604064f6fc9fb6b7d560face18a1741eb32c32bd7435",
+    "prisma-generate.log": "231d39610d8273db447fc15095f278f04292a38f26395db17f72e7871da664f1",
+    "typegen.log": "d51d6d06be4756a91e9910f05d692a4914979cbf4e058907ca57980542d1b8c9",
+    "tsc.log": "76162e465989f3f070a9de8db711fbf358e53b74d09ce1bbdb57c727e4c4a16d",
+    "lint.log": "a1c2b610c1998028f54ffb82053418530dfc96c543e31d539b5f9cf1ba05b24b",
+    "build-final.log": "e2dbf9e622b131b5bc4c9ca737dc62eb4ae2bf45e7b749488357ff76ef54fdae",
+    "operations-final.log": "8090ba8c96cab4d42a872dfa4950b725bdb178255e08d72a594daafa205bfa48",
+    "smart.log": "6f11e3e428451e9475017f82077c4908d78430f9b66f91429a540133d329a9ca",
+    "auth.log": "0e79916ce1ef105055ee4b8b6bf36555e8124af6d46f52e7aca0e9d0b5cfb124",
+    "security-final.log": "b6fbd12f8556eade090527f77fa07538657c07db6bc6aa1b1d934460a850a700",
+    "roles.log": "fe4d5bdc96750dd1d45c218abcfcaa1d7edf28b588276c22b306400cfb793cad",
+    "migration-image-final.log": "536cd201e3b9681ce6f356322ab003a232c22cdd2faaace6762a9adb34f2c50e",
+    "migration-27-baseline.log": "77b29348907a2577c5f1f61d27b2d526d3dcbd2706d685da69e05acc542bfd42",
+    "web-image.log": "bf95d3e98a1eb8934427261904d93cb55ff15b06c3394ef2e0b6f5e93b4348ed",
+    "image-scan.log": "a3c049a0a72a752fb2c05e9aeacfc2a45bfe618704e50839504df88a3978ae5e",
+    "image-scan-before.log": "a0a627a58fb027742f4b1d83ba86408bce9220ffa4af9fece6afabe4831165a6",
+    "image-isolation.log": "b1a04c1fcf338161f2a1a187a924198477ddefcc9affb21fa07b0f0d344b7058",
+    "audit-root.log": "c8444cf6aa232a0dd86d43d9c0f12a9a886ecbc2900d97c45c4f363a106fa255",
+    "audit-migrator.log": "c8444cf6aa232a0dd86d43d9c0f12a9a886ecbc2900d97c45c4f363a106fa255",
+    "ci-guard.log": "680eb545813d3bd55a1159a8748c9709b83686b5369018ae3279bc1fde9e1e74",
+    "history-integrity.log": "236b23854ce1f5b892565adabd96fd8f8af9090e8f42012fedebd68aad832646",
+    "runner-build-final.log": "b5a73caa4c997be73729df9f5d22f9a40f04bf0c0fd79e13f1d851dd0bd0d2bd",
+    "migrator-build-final.log": "bcfc1ab81a5efe124cf35b55ad58c7316cfcce580ef68c7363bb892666f81c1f",
+    "postgres-readiness.log": "33c329eae2be0414257c475e8f849c7ab7dcb2332bb01994efd47cf4be5fb775",
+    "roles-readiness-1.log": "fe4d5bdc96750dd1d45c218abcfcaa1d7edf28b588276c22b306400cfb793cad",
+    "roles-readiness-2.log": "fe4d5bdc96750dd1d45c218abcfcaa1d7edf28b588276c22b306400cfb793cad",
+    "roles-readiness-3.log": "fe4d5bdc96750dd1d45c218abcfcaa1d7edf28b588276c22b306400cfb793cad",
+    "ci-remote-failure.log": "562acb37591f01a25ee50be11281df072e45ea70c07a9d3750815f31a454219f"
+  },
+  "external_not_validated": [
+    "VPS deploy script and compose",
+    "real production privileges and credential cutover",
+    "production backup/restore and RTO/RPO",
+    "GitHub environment and branch protection settings",
+    "CI remote run pending publication of branch",
+    "DNS, RNDS and clinical release acceptance"
+  ],
+  "historical_migrations": {
+    "prisma/migrations/20260909150044_init_clinical_schema/migration.sql": "a6284fc87a40087d2e5dbd8265802e17bbb5f4a86c9aed2275501cd9ff63f0ed",
+    "prisma/migrations/20260926001330_foundation_01/migration.sql": "1ac0dc1d871731c05dcf253f2f53db19fd61d953e0cb650af5bf83cbf31e70d6",
+    "prisma/migrations/20260926014952_foundation_02_identity/migration.sql": "65156c3264ed77ecc300e7d2a619143601c940633ad363ebf8506ed8444fcc8a",
+    "prisma/migrations/20260926210500_foundation_02_email_identity/migration.sql": "484f15cc41dac21de6c48a92a24553e2f4b31aa7e2ecb2d68fc0bc6fffdb8c3d",
+    "prisma/migrations/20260926220000_foundation_02_login_abuse_protection/migration.sql": "a5dfac82f901f2cf6f8a1b9edfe829d1a515265b22021477294de2fcb8b022d8",
+    "prisma/migrations/20260927001500_foundation_02_mfa_challenge/migration.sql": "1f14cbd2b0ed6d921612aa2c9df49bb5ccbcf05dbe2a329d2a39759b40e61f8b",
+    "prisma/migrations/20260927033000_foundation_02_mfa_reset/migration.sql": "cfb7e1436b54f97f5f33a121bbde1549bf116e2b6498dcf1f6533b946afdeadc",
+    "prisma/migrations/20260927043000_foundation_02_organization_lifecycle/migration.sql": "81bb3b8c46d22a172a47c88073dc90c85c3d2bbb6438f8877df112edeec4441f",
+    "prisma/migrations/20260927050000_foundation_02_membership_discovery/migration.sql": "fc46757785c75913eac38b0ebe20165653ee35934c852474ca0a1d2d5e043df8",
+    "prisma/migrations/20261002010000_foundation_02_roles_permissions/migration.sql": "deb472ad0f792670286424079c2307e71918eb18a3e1b687d04609f95af090a2",
+    "prisma/migrations/20261002020000_foundation_02_product_activity/migration.sql": "5bf2b771e76a9ec62101606e7ea407fe64ec6927f4f1c1ba3e56f0bb73afe1da",
+    "prisma/migrations/20261002030000_foundation_02_organization_metrics/migration.sql": "dab1cfeff9b22e736c07b5e0de6b2962e04c64e58316177d3d50a2dae306b681",
+    "prisma/migrations/20261002040000_foundation_02_feedback/migration.sql": "37286838815f2263a73bc22edd6f5bb800086800fafe6459cc88882c9869f950",
+    "prisma/migrations/20261002050000_foundation_02_health_alerts/migration.sql": "d52af98b493090602313a1b5501ab5beda6753d5770e3655bcc038e52175f5b0",
+    "prisma/migrations/20261003010000_foundation_03_patient_registry_core/migration.sql": "9e55060b6307f171566849c3ff6f89ed22c57ab82e0d4cb4909043192f1d6d40",
+    "prisma/migrations/20261003020000_foundation_03_pregnancy_core/migration.sql": "7910d9b5e888c3adc332e19cf44fdf168ba45ead23b45e0674cf26b0e9e378f8",
+    "prisma/migrations/20261003030000_foundation_03_encounter_core/migration.sql": "d88da8ad430beacc707a96d86ede5459a8bc15db8af10be788a30534c3d60efb",
+    "prisma/migrations/20261003040000_foundation_03_vital_signs_core/migration.sql": "d9d669557813b8491ccfa49fc5a6ccf2afa39d073d2170350d1c1c4dd2f1d1d5",
+    "prisma/migrations/20261003050000_foundation_03_obstetric_data_core/migration.sql": "b21155565504d3287027f3839882b0b4cf36574e41a351b4b30e2211d663201b",
+    "prisma/migrations/20261003060000_foundation_03_allergies_clinical_flags/migration.sql": "c4aeb221a28abfdc01b4554d396e7a6397bb5ea0c6d05b3f3c3a70b1dc451e02",
+    "prisma/migrations/20261003070000_foundation_03_meows_engine/migration.sql": "1d3eaeb991e5bf2bb088f11c525abfb041beb5e6750937a6f68436bbc75f91d9",
+    "prisma/migrations/20261005080000_foundation_03_clinical_revision_authorization/migration.sql": "410fccba2558be39d44d275a6f7ca5ee1dde5a41586b2986b76dfa232eaa1c58",
+    "prisma/migrations/20261007094500_foundation_04_user_invitations/migration.sql": "7e7eaa37f669f86cd96b8cb52ad3c67c971bc43086f22290e7f2ca8d75622759",
+    "prisma/migrations/20261007101500_foundation_04_onboarding/migration.sql": "55cad879b016e0850885778d9052abf2cd6a2a24380767fe1fa78ffce31503e5",
+    "prisma/migrations/20261016010000_foundation_04_password_reset_token/migration.sql": "58ee86841a5b710a43626c2c9396b0c5371c8a83ccef1333dd7bc1146721868a",
+    "prisma/migrations/20261016200000_foundation_04_admin_audit_indexes/migration.sql": "7e22a6bdcd0972e51c0fedfbd2e71b90f49c714b3394053394d8f158aa5c8834",
+    "prisma/migrations/20261016210000_foundation_04_audit_integrity/migration.sql": "ba36b2f00e96d04f7231043a8fa6e2ae047dd5a16ec571b603260faa0fd56f64"
+  },
+  "github_readonly_observations": {
+    "branches": {
+      "prod": {
+        "protected": false
+      },
+      "PROD": {
+        "protected": false
+      },
+      "develop": {
+        "protected": false
+      }
+    },
+    "effective_rules_prod": [],
+    "production_environment_http_status": 404,
+    "actions_permissions_http_status": 403,
+    "settings_modified": false
+  },
+  "remote_ci_observed_failure": {
+    "run_id": 39195316882,
+    "conclusion": "failure",
+    "step": "PostgreSQL runtime and migrator separation",
+    "exit_code": 2,
+    "diagnosis": "Unix-socket readiness accepted temporary init server; psql raced its shutdown",
+    "correction": "Wait for final TCP server; deterministic delayed-init regression and three role harness repetitions passed",
+    "remote_revalidation": "pending latest push"
+  },
+  "pre_ddl_history_validation": {
+    "tampered_checksum": "PASS",
+    "no_new_migration_or_legacy_table_drop": "PASS",
+    "actual_prisma_sql_failure_blocks_web": "PASS"
+  }
+}

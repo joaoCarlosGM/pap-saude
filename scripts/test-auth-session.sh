@@ -50,6 +50,10 @@ if [[ "$CURRENT_DB" != "$DB_NAME" ]]; then
   exit 1
 fi
 
+# Legacy suites clear audit rows between cases; bypass only within allowlisted throwaway DBs.
+bash scripts/testing/allow-audit-test-cleanup.sh "$DB_CONTAINER" "$DB_USER" "$DB_NAME"
+
+
 HAS_SESSIONS="$(
   docker exec "$DB_CONTAINER" \
     psql -U "$DB_USER" -d "$DB_NAME" \

@@ -37,3 +37,6 @@ compose*.yml
 *.tar.gz
 *.sql
 *.dump
+# Migration SQL is required by the isolated migrator.
+!prisma/migrations/**/migration.sql
+.test-audit

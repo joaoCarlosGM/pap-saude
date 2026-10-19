@@ -59,7 +59,18 @@
     "audit:f03:clinical-governance": "bash scripts/audit-f03-clinical-governance.sh",
     "test:f03:clinical-api-ui": "npm run guard:sql-injection && bash scripts/test-f03-clinical-api-ui.sh",
     "guard:sql-injection": "node scripts/security/guard-sql-injection.mjs",
-    "audit:f03:final": "bash scripts/audit-f03-master.sh"
+    "audit:f03:final": "bash scripts/audit-f03-master.sh",
+    "test:f04:admin-core": "bash scripts/test-f04-admin-core.sh",
+    "test:f04:role-governance": "bash scripts/test-f04-role-governance.sh",
+    "test:f04:role-adversarial": "bash scripts/test-f04-role-adversarial.sh",
+    "audit:f04:admin-core": "bash scripts/audit-f04-admin-core.sh",
+    "test:f04:access-trust": "bash scripts/test-f04-access-trust.sh",
+    "audit:f04:access-trust": "bash scripts/audit-f04-access-trust.sh",
+    "test:f04:audit-idor": "bash scripts/test-f04-audit-idor.sh",
+    "audit:f04:audit-idor": "bash scripts/audit-f04-audit-idor.sh",
+    "test:f04:operations": "bash scripts/test-f04-operations.sh",
+    "audit:f04:operations": "bash scripts/audit-f04-operations.sh",
+    "test:f04:db-integrity": "bash scripts/test-f04-db-invariants.sh"
   },
   "dependencies": {
     "@capacitor/android": "^8.5.2",
@@ -79,7 +90,6 @@
     "radix-ui": "^1.6.7",
     "react": "19.2.8",
     "react-dom": "19.2.8",
-    "shadcn": "^4.21.0",
     "tw-animate-css": "^1.4.0"
   },
   "devDependencies": {
@@ -90,8 +100,10 @@
     "eslint": "^9",
     "eslint-config-next": "16.3.8",
     "prisma": "^7.10.0",
+    "shadcn": "^4.21.0",
     "tailwindcss": "^4",
     "tsx": "^4.23.15",
-    "typescript": "^5"
+    "typescript": "^5",
+    "yaml": "2.9.1"
   }
 }
