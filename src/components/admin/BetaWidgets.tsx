@@ -17,7 +17,7 @@ export function useBetaData<T>(url: string) {
           throw new Error(
             body.error === "BETA_QUERY_TOO_LARGE"
               ? "Há muitos eventos nesta consulta. Reduza o período ou selecione um município/UBS."
-              : body.error === "BETA_MFA_REQUIRED"
+              : ["ADMIN_MFA_REQUIRED", "BETA_MFA_REQUIRED"].includes(body.error)
                 ? "Ative o MFA em Minha segurança e entre novamente com o segundo fator."
                 : r.status === 403
                   ? "Você não tem permissão para esta área."
