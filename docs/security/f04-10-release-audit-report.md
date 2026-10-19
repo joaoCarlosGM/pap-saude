@@ -57,6 +57,7 @@ smokes são verificações funcionais adicionais, não contagens inventadas de t
 | Severidade | Achado | Correção/status |
 |---|---|---|
 | CRITICAL | Migrations históricas removem dados legados se executadas sem inventário | Preflight obrigatório na imagem; qualquer dado legado causa aborto sem mutação; manutenção confirmada e sem outras sessões para legado vazio. Dados existentes exigem plano clínico separado. |
+| CRITICAL externo | API GitHub retornou protected:false para prod, PROD e develop; regras efetivas de prod retornaram [] | Nenhuma configuração alterada. Exigir proteção e revisão antes de qualquer merge/release. |
 | CRITICAL externo | pap_prod foi anteriormente descrito com SUPERUSER/CREATEDB/CREATEROLE/BYPASSRLS | Situação atual NÃO reconfirmada na VPS. Scripts/testes mínimos prontos; produção permanece NO-GO até cutover comprovado. |
 | HIGH | .dockerignore excluía os SQL de migration | Exceção explícita para prisma/migrations/**/migration.sql; imagem realmente ensaiada. |
 | HIGH | npm herdado da base introduzia 11 CVEs HIGH por imagem, invisíveis ao audit do lockfile da aplicação | Removidos npm/corepack/yarn dos estágios finais; nova varredura HIGH/CRITICAL limpa nas duas imagens. Sem suprimir CVEs. |
@@ -110,6 +111,12 @@ n8n. Revogar CREATE público no schema do banco PAP pode afetar consumidores que
 compartilhem esse schema: confirmar segregação antes de executar.
 
 ## CI, imagens e limites das evidências
+
+Consulta read-only ao GitHub confirmou `protected: false` em prod, PROD e develop,
+e `GET /rules/branches/prod` retornou `[]`. A consulta do environment production
+retornou 404: existência/proteção não comprovadas com o acesso atual. A API de
+permissões de Actions retornou 403 por limite da integração; nenhum setting foi
+modificado. Essas evidências reforçam o NO-GO.
 
 O YAML exige todos os gates locais, incluindo regressão forçada F03, auth, roles,
 smokes e varredura Trivy. Actions, base Node e scanner estão fixados por SHA/digest.
@@ -184,7 +191,7 @@ revisável; não foi executado na VPS.
 | 667a15d | Migration incremental atômica de paridade |
 | bb3985e | Contratos de falha, inventário read-only e smoke com runtime mínimo |
 | 39df7d9 | Remoção do npm vulnerável e gate de CVEs nas imagens |
-| Commit de documentação deste relatório | Relatório, runbook, gates e resumo de evidências |
+| Commits de documentação deste relatório e inspeção GitHub | Relatório, runbook, gates e resumo de evidências |
 
 Arquivos: Dockerfile/.dockerignore; workflow CI; package/lock raiz (yaml dev) e do
 migrator (pg fixado); wrapper migrate.mjs; nova migration; scripts/db de privilégios,
