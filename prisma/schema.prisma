@@ -329,6 +329,9 @@ model UserInvitation {
   userId          String?
   organizationId  String
   roleKey         String
+  deliveryStatus  String           @default("NOT_ATTEMPTED")
+  providerMessageId String?
+  deliveryAttemptedAt DateTime?
   tokenHash       String           @unique
   status          InvitationStatus @default(PENDING)
   expiresAt       DateTime
@@ -361,6 +364,13 @@ model OrganizationCandidate {
   address                 String?
   status                  OrganizationCandidateStatus @default(NEW)
   leadTemperature         OrganizationLeadTemperature @default(COLD)
+  contactName             String?
+  contactEmail            String?
+  contactPhone            String?
+  consentedAt             DateTime?
+  reviewReason            String?
+  reviewedByUserId         String?
+  reviewedAt              DateTime?
   convertedOrganizationId String?                     @unique
   createdAt               DateTime                    @default(now())
   updatedAt               DateTime                    @updatedAt
@@ -378,13 +388,13 @@ model OrganizationCandidate {
 model OrganizationRequest {
   id                String                    @id @default(uuid())
   candidateId       String
-  requestedByUserId String
+  requestedByUserId String?
   status            OrganizationRequestStatus @default(REQUESTED)
   createdAt         DateTime                  @default(now())
   updatedAt         DateTime                  @updatedAt
 
   candidate   OrganizationCandidate @relation(fields: [candidateId], references: [id], onDelete: Cascade)
-  requestedBy User                  @relation(fields: [requestedByUserId], references: [id], onDelete: Restrict)
+  requestedBy User?                 @relation(fields: [requestedByUserId], references: [id], onDelete: Restrict)
 
   @@unique([candidateId, requestedByUserId])
   @@index([requestedByUserId, status])
@@ -988,6 +998,7 @@ model Session {
   createdAt        DateTime                 @default(now())
   expiresAt        DateTime
   lastSeenAt       DateTime                 @default(now())
+  mfaVerifiedAt    DateTime?
   revokedAt        DateTime?
   revocationReason SessionRevocationReason?
   ipHash           String?
@@ -1054,4 +1065,13 @@ model PasswordResetToken {
   @@index([originHash, createdAt])
   @@index([expiresAt])
   @@map("password_reset_tokens")
+}
+
+// Durable, bounded time-window counters; no IP/email is stored in cleartext.
+model BetaAbuseBucket {
+  key String @id
+  count Int @default(1)
+  expiresAt DateTime
+  @@index([expiresAt])
+  @@map("beta_abuse_buckets")
 }

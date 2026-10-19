@@ -65,6 +65,7 @@ export async function completeMfaLogin(
    */
   const createdSession =
     await createSession({
+      mfaVerified: true,
       userId:
         challenge.userId,
       ipHash:
@@ -143,6 +144,7 @@ export async function completeMfaLoginWithRecoveryCode(
 
   const createdSession =
     await createSession({
+      mfaVerified: true,
       userId:
         challenge.userId,
       ipHash:

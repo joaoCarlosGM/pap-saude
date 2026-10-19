@@ -1,5 +1,6 @@
 /** Admin audit actions are separate from clinical audit and cannot reveal PHI. */
 export const ADMIN_AUDIT_ACTIONS = [
+  "REQUEST_SUBMITTED", "REQUEST_APPROVED", "REQUEST_REJECTED", "INVITATION_DELIVERY", "BETA_METRICS_READ",
   "ORGANIZATION_CREATED", "ORGANIZATION_UPDATED", "ORGANIZATION_ACTIVATED",
   "ORGANIZATION_SUSPENDED", "ORGANIZATION_ARCHIVED",
   "INVITATION_CREATED", "INVITATION_ACCEPTED", "INVITATION_REVOKED",
@@ -8,8 +9,9 @@ export const ADMIN_AUDIT_ACTIONS = [
   "MFA_ENROLLMENT_STARTED", "MFA_ENROLLMENT_CONFIRMED", "RECOVERY_CODES_REGENERATED",
   "PASSWORD_RESET", "PASSWORD_CHANGED",
 ] as const;
-export const ADMIN_AUDIT_RESOURCES = ["ORGANIZATION", "INVITATION", "ROLE_ASSIGNMENT", "USER", "USER_SESSION", "MFA_FACTOR"] as const;
+export const ADMIN_AUDIT_RESOURCES = ["ORGANIZATION_REQUEST", "ORGANIZATION", "INVITATION", "ROLE_ASSIGNMENT", "USER", "USER_SESSION", "MFA_FACTOR"] as const;
 const SAFE_FIELDS: Record<string, readonly string[]> = {
+  ORGANIZATION_REQUEST: ["id", "status", "convertedOrganizationId"],
   ORGANIZATION: ["id", "type", "status", "name", "code", "city", "state", "parentId", "isActive"],
   INVITATION: ["id", "status", "roleKey", "organizationId", "userId", "expiresAt"],
   ROLE_ASSIGNMENT: ["targetUserId", "roleKey", "organizationId"],
