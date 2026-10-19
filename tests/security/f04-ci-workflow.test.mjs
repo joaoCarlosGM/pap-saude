@@ -4,6 +4,7 @@ import { mkdtempSync, mkdirSync, copyFileSync, readFileSync, writeFileSync, rmSy
 import { tmpdir } from 'node:os';
 import { dirname, join, resolve } from 'node:path';
 import { spawnSync } from 'node:child_process';
+import { parse } from 'yaml';
 
 test('release guard rejects adversarial workflow changes', () => {
  const root = mkdtempSync(join(tmpdir(),'f0410-ci-'));
@@ -29,4 +30,49 @@ test('release guard rejects adversarial workflow changes', () => {
    assert.notEqual(run(),0,`unsafe workflow mutation ${index} must fail closed`);
   }
  } finally { rmSync(root,{recursive:true,force:true}); }
+});
+
+
+test('deploy SSH remains one command with complete arguments, without network access', () => {
+ const ci = parse(readFileSync('.github/workflows/ci.yml', 'utf8'));
+ const command = ci.jobs.deploy.steps.find(step => step.name === 'Deploy application')?.run;
+ assert.equal(typeof command, 'string');
+ const root = mkdtempSync(join(tmpdir(), 'f0410-ssh-'));
+ const capture = join(root, 'ssh-arguments.jsonl');
+ const home = join(root, 'synthetic-home');
+ const sha = 'a'.repeat(40);
+ try {
+  // Only this write-only SSH stub is reachable through PATH. No real SSH,
+  // production environment, key or network operation is used by the test.
+  const stub = join(root, 'ssh');
+  writeFileSync(stub, `#!${process.execPath}\nimport('node:fs').then(fs => fs.appendFileSync(process.env.SSH_CAPTURE, JSON.stringify(process.argv.slice(2)) + '\\n'));\n`, { mode: 0o700 });
+  function run(script) {
+   rmSync(capture, { force: true });
+   const result = spawnSync('/bin/bash', ['--noprofile', '--norc', '-e', '-o', 'pipefail', '-c', script], {
+    encoding: 'utf8', timeout: 5000,
+    env: { PATH: root, HOME: home, SSH_CAPTURE: capture, VPS_PORT: '2222', VPS_HOST: 'vps.invalid', VPS_USER: 'synthetic', DEPLOY_SHA: sha },
+   });
+   return { result, calls: (() => {
+    try { return readFileSync(capture, 'utf8').trim().split('\n').map(line => JSON.parse(line)); }
+    catch { return []; }
+   })() };
+  }
+  function assertSingleSsh({ result, calls }) {
+   assert.equal(result.error, undefined);
+   assert.equal(result.status, 0, result.stderr);
+   assert.deepEqual(calls, [[
+    '-p', '2222', '-i', join(home, '.ssh/pap_deploy'),
+    '-o', 'StrictHostKeyChecking=yes', '-o', 'BatchMode=yes', '-o', 'IdentitiesOnly=yes',
+    'synthetic@vps.invalid', `sudo -n /opt/pap-saude/scripts/deploy.sh '${sha}'`,
+   ]]);
+  }
+  assertSingleSsh(run(command));
+  // bash -n alone accepts these broken scripts. Execute each regression with
+  // the stub to prove that losing either continuation is actually detected.
+  for (const option of ['StrictHostKeyChecking=yes', 'BatchMode=yes']) {
+   const broken = command.replace(`${option} \\\n`, `${option}\n`);
+   assert.notEqual(broken, command, `must remove the continuation after ${option}`);
+   assert.throws(() => assertSingleSsh(run(broken)), { name: 'AssertionError' });
+  }
+ } finally { rmSync(root, { recursive: true, force: true }); }
 });

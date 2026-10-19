@@ -215,3 +215,23 @@ invariantes e inventário; harnesses de imagens/roles; guard e scanner de segura
 smart runner; helper e 16 fixtures clínicas; health route; dois testes de segurança;
 documentos e JSON de evidências. A lista exata é reproduzível com
 `git diff --name-only fd42d91..HEAD`. Migrations históricas e schema.prisma intactos.
+
+## Revisão do PR #1 — continuação do SSH (base e1a49ab)
+
+A revisão identificou duas continuações ausentes no comando SSH do job `deploy`,
+após `StrictHostKeyChecking=yes` e `BatchMode=yes`. Foram acrescentadas as barras
+para manter opções, destino e comando remoto na mesma invocação.
+
+O teste `tests/security/f04-ci-workflow.test.mjs` lê o bloco real do YAML e o
+executa com Bash e um substituto local de `ssh`. Verifica uma única invocação e
+cada argumento, incluindo as três opções de segurança, destino e SHA remoto.
+O PATH contém somente o substituto, com ambiente sintético e host `.invalid`;
+nenhuma chave real, conexão à VPS ou execução de deploy participa do teste.
+Duas mutações removem individualmente as continuações e precisam ser rejeitadas.
+
+Evidências locais: antes da correção, o teste reproduziu `-o: command not found`
+(status 127); depois, os dois testes passaram, inclusive as mutações negativas.
+O guard de CI também passou. O teste integra o gate existente do CI completo;
+os resultados remotos e o SHA final são registrados no PR para revisão.
+Esta correção não altera o **NO-GO para produção** nem elimina as validações
+externas listadas acima. O PR permanece draft, sem merge ou deploy.

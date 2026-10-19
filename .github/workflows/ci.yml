@@ -223,8 +223,8 @@ jobs:
           ssh \
             -p "$VPS_PORT" \
             -i ~/.ssh/pap_deploy \
-            -o StrictHostKeyChecking=yes
-            -o BatchMode=yes
+            -o StrictHostKeyChecking=yes \
+            -o BatchMode=yes \
             -o IdentitiesOnly=yes \
             "$VPS_USER@$VPS_HOST" \
             "sudo -n /opt/pap-saude/scripts/deploy.sh '$DEPLOY_SHA'"
