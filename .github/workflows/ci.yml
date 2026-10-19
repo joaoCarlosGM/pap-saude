@@ -105,6 +105,9 @@ jobs:
       - name: PAP Admin Beta 1 institutional and adversarial journey
         run: npm run test:admin:beta1
 
+      - name: Isolated local development workflow
+        run: npm run test:local-dev
+
       - name: PostgreSQL runtime and migrator separation
         run: bash scripts/test-f04-role-separation.sh
 
