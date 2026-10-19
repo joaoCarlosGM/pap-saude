@@ -2,7 +2,7 @@
   "date": "2026-10-19",
   "branch": "codex/f04-10-release-hardening",
   "base_commit": "fd42d91e3169727bd772d713e73659e7d23a22c2",
-  "implementation_commit": "39df7d97b4f3f48d4e9bfd3c9ceb86f673b53a48",
+  "implementation_commit": "7936a5984cb57d640e7c1173b01d8a3fa3e33875",
   "production_decision": "NO-GO",
   "local_suites": {
     "operations-final.log": {
@@ -57,11 +57,11 @@
     "operations-final.log": "8090ba8c96cab4d42a872dfa4950b725bdb178255e08d72a594daafa205bfa48",
     "smart.log": "6f11e3e428451e9475017f82077c4908d78430f9b66f91429a540133d329a9ca",
     "auth.log": "0e79916ce1ef105055ee4b8b6bf36555e8124af6d46f52e7aca0e9d0b5cfb124",
-    "security-final.log": "7a5ce851e243885e3165310aaddc900921df9bdda378cf61a55224b4055de0c8",
+    "security-final.log": "9f7243b93376d1cc8c99db87dec0b5c9498736314d1ef62a2e75b5248e0123ff",
     "roles.log": "fe4d5bdc96750dd1d45c218abcfcaa1d7edf28b588276c22b306400cfb793cad",
-    "migration-image-final.log": "6a87ebd02c0e157c46e129347c240df044b8806e58663722b85b9e08874703b6",
+    "migration-image-final.log": "b8c629da210389dcbb6b963f69651bacc98fdc484221644469aab6de828697d9",
     "migration-27-baseline.log": "77b29348907a2577c5f1f61d27b2d526d3dcbd2706d685da69e05acc542bfd42",
-    "web-image.log": "1e562dade2d04433c7c6209040f6a61abf2c158b536d933b60a564757ca8e252",
+    "web-image.log": "21612aa0afe4ed17a9bf70d03418834ea57322d27fc4aa2dfb4ad63559a5ca4a",
     "image-scan.log": "1f042f41d3ef86105750e7b1415cb551884a35b0baac16cecf9b26beefe6104d",
     "image-scan-before.log": "a0a627a58fb027742f4b1d83ba86408bce9220ffa4af9fece6afabe4831165a6",
     "image-isolation.log": "b1a04c1fcf338161f2a1a187a924198477ddefcc9affb21fa07b0f0d344b7058",
@@ -70,7 +70,12 @@
     "ci-guard.log": "680eb545813d3bd55a1159a8748c9709b83686b5369018ae3279bc1fde9e1e74",
     "history-integrity.log": "236b23854ce1f5b892565adabd96fd8f8af9090e8f42012fedebd68aad832646",
     "runner-build-final.log": "b5a73caa4c997be73729df9f5d22f9a40f04bf0c0fd79e13f1d851dd0bd0d2bd",
-    "migrator-build-final.log": "c7d0c84551b8d6c6bc4d52c5c3369688bed10ae2e45b7d5ccbac56360a3b0ae6"
+    "migrator-build-final.log": "c7d0c84551b8d6c6bc4d52c5c3369688bed10ae2e45b7d5ccbac56360a3b0ae6",
+    "postgres-readiness.log": "33c329eae2be0414257c475e8f849c7ab7dcb2332bb01994efd47cf4be5fb775",
+    "roles-readiness-1.log": "fe4d5bdc96750dd1d45c218abcfcaa1d7edf28b588276c22b306400cfb793cad",
+    "roles-readiness-2.log": "fe4d5bdc96750dd1d45c218abcfcaa1d7edf28b588276c22b306400cfb793cad",
+    "roles-readiness-3.log": "fe4d5bdc96750dd1d45c218abcfcaa1d7edf28b588276c22b306400cfb793cad",
+    "ci-remote-failure.log": "562acb37591f01a25ee50be11281df072e45ea70c07a9d3750815f31a454219f"
   },
   "external_not_validated": [
     "VPS deploy script and compose",
@@ -125,5 +130,14 @@
     "production_environment_http_status": 404,
     "actions_permissions_http_status": 403,
     "settings_modified": false
+  },
+  "remote_ci_observed_failure": {
+    "run_id": 39195316882,
+    "conclusion": "failure",
+    "step": "PostgreSQL runtime and migrator separation",
+    "exit_code": 2,
+    "diagnosis": "Unix-socket readiness accepted temporary init server; psql raced its shutdown",
+    "correction": "Wait for final TCP server; deterministic delayed-init regression and three role harness repetitions passed",
+    "remote_revalidation": "pending latest push"
   }
 }

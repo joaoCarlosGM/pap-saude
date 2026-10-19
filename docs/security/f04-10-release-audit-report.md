@@ -37,6 +37,7 @@ checkout existente, sem criar worktree nem sobrescrever trabalho de terceiros.
 | Histórico 1→27 | imagem migrator fixada e banco inicial legado | PASS histórico/checksums, segunda execução e invariantes; diff detectou drift preexistente | `migration-27-baseline.log` |
 | Histórico 1→28 | harness final da imagem | PASS, 28 concluídas, checksums, idempotência, invariantes e diff vazio | `migration-image-final.log` |
 | Falha migrator bloqueia web | falha sintética em histórico descartável + contrato condicional | PASS; não é validação do deploy.sh externo | `migration-image-final.log` |
+| Prontidão PostgreSQL | inicialização temporária forçada e gate TCP final; três repetições de roles | PASS local após corrigir corrida observada no CI (exit 2/socket ausente) | `postgres-readiness.log`, `roles-readiness-*.log` |
 | Separação PostgreSQL | scripts SQL e testes negativos em container próprio | PASS, reaplicação idempotente e DDL/DML diferenciados | `roles.log` |
 | Imagens Docker | build runner/migrator, usuários sem root, CLI isolada | PASS | logs `*-build-final.log`, `image-isolation.log` |
 | Web com runtime mínimo | migration como owner não-superuser; login HTTP negado gravado por runtime | PASS, liveness e renderização também conferidos | `web-image.log` |
@@ -66,6 +67,7 @@ smokes são verificações funcionais adicionais, não contagens inventadas de t
 | MEDIUM | Branch desta missão não acionava validação e guard local F04 a rejeitava | Adicionada branch exata ao CI/guard, mantendo restrição de publish/deploy exclusivamente em push prod. |
 | MEDIUM | Smart --force podia selecionar zero módulos; cache não cobria alterações compartilhadas | --force executa todos; fingerprints incluem scripts, migrations, locks, helpers e Node; ausência de seleção não vira PASS; falha não impede registrar módulos independentes. |
 | MEDIUM | Fixtures F03 criavam UBS sem município/PAP, incompatíveis com invariantes F04 | Helper de fixtures com hierarquia válida e guard de banco descartável; nenhuma asserção de autorização ou trigger foi removida. |
+| HIGH | CI revelou corrida: pg_isready via Unix socket aceitava o servidor temporário de init, que desligava antes do psql seguinte | Sondas esperam TCP final; timeout explícito; teste força init lento e rejeita prontidão temporária; gate de roles repetido três vezes. |
 | MEDIUM | Arquivos copiados com modo restritivo impediam Prisma não-root | COPY com ownership explícito; migrator e web testados sem root. |
 | LOW | npm ci avisa que ESLint 9 está fora de suporte | Aviso de manutenção, sem falha de lint ou CVE HIGH reportada pelo audit solicitado. Upgrade major fora desta missão. |
 
@@ -133,6 +135,11 @@ Varredura válida para esses artefatos e a base de vulnerabilidades da execuçã
 não é promessa de ausência de CVEs futuras. `/api/health` prova liveness, não
 prontidão clínica/DB. O teste HTTP adicional verifica autenticação negada com DML.
 
+O run remoto de push `39195316882` falhou no gate de roles com exit 2 e
+socket ausente. O log confirmou a corrida entre o servidor temporário de init e
+o servidor final. A correção de prontidão foi testada localmente e exige nova
+execução remota; a execução falhada não é apresentada como PASS.
+
 Falhas intermediárias foram diagnosticadas e corrigidas: bloqueio de domínios
 Prisma/fontes, DNS do proxy no BuildKit, confiança TLS no builder, permissões
 não-root, fixtures antigas, drift e dependências do npm na base. Houve ENOSPC na
@@ -191,6 +198,7 @@ revisável; não foi executado na VPS.
 | 667a15d | Migration incremental atômica de paridade |
 | bb3985e | Contratos de falha, inventário read-only e smoke com runtime mínimo |
 | 39df7d9 | Remoção do npm vulnerável e gate de CVEs nas imagens |
+| Commit de prontidão PostgreSQL | Corrida de inicialização detectada no CI e teste determinístico |
 | Commits de documentação deste relatório e inspeção GitHub | Relatório, runbook, gates e resumo de evidências |
 
 Arquivos: Dockerfile/.dockerignore; workflow CI; package/lock raiz (yaml dev) e do

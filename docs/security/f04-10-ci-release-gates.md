@@ -17,7 +17,8 @@
 
 ## Gates obrigatórios
 
-1. npm ci; auditoria de dependências production e migrator isolado; Prisma generate;
+1. Prontidão PostgreSQL pelo servidor TCP final (não pelo servidor Unix temporário
+   de init), com teste de inicialização lenta; npm ci; auditoria de dependências production e migrator isolado; Prisma generate;
    Next typegen; Prisma falha fechado sem DATABASE_URL.
 2. Guard YAML estrutural e testes adversariais (ampliação de condição de release,
    remoção de dependência, environment incorreto, refs mutáveis, remoção de auditoria
