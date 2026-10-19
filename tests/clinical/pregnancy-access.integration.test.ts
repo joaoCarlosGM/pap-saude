@@ -1,3 +1,4 @@
+import { createClinicalTestOrganization } from "../helpers/clinical-organization";
 import assert from "node:assert/strict";
 
 import {
@@ -105,7 +106,7 @@ async function createUnit(
   name: string,
   cnes: string,
 ) {
-  return db.organization.create({
+  return createClinicalTestOrganization({
     data: {
       type:
         OrganizationType.HEALTH_UNIT,

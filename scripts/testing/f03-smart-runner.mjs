@@ -275,6 +275,14 @@ for (const file of trulyGlobalFiles) {
   }
 }
 
+// Force means all modules, including when no watched source file changed.
+// Migrations, dependencies and harness changes invalidate the whole DB regression.
+const globalChange = changedFiles.some(file =>
+  file.startsWith("prisma/") || file.startsWith("scripts/") || file.startsWith("tests/helpers/") ||
+  ["package.json", "package-lock.json", "Dockerfile"].includes(file));
+if (force || globalChange) {
+  for (const name of Object.keys(modules)) markDirect(name, force ? "forced-full-regression" : "shared-infrastructure-change");
+}
 const selected = new Set(directlyAffected);
 
 const relationships = [];
@@ -321,6 +329,7 @@ function walk(path) {
 
 function fingerprintModule(name) {
   const hash = createHash("sha256");
+  hash.update(process.version);
 
   const config = modules[name];
 
@@ -391,7 +400,7 @@ function fingerprintModule(name) {
     ],
   };
 
-  const paths = [...config.watch, ...(sharedByModule[name] ?? [])];
+  const paths = [...config.watch, ...(sharedByModule[name] ?? []), "prisma/", "scripts/", "package.json", "package-lock.json", "tests/helpers/", "src/server/db/client.ts"];
 
   const files = new Set();
 
@@ -504,7 +513,7 @@ for (const name of selected) {
       commit,
     };
 
-    break;
+    // Continue independent modules so the audit records the full regression.
   }
 }
 
@@ -549,7 +558,7 @@ console.log(`direct=${directlyAffected.size}`);
 console.log(`selected=${selected.size}`);
 
 for (const name of selected) {
-  const result = results[name];
+  const result = results[name] ?? { status: "NOT_RUN" };
 
   console.log(`${result.status.padEnd(11)} ${name}`);
 }
@@ -558,7 +567,10 @@ const failed = Object.values(results).some(
   (result) => result.status === "FAIL",
 );
 
-if (failed) {
+if (selected.size === 0) {
+  console.log("\nF03 SMART TEST: NO_TESTS_SELECTED (no validation claimed)");
+  process.exitCode = 2;
+} else if (failed) {
   console.log("\nF03 SMART TEST: FAIL");
 
   process.exitCode = 1;

@@ -1,3 +1,4 @@
+import { createClinicalTestOrganization } from "../helpers/clinical-organization";
 import assert from "node:assert/strict";
 
 import {
@@ -83,7 +84,7 @@ Promise<void> {
 async function createUnit(
   suffix: string,
 ) {
-  return db.organization.create({
+  return createClinicalTestOrganization({
     data: {
       type:
         OrganizationType.HEALTH_UNIT,
@@ -212,7 +213,7 @@ test(
   "encounter organization must be active health unit",
   async () => {
     const municipality =
-      await db.organization.create({
+      await createClinicalTestOrganization({
         data: {
           type:
             OrganizationType.MUNICIPALITY,
