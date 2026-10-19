@@ -36,7 +36,8 @@ checkout existente, sem criar worktree nem sobrescrever trabalho de terceiros.
 | Segurança do workflow | guard estrutural + seis mutações adversariais | PASS, condições inseguras rejeitadas | `security-final.log`, `ci-guard.log` |
 | Histórico 1→27 | imagem migrator fixada e banco inicial legado | PASS histórico/checksums, segunda execução e invariantes; diff detectou drift preexistente | `migration-27-baseline.log` |
 | Histórico 1→28 | harness final da imagem | PASS, 28 concluídas, checksums, idempotência, invariantes e diff vazio | `migration-image-final.log` |
-| Falha migrator bloqueia web | falha sintética em histórico descartável + contrato condicional | PASS; não é validação do deploy.sh externo | `migration-image-final.log` |
+| Histórico incompatível antes de DDL | adulteração sintética de checksum aplicado | PASS, apenas uma migration e admissions ainda presente após aborto | `migration-image-final.log` |
+| Falha migrator bloqueia web | histórico falhado e erro SQL real provocado por colisão de enum, em DBs descartáveis | PASS; não é validação do deploy.sh externo | `migration-image-final.log` |
 | Prontidão PostgreSQL | inicialização temporária forçada e gate TCP final; três repetições de roles | PASS local após corrigir corrida observada no CI (exit 2/socket ausente) | `postgres-readiness.log`, `roles-readiness-*.log` |
 | Separação PostgreSQL | scripts SQL e testes negativos em container próprio | PASS, reaplicação idempotente e DDL/DML diferenciados | `roles.log` |
 | Imagens Docker | build runner/migrator, usuários sem root, CLI isolada | PASS | logs `*-build-final.log`, `image-isolation.log` |
@@ -62,6 +63,7 @@ smokes são verificações funcionais adicionais, não contagens inventadas de t
 | CRITICAL externo | pap_prod foi anteriormente descrito com SUPERUSER/CREATEDB/CREATEROLE/BYPASSRLS | Situação atual NÃO reconfirmada na VPS. Scripts/testes mínimos prontos; produção permanece NO-GO até cutover comprovado. |
 | HIGH | .dockerignore excluía os SQL de migration | Exceção explícita para prisma/migrations/**/migration.sql; imagem realmente ensaiada. |
 | HIGH | npm herdado da base introduzia 11 CVEs HIGH por imagem, invisíveis ao audit do lockfile da aplicação | Removidos npm/corepack/yarn dos estágios finais; nova varredura HIGH/CRITICAL limpa nas duas imagens. Sem suprimir CVEs. |
+| HIGH | Integridade do histórico era conferida somente ao final do wrapper | Adicionada verificação prévia de prefixo, estados e checksums; histórico incompatível aborta antes de qualquer nova DDL. Teste adulterado preserva estado inicial. |
 | HIGH | Defaults/índices do SQL histórico divergiam do modelo Prisma | Nova migration transacional de paridade; diff final vazio. Histórico não reescrito e schema.prisma não alterado para esconder drift. |
 | HIGH | Confiança SSH criada por ssh-keyscan durante deploy | VPS_KNOWN_HOSTS confiável obrigatório; StrictHostKeyChecking e BatchMode; environment production declarado. Configuração humana ainda necessária. |
 | MEDIUM | Branch desta missão não acionava validação e guard local F04 a rejeitava | Adicionada branch exata ao CI/guard, mantendo restrição de publish/deploy exclusivamente em push prod. |
@@ -81,6 +83,11 @@ remove defaults divergentes, elimina índice auxiliar redundante de MFA (prefixo
 userId continua indexado) e renomeia índice truncado para o nome canônico. A
 transação não transforma nem remove registros. As escritas Prisma já fornecem os
 campos obrigatórios; compatibilidade operacional com imagem antiga ainda exige ensaio.
+
+O wrapper também rejeita histórico desconhecido, incompleto ou checksum adulterado
+antes de chamar Prisma; a prova de aborto confirma que a tabela admissions e a
+única migration inicial continuam presentes. Um segundo banco provoca erro SQL
+real no Prisma por colisão sintética de enum e comprova que web não prossegue.
 
 O harness final comprova 1→28, histórico/checksums exatos, nenhuma migration pendente
 ou falhada antes da injeção deliberada de falha, schema diff vazio e idempotência.
@@ -128,7 +135,7 @@ configurados externamente; sua simples declaração não constitui proteção ef
 Imagens finais locais verificadas:
 
 - runner: `sha256:0629e776bd7b815e7110f9648242b9d4f7d39db0dc2047cf767cb41048e3f7f9`, usuário nextjs.
-- migrator: `sha256:bf13c0b17829b2931a4ae7147a7e779d25f76c79ac089a582501a9abfaffa4c6`, usuário node.
+- migrator: `sha256:cedd1e8e3c39e8147432d4eedc050432115e646c3640c4259add74add32aa8ff`, usuário node.
 
 Node local 24.19.0/npm 11.9.0; imagens Node 22.23.3; PostgreSQL 16; Alpine 3.24.2.
 Varredura válida para esses artefatos e a base de vulnerabilidades da execução;
@@ -198,7 +205,8 @@ revisável; não foi executado na VPS.
 | 667a15d | Migration incremental atômica de paridade |
 | bb3985e | Contratos de falha, inventário read-only e smoke com runtime mínimo |
 | 39df7d9 | Remoção do npm vulnerável e gate de CVEs nas imagens |
-| Commit de prontidão PostgreSQL | Corrida de inicialização detectada no CI e teste determinístico |
+| c3e1ff6 | Precheck de histórico antes de DDL e erro SQL real no migrator |
+| 7936a59 | Corrida de inicialização detectada no CI e teste determinístico |
 | Commits de documentação deste relatório e inspeção GitHub | Relatório, runbook, gates e resumo de evidências |
 
 Arquivos: Dockerfile/.dockerignore; workflow CI; package/lock raiz (yaml dev) e do

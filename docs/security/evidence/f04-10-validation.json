@@ -2,7 +2,7 @@
   "date": "2026-10-19",
   "branch": "codex/f04-10-release-hardening",
   "base_commit": "fd42d91e3169727bd772d713e73659e7d23a22c2",
-  "implementation_commit": "7936a5984cb57d640e7c1173b01d8a3fa3e33875",
+  "implementation_commit": "c3e1ff621c0ef187e49011378d902cec3bc9acf1",
   "production_decision": "NO-GO",
   "local_suites": {
     "operations-final.log": {
@@ -41,7 +41,7 @@
       "trivy_high_critical_exit": 0
     },
     "pap-saude-migrator:mission": {
-      "id": "sha256:bf13c0b17829b2931a4ae7147a7e779d25f76c79ac089a582501a9abfaffa4c6",
+      "id": "sha256:cedd1e8e3c39e8147432d4eedc050432115e646c3640c4259add74add32aa8ff",
       "user": "node",
       "trivy_high_critical_exit": 0
     }
@@ -57,12 +57,12 @@
     "operations-final.log": "8090ba8c96cab4d42a872dfa4950b725bdb178255e08d72a594daafa205bfa48",
     "smart.log": "6f11e3e428451e9475017f82077c4908d78430f9b66f91429a540133d329a9ca",
     "auth.log": "0e79916ce1ef105055ee4b8b6bf36555e8124af6d46f52e7aca0e9d0b5cfb124",
-    "security-final.log": "9f7243b93376d1cc8c99db87dec0b5c9498736314d1ef62a2e75b5248e0123ff",
+    "security-final.log": "b6fbd12f8556eade090527f77fa07538657c07db6bc6aa1b1d934460a850a700",
     "roles.log": "fe4d5bdc96750dd1d45c218abcfcaa1d7edf28b588276c22b306400cfb793cad",
-    "migration-image-final.log": "b8c629da210389dcbb6b963f69651bacc98fdc484221644469aab6de828697d9",
+    "migration-image-final.log": "536cd201e3b9681ce6f356322ab003a232c22cdd2faaace6762a9adb34f2c50e",
     "migration-27-baseline.log": "77b29348907a2577c5f1f61d27b2d526d3dcbd2706d685da69e05acc542bfd42",
-    "web-image.log": "21612aa0afe4ed17a9bf70d03418834ea57322d27fc4aa2dfb4ad63559a5ca4a",
-    "image-scan.log": "1f042f41d3ef86105750e7b1415cb551884a35b0baac16cecf9b26beefe6104d",
+    "web-image.log": "bf95d3e98a1eb8934427261904d93cb55ff15b06c3394ef2e0b6f5e93b4348ed",
+    "image-scan.log": "a3c049a0a72a752fb2c05e9aeacfc2a45bfe618704e50839504df88a3978ae5e",
     "image-scan-before.log": "a0a627a58fb027742f4b1d83ba86408bce9220ffa4af9fece6afabe4831165a6",
     "image-isolation.log": "b1a04c1fcf338161f2a1a187a924198477ddefcc9affb21fa07b0f0d344b7058",
     "audit-root.log": "c8444cf6aa232a0dd86d43d9c0f12a9a886ecbc2900d97c45c4f363a106fa255",
@@ -70,7 +70,7 @@
     "ci-guard.log": "680eb545813d3bd55a1159a8748c9709b83686b5369018ae3279bc1fde9e1e74",
     "history-integrity.log": "236b23854ce1f5b892565adabd96fd8f8af9090e8f42012fedebd68aad832646",
     "runner-build-final.log": "b5a73caa4c997be73729df9f5d22f9a40f04bf0c0fd79e13f1d851dd0bd0d2bd",
-    "migrator-build-final.log": "c7d0c84551b8d6c6bc4d52c5c3369688bed10ae2e45b7d5ccbac56360a3b0ae6",
+    "migrator-build-final.log": "bcfc1ab81a5efe124cf35b55ad58c7316cfcce580ef68c7363bb892666f81c1f",
     "postgres-readiness.log": "33c329eae2be0414257c475e8f849c7ab7dcb2332bb01994efd47cf4be5fb775",
     "roles-readiness-1.log": "fe4d5bdc96750dd1d45c218abcfcaa1d7edf28b588276c22b306400cfb793cad",
     "roles-readiness-2.log": "fe4d5bdc96750dd1d45c218abcfcaa1d7edf28b588276c22b306400cfb793cad",
@@ -139,5 +139,10 @@
     "diagnosis": "Unix-socket readiness accepted temporary init server; psql raced its shutdown",
     "correction": "Wait for final TCP server; deterministic delayed-init regression and three role harness repetitions passed",
     "remote_revalidation": "pending latest push"
+  },
+  "pre_ddl_history_validation": {
+    "tampered_checksum": "PASS",
+    "no_new_migration_or_legacy_table_drop": "PASS",
+    "actual_prisma_sql_failure_blocks_web": "PASS"
   }
 }
