@@ -1,15 +1,280 @@
 "use client";
 import { useState } from "react";
 import { BetaTitle, DataState, useBetaData } from "./BetaWidgets";
-type RequestRow={id:string;name:string;city:string;state:string;status:string;address:string;cnes:string|null;cnpj:string|null;contactName:string;contactEmail:string;contactPhone:string;createdAt:string;reviewReason:string|null;reviewedAt:string|null;convertedOrganizationId:string|null};
-type Org={id:string;name:string;type:string;city:string|null;state:string|null};
-export default function BetaRequestsClient(){
- const [page,setPage]=useState(1),[status,setStatus]=useState("NEW"),[q,setQ]=useState(""),[selected,setSelected]=useState<RequestRow|null>(null),[parent,setParent]=useState(""),[reason,setReason]=useState(""),[message,setMessage]=useState(""),[busy,setBusy]=useState(false);
- const result=useBetaData<{rows:RequestRow[];total:number}>(`/api/admin/beta/requests?${new URLSearchParams({page:String(page),status,...(q?{q}:{})})}`);
- const orgs=useBetaData<{organizations:Org[]}>("/api/admin/organizations");
- async function act(decision:string){
-  if(!selected||!window.confirm(decision==="APPROVE"?"Aprovar esta instituição e ativar a UBS no município selecionado?":"Rejeitar esta solicitação?"))return;
-  setBusy(true);setMessage("");try{const r=await fetch("/api/admin/beta/requests",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({id:selected.id,decision,municipalityId:parent,reason})});if(!r.ok)throw new Error("Não foi possível concluir. Confira motivo, município e MFA; atualize antes de tentar novamente.");setSelected(null);result.refresh();setMessage("Análise registrada. O convite inaugural está disponível na área de convites.");}catch(e){setMessage((e as Error).message);}finally{setBusy(false);}
- }
- return <section className="mx-auto max-w-6xl"><BetaTitle title="Solicitações de adesão" description="Revisão PAP, ativação hierárquica e histórico institucional. Dados de contato restritos à equipe autorizada."/><div className="mb-5 flex flex-wrap gap-3"><label>Estado <select value={status} onChange={e=>{setStatus(e.target.value);setPage(1);result.refresh();}} className="rounded-lg border p-2">{["NEW","APPROVED","REJECTED"].map(s=><option key={s}>{s}</option>)}</select></label><label>Buscar UBS <input maxLength={100} value={q} onChange={e=>{setQ(e.target.value);setPage(1);result.refresh();}} className="rounded-lg border p-2"/></label><button onClick={result.refresh}>Atualizar</button></div><DataState {...result}/><p role="status" className="my-3">{message}</p>{!result.loading&&!result.error&&result.data&&<><div className="overflow-x-auto rounded-2xl border bg-white"><table className="w-full text-left text-sm"><caption className="p-3 text-left">{result.data.total} solicitações · página {page}</caption><thead><tr>{["UBS","Município","Estado","Recebida","Análise"].map(s=><th className="p-4" key={s}>{s}</th>)}</tr></thead><tbody>{result.data.rows.map(r=><tr className="border-t" key={r.id}><td className="p-4">{r.name}</td><td>{r.city}/{r.state}</td><td>{r.status}</td><td>{new Date(r.createdAt).toLocaleDateString("pt-BR")}</td><td><button className="underline" onClick={()=>{setSelected(r);setParent("");setReason("");}}>Detalhes</button></td></tr>)}</tbody></table>{!result.data.rows.length&&<p className="p-6">Nenhuma solicitação neste filtro.</p>}</div><div className="my-4 flex gap-4"><button disabled={page===1} onClick={()=>{setPage(p=>p-1);result.refresh();}}>Anterior</button><button disabled={page*20>=result.data.total} onClick={()=>{setPage(p=>p+1);result.refresh();}}>Próxima</button></div></>}{selected&&<section aria-label="Detalhes da solicitação" className="mt-6 rounded-2xl border bg-white p-6"><h2 className="text-xl font-semibold">{selected.name}</h2><dl className="my-4 grid gap-2"><dt>Contato institucional</dt><dd>{selected.contactName} · {selected.contactEmail} · {selected.contactPhone}</dd><dt>Localização e identificadores</dt><dd>{selected.address} · {selected.city}/{selected.state} · CNES {selected.cnes||"não informado"} · CNPJ {selected.cnpj||"não informado"}</dd><dt>Histórico</dt><dd>Recebida em {new Date(selected.createdAt).toLocaleString("pt-BR")}. {selected.reviewedAt&&`Revisada em ${new Date(selected.reviewedAt).toLocaleString("pt-BR")}: ${selected.reviewReason}`}</dd></dl>{selected.status==="NEW"&&<div className="space-y-4"><label className="block">Município validado <select className="w-full rounded-xl border p-3" value={parent} onChange={e=>setParent(e.target.value)}><option value="">Selecione; se ausente, cadastre e valide o município primeiro</option>{orgs.data?.organizations?.filter(o=>o.type==="MUNICIPALITY"&&o.city?.toLowerCase()===selected.city.toLowerCase()&&o.state===selected.state).map(o=><option key={o.id} value={o.id}>{o.name}</option>)}</select></label><label className="block">Motivo da decisão <textarea minLength={5} maxLength={500} value={reason} onChange={e=>setReason(e.target.value)} className="w-full rounded-xl border p-3"/></label><div className="flex gap-4"><button disabled={busy||reason.trim().length<5||!parent} onClick={()=>act("APPROVE")} className="rounded-xl bg-[#064f50] p-3 text-white disabled:opacity-40">Aprovar e ativar</button><button disabled={busy||reason.trim().length<5} onClick={()=>act("REJECT")} className="rounded-xl border p-3 disabled:opacity-40">Rejeitar</button></div></div>}<button className="mt-4 underline" onClick={()=>setSelected(null)}>Fechar detalhes</button></section>}</section>;
+type RequestRow = {
+  id: string;
+  name: string;
+  city: string;
+  state: string;
+  status: string;
+  address: string;
+  cnes: string | null;
+  cnpj: string | null;
+  contactName: string;
+  contactEmail: string;
+  contactPhone: string;
+  createdAt: string;
+  reviewReason: string | null;
+  reviewedAt: string | null;
+  convertedOrganizationId: string | null;
+};
+type Org = {
+  id: string;
+  name: string;
+  type: string;
+  city: string | null;
+  state: string | null;
+};
+export default function BetaRequestsClient() {
+  const [page, setPage] = useState(1),
+    [status, setStatus] = useState("NEW"),
+    [q, setQ] = useState(""),
+    [selected, setSelected] = useState<RequestRow | null>(null),
+    [parent, setParent] = useState(""),
+    [reason, setReason] = useState(""),
+    [message, setMessage] = useState(""),
+    [busy, setBusy] = useState(false);
+  const result = useBetaData<{ rows: RequestRow[]; total: number }>(
+    `/api/admin/beta/requests?${new URLSearchParams({ page: String(page), status, ...(q ? { q } : {}) })}`,
+  );
+  const orgs = useBetaData<{ organizations: Org[] }>(
+    "/api/admin/organizations",
+  );
+  async function act(decision: string) {
+    if (
+      !selected ||
+      !window.confirm(
+        decision === "APPROVE"
+          ? "Aprovar esta instituição e ativar a UBS no município selecionado?"
+          : "Rejeitar esta solicitação?",
+      )
+    )
+      return;
+    setBusy(true);
+    setMessage("");
+    try {
+      const r = await fetch("/api/admin/beta/requests", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          id: selected.id,
+          decision,
+          municipalityId: parent,
+          reason,
+        }),
+      });
+      if (!r.ok)
+        throw new Error(
+          "Não foi possível concluir. Confira motivo, município e MFA; atualize antes de tentar novamente.",
+        );
+      setSelected(null);
+      result.refresh();
+      setMessage(
+        "Análise registrada. O convite inaugural está disponível na área de convites.",
+      );
+    } catch (e) {
+      setMessage((e as Error).message);
+    } finally {
+      setBusy(false);
+    }
+  }
+  return (
+    <section className="mx-auto max-w-6xl">
+      <BetaTitle
+        title="Solicitações de adesão"
+        description="Revisão PAP, ativação hierárquica e histórico institucional. Dados de contato restritos à equipe autorizada."
+      />
+      <div className="mb-5 flex flex-wrap gap-3">
+        <label>
+          Estado{" "}
+          <select
+            value={status}
+            onChange={(e) => {
+              setStatus(e.target.value);
+              setPage(1);
+              result.refresh();
+            }}
+            className="rounded-lg border p-2"
+          >
+            {["NEW", "APPROVED", "REJECTED"].map((s) => (
+              <option key={s}>{s}</option>
+            ))}
+          </select>
+        </label>
+        <label>
+          Buscar UBS{" "}
+          <input
+            maxLength={100}
+            value={q}
+            onChange={(e) => {
+              setQ(e.target.value);
+              setPage(1);
+              result.refresh();
+            }}
+            className="rounded-lg border p-2"
+          />
+        </label>
+        <button onClick={result.refresh}>Atualizar</button>
+      </div>
+      <DataState {...result} />
+      <p role="status" className="my-3">
+        {message}
+      </p>
+      {!result.loading && !result.error && result.data && (
+        <>
+          <div className="overflow-x-auto rounded-2xl border bg-white">
+            <table className="w-full text-left text-sm">
+              <caption className="p-3 text-left">
+                {result.data.total} solicitações · página {page}
+              </caption>
+              <thead>
+                <tr>
+                  {["UBS", "Município", "Estado", "Recebida", "Análise"].map(
+                    (s) => (
+                      <th className="p-4" key={s}>
+                        {s}
+                      </th>
+                    ),
+                  )}
+                </tr>
+              </thead>
+              <tbody>
+                {result.data.rows.map((r) => (
+                  <tr className="border-t" key={r.id}>
+                    <td className="p-4">{r.name}</td>
+                    <td>
+                      {r.city}/{r.state}
+                    </td>
+                    <td>{r.status}</td>
+                    <td>{new Date(r.createdAt).toLocaleDateString("pt-BR")}</td>
+                    <td>
+                      <button
+                        className="underline"
+                        onClick={() => {
+                          setSelected(r);
+                          setParent("");
+                          setReason("");
+                        }}
+                      >
+                        Detalhes
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            {!result.data.rows.length && (
+              <p className="p-6">Nenhuma solicitação neste filtro.</p>
+            )}
+          </div>
+          <div className="my-4 flex gap-4">
+            <button
+              disabled={page === 1}
+              onClick={() => {
+                setPage((p) => p - 1);
+                result.refresh();
+              }}
+            >
+              Anterior
+            </button>
+            <button
+              disabled={page * 20 >= result.data.total}
+              onClick={() => {
+                setPage((p) => p + 1);
+                result.refresh();
+              }}
+            >
+              Próxima
+            </button>
+          </div>
+        </>
+      )}
+      {selected && (
+        <section
+          aria-label="Detalhes da solicitação"
+          className="mt-6 rounded-2xl border bg-white p-6"
+        >
+          <h2 className="text-xl font-semibold">{selected.name}</h2>
+          <dl className="my-4 grid gap-2">
+            <dt>Contato institucional</dt>
+            <dd>
+              {selected.contactName} · {selected.contactEmail} ·{" "}
+              {selected.contactPhone}
+            </dd>
+            <dt>Localização e identificadores</dt>
+            <dd>
+              {selected.address} · {selected.city}/{selected.state} · CNES{" "}
+              {selected.cnes || "não informado"} · CNPJ{" "}
+              {selected.cnpj || "não informado"}
+            </dd>
+            <dt>Histórico</dt>
+            <dd>
+              Recebida em {new Date(selected.createdAt).toLocaleString("pt-BR")}
+              .{" "}
+              {selected.reviewedAt &&
+                `Revisada em ${new Date(selected.reviewedAt).toLocaleString("pt-BR")}: ${selected.reviewReason}`}
+            </dd>
+          </dl>
+          {selected.status === "NEW" && (
+            <div className="space-y-4">
+              <label className="block">
+                Município validado{" "}
+                <select
+                  className="w-full rounded-xl border p-3"
+                  value={parent}
+                  onChange={(e) => setParent(e.target.value)}
+                >
+                  <option value="">
+                    Selecione; se ausente, cadastre e valide o município
+                    primeiro
+                  </option>
+                  {orgs.data?.organizations
+                    ?.filter(
+                      (o) =>
+                        o.type === "MUNICIPALITY" &&
+                        o.city?.toLowerCase() === selected.city.toLowerCase() &&
+                        o.state === selected.state,
+                    )
+                    .map((o) => (
+                      <option key={o.id} value={o.id}>
+                        {o.name}
+                      </option>
+                    ))}
+                </select>
+              </label>
+              <label className="block">
+                Motivo da decisão{" "}
+                <textarea
+                  minLength={5}
+                  maxLength={500}
+                  value={reason}
+                  onChange={(e) => setReason(e.target.value)}
+                  className="w-full rounded-xl border p-3"
+                />
+              </label>
+              <div className="flex gap-4">
+                <button
+                  disabled={busy || reason.trim().length < 5 || !parent}
+                  onClick={() => act("APPROVE")}
+                  className="rounded-xl bg-[#064f50] p-3 text-white disabled:opacity-40"
+                >
+                  Aprovar e ativar
+                </button>
+                <button
+                  disabled={busy || reason.trim().length < 5}
+                  onClick={() => act("REJECT")}
+                  className="rounded-xl border p-3 disabled:opacity-40"
+                >
+                  Rejeitar
+                </button>
+              </div>
+            </div>
+          )}
+          <button className="mt-4 underline" onClick={() => setSelected(null)}>
+            Fechar detalhes
+          </button>
+        </section>
+      )}
+    </section>
+  );
 }
