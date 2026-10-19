@@ -37,6 +37,12 @@ RUN --mount=type=secret,id=build_ca \
 # ============================================================
 FROM base AS runner
 
+# Final images execute preinstalled Node programs; package managers are unnecessary
+# and carry a separate dependency tree outside the application lockfiles.
+RUN rm -rf /usr/local/lib/node_modules/npm /usr/local/lib/node_modules/corepack /opt/yarn* \
+    /usr/local/bin/npm /usr/local/bin/npx /usr/local/bin/corepack \
+    /usr/local/bin/yarn /usr/local/bin/yarnpkg /usr/local/bin/pnpm /usr/local/bin/pnpx
+
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
 
@@ -69,6 +75,12 @@ RUN --mount=type=secret,id=build_ca \
     npm ci --omit=dev --no-audit --no-fund
 
 FROM base AS migrator
+
+# Final images execute preinstalled Node programs; package managers are unnecessary
+# and carry a separate dependency tree outside the application lockfiles.
+RUN rm -rf /usr/local/lib/node_modules/npm /usr/local/lib/node_modules/corepack /opt/yarn* \
+    /usr/local/bin/npm /usr/local/bin/npx /usr/local/bin/corepack \
+    /usr/local/bin/yarn /usr/local/bin/yarnpkg /usr/local/bin/pnpm /usr/local/bin/pnpx
 
 ENV NODE_ENV=production
 

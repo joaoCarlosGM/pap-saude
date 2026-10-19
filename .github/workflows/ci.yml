@@ -129,6 +129,9 @@ jobs:
       - name: Verify runtime web image with least-privilege database role
         run: bash scripts/test-f04-web-image.sh pap-saude:ci pap-saude-migrator:ci
 
+      - name: Scan runtime and migrator images for HIGH and CRITICAL vulnerabilities
+        run: bash scripts/security/scan-f04-images.sh pap-saude:ci pap-saude-migrator:ci
+
       - name: Stop disposable PostgreSQL
         if: always()
         run: docker rm -f pap_saude_db >/dev/null 2>&1 || true

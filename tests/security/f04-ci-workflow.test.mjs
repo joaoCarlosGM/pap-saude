@@ -21,6 +21,7 @@ test('release guard rejects adversarial workflow changes', () => {
    workflow.replace('environment: production','environment: unprotected'),
    workflow.replace(/actions\/checkout@[a-f0-9]{40}/g,'actions/checkout@v4'),
    workflow.replace('run: npm run audit:f04:operations','run: echo skipped'),
+   workflow.replace('run: bash scripts/security/scan-f04-images.sh pap-saude:ci pap-saude-migrator:ci','run: echo scan-skipped'),
   ];
   for (const [index,mutation] of mutations.entries()) {
    assert.notEqual(mutation,workflow,`mutation ${index} must actually alter input`);
