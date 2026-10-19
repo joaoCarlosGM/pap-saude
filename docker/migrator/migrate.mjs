@@ -23,6 +23,12 @@ async function main() {
   try {
     // Serializes cooperating migrators; operators MUST also quiesce legacy writers.
     await client.query("SELECT pg_advisory_lock(4101027)");
+    const expected = fs.readdirSync('/app/prisma/migrations').filter(p => fs.existsSync(`/app/prisma/migrations/${p}/migration.sql`)).sort();
+    const history = await client.query("SELECT to_regclass('public._prisma_migrations') IS NOT NULL AS present");
+    if (history.rows[0].present) {
+      const { rows } = await client.query('SELECT migration_name, checksum, finished_at, rolled_back_at FROM public._prisma_migrations ORDER BY migration_name');
+      if (rows.length > expected.length || rows.some((r, i) => r.migration_name !== expected[i] || !r.finished_at || r.rolled_back_at || r.checksum !== createHash('sha256').update(fs.readFileSync(`/app/prisma/migrations/${expected[i]}/migration.sql`)).digest('hex'))) throw new Error('MIGRATION_HISTORY_INVALID');
+    }
     const legacy = await preflightLegacyData(client);
     if (legacy) {
       if (process.env.F04_LEGACY_MAINTENANCE !== 'writers-stopped') throw new Error('MAINTENANCE_REQUIRED');
@@ -35,7 +41,6 @@ async function main() {
       child.on('exit', code => resolve(code ?? 1));
     });
     if (code !== 0) throw new Error('MIGRATION_FAILED: web must not start');
-    const expected = fs.readdirSync('/app/prisma/migrations').filter(p => fs.existsSync(`/app/prisma/migrations/${p}/migration.sql`)).sort();
     const { rows } = await client.query('SELECT migration_name, checksum, finished_at, rolled_back_at FROM public._prisma_migrations ORDER BY migration_name');
     if (rows.length !== expected.length || rows.some((r, i) => r.migration_name !== expected[i] || !r.finished_at || r.rolled_back_at || r.checksum !== createHash('sha256').update(fs.readFileSync(`/app/prisma/migrations/${expected[i]}/migration.sql`)).digest('hex'))) throw new Error('MIGRATION_HISTORY_INVALID');
     console.log(`PASS migration history: ${expected.length}`);

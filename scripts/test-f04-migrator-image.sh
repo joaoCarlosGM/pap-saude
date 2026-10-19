@@ -96,6 +96,18 @@ fi
 grep -q 'MIGRATOR_ABORTED MAINTENANCE_REQUIRED' /tmp/"$PG".log
 echo 'PASS maintenance confirmation required'
 
+# Reject a tampered applied checksum before any new DDL is attempted.
+ORIGINAL_CHECKSUM="$(sha256sum "prisma/migrations/$INITIAL/migration.sql" | cut -d ' ' -f 1)"
+docker exec "$PG" psql -X -U "$DB_USER" -d "$DB" -v ON_ERROR_STOP=1 -c "UPDATE _prisma_migrations SET checksum='SYNTHETIC_INVALID';"
+if docker run --rm --network "$NET" -e "DATABASE_URL=$DB_URL" -e F04_LEGACY_MAINTENANCE=writers-stopped "$IMAGE" > /tmp/"$PG".log 2>&1; then
+ echo 'FAIL invalid historical checksum accepted' >&2; exit 1
+fi
+grep -q 'MIGRATOR_ABORTED MIGRATION_HISTORY_INVALID' /tmp/"$PG".log
+test "$(docker exec "$PG" psql -X -U "$DB_USER" -d "$DB" -Atqc 'SELECT count(*) FROM _prisma_migrations')" = 1
+test "$(docker exec "$PG" psql -X -U "$DB_USER" -d "$DB" -Atqc "SELECT to_regclass('public.admissions') IS NOT NULL")" = t
+docker exec "$PG" psql -X -U "$DB_USER" -d "$DB" -v ON_ERROR_STOP=1 -c "UPDATE _prisma_migrations SET checksum='$ORIGINAL_CHECKSUM';"
+echo 'PASS tampered historical checksum blocked before new migrations'
+
 for run in 1 2; do
   echo "==> Migration execution $run"
 
@@ -133,6 +145,18 @@ if docker run --rm --network "$NET" -e "DATABASE_URL=$DB_URL" "$IMAGE" > /tmp/"$
   WEB_STARTED=1
 fi
 test "$WEB_STARTED" = 0
-grep -q 'MIGRATOR_ABORTED MIGRATION_FAILED' /tmp/"$PG".log
+grep -q 'MIGRATOR_ABORTED MIGRATION_HISTORY_INVALID' /tmp/"$PG".log
 echo 'PASS failed migration blocks web startup contract (VPS script unverified)'
+# Independently provoke an actual SQL migration error in a second disposable DB.
+FAIL_DB=pap_f0410_engine_failure
+docker exec "$PG" createdb -U "$DB_USER" "$FAIL_DB"
+docker exec -i "$PG" psql -X -U "$DB_USER" -d "$FAIL_DB" -v ON_ERROR_STOP=1 < "prisma/migrations/$INITIAL/migration.sql"
+FAIL_URL="postgresql://${DB_USER}:${DB_PASSWORD}@${PG}:5432/${FAIL_DB}?schema=public"
+docker run --rm --network "$NET" -e "DATABASE_URL=$FAIL_URL" --entrypoint /app/node_modules/.bin/prisma "$IMAGE" migrate resolve --applied "$INITIAL"
+docker exec "$PG" psql -X -U "$DB_USER" -d "$FAIL_DB" -v ON_ERROR_STOP=1 -c "CREATE TYPE \"OrganizationType\" AS ENUM ('SYNTHETIC_COLLISION');"
+WEB_STARTED=0
+if docker run --rm --network "$NET" -e "DATABASE_URL=$FAIL_URL" -e F04_LEGACY_MAINTENANCE=writers-stopped "$IMAGE" > /tmp/"$PG".log 2>&1; then WEB_STARTED=1; fi
+test "$WEB_STARTED" = 0
+grep -q 'MIGRATOR_ABORTED MIGRATION_FAILED' /tmp/"$PG".log
+echo 'PASS actual Prisma SQL failure blocks web startup contract'
 echo "F04.10 MIGRATOR FUNCTIONAL CI GATE: PASS"
