@@ -71,7 +71,15 @@
     "test:f04:operations": "bash scripts/test-f04-operations.sh",
     "audit:f04:operations": "bash scripts/audit-f04-operations.sh",
     "test:f04:db-integrity": "bash scripts/test-f04-db-invariants.sh",
-    "test:admin:beta1": "bash scripts/test-admin-beta1.sh"
+    "test:admin:beta1": "bash scripts/test-admin-beta1.sh",
+    "local:init": "node scripts/local/dev.mjs init",
+    "local:start": "node scripts/local/dev.mjs start",
+    "local:migrate": "node scripts/local/dev.mjs migrate",
+    "local:admin": "node scripts/local/dev.mjs admin",
+    "local:dev": "node scripts/local/dev.mjs dev",
+    "local:mail": "node scripts/local/dev.mjs mail",
+    "local:stop": "node scripts/local/dev.mjs stop",
+    "test:local-dev": "node --test tests/local/policy.test.mjs && node scripts/local/test-smoke.mjs"
   },
   "dependencies": {
     "@capacitor/android": "^8.5.2",
