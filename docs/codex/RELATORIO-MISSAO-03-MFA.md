@@ -73,6 +73,9 @@ da aplicação. O idioma raiz foi corrigido para pt-BR.
   de senha, role, vínculo ou prova MFA. A API de autoatendimento nunca substitui
   fator ACTIVE, inclusive após corrida. Contrato interno legado usado pelo fluxo
   autorizado de recuperação permanece compatível e coberto por regressão.
+- Auditoria de ativação é preservada antes de emitir recuperação/progresso: falhas
+  posteriores não apagam esse registro. Resposta perdida é retomada com senha e
+  TOTP sem substituir o fator ativo; teste adversarial específico aprovado.
 - CONFIRM retorna adicionalmente os códigos de recuperação da ativação, uma vez.
   Só hashes ficam no banco. Senha, TOTP, QR e URI ficam apenas na memória da aba
   e saem da UI após a etapa. QR é gerado com biblioteca local, sem serviço remoto.
@@ -99,7 +102,7 @@ Chromium. Nenhuma conexão com VPS, entrega de e-mail ou deploy.
 
 | Verificação | Resultado |
 |---|---|
-| API adversarial, três papéis, throttle, origin/sessão, estado, QR offline | PASS — 10 testes contando subtestes e QR |
+| API adversarial, três papéis, throttle, origin/sessão, estado, QR offline | PASS — 11 testes contando subtestes e QR, incluindo resposta de recuperação perdida |
 | Browser PAP_ADMIN → MFA → recuperação → login → dashboard | PASS |
 | Browser convite HUA → senha → MFA → login; reload PENDING | PASS |
 | Browser convite PROFESSIONAL → senha → MFA → login | PASS |
@@ -110,7 +113,8 @@ Chromium. Nenhuma conexão com VPS, entrega de e-mail ou deploy.
 | Autenticação/MFA completa, incluindo TOTP e recuperação | PASS — 202 testes |
 | Laboratório PR #3, inclusive inicialização interrompida | PASS — política e smoke completo |
 | F04 integrada, TypeScript, lint e build | PASS — 78 testes e build de produção |
-| F03, imagens runtime/migrador, privilégios e scan de vulnerabilidades | CI completo; resultado consolidado no PR |
+| F03 completa local | PASS — todas as nove suítes sem cache |
+| Imagens runtime/migrador, privilégios e scan de vulnerabilidades | CI completo; resultado consolidado no PR |
 
 O harness `scripts/test-first-access.sh` valida a label do cluster descartável,
 fixa o nome `pap_saude_onboarding_test` e limpa apenas esse banco. E2E usa porta

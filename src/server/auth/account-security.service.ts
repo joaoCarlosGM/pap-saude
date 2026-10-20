@@ -275,8 +275,6 @@ export async function runOwnSecurityAction(input: {
       });
       throw error;
     }
-    const recovery = await generateRecoveryCodes(userId);
-    await advanceFirstAccess(userId, 5);
     await db.auditEvent.create({
       data: {
         actorUserId: userId,
@@ -286,6 +284,10 @@ export async function runOwnSecurityAction(input: {
         resourceId: userId,
       },
     });
+    // Preserve the existing activation audit even if recovery delivery/state
+    // fails afterwards. An active account can resume with strong reauth.
+    const recovery = await generateRecoveryCodes(userId);
+    await advanceFirstAccess(userId, 5);
     return { ...result, codes: recovery.codes };
   }
   if (action === "GENERATE_RECOVERY_CODES") {

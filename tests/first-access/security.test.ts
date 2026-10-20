@@ -186,6 +186,54 @@ test("first access adversarial API and role journeys", async (t) => {
       );
     },
   );
+  await t.test(
+    "lost recovery response resumes with strong reauth without replacing the active factor",
+    async () => {
+      const f = await fixture();
+      const pending = await (await f.post("START_MFA")).json();
+      const code = OTPAuth.URI.parse(pending.provisioningUri).generate();
+      const confirmation = await f.post("CONFIRM_MFA", {
+        factorId: pending.factorId,
+        code,
+      });
+      assert.equal(confirmation.status, 200);
+      // Simulate losing the response at the browser: no plaintext retained.
+      const posture = await (
+        await security.GET(request(f.session.token))
+      ).json();
+      assert.equal(posture.onboarding.active, true);
+      assert.equal(posture.onboarding.progress.currentStep, 5);
+      assert.ok(!JSON.stringify(posture).includes(pending.secret));
+      assert.equal(
+        (await f.post("GENERATE_RECOVERY_CODES", { password: "wrong", code }))
+          .status,
+        400,
+      );
+      const rotated = await f.post("GENERATE_RECOVERY_CODES", { code });
+      assert.equal(rotated.status, 200);
+      assert.equal((await rotated.json()).codes.length, 10);
+      assert.equal(
+        await db.mfaFactor.count({ where: { userId: f.user.id } }),
+        1,
+      );
+      assert.equal(
+        await db.auditEvent.count({
+          where: { actorUserId: f.user.id, action: "MFA_ENROLLMENT_CONFIRMED" },
+        }),
+        1,
+      );
+      assert.equal(
+        (
+          await db.session.findUniqueOrThrow({
+            where: { id: f.session.session.id },
+          })
+        ).mfaVerifiedAt,
+        null,
+      );
+      assert.equal((await f.post("ACK_RECOVERY")).status, 200);
+      assert.equal((await f.post("COMPLETE_ONBOARDING")).status, 400);
+    },
+  );
   for (const role of [
     "PAP_ADMIN",
     "HEALTH_UNIT_ADMIN",
