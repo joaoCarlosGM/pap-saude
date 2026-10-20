@@ -43,3 +43,5 @@ compose*.yml
 
 # Local operator credentials, encryption keys and demo invitation tokens
 .local
+
+.next-first-access

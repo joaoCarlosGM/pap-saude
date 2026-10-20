@@ -27,7 +27,7 @@ if [[ "${GITHUB_ACTIONS:-}" == 'true' && "${GITHUB_REPOSITORY:-}" == 'joaoCarlos
     *) printf 'FAIL: unexpected GitHub Actions context\n' >&2; exit 1 ;;
   esac
 else
-  [[ "$(git branch --show-current)" == 'feature/foundation-04-admin-core' || "$(git branch --show-current)" == 'codex/f04-10-release-hardening' || "$(git branch --show-current)" == 'codex/pap-admin-beta1' ]] || {
+  [[ "$(git branch --show-current)" == 'feature/foundation-04-admin-core' || "$(git branch --show-current)" == 'codex/f04-10-release-hardening' || "$(git branch --show-current)" == 'codex/pap-admin-beta1' || "$(git branch --show-current)" == 'codex/onboarding-primeiro-acesso-mfa' ]] || {
     printf 'FAIL: wrong local branch\n' >&2; exit 1;
   }
 fi

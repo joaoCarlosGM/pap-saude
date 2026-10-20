@@ -56,3 +56,5 @@ next-env.d.ts
 
 # Private local manual-testing environment, credentials and captured demo messages
 /.local/
+
+/.next-first-access/
