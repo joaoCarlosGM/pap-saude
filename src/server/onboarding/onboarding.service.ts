@@ -13,7 +13,7 @@ export function validateTourKey(
   tourKey: string,
 ) {
   if (
-    !TOUR_KEY_PATTERN.test(
+    tourKey === "security-first-access" || !TOUR_KEY_PATTERN.test(
       tourKey,
     )
   ) {
