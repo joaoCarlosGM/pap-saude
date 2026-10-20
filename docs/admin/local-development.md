@@ -142,19 +142,26 @@ Não use fixtures de testes para entrar no ambiente manual.
 1. Com `local:dev` ativo, abra **http://127.0.0.1:3100/login** e entre com as
    credenciais definidas no terminal. Use sempre 127.0.0.1, sem alternar para
    localhost, para manter cookies e política de origem consistentes.
-2. A sessão inicial pode abrir o próprio contexto e **Minha segurança**, mas
-   operações administrativas retornarão `ADMIN_MFA_REQUIRED` até confirmar MFA e
-   fazer novo login. Esse bloqueio é esperado; não remova o guard.
-3. Em `/admin/minha-seguranca`, informe a senha e inicie a configuração MFA.
-   Cadastre o segredo/URI `otpauth` apresentado em um autenticador TOTP real.
-   Se não houver QR renderizado, use a opção de chave de configuração manual do
-   autenticador. Não fotografe nem envie o segredo para terceiros.
-4. Confirme com o código atual de seis dígitos. Gere e guarde códigos de recuperação
-   pelo fluxo da própria conta quando disponível, reautenticando conforme a tela.
-5. Em Minha segurança, use **Encerrar todas as sessões** com senha e um novo código TOTP (se o código da confirmação já foi consumido, aguarde o próximo). Faça novo login: senha → TOTP. A sessão primária anterior
-   não é promovida automaticamente. Agora organizações, solicitações e convites
-   devem estar acessíveis segundo IAM. Relógios do computador/celular devem estar
-   sincronizados; TOTP usa tempo absoluto, independentemente do fuso da tela.
+2. O login conduz a `/primeiros-passos`. Siga **Começar → Continuar**. Funções
+   administrativas só serão liberadas após MFA ativo e novo login verificado.
+3. Informe a senha atual para autorizar o vínculo e clique em **Gerar QR Code**.
+   No Google Authenticator (ou outro TOTP), escolha **+ → Ler QR Code**. Se
+   necessário, use **Não consigo ler? Usar chave manual**. A geração é local;
+   não existe API do Google nem envio da chave para serviço externo.
+4. Clique em **Já cadastrei no aplicativo**, informe os seis dígitos atuais e
+   confirme. Guarde os códigos de recuperação exibidos uma vez, marque o
+   reconhecimento e clique em **Ocultar códigos e continuar**.
+5. Clique em **Encerrar sessão e fazer novo login**. Entre com senha → TOTP
+   (ou um código de recuperação não utilizado) → **Concluir e acessar minha área**.
+   A sessão primária anterior não é promovida automaticamente.
+6. Para retomar, abra `/primeiros-passos`; para conta/sessões e ajuda use
+   `/minha-seguranca`. Após reload, uma URI pendente não é recuperada do storage:
+   autorize explicitamente nova chave. Nunca regenere um fator ativo por este
+   caminho. Veja o [roteiro completo da Missão 03](first-access-mfa.md).
+
+Relógios do computador/celular devem estar sincronizados automaticamente; TOTP usa
+tempo absoluto, independentemente do fuso da tela. Se um código já foi consumido
+em reautenticação, aguarde o próximo intervalo de 30 segundos.
 
 Nenhum provisionador pré-configura/contorna o segundo fator. Perder a chave privada
 de criptografia e o autenticador não deve ser “corrigido” editando prova de sessão
