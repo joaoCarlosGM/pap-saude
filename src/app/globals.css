@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import "../components/security/onboarding.css";
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 

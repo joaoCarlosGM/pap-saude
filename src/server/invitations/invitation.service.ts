@@ -1,3 +1,4 @@
+import { requirePapReviewer } from "@/server/admin-beta/policy"
 import {
   createHash,
   randomBytes,
@@ -114,7 +115,6 @@ async function createInvitation(
   )
 
   if (input.roleKey === "HEALTH_UNIT_ADMIN") {
-    const { requirePapReviewer } = await import("@/server/admin-beta/policy");
     await requirePapReviewer(input.invitedByUserId);
     const approved = await db.organizationCandidate.findFirst({ where: { convertedOrganizationId: input.organizationId, status: "APPROVED", consentedAt: { not: null } } });
     if (!approved || approved.contactEmail !== input.email.trim().toLowerCase()) throw new InvitationPayloadError();
