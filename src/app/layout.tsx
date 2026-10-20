@@ -17,13 +17,14 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "PAP Saúde",
+  referrer: "no-referrer",
   description: "prontuário de atendimento pré-natall",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
-      lang="en"
+      lang="pt-BR"
       className={cn("h-full", "antialiased", geistSans.variable, geistMono.variable, "font-sans", inter.variable)}
     >
       <body className="min-h-full flex flex-col">{children}</body>

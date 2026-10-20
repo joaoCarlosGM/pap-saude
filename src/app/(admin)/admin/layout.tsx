@@ -1,110 +1,70 @@
-import type {
-  ReactNode,
-} from "react"
+import type { ReactNode } from "react";
 
-import {
-  cookies,
-} from "next/headers"
+import { cookies } from "next/headers";
 
-import {
-  redirect,
-} from "next/navigation"
+import { redirect } from "next/navigation";
 
-import AdminShell from "@/components/admin/AdminShell"
+import AdminShell from "@/components/admin/AdminShell";
 
-import {
-  SESSION_COOKIE_NAME,
-} from "@/server/security/constants"
+import { SESSION_COOKIE_NAME } from "@/server/security/constants";
 
-import {
-  validateSession,
-} from "@/server/auth/session.service"
+import { validateSession } from "@/server/auth/session.service";
 
 import {
   ExpiredSessionError,
   InactiveSessionUserError,
   InvalidSessionError,
   RevokedSessionError,
-} from "@/server/auth/session.errors"
+} from "@/server/auth/session.errors";
 
-import {
-  getEffectiveAccessProfile,
-} from "@/server/iam/effective-access-profile.service"
+import { firstAccessState } from "@/server/auth/first-access.service";
 
 async function resolveProfile() {
-  const cookieStore =
-    await cookies()
+  const cookieStore = await cookies();
 
-  const token =
-    cookieStore.get(
-      SESSION_COOKIE_NAME,
-    )?.value
+  const token = cookieStore.get(SESSION_COOKIE_NAME)?.value;
 
   if (!token) {
-    return null
+    return null;
   }
 
   try {
-    const session =
-      await validateSession(
-        token,
-        {
-          updateLastSeen:
-            false,
-        },
-      )
+    const session = await validateSession(token, {
+      updateLastSeen: false,
+    });
 
-    return getEffectiveAccessProfile(
-      session.user.id,
-    )
+    return firstAccessState(session.user.id, session.session.id);
   } catch (error) {
     if (
-      error instanceof
-        InvalidSessionError ||
-      error instanceof
-        ExpiredSessionError ||
-      error instanceof
-        RevokedSessionError ||
-      error instanceof
-        InactiveSessionUserError
+      error instanceof InvalidSessionError ||
+      error instanceof ExpiredSessionError ||
+      error instanceof RevokedSessionError ||
+      error instanceof InactiveSessionUserError
     ) {
-      return null
+      return null;
     }
 
-    throw error
+    throw error;
   }
 }
 
 export default async function AdminLayout({
   children,
 }: {
-  children:
-    ReactNode
+  children: ReactNode;
 }) {
-  const profile =
-    await resolveProfile()
+  const state = await resolveProfile();
+  const profile = state?.profile;
 
   if (!profile) {
-    redirect(
-      "/login",
-    )
+    redirect("/login");
   }
 
-  if (
-    !profile.canAccessAdmin
-  ) {
-    redirect(
-      "/dashboard",
-    )
+  if (!profile.canAccessAdmin) {
+    redirect("/dashboard");
   }
 
-  return (
-    <AdminShell
-      profile={
-        profile
-      }
-    >
-      {children}
-    </AdminShell>
-  )
+  if (!state?.verified) redirect("/primeiros-passos");
+
+  return <AdminShell profile={profile}>{children}</AdminShell>;
 }
