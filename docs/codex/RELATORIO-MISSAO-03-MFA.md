@@ -113,7 +113,7 @@ Chromium. Nenhuma conexão com VPS, entrega de e-mail ou deploy.
 | Autenticação/MFA completa, incluindo TOTP e recuperação | PASS — 202 testes |
 | Laboratório PR #3, inclusive inicialização interrompida | PASS — política e smoke completo |
 | F04 integrada, TypeScript, lint e build | PASS — 78 testes e build de produção |
-| F03 completa local | PASS — todas as nove suítes sem cache |
+| F03 completa local | PASS — 203 testes nas nove suítes sem cache |
 | Imagens runtime/migrador, privilégios e scan de vulnerabilidades | CI completo; resultado consolidado no PR |
 
 O harness `scripts/test-first-access.sh` valida a label do cluster descartável,
@@ -121,6 +121,13 @@ fixa o nome `pap_saude_onboarding_test` e limpa apenas esse banco. E2E usa porta
 3110 e pasta `.next-first-access`, excluída de Git, Docker e lint. CI instala
 Chromium e executa a mesma suíte. A allowlist local F04 acrescenta somente esta
 branch exata; regras de banco protegido e deploy não foram relaxadas.
+
+A primeira execução remota do commit `f7f1b33` detectou resolução de alias no import
+dinâmico da política do convite HUA sob Node 22/Playwright. O import foi tornado
+estático, sem alterar verificações de PAP_ADMIN, consentimento ou UBS aprovada.
+Após a correção, a suíte específica completa (11 API/QR + 5 browser) passou também
+localmente com **Node 22.23.3**, além da execução anterior em Node 24. A execução
+remota que falhou não conta como PASS; o resultado do CI do commit final está no PR.
 
 As capturas em `docs/evidence/missao-03/` mascaram QR, campos, chave e códigos **antes**
 da captura. Não há traces/vídeos/snapshots DOM privados automáticos; erros dinâmicos
