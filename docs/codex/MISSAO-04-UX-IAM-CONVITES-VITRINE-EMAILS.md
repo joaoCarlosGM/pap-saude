@@ -4,6 +4,26 @@
 
 **Origem:** solicitação do operador, 21/10/2026. **Branch:** feature/ux-iam-convites-vitrine-email, criada a partir de codex/onboarding-primeiro-acesso-mfa (PR #4 ainda em revisão). Nenhum deploy ou alteração de produção autorizados.
 
+## REQUISITO INEGOCIÁVEL — PRESERVAR O LABORATÓRIO LOCAL JÁ PROVISIONADO
+
+O operador **já possui** worktree local de homologação em `~/projetos/pap-saude-onboarding`, na branch **`test/onboarding-primeiro-acesso-mfa`**, com banco PostgreSQL local `pap_admin_beta1_local`, container `pap-admin-beta1-local-db`, volume persistente **`pap-admin-beta1-local-data`**, configuração privada `.local/pap-admin/config.json`, conta PAP_ADMIN `papsaudeapp@gmail.com`, senha escolhida pelo operador, chave criptográfica MFA e dados de autenticação já cadastrados. **Este é o mesmo laboratório a ser atualizado; nenhum recadastramento é autorizado.**
+
+**Proibido no ambiente manual:**
+- `npm run local:init` ou `npm run local:admin` novamente; reinicializar credenciais, criar outro primeiro Admin, trocar a senha ou obrigar recadastro MFA.
+- Apagar/substituir/copiar sem necessidade `.local/`, `.env*`, o volume Docker, banco, cookies de navegador, chaves MFA, sessões e usuários; `docker compose down -v`, `docker volume rm`, `prisma migrate reset`, `prisma db push`, `TRUNCATE` e `DROP`.
+- Clonar um laboratório diferente para executar a homologação do usuário; usar outro checkout como área **de desenvolvimento** pode ser adequado, porém a homologação deve ser aplicada ao mesmo worktree/banco local já existente.
+- Rodar suíte de teste destrutiva no volume real ou apontar testes ao `127.0.0.1:15432`/`pap_admin_beta1_local`. Testes devem usar seus próprios bancos/volumes descartáveis, devidamente marcados e isolados.
+
+**Procedimento obrigatório de atualização in-place**, somente quando houver slice validado e o operador liberar atualização do ambiente de homologação:
+1. Inspecionar `git -C ~/projetos/pap-saude-onboarding status --short --branch`, o upstream, HEAD, o grafo da branch de feature e quaisquer edições não commitadas. Preservar inclusive o diagnóstico temporário conhecido em `scripts/local/provision.ts` até confirmar que pode ser retirado; não executar restore genérico sobre mudanças desconhecidas.
+2. Garantir plano de migração **forward-only, idempotente e compatível com os registros atuais**. Validar migrations em cópia restaurável de banco de testes, sem alterar as credenciais ou a chave de criptografia do MFA; registrar backup seguro/possibilidade de rollback antes de qualquer migração aplicada ao banco manual, evitando exportar segredos para logs ou Git.
+3. Fazer `git fetch origin`, comparar `git merge-base`, `git log --oneline --left-right` e mudanças pendentes. Se a branch de homologação for ancestral da feature e o worktree estiver seguro/limpo, atualizar **na própria branch `test/onboarding-primeiro-acesso-mfa`** com `git merge --ff-only origin/feature/ux-iam-convites-vitrine-email`. Não trocar para outra branch no worktree de homologação. Se não for fast-forward, **parar** e apresentar plano não destrutivo; não fazer merge forçado, rebase, reset ou cherry-pick improvisado.
+4. **Não** repetir `local:init` ou `local:admin`. Se preciso, apenas `npm ci`, `npm run local:start`, `npm run local:migrate` (depois da validação de migrações) e `npm run local:dev`, usando rigorosamente o mesmo `.local`, volume e host `http://127.0.0.1:3100`. Reiniciar servidor de aplicação quando necessário não equivale a apagar contas ou MFA.
+5. Teste de preservação: antes/depois, comprovar a existência da mesma conta PAP_ADMIN, a integridade das role assignments, mesma chave de criptografia e fator MFA, organizações e registros persistidos; validar login com senha/TOTP **já existentes** e fluxos novos. Não solicitar a senha/token ao chat ou imprimi-los.
+6. Prioridade é **preservar sessões já válidas**; evitar rotação de cookie signing key, session secret, session invalidation e alterações disruptivas da autenticação. O sistema pode exigir novo login em caso de expiração natural ou mudança de contrato; **nunca prometer** que cookies/sessões durarão indefinidamente. Caso reautenticação seja inevitável, deve funcionar com a conta e MFA existentes, sem novo provisionamento.
+
+**Critério de aceite de compatibilidade:** implementar a missão sem perder a conta Admin já criada, seus papéis, senhas, TOTP, códigos de recuperação, configurações privadas e dados. Qualquer migração não compatível é BLOQUEANTE. A nova branch no GitHub é de **desenvolvimento**; a branch local que o operador atualizará para testar **continua sendo test/onboarding-primeiro-acesso-mfa**.
+
 ## Missão para o Codex
 
 Implementar incrementos testáveis e auditáveis em Next.js/Prisma/PostgreSQL, preservando fluxos existentes, IAM, CSRF, sessões, MFA real, dados, UX clínica e backend. Ler esta especificação, o estado do git, os PRs pendentes, as migrations, as suites de testes e os componentes existentes antes de editar. Nunca presumir que a branch já está integrada à develop. Não misturar ambientes nem sobrescrever alterações não commitadas.
