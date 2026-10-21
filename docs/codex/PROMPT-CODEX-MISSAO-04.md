@@ -2,6 +2,16 @@
 
 Você está trabalhando no repositório GitHub joaoCarlosGM/pap-saude. Sua missão é implementar **de verdade**, com testes e auditoria, a evolução visual e funcional de IAM, convite, autorização, e-mails e vitrine comercial descrita no arquivo docs/codex/MISSAO-04-UX-IAM-CONVITES-VITRINE-EMAILS.md, presente na branch feature/ux-iam-convites-vitrine-email. Leia integralmente essa especificação e as referências docs/design/pap-espera-convite-preview.html e public/illustrations/pap-login-care.svg ANTES de modificar código. As capturas aprovadas pelo operador mostram admin verde petróleo e clínico rosa. Se esta branch não estiver localmente disponível, faça fetch com segurança; não destrua alterações locais.
 
+## Atualização da branch de testes local — obrigatória
+
+A homologação do operador já funciona em `~/projetos/pap-saude-onboarding`, na branch local `test/onboarding-primeiro-acesso-mfa`. O PAP_ADMIN e o MFA já estão provisionados no banco persistente local. **Não criar laboratório novo e não repetir a inicialização ou o provisionamento do primeiro administrador.**
+
+Implementar na feature branch, mas preparar a incorporação à **mesma branch local de testes** sem mudar de checkout. Antes de atualizar, verificar alterações locais e ancestrais Git. Se a atualização puder ser realizada por fast-forward, usar `git fetch origin` e, com árvore limpa e auditoria concluída, `git merge --ff-only origin/feature/ux-iam-convites-vitrine-email` mantendo a branch local atual. Se houver divergência, parar e solicitar decisão; nunca apagar trabalho local.
+
+Preservar `.local/pap-admin`, chaves MFA, contas, senhas, roles, convites, banco `pap_admin_beta1_local`, volume `pap-admin-beta1-local-data`, porta 15432 e configurações de sessão. Migrações devem ser aditivas e compatíveis, previamente validadas em banco descartável. Não redefinir banco, volume, credenciais ou MFA. Reiniciar somente serviços necessários sem remover dados. Sessões podem expirar naturalmente, mas o mesmo login e o mesmo TOTP devem continuar válidos. Testes destrutivos só podem usar bancos isolados.
+
+Na primeira resposta, confirmar expressamente esta restrição. Ver também a seção detalhada **REQUISITO INEGOCIÁVEL — PRESERVAR O LABORATÓRIO LOCAL JÁ PROVISIONADO** na especificação da missão.
+
 ## Regras que não podem ser negociadas
 1. Antes de editar, mostre branch/SHA/status completo (inclusive untracked), dependências dos PRs #3/#4, rotas, tabelas Prisma, testes existentes, riscos de alteração e plano por slices. A branch de especificação foi criada a partir do PR #4 ainda aberto; não presuma merge em develop nem altere o PR de MFA. Não use git add ., reset --hard, force push, DROP/TRUNCATE/reset de DB, credentials reais, env de produção, VPS, DNS ou deploy sem autorização. Preserve qualquer trabalho local do operador em outros slices.
 2. Segurança/IAM é backend-first: negar por padrão, escopos e MFA existentes, CSRF/origin, trilha de auditoria e isolamento multi-tenant. Nada de validar privilégio só por esconder botões ou por claims do navegador. Sem acesso clínico implícito a Admin/Gerente/Comercial.
