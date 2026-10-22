@@ -1,3 +1,4 @@
+import { requireInstitutionalInvitationAccess, requireInstitutionalInvitationTarget } from "@/server/admin/institutional-invitation-policy"
 import { requirePapReviewer } from "@/server/admin-beta/policy"
 import {
   createHash,
@@ -25,15 +26,6 @@ import {
 import {
   normalizeEmail,
 } from "@/server/auth/password-authentication.service"
-
-import {
-  PERMISSIONS,
-} from "@/server/iam/permissions"
-
-
-import {
-  requireAdminOrganizationAccess,
-} from "@/server/admin/admin-access.service"
 
 import {
   INVITATION_TOKEN_BYTES,
@@ -102,17 +94,7 @@ async function createInvitation(
     roleKey: "PROFESSIONAL" | "HEALTH_UNIT_ADMIN"
   },
 ) {
-  await requireAdminOrganizationAccess(
-    input.invitedByUserId,
-    PERMISSIONS.USER_INVITE,
-    input.organizationId,
-  )
-
-  await requireAdminOrganizationAccess(
-    input.invitedByUserId,
-    PERMISSIONS.MEMBERSHIP_MANAGE,
-    input.organizationId,
-  )
+  await requireInstitutionalInvitationAccess(input.invitedByUserId, input.organizationId)
 
   if (input.roleKey === "HEALTH_UNIT_ADMIN") {
     await requirePapReviewer(input.invitedByUserId);
@@ -160,6 +142,8 @@ async function createInvitation(
     throw new InvitationPayloadError()
   }
 
+  await requireInstitutionalInvitationTarget(input.invitedByUserId, email)
+
   const displayName =
     normalizeDisplayName(
       input.displayName,
@@ -193,6 +177,8 @@ async function createInvitation(
       async (
         tx,
       ) => {
+        await requireInstitutionalInvitationAccess(input.invitedByUserId, organization.id, tx);
+        await requireInstitutionalInvitationTarget(input.invitedByUserId, email, tx);
         // Serialize invite/accept/revoke and bootstrap per organization.
         await tx.organization.update({where:{id:organization.id},data:{updatedAt:new Date()}});
 
@@ -588,6 +574,13 @@ export async function acceptInvitation(
     async (
       tx,
     ) => {
+      // Revalidate authority and target at acceptance: identities/roles can change
+      // while a bearer invitation is pending. Never consume a now-invalid grant.
+      if (!existing.invitedByUserId) throw new InvalidInvitationError();
+      try {
+        await requireInstitutionalInvitationAccess(existing.invitedByUserId, existing.organizationId, tx);
+        await requireInstitutionalInvitationTarget(existing.invitedByUserId, existing.email, tx);
+      } catch { throw new InvalidInvitationError(); }
       await tx.organization.update({where:{id:existing.organizationId},data:{updatedAt:new Date()}});
       const currentUser = await tx.user.findUnique({where:{id:existing.user!.id}});
       const currentOrg = await tx.organization.findUnique({where:{id:existing.organizationId}});

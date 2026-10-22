@@ -1,8 +1,10 @@
+import { requireClinicalPageSession } from "@/server/clinical/clinical-page-session";
 import ToolsGrid from "@/components/ferramentas/ToolsGrid"
 
 import { clinicalTools } from "@/lib/mock-ferramentas"
 
-export default function FerramentasPage() {
+export default async function FerramentasPage() {
+  await requireClinicalPageSession();
   return (
     <div
       className="

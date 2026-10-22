@@ -60,6 +60,8 @@ enum OnboardingStatus {
 }
 
 enum OrganizationCandidateStatus {
+  READY_FOR_ACTIVATION
+  CHANGES_REQUESTED
   NEW
   QUALIFYING
   CONTACTED

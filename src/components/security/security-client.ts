@@ -1,3 +1,4 @@
+import type { EffectiveAccessProfile } from "@/lib/admin/types";
 export type Enrollment = {
   factorId: string;
   secret: string;
@@ -18,16 +19,7 @@ export type SecurityPosture = {
     verified: boolean;
     active: boolean;
     progress: { currentStep: number; status: string } | null;
-    profile: {
-      user: { displayName: string; email: string };
-      canAccessAdmin: boolean;
-      roles: {
-        key: string;
-        name: string;
-        organization: { name: string } | null;
-      }[];
-      organizations: { name: string }[];
-    } | null;
+    profile: EffectiveAccessProfile | null;
   };
 };
 export const securityMessages: Record<string, string> = {

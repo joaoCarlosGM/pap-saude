@@ -419,8 +419,8 @@ test("all privileged administrative routes require verified MFA, with IAM and bo
     const r = await organizations.GET(
       req("/api/admin/organizations", session.token),
     );
-    assert.equal(r.status, 200);
-    assert.deepEqual(await r.json(), { organizations: [] });
+    assert.equal(r.status, 403);
+    assert.equal((await r.json()).error, "ACCESS_DENIED");
     assert.equal(
       (
         await organizationPATCH(

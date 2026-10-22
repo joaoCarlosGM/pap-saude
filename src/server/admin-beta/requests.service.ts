@@ -1,3 +1,5 @@
+import { requireAdminActor } from "@/server/admin/admin-session.service";
+import { getEffectiveAccessProfile } from "@/server/iam/effective-access-profile.service";
 import { createHash } from "node:crypto";
 import { Prisma } from "@prisma/client";
 import { db } from "@/server/db/client";
@@ -134,12 +136,19 @@ export async function listBetaRequests(
     !Number.isInteger(page) ||
     page < 1 ||
     page > 10000 ||
-    (status && !["NEW", "APPROVED", "REJECTED"].includes(status))
+    (status &&
+      ![
+        "NEW",
+        "CHANGES_REQUESTED",
+        "READY_FOR_ACTIVATION",
+        "APPROVED",
+        "REJECTED",
+      ].includes(status))
   )
     invalid();
   const where: Prisma.OrganizationCandidateWhereInput = {
     consentedAt: { not: null },
-    status: status as "NEW" | "APPROVED" | "REJECTED" | undefined,
+    status: status as Prisma.EnumOrganizationCandidateStatusFilter["equals"],
     ...(query
       ? { name: { contains: text(query, 100, 1), mode: "insensitive" } }
       : {}),
@@ -153,19 +162,37 @@ export async function listBetaRequests(
     }),
     db.organizationCandidate.count({ where }),
   ]);
-  return { rows, total, page, pageSize: 20 };
+  const profile = await getEffectiveAccessProfile(userId);
+  return {
+    rows,
+    total,
+    page,
+    pageSize: 20,
+    canActivate:
+      profile?.roles.some(
+        (r) =>
+          r.key === "PAP_ADMIN" &&
+          r.scope === "GLOBAL" &&
+          r.permissions.includes("organization.activate"),
+      ) ?? false,
+  };
 }
 export async function reviewBetaRequest(
   userId: string,
   body: Record<string, unknown>,
+  actorSessionToken?: string,
 ) {
+  await requireAdminActor(userId, actorSessionToken);
   await requirePapReviewer(userId);
   const id = uuid(body.id),
     reason = text(body.reason, 500, 5);
-  if (body.decision !== "APPROVE" && body.decision !== "REJECT") invalid();
-  return db.$transaction(async (tx) => {
+  if (!["APPROVE", "REJECT", "REQUEST_CHANGES"].includes(String(body.decision)))
+    invalid();
+  return serializable(async (tx) => {
+    await requireAdminActor(userId, actorSessionToken, tx);
+    await requirePapReviewer(userId, tx);
     const claim = await tx.organizationCandidate.updateMany({
-      where: { id, status: "NEW" },
+      where: { id, status: { in: ["NEW", "CHANGES_REQUESTED"] } },
       data: { updatedAt: new Date() },
     });
     void claim;
@@ -173,10 +200,10 @@ export async function reviewBetaRequest(
       where: { id },
     });
     if (!candidate?.consentedAt) invalid();
-    if (candidate.status !== "NEW") {
+    if (!["NEW", "CHANGES_REQUESTED"].includes(candidate.status)) {
       if (
         candidate.status ===
-          (body.decision === "APPROVE" ? "APPROVED" : "REJECTED") &&
+          (body.decision === "APPROVE" ? "READY_FOR_ACTIVATION" : "REJECTED") &&
         (!body.municipalityId ||
           (candidate.convertedOrganizationId &&
             (
@@ -213,7 +240,7 @@ export async function reviewBetaRequest(
       const organization = await createOrganization(
         {
           type: "HEALTH_UNIT",
-          status: "ACTIVE",
+          status: "PENDING_VERIFICATION",
           name: candidate.name,
           parentId: parent.id,
           cnes: candidate.cnes,
@@ -229,7 +256,7 @@ export async function reviewBetaRequest(
         {
           actorUserId: userId,
           organizationId,
-          action: "ORGANIZATION_ACTIVATED",
+          action: "ORGANIZATION_CREATED",
           resourceType: "ORGANIZATION",
           resourceId: organizationId,
           after: organization,
@@ -240,23 +267,33 @@ export async function reviewBetaRequest(
     const after = await tx.organizationCandidate.update({
       where: { id },
       data: {
-        status: body.decision === "APPROVE" ? "APPROVED" : "REJECTED",
+        status:
+          body.decision === "APPROVE"
+            ? "READY_FOR_ACTIVATION"
+            : body.decision === "REQUEST_CHANGES"
+              ? "CHANGES_REQUESTED"
+              : "REJECTED",
         convertedOrganizationId: organizationId,
         reviewReason: reason,
         reviewedByUserId: userId,
         reviewedAt: new Date(),
       },
     });
-    await tx.organizationRequest.updateMany({
-      where: { candidateId: id, status: "REQUESTED" },
-      data: { status: "RESOLVED" },
-    });
+    if (body.decision === "REJECT")
+      await tx.organizationRequest.updateMany({
+        where: { candidateId: id, status: "REQUESTED" },
+        data: { status: "RESOLVED" },
+      });
     await writeAdminAudit(
       {
         actorUserId: userId,
         organizationId,
         action:
-          body.decision === "APPROVE" ? "REQUEST_APPROVED" : "REQUEST_REJECTED",
+          body.decision === "APPROVE"
+            ? "REQUEST_FORWARDED"
+            : body.decision === "REQUEST_CHANGES"
+              ? "REQUEST_CHANGES"
+              : "REQUEST_REJECTED",
         resourceType: "ORGANIZATION_REQUEST",
         resourceId: id,
         before: candidate,

@@ -1,3 +1,5 @@
+import type { Prisma } from "@prisma/client"
+import type { EffectiveAccessProfile } from "@/lib/admin/types"
 import type {
   PermissionKey,
 } from "@/server/iam/permissions"
@@ -22,6 +24,7 @@ export async function requireAdminOrganizationAccess(
   userId: string,
   permission: PermissionKey,
   organizationId: string,
+  client: Prisma.TransactionClient = db,
 ) {
   const [
     profile,
@@ -29,10 +32,10 @@ export async function requireAdminOrganizationAccess(
   ] =
     await Promise.all([
       getEffectiveAccessProfile(
-        userId,
+        userId, client,
       ),
 
-      db.organization.findUnique({
+      client.organization.findUnique({
         where: {
           id:
             organizationId,
@@ -122,16 +125,17 @@ export async function hasGlobalAdminPermission(
 export async function listAccessibleOrganizationIds(
   userId: string,
   permission: PermissionKey,
+  effectiveProfile?: EffectiveAccessProfile,
 ): Promise<{
   global: boolean
   organizationIds: string[]
 }> {
-  const profile =
+  const profile = effectiveProfile ??
     await getEffectiveAccessProfile(
       userId,
     )
 
-  if (!profile) {
+  if (!profile || profile.user.id !== userId) {
     throw new AccessDeniedError()
   }
 

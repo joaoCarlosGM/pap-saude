@@ -1,3 +1,4 @@
+import { AccountSecurityError } from "@/server/auth/account-security.service"
 import {
   NextRequest,
   NextResponse,
@@ -52,39 +53,17 @@ import {
   OrganizationAlreadyArchivedError,
 } from "@/server/organizations/organization.errors"
 
-import { db } from "@/server/db/client"
-
-export class AdminMfaRequiredError extends Error {
-  constructor() { super("ADMIN_MFA_REQUIRED") }
-}
-
-const MAX_ADMIN_BODY_BYTES =
-  32 * 1024
-
-export async function requireAdminSession(
-  request: NextRequest,
-) {
-  const token =
-    readSessionToken(
-      request,
-    )
-
-  if (!token) {
-    throw new InvalidSessionError()
-  }
-
-  const result = await validateSession(token)
-  const verifiedAt = result.session.mfaVerifiedAt
-  const factor = await db.mfaFactor.findFirst({
-    where: { userId: result.user.id, type: "TOTP", status: "ACTIVE" },
-    orderBy: { enabledAt: "desc" },
-    select: { enabledAt: true },
-  })
-  if (!verifiedAt || !factor?.enabledAt || factor.enabledAt > verifiedAt ||
-      verifiedAt < result.session.createdAt || verifiedAt > new Date()) {
-    throw new AdminMfaRequiredError()
-  }
-  return result
+import {
+  requireAdminActor,
+  AdminMfaRequiredError,
+} from "./admin-session.service";
+export { AdminMfaRequiredError } from "./admin-session.service";
+const MAX_ADMIN_BODY_BYTES = 32 * 1024;
+export async function requireAdminSession(request: NextRequest) {
+  const token = readSessionToken(request);
+  if (!token) throw new InvalidSessionError();
+  const { user } = await validateSession(token);
+  return requireAdminActor(user.id, token);
 }
 
 export async function readAdminJson(
@@ -191,6 +170,9 @@ function noStoreHeaders() {
 export function adminErrorResponse(
   error: unknown,
 ) {
+  if (error instanceof AccountSecurityError) {
+    return NextResponse.json({ error: error.message }, { status: error.message === "REAUTH_THROTTLED" ? 429 : 403, headers: noStoreHeaders() })
+  }
   if (error instanceof AdminMfaRequiredError) {
     return NextResponse.json({ error: "ADMIN_MFA_REQUIRED" }, {
       status: 403, headers: noStoreHeaders(),

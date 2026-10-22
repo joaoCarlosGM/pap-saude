@@ -1,3 +1,4 @@
+import { PATCH as mutateOrganization } from "../../src/app/api/admin/organizations/[organizationId]/route";
 import assert from "node:assert/strict";
 import { test, after } from "node:test";
 import { randomUUID } from "node:crypto";
@@ -325,10 +326,16 @@ test("institutional onboarding journey, provider contract and adversarial bounda
         where: { id: unitId },
       });
       assert.equal(org.parentId, municipality.id);
-      assert.equal(org.status, "ACTIVE");
-      assert.equal(org.isActive, true);
+      assert.equal(org.status, "PENDING_VERIFICATION");
+      assert.equal(org.isActive, false);
+      assert.equal((await invite(req("/api/admin/beta/invitations", adminToken, { operation: "BOOTSTRAP", organizationId: unitId }))).status, 400);
+      const activation = await mutateOrganization(new NextRequest(`http://localhost:3000/api/admin/organizations/${unitId}`, {
+        method: "PATCH", headers: { origin: "http://localhost:3000", cookie: `pap_session=${adminToken}`, "content-type": "application/json" }, body: JSON.stringify({ operation: "ACTIVATE" }),
+      }), { params: Promise.resolve({ organizationId: unitId }) });
+      assert.equal(activation.status, 200);
+      assert.equal((await db.organization.findUniqueOrThrow({ where: { id: unitId } })).status, "ACTIVE");
       assert.equal(
-        await db.auditEvent.count({ where: { action: "REQUEST_APPROVED" } }),
+        await db.auditEvent.count({ where: { action: "REQUEST_FORWARDED" } }),
         1,
       );
       const audit = JSON.stringify(await db.auditEvent.findMany());

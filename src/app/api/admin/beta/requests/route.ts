@@ -1,3 +1,4 @@
+import { readSessionToken } from "@/server/auth/http-auth";
 import { NextRequest } from "next/server";
 import { assertTrustedRequestOrigin } from "@/server/auth/http-auth";
 import { readAdminJson } from "@/server/admin/admin-http";
@@ -42,7 +43,7 @@ export async function POST(request: NextRequest) {
     const session = await requireBetaSession(request);
     await betaRateLimit("review", session.user.id, 100);
     return betaJson(
-      await reviewBetaRequest(session.user.id, await readAdminJson(request)),
+      await reviewBetaRequest(session.user.id, await readAdminJson(request), readSessionToken(request) ?? undefined),
     );
   } catch (error) {
     return betaError(error);

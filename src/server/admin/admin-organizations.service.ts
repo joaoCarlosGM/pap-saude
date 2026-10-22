@@ -1,7 +1,13 @@
+import { requireAdminActor } from "./admin-session.service";
+import { getEffectiveAccessProfile } from "@/server/iam/effective-access-profile.service";
+import {
+  requireReauthentication,
+  AccountSecurityError,
+} from "@/server/auth/account-security.service";
+import { serializable } from "@/server/admin-beta/policy";
 import {
   OrganizationStatus,
   OrganizationType,
-  Prisma,
 } from "@prisma/client"
 
 import {
@@ -34,10 +40,13 @@ import {
 export async function listAdminOrganizations(
   userId: string,
 ) {
+  const profile = await getEffectiveAccessProfile(userId)
+  if (!profile) throw new AccessDeniedError()
   const access =
     await listAccessibleOrganizationIds(
       userId,
       PERMISSIONS.ORGANIZATION_READ,
+      profile,
     )
 
   if (
@@ -45,9 +54,15 @@ export async function listAdminOrganizations(
     access.organizationIds.length ===
       0
   ) {
-    return []
+    throw new AccessDeniedError()
   }
 
+  // Scope and projection must use the same profile: revocation between reads
+  // must never turn a global delegated directory into a private-field response.
+  // Global directory access delegates institutional metadata, never private configuration.
+  const delegatedDirectory = profile.roles.some(r => r.key === "PAP_MANAGER") &&
+    !profile.roles.some(r => r.key === "PAP_ADMIN" && r.scope === "GLOBAL")
+  const canSeeClinicalCounts = profile?.permissions.includes(PERMISSIONS.ORGANIZATION_ANALYTICS_READ) ?? false
   return db.organization.findMany({
     where:
       access.global
@@ -59,7 +74,22 @@ export async function listAdminOrganizations(
             },
           },
 
-    include: {
+    select: {
+      id: true,
+      name: true,
+      type: true,
+      status: true,
+      isActive: true,
+      parentId: true,
+      city: true,
+      state: true,
+      code: !delegatedDirectory,
+      cnes: !delegatedDirectory,
+      cnpj: !delegatedDirectory,
+      address: !delegatedDirectory,
+      createdAt: !delegatedDirectory,
+      updatedAt: !delegatedDirectory,
+      // settings is deliberately absent for every role: this is a directory DTO.
       parent: {
         select: {
           id: true,
@@ -71,9 +101,9 @@ export async function listAdminOrganizations(
       _count: {
         select: {
           children: true,
-          memberships: true,
-          patientLinks: true,
-          encounters: true,
+          memberships: !delegatedDirectory,
+          patientLinks: !delegatedDirectory && canSeeClinicalCounts,
+          encounters: !delegatedDirectory && canSeeClinicalCounts,
         },
       },
     },
@@ -104,7 +134,9 @@ export async function createAdminOrganization(
     state?: string | null
     address?: string | null
   },
+  actorSessionToken?: string,
 ) {
+  await requireAdminActor(userId, actorSessionToken)
   if (
     input.type !==
       OrganizationType.MUNICIPALITY &&
@@ -120,7 +152,9 @@ export async function createAdminOrganization(
     input.parentId,
   )
 
-  return db.$transaction(async tx => {
+  return serializable(async tx => {
+    await requireAdminActor(userId, actorSessionToken, tx)
+    await requireAdminOrganizationAccess(userId, PERMISSIONS.ORGANIZATION_MANAGE, input.parentId, tx)
     const organization = await createOrganization({
     type:
       input.type,
@@ -169,61 +203,188 @@ export async function mutateAdminOrganization(
   organizationId: string,
   input:
     | {
-        operation:
-          "ACTIVATE"
+        operation: "ACTIVATE";
       }
     | {
-        operation:
-          "SUSPEND"
+        operation: "SUSPEND";
       }
     | {
-        operation:
-          "ARCHIVE"
+        operation: "ARCHIVE";
+        confirmationName?: string;
+        password?: string;
+        code?: string;
       }
     | {
-        operation:
-          "UPDATE"
-        name?: string
-        code?: string | null
-        cnes?: string | null
-        cnpj?: string | null
-        city?: string | null
-        state?: string | null
-        address?: string | null
+        operation: "UPDATE";
+        name?: string;
+        code?: string | null;
+        cnes?: string | null;
+        cnpj?: string | null;
+        city?: string | null;
+        state?: string | null;
+        address?: string | null;
       },
+  actorSessionToken?: string,
 ) {
+  await requireAdminActor(userId, actorSessionToken);
   await requireAdminOrganizationAccess(
     userId,
     PERMISSIONS.ORGANIZATION_MANAGE,
     organizationId,
-  )
+  );
 
-  return db.$transaction(async tx => {
-    const before = await tx.organization.findUnique({ where: { id: organizationId } });
+  if (input.operation !== "UPDATE") {
+    const profile = await getEffectiveAccessProfile(userId);
+    const target = await db.organization.findUnique({
+      where: { id: organizationId },
+    });
+    const permission =
+      input.operation === "ACTIVATE"
+        ? PERMISSIONS.ORGANIZATION_ACTIVATE
+        : input.operation === "SUSPEND"
+          ? PERMISSIONS.ORGANIZATION_DEACTIVATE
+          : PERMISSIONS.ORGANIZATION_DELETE;
+    if (
+      target?.type === "HEALTH_UNIT" &&
+      !profile?.roles.some(
+        (r) =>
+          r.key === "PAP_ADMIN" &&
+          r.scope === "GLOBAL" &&
+          r.permissions.includes(permission),
+      )
+    )
+      throw new AccessDeniedError();
+    if (input.operation === "ARCHIVE") {
+      if (
+        !target ||
+        input.confirmationName !== target.name ||
+        typeof input.password !== "string" ||
+        typeof input.code !== "string"
+      )
+        throw new AccountSecurityError("STRONG_CONFIRMATION_REQUIRED");
+      await requireReauthentication(userId, input.password, input.code);
+    }
+  }
+  return serializable(async (tx) => {
+    await requireAdminActor(userId, actorSessionToken, tx);
+    const { profile, organization } = await requireAdminOrganizationAccess(
+      userId,
+      PERMISSIONS.ORGANIZATION_MANAGE,
+      organizationId,
+      tx,
+    );
+    if (input.operation !== "UPDATE") {
+      const permission =
+        input.operation === "ACTIVATE"
+          ? PERMISSIONS.ORGANIZATION_ACTIVATE
+          : input.operation === "SUSPEND"
+            ? PERMISSIONS.ORGANIZATION_DEACTIVATE
+            : PERMISSIONS.ORGANIZATION_DELETE;
+      if (
+        organization.type === "HEALTH_UNIT" &&
+        !profile.roles.some(
+          (r) =>
+            r.key === "PAP_ADMIN" &&
+            r.scope === "GLOBAL" &&
+            r.permissions.includes(permission),
+        )
+      )
+        throw new AccessDeniedError();
+      if (
+        input.operation === "ARCHIVE" &&
+        input.confirmationName !== organization.name
+      )
+        throw new AccountSecurityError("STRONG_CONFIRMATION_REQUIRED");
+    }
+    const before = await tx.organization.findUnique({
+      where: { id: organizationId },
+    });
     if (!before) throw new AccessDeniedError();
     let after;
     switch (input.operation) {
-      case "ACTIVATE": after = await activateOrganization(organizationId, tx); break;
-      case "SUSPEND": after = await suspendOrganization(organizationId, tx); break;
-      case "ARCHIVE": after = await archiveOrganization(organizationId, tx); break;
+      case "ACTIVATE": {
+        const candidate = await tx.organizationCandidate.findFirst({
+          where: {
+            convertedOrganizationId: organizationId,
+            consentedAt: { not: null },
+          },
+        });
+        if (
+          candidate &&
+          !["READY_FOR_ACTIVATION", "APPROVED"].includes(candidate.status)
+        )
+          throw new AccessDeniedError();
+        after = await activateOrganization(organizationId, tx);
+        if (candidate?.status === "READY_FOR_ACTIVATION") {
+          const activated = await tx.organizationCandidate.update({
+            where: { id: candidate.id },
+            data: { status: "APPROVED" },
+          });
+          await tx.organizationRequest.updateMany({
+            where: { candidateId: candidate.id, status: "REQUESTED" },
+            data: { status: "RESOLVED" },
+          });
+          await writeAdminAudit(
+            {
+              actorUserId: userId,
+              organizationId,
+              action: "REQUEST_ACTIVATED",
+              resourceType: "ORGANIZATION_REQUEST",
+              resourceId: candidate.id,
+              before: candidate,
+              after: activated,
+            },
+            tx,
+          );
+        }
+        break;
+      }
+      case "SUSPEND":
+        after = await suspendOrganization(organizationId, tx);
+        break;
+      case "ARCHIVE":
+        after = await archiveOrganization(organizationId, tx);
+        break;
       case "UPDATE":
-        after = await updateOrganizationDetails(organizationId, {
-          name: input.name, code: input.code, cnes: input.cnes, cnpj: input.cnpj,
-          city: input.city, state: input.state, address: input.address,
-        }, tx);
+        after = await updateOrganizationDetails(
+          organizationId,
+          {
+            name: input.name,
+            code: input.code,
+            cnes: input.cnes,
+            cnpj: input.cnpj,
+            city: input.city,
+            state: input.state,
+            address: input.address,
+          },
+          tx,
+        );
         break;
     }
-    if (JSON.stringify(projectAdminSnapshot("ORGANIZATION", before)) !==
-        JSON.stringify(projectAdminSnapshot("ORGANIZATION", after))) {
-      await writeAdminAudit({
-        actorUserId: userId, organizationId,
-        action: input.operation === "UPDATE" ? "ORGANIZATION_UPDATED" :
-          input.operation === "ACTIVATE" ? "ORGANIZATION_ACTIVATED" :
-          input.operation === "SUSPEND" ? "ORGANIZATION_SUSPENDED" : "ORGANIZATION_ARCHIVED",
-        resourceType: "ORGANIZATION", resourceId: organizationId,
-        before, after,
-      }, tx);
+    if (
+      JSON.stringify(projectAdminSnapshot("ORGANIZATION", before)) !==
+      JSON.stringify(projectAdminSnapshot("ORGANIZATION", after))
+    ) {
+      await writeAdminAudit(
+        {
+          actorUserId: userId,
+          organizationId,
+          action:
+            input.operation === "UPDATE"
+              ? "ORGANIZATION_UPDATED"
+              : input.operation === "ACTIVATE"
+                ? "ORGANIZATION_ACTIVATED"
+                : input.operation === "SUSPEND"
+                  ? "ORGANIZATION_SUSPENDED"
+                  : "ORGANIZATION_ARCHIVED",
+          resourceType: "ORGANIZATION",
+          resourceId: organizationId,
+          before,
+          after,
+        },
+        tx,
+      );
     }
     return after;
-  }, { isolationLevel: Prisma.TransactionIsolationLevel.Serializable });
+  });
 }

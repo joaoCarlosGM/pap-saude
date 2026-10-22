@@ -114,6 +114,9 @@ jobs:
       - name: First-access MFA API, QR, browser and accessibility regression
         run: npm run test:first-access:browser
 
+      - name: Mission 04 delegated IAM, legacy upgrade and clinical page boundaries
+        run: npm run test:mission04:b:browser
+
       - name: PostgreSQL runtime and migrator separation
         run: bash scripts/test-f04-role-separation.sh
 

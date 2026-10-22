@@ -1,8 +1,10 @@
+import { requireClinicalPageSession } from "@/server/clinical/clinical-page-session";
 import CourseList from "@/components/cursos/CourseList"
 
 import { mockCursos } from "@/lib/mock-cursos"
 
-export default function CursosPage() {
+export default async function CursosPage() {
+  await requireClinicalPageSession();
   return (
     <div className="mx-auto w-full max-w-[1600px]">
       <header className="mb-6">

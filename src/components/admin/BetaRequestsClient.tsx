@@ -34,7 +34,11 @@ export default function BetaRequestsClient() {
     [reason, setReason] = useState(""),
     [message, setMessage] = useState(""),
     [busy, setBusy] = useState(false);
-  const result = useBetaData<{ rows: RequestRow[]; total: number }>(
+  const result = useBetaData<{
+    rows: RequestRow[];
+    total: number;
+    canActivate: boolean;
+  }>(
     `/api/admin/beta/requests?${new URLSearchParams({ page: String(page), status, ...(q ? { q } : {}) })}`,
   );
   const orgs = useBetaData<{ organizations: Org[] }>(
@@ -45,8 +49,10 @@ export default function BetaRequestsClient() {
       !selected ||
       !window.confirm(
         decision === "APPROVE"
-          ? "Aprovar esta instituição e ativar a UBS no município selecionado?"
-          : "Rejeitar esta solicitação?",
+          ? "Encaminhar esta instituição para ativação pelo PAP Admin? A UBS ficará pendente."
+          : decision === "REQUEST_CHANGES"
+            ? "Solicitar correções nesta análise?"
+            : "Rejeitar esta solicitação?",
       )
     )
       return;
@@ -70,7 +76,45 @@ export default function BetaRequestsClient() {
       setSelected(null);
       result.refresh();
       setMessage(
-        "Análise registrada. O convite inaugural está disponível na área de convites.",
+        decision === "APPROVE"
+          ? "Análise registrada. UBS encaminhada aguarda ativação explícita pelo PAP Admin; o convite só é liberado após a ativação."
+          : decision === "REQUEST_CHANGES"
+            ? "Correções solicitadas. A análise continua pendente; nenhuma UBS foi criada ou ativada."
+            : "Solicitação rejeitada. Nenhuma UBS foi ativada.",
+      );
+    } catch (e) {
+      setMessage((e as Error).message);
+    } finally {
+      setBusy(false);
+    }
+  }
+  async function activate() {
+    if (
+      !selected?.convertedOrganizationId ||
+      !window.confirm(
+        `Ativar a UBS ${selected.name}? Esta ação libera a operação institucional e é exclusiva do PAP Admin.`,
+      )
+    )
+      return;
+    setBusy(true);
+    setMessage("");
+    try {
+      const r = await fetch(
+        `/api/admin/organizations/${selected.convertedOrganizationId}`,
+        {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ operation: "ACTIVATE" }),
+        },
+      );
+      if (!r.ok)
+        throw new Error(
+          "Ativação recusada. Confira sua sessão MFA e atualize o estado da solicitação.",
+        );
+      setSelected(null);
+      result.refresh();
+      setMessage(
+        "UBS ativada pelo PAP Admin. O convite inaugural pode ser emitido na área de convites.",
       );
     } catch (e) {
       setMessage((e as Error).message);
@@ -82,7 +126,7 @@ export default function BetaRequestsClient() {
     <section className="mx-auto max-w-6xl">
       <BetaTitle
         title="Solicitações de adesão"
-        description="Revisão PAP, ativação hierárquica e histórico institucional. Dados de contato restritos à equipe autorizada."
+        description="Análise institucional separada da ativação exclusiva pelo PAP Admin. Dados de contato restritos à equipe autorizada."
       />
       <div className="mb-5 flex flex-wrap gap-3">
         <label>
@@ -96,7 +140,13 @@ export default function BetaRequestsClient() {
             }}
             className="rounded-lg border p-2"
           >
-            {["NEW", "APPROVED", "REJECTED"].map((s) => (
+            {[
+              "NEW",
+              "CHANGES_REQUESTED",
+              "READY_FOR_ACTIVATION",
+              "APPROVED",
+              "REJECTED",
+            ].map((s) => (
               <option key={s}>{s}</option>
             ))}
           </select>
@@ -122,7 +172,7 @@ export default function BetaRequestsClient() {
       </p>
       {!result.loading && !result.error && result.data && (
         <>
-          <div className="overflow-x-auto rounded-2xl border bg-white">
+          <div tabIndex={0} role="region" aria-label="Tabela de solicitações" className="overflow-x-auto rounded-2xl border bg-white">
             <table className="w-full text-left text-sm">
               <caption className="p-3 text-left">
                 {result.data.total} solicitações · página {page}
@@ -215,7 +265,7 @@ export default function BetaRequestsClient() {
                 `Revisada em ${new Date(selected.reviewedAt).toLocaleString("pt-BR")}: ${selected.reviewReason}`}
             </dd>
           </dl>
-          {selected.status === "NEW" && (
+          {["NEW", "CHANGES_REQUESTED"].includes(selected.status) && (
             <div className="space-y-4">
               <label className="block">
                 Município validado{" "}
@@ -258,7 +308,14 @@ export default function BetaRequestsClient() {
                   onClick={() => act("APPROVE")}
                   className="rounded-xl bg-[#064f50] p-3 text-white disabled:opacity-40"
                 >
-                  Aprovar e ativar
+                  Encaminhar para ativação
+                </button>
+                <button
+                  disabled={busy || reason.trim().length < 5}
+                  onClick={() => act("REQUEST_CHANGES")}
+                  className="rounded-xl border p-3 disabled:opacity-40"
+                >
+                  Solicitar correções
                 </button>
                 <button
                   disabled={busy || reason.trim().length < 5}
@@ -270,6 +327,22 @@ export default function BetaRequestsClient() {
               </div>
             </div>
           )}
+          {selected.status === "READY_FOR_ACTIVATION" && (
+            <p className="my-4">
+              Análise concluída. A UBS permanece pendente até a ativação pelo
+              PAP Admin.
+            </p>
+          )}
+          {selected.status === "READY_FOR_ACTIVATION" &&
+            result.data?.canActivate && (
+              <button
+                disabled={busy}
+                onClick={activate}
+                className="rounded-xl bg-[#064f50] p-3 text-white disabled:opacity-40"
+              >
+                Ativar UBS
+              </button>
+            )}
           <button className="mt-4 underline" onClick={() => setSelected(null)}>
             Fechar detalhes
           </button>

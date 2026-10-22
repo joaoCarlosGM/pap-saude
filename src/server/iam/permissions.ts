@@ -2,6 +2,12 @@ export const PERMISSIONS = {
   // Organizations
   ORGANIZATION_READ: "organization.read",
   ORGANIZATION_MANAGE: "organization.manage",
+  ORGANIZATION_ACTIVATE: "organization.activate",
+  ORGANIZATION_DEACTIVATE: "organization.deactivate",
+  ORGANIZATION_DELETE: "organization.delete",
+  ORGANIZATION_REQUEST_REVIEW: "organization.request.review",
+  INSTITUTION_INVITE: "institution.invite",
+  ROLE_ASSIGN_COMMERCIAL: "role.assign_commercial",
 
   // Memberships
   MEMBERSHIP_READ: "membership.read",

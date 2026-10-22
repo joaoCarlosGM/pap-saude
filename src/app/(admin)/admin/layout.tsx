@@ -1,3 +1,5 @@
+import "@/components/admin/admin-theme.css";
+import { accessDestination } from "@/lib/auth/access-destination";
 import type { ReactNode } from "react";
 
 import { cookies } from "next/headers";
@@ -61,7 +63,7 @@ export default async function AdminLayout({
   }
 
   if (!profile.canAccessAdmin) {
-    redirect("/dashboard");
+    redirect(accessDestination(profile));
   }
 
   if (!state?.verified) redirect("/primeiros-passos");

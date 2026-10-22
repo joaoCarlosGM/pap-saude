@@ -1,3 +1,4 @@
+import { readSessionToken } from "@/server/auth/http-auth"
 import {
   NextRequest,
   NextResponse,
@@ -169,6 +170,7 @@ export async function POST(
               "address",
             ),
         },
+        readSessionToken(request) ?? undefined,
       )
 
     return NextResponse.json(

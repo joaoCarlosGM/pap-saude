@@ -1,4 +1,5 @@
 "use client";
+import { accessDestination } from "@/lib/auth/access-destination";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { ShieldCheck, Heart, Moon, Sun, ArrowRight, Check } from "lucide-react";
@@ -70,11 +71,7 @@ export default function FirstAccessWizard() {
           progress?.status === "COMPLETED" &&
           (!posture.onboarding.mfaRequired || posture.onboarding.verified)
         ) {
-          router.replace(
-            posture.onboarding.profile?.canAccessAdmin
-              ? "/admin"
-              : "/dashboard",
-          );
+          router.replace(accessDestination(posture.onboarding.profile));
           setPaused(true);
           return;
         }
@@ -144,9 +141,7 @@ export default function FirstAccessWizard() {
     data.onboarding.progress?.status === "COMPLETED" &&
     (!data.onboarding.mfaRequired || data.onboarding.verified)
   );
-  const destination = data?.onboarding.profile?.canAccessAdmin
-    ? "/admin"
-    : "/dashboard";
+  const destination = accessDestination(data?.onboarding.profile ?? null);
   function resume() {
     setPaused(false);
     setStep(

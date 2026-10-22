@@ -1,3 +1,7 @@
+import * as OTPAuth from "otpauth";
+import { authenticateLogin } from "../../src/server/auth/login.service";
+import { completeMfaLoginWithRecoveryCode } from "../../src/server/auth/mfa-login.service";
+import { mutateAdminOrganization } from "../../src/server/admin/admin-organizations.service";
 import { test, after } from "node:test";
 import assert from "node:assert/strict";
 import { randomBytes } from "node:crypto";
@@ -98,6 +102,32 @@ test("operator-selected admin has hashed password, global role and real enrollme
   const enrollment = await enrolled.json();
   assert.ok(enrollment.secret);
   assert.match(enrollment.provisioningUri, /^otpauth:\/\//);
+  const confirmation = await security(
+    new NextRequest("http://127.0.0.1:3100/api/auth/security", {
+      method: "POST",
+      headers,
+      body: JSON.stringify({
+        action: "CONFIRM_MFA",
+        password,
+        factorId: enrollment.factorId,
+        code: OTPAuth.URI.parse(enrollment.provisioningUri).generate(),
+      }),
+    }),
+  );
+  assert.equal(confirmation.status, 200);
+  const recovery = await confirmation.json();
+  const login = await authenticateLogin({
+    email,
+    password,
+    origin: "synthetic-local-smoke",
+  });
+  assert.equal(login.status, "MFA_REQUIRED");
+  if (login.status !== "MFA_REQUIRED")
+    throw new Error("Expected MFA challenge");
+  const verified = await completeMfaLoginWithRecoveryCode({
+    challengeToken: login.challengeToken,
+    recoveryCode: recovery.codes[0],
+  });
   const pap = await db.organization.findFirstOrThrow({
     where: { type: "PAP" },
   });
@@ -122,12 +152,28 @@ test("operator-selected admin has hashed password, global role and real enrollme
     consent: true,
   });
   const candidate = await db.organizationCandidate.findFirstOrThrow();
-  const approved = await reviewBetaRequest(admin.id, {
-    id: candidate.id,
-    decision: "APPROVE",
-    municipalityId: municipality.id,
-    reason: "Synthetic local validation",
+  const approved = await reviewBetaRequest(
+    admin.id,
+    {
+      id: candidate.id,
+      decision: "APPROVE",
+      municipalityId: municipality.id,
+      reason: "Synthetic local validation",
+    },
+    verified.sessionToken,
+  );
+  assert.equal(approved.status, "READY_FOR_ACTIVATION");
+  const pending = await db.organization.findUniqueOrThrow({
+    where: { id: approved.organizationId! },
   });
+  assert.equal(pending.status, "PENDING_VERIFICATION");
+  assert.equal(pending.isActive, false);
+  await mutateAdminOrganization(
+    admin.id,
+    approved.organizationId!,
+    { operation: "ACTIVATE" },
+    verified.sessionToken,
+  );
   const invitation = await createHealthUnitAdminInvitation({
     invitedByUserId: admin.id,
     organizationId: approved.organizationId!,

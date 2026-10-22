@@ -129,55 +129,24 @@ export default function AccessAdminClient() {
           null,
         )
 
-        const [
-          roleResponse,
-          userResponse,
-          organizationResponse,
-        ] =
-          await Promise.all([
-            fetch(
-              "/api/admin/roles",
-              {
-                cache:
-                  "no-store",
-              },
-            ),
-
-            fetch(
-              "/api/admin/users",
-              {
-                cache:
-                  "no-store",
-              },
-            ),
-
-            fetch(
-              "/api/admin/organizations",
-              {
-                cache:
-                  "no-store",
-              },
-            ),
-          ])
-
-        if (
-          !roleResponse.ok ||
-          !userResponse.ok ||
-          !organizationResponse.ok
-        ) {
-          throw new Error()
+        const roleResponse = await fetch("/api/admin/roles", { cache: "no-store" });
+        if (!roleResponse.ok) throw new Error();
+        const roleData = await roleResponse.json();
+        let userData: { users: User[] },
+          organizationData: { organizations: Organization[] };
+        if (roleData.delegated) {
+          userData = { users: roleData.assignableUsers ?? [] };
+          organizationData = { organizations: [] };
+        } else {
+          const responses = await Promise.all([
+            fetch("/api/admin/users", { cache: "no-store" }),
+            fetch("/api/admin/organizations", { cache: "no-store" }),
+          ]);
+          if (responses.some((r) => !r.ok)) throw new Error();
+          [userData, organizationData] = await Promise.all(
+            responses.map((r) => r.json()),
+          );
         }
-
-        const [
-          roleData,
-          userData,
-          organizationData,
-        ] =
-          await Promise.all([
-            roleResponse.json(),
-            userResponse.json(),
-            organizationResponse.json(),
-          ])
 
         setRoles(
           roleData.roles ??
@@ -443,8 +412,8 @@ export default function AccessAdminClient() {
 
   return (
     <section className="mx-auto max-w-7xl">
-      <p className="text-xs font-semibold uppercase tracking-[0.18em] text-pink-500">
-        F04.4
+      <p className="text-xs font-semibold uppercase tracking-[0.18em] text-teal-700">
+        Governança PAP
       </p>
 
       <h1 className="mt-2 text-2xl font-semibold tracking-tight text-slate-950 sm:text-3xl">

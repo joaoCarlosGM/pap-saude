@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import { BetaTitle, DataState, useBetaData } from "./BetaWidgets";
-type Org = { id: string; name: string; type: string };
+type Org = { id: string; name: string; type: string; status: string; isActive: boolean };
 type Row = {
   id: string;
   email: string;
@@ -235,7 +235,7 @@ export default function BetaInvitationsClient() {
         >
           <option value="">Selecione uma UBS</option>
           {orgs.data?.organizations
-            ?.filter((o) => o.type === "HEALTH_UNIT")
+            ?.filter((o) => o.type === "HEALTH_UNIT" && o.status === "ACTIVE" && o.isActive)
             .map((o) => (
               <option key={o.id} value={o.id}>
                 {o.name}
@@ -249,7 +249,7 @@ export default function BetaInvitationsClient() {
           organizationId={organizationId}
           allowBootstrap={Boolean(
             context.data?.profile.roles.some(
-              (r) => r.key === "PAP_ADMIN" && r.scope === "GLOBAL",
+              (r) => ["PAP_ADMIN", "PAP_MANAGER"].includes(r.key) && r.scope === "GLOBAL",
             ),
           )}
         />

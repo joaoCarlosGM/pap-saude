@@ -1,3 +1,4 @@
+import { verifiedSessionToken } from "../helpers/verified-admin-session";
 import assert from "node:assert/strict";
 import { randomUUID } from "node:crypto";
 import { before, beforeEach, after, test } from "node:test";
@@ -67,8 +68,8 @@ test("A/B: writer allowlists admin snapshots and refuses clinical audit", async 
 test("C: organization create and update write authoritative events", async () => {
   const actor = await admin();
   const { pap } = await tree();
-  const org = await createAdminOrganization(actor.id, { type: OrganizationType.MUNICIPALITY, parentId: pap.id, name: "Original" });
-  await mutateAdminOrganization(actor.id, org.id, { operation: "UPDATE", name: "Updated" });
+  const org = await createAdminOrganization(actor.id, { type: OrganizationType.MUNICIPALITY, parentId: pap.id, name: "Original" }, await verifiedSessionToken(actor.id));
+  await mutateAdminOrganization(actor.id, org.id, { operation: "UPDATE", name: "Updated" }, await verifiedSessionToken(actor.id));
   const events = await db.auditEvent.findMany({ where: { resourceId: org.id }, orderBy: { occurredAt: "asc" } });
   assert.equal(events.length, 2);
   assert.equal((events[0].after as Record<string, unknown>).name, "Original");
@@ -79,7 +80,7 @@ test("C: organization create and update write authoritative events", async () =>
 test("C/H: rejected organization updates never produce success events", async () => {
   const actor = await admin();
   const { unitA } = await tree();
-  await assert.rejects(mutateAdminOrganization(actor.id, unitA.id, { operation: "UPDATE", cnes: "123" }));
+  await assert.rejects(mutateAdminOrganization(actor.id, unitA.id, { operation: "UPDATE", cnes: "123" }, await verifiedSessionToken(actor.id)));
   assert.equal(await db.auditEvent.count({ where: { resourceId: unitA.id } }), 0);
 });
 

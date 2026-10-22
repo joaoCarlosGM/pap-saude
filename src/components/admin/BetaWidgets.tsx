@@ -66,7 +66,7 @@ export function DataState({
 }) {
   if (loading)
     return (
-      <div role="status" className="animate-pulse rounded-2xl bg-slate-100 p-8">
+      <div role="status" className="rounded-2xl bg-slate-100 p-8 text-slate-700">
         Carregando dados…
       </div>
     );

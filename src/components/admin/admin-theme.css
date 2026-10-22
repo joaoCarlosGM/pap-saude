@@ -1,0 +1,57 @@
+/* Scoped administrative surfaces; clinical pink/theme tokens remain independent. */
+.pap-admin {
+  color: #172c2c;
+}
+.dark .pap-admin {
+  color: #e6f4ef;
+}
+.dark .pap-admin > div {
+  background-color: #0c2023;
+}
+.dark .pap-admin :is(header, main) [class~="bg-white"],
+.dark .pap-admin header[class~="bg-white"],
+.dark .pap-admin dialog {
+  background-color: #142d31;
+  color: #e6f4ef;
+}
+.dark .pap-admin main :is(input, select, textarea) {
+  background-color: #10272a;
+  color: #e6f4ef;
+  border-color: #647c7b;
+}
+.dark
+  .pap-admin
+  :is(header, main)
+  :is(
+    [class~="text-slate-950"],
+    [class~="text-slate-900"],
+    [class~="text-slate-700"],
+    [class~="text-[#172c2c]"]
+  ) {
+  color: #e6f4ef;
+}
+.dark
+  .pap-admin
+  :is(header, main)
+  :is([class~="text-slate-600"], [class~="text-slate-500"]) {
+  color: #b6cfca;
+}
+.dark .pap-admin main [class~="text-[#064f50]"] {
+  color: #8ce6c9;
+}
+.dark
+  .pap-admin
+  main
+  :is([class~="bg-slate-100"], [class~="hover:bg-slate-50"]:hover) {
+  background-color: #28484b;
+}
+.dark
+  .pap-admin
+  :is(header, main)
+  :is(
+    [class~="border-slate-100"],
+    [class~="border-slate-200"],
+    [class~="border-slate-300"]
+  ) {
+  border-color: #466163;
+}

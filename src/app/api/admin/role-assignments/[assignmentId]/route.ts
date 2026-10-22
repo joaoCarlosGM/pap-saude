@@ -1,3 +1,4 @@
+import { readSessionToken } from "@/server/auth/http-auth"
 import {
   NextRequest,
   NextResponse,
@@ -52,6 +53,7 @@ export async function DELETE(
       await revokeAdminRoleAssignment({
         actorUserId:
           session.user.id,
+        actorSessionToken: readSessionToken(request) ?? undefined,
 
         assignmentId,
       })
