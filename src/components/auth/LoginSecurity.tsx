@@ -3,7 +3,11 @@ import { useRef, useState, useSyncExternalStore } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 const subscribe = () => () => {};
-export default function LoginSecurity() {
+export default function LoginSecurity({
+  initialMode = "LOGIN",
+}: {
+  initialMode?: "LOGIN" | "MFA";
+}) {
   const ready = useSyncExternalStore(
     subscribe,
     () => true,
@@ -16,7 +20,7 @@ export default function LoginSecurity() {
     [password, setPassword] = useState(""),
     [newPassword, setNewPassword] = useState(""),
     [code, setCode] = useState(""),
-    [mode, setMode] = useState<"LOGIN" | "MFA" | "CHANGE">("LOGIN"),
+    [mode, setMode] = useState<"LOGIN" | "MFA" | "CHANGE">(initialMode),
     [error, setError] = useState("");
   const submit = async () => {
     if (lock.current) return;
