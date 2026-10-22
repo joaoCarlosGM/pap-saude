@@ -1,7 +1,8 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import FirstAccessWizard from "@/components/security/FirstAccessWizard";
+import Link from "next/link";
+import AccountRecovery from "@/components/security/AccountRecovery";
 import {
   securityRequest,
   type SecurityPosture,
@@ -49,8 +50,11 @@ export default function MySecurityClient() {
   }
   return (
     <>
-      <FirstAccessWizard embedded />
-      <section className="ob" data-theme="auto">
+      <section
+        className={`ob account-security ${data?.onboarding.profile?.canAccessAdmin ? "account-security--admin" : ""}`}
+        data-theme="auto"
+        aria-label="Gestão da conta"
+      >
         <div className="ob-card mx-auto max-w-3xl ob-stack">
           <h1 className="text-2xl font-semibold">Segurança da minha conta</h1>
           <p>
@@ -112,7 +116,29 @@ export default function MySecurityClient() {
               Encerrar todas as sessões
             </button>
           </form>
-          <h2>Fatores e recuperação</h2>
+          <h2>Autenticador e recuperação</h2>
+          <p>
+            {data
+              ? data.onboarding.active
+                ? "MFA ativo. Seu autenticador atual foi preservado."
+                : "MFA ainda não ativado. Configure-o na rota exclusiva de primeiros passos."
+              : "Carregando estado de segurança…"}
+          </p>
+          {data && !data.onboarding.active && (
+            <Link className="ob-primary" href="/primeiros-passos">
+              Configurar autenticador
+            </Link>
+          )}
+          {data?.onboarding.active && (
+            <AccountRecovery
+              onRotated={async () => {
+                setData(await securityRequest());
+              }}
+            />
+          )}
+          <Link className="ob-link" href="/ajuda/seguranca">
+            Ajuda / Refazer tutorial
+          </Link>
           <p>
             Fatores ativos:{" "}
             {data?.factors.filter((f) => f.status === "ACTIVE").length ?? 0};

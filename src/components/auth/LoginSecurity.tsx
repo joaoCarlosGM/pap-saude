@@ -1,6 +1,7 @@
 "use client";
 import { useRef, useState, useSyncExternalStore } from "react";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 const subscribe = () => () => {};
 export default function LoginSecurity() {
   const ready = useSyncExternalStore(
@@ -83,10 +84,27 @@ export default function LoginSecurity() {
     }
   };
   return (
-    <main
-      className="ob flex min-h-screen items-center justify-center"
-      data-theme="auto"
-    >
+    <main className="ob account-login" data-theme="auto">
+      <aside
+        className="account-login-art"
+        aria-label="Cuidado e tecnologia PAP Saúde"
+      >
+        <p className="ob-eyebrow">PAP SAÚDE</p>
+        <h2>
+          Cuidado conectado.
+          <br />
+          Acesso protegido.
+        </h2>
+        <p>Um ambiente de confiança para quem cuida da saúde.</p>
+        <Image
+          src="/illustrations/pap-login-care.svg"
+          alt="Unidade de saúde entre natureza e recursos digitais de cuidado"
+          width={1000}
+          height={720}
+          sizes="(max-width: 760px) 220px, 440px"
+          unoptimized
+        />
+      </aside>
       <form
         className="ob-card w-full max-w-md ob-stack"
         onSubmit={(e) => {

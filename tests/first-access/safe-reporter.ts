@@ -17,7 +17,7 @@ export default class SafeReporter implements Reporter {
           .replace(/https?:\/\/\S+/g, "[URL]"),
       );
       console.log(
-        error.stack?.match(/browser\.spec\.ts:\d+:\d+/g)?.join(", ") || "",
+        error.stack?.match(/[\w-]+\.spec\.ts:\d+:\d+/g)?.join(", ") || "",
       );
     }
   }

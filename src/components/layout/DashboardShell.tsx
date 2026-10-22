@@ -24,7 +24,7 @@ export default function DashboardShell({
             aria-label="Ajuda e segurança"
             className="mb-4 flex gap-4 text-sm"
           >
-            <a href="/primeiros-passos?ajuda=1">Primeiros passos / Ajuda</a>
+            <a href="/ajuda/seguranca">Ajuda de segurança</a>
             <a href="/minha-seguranca">Segurança da minha conta</a>
           </nav>
           {children}

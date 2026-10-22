@@ -1,3 +1,5 @@
+import { requireOwnPageSession } from "@/server/auth/require-page-session";
+import { redirect } from "next/navigation";
 import FirstAccessWizard from "@/components/security/FirstAccessWizard";
 export default async function FirstAccessPage({
   searchParams,
@@ -5,5 +7,8 @@ export default async function FirstAccessPage({
   searchParams: Promise<{ ajuda?: string }>;
 }) {
   const { ajuda } = await searchParams;
-  return <FirstAccessWizard help={ajuda === "1"} />;
+  // Preserve existing bookmarks while keeping help outside initial setup.
+  if (ajuda === "1") redirect("/ajuda/seguranca");
+  await requireOwnPageSession();
+  return <FirstAccessWizard />;
 }

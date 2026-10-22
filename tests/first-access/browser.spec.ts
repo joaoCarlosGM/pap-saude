@@ -263,9 +263,7 @@ for (const role of ["PAP_ADMIN", "HEALTH_UNIT_ADMIN", "PROFESSIONAL"] as const)
       role === "PROFESSIONAL" ? /\/dashboard$/ : /\/admin$/,
     );
     await page.goto("/primeiros-passos?ajuda=1");
-    await page
-      .getByRole("button", { name: "Ajuda / Refazer tutorial" })
-      .click();
+    await expect(page).toHaveURL(/\/ajuda\/seguranca$/);
     await expect(
       page.getByRole("heading", {
         name: "Ajuda: configurar e usar o autenticador",

@@ -40,15 +40,8 @@ const targets = [
   "new-login",
   "finish-onboarding",
 ];
-export default function FirstAccessWizard({
-  embedded = false,
-  help = false,
-}: {
-  embedded?: boolean;
-  help?: boolean;
-}) {
+export default function FirstAccessWizard() {
   const router = useRouter();
-  const Surface = embedded ? "section" : "main";
   const [data, setData] = useState<SecurityPosture | null>(null),
     [step, setStep] = useState(0),
     [error, setError] = useState("");
@@ -57,7 +50,6 @@ export default function FirstAccessWizard({
     [enrollment, setEnrollment] = useState<Enrollment | null>(null),
     [codes, setCodes] = useState<string[]>([]);
   const [paused, setPaused] = useState(false),
-    [review, setReview] = useState(false),
     [busy, setBusy] = useState(false),
     [restart, setRestart] = useState(false),
     [theme, setTheme] = useState("auto");
@@ -78,13 +70,11 @@ export default function FirstAccessWizard({
           progress?.status === "COMPLETED" &&
           (!posture.onboarding.mfaRequired || posture.onboarding.verified)
         ) {
-          if (!embedded && !help) {
-            router.replace(
-              posture.onboarding.profile?.canAccessAdmin
-                ? "/admin"
-                : "/dashboard",
-            );
-          }
+          router.replace(
+            posture.onboarding.profile?.canAccessAdmin
+              ? "/admin"
+              : "/dashboard",
+          );
           setPaused(true);
           return;
         }
@@ -110,7 +100,7 @@ export default function FirstAccessWizard({
       live = false;
       window.removeEventListener("focus", focus);
     };
-  }, [refresh, router, embedded, help]);
+  }, [refresh, router]);
   async function perform(work: () => Promise<void>) {
     if (lock.current) return;
     lock.current = true;
@@ -149,7 +139,11 @@ export default function FirstAccessWizard({
     )
       ? enrollment
       : null;
-  const completed = data?.onboarding.progress?.status === "COMPLETED";
+  const completed = !!(
+    data &&
+    data.onboarding.progress?.status === "COMPLETED" &&
+    (!data.onboarding.mfaRequired || data.onboarding.verified)
+  );
   const destination = data?.onboarding.profile?.canAccessAdmin
     ? "/admin"
     : "/dashboard";
@@ -166,7 +160,7 @@ export default function FirstAccessWizard({
     );
   }
   return (
-    <Surface
+    <main
       className="ob"
       data-theme={theme}
       onKeyDown={(e) => {
@@ -263,29 +257,9 @@ export default function FirstAccessWizard({
                       Retomar configuração
                     </button>
                   )}
-                  {completed && (
-                    <button
-                      className="ob-secondary"
-                      onClick={() => {
-                        setReview(true);
-                        setPaused(false);
-                        setStep(0);
-                      }}
-                    >
-                      Ajuda / Refazer tutorial
-                    </button>
-                  )}
-                  {completed && data.onboarding.active && (
-                    <button
-                      className="ob-secondary"
-                      onClick={() => {
-                        setPaused(false);
-                        setStep(5);
-                      }}
-                    >
-                      Gerenciar recuperação
-                    </button>
-                  )}
+                  <a className="ob-secondary" href="/ajuda/seguranca">
+                    Ajuda / Refazer tutorial
+                  </a>
                   {(!data.onboarding.mfaRequired ||
                     data.onboarding.verified) && (
                     <a className="ob-primary" href={destination}>
@@ -293,32 +267,6 @@ export default function FirstAccessWizard({
                     </a>
                   )}
                   <a href="/minha-seguranca">Segurança da minha conta</a>
-                </div>
-              ) : review ? (
-                <div className="ob-stack">
-                  <h2>Ajuda: configurar e usar o autenticador</h2>
-                  <p>
-                    Na configuração inicial, leia o QR Code no app e confirme os
-                    seis dígitos. Guarde os códigos de recuperação e depois faça
-                    um novo login.
-                  </p>
-                  <p>
-                    O código muda a cada 30 segundos. Sincronize os relógios
-                    automaticamente. Um código de recuperação é de uso único.
-                  </p>
-                  <p>
-                    Para sua segurança, este tutorial não mostra nem substitui a
-                    chave de um fator ativo.
-                  </p>
-                  <button
-                    className="ob-primary"
-                    onClick={() => {
-                      setReview(false);
-                      setPaused(true);
-                    }}
-                  >
-                    Concluir ajuda
-                  </button>
                 </div>
               ) : (
                 <>
@@ -708,11 +656,6 @@ export default function FirstAccessWizard({
           )}
         </section>
       </div>
-      {embedded && (
-        <p className="ob-footnote">
-          Seus controles de conta continuam disponíveis abaixo.
-        </p>
-      )}
-    </Surface>
+    </main>
   );
 }
