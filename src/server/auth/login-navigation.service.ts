@@ -1,4 +1,6 @@
 import { PERMISSIONS } from "@/server/iam/permissions";
+import { accessDestination } from "@/lib/auth/access-destination";
+import { ownAccessStatus } from "@/server/access-invitations/access-invitation.service";
 import { firstAccessState } from "./first-access.service";
 import { loadMfaChallenge } from "./mfa-challenge.service";
 import {
@@ -18,7 +20,7 @@ type LoginNavigation =
   | { view: "LOGIN" | "MFA" | "RESTRICTED" }
   | {
       view: "REDIRECT";
-      destination: "/admin" | "/dashboard" | "/primeiros-passos";
+      destination: "/admin" | "/dashboard" | "/primeiros-passos" | "/comercial" | "/aguardando-autorizacao";
     };
 
 // Read-only navigation, never an access grant. IAM/MFA guards still protect
@@ -60,6 +62,8 @@ export async function resolveLoginNavigation(
 
   const state = await firstAccessState(session.user.id, session.session.id);
   const profile = state.profile;
+  if (accessDestination(profile) === "/comercial")
+    return { view: "REDIRECT", destination: "/comercial" };
   // Effective permissions already intersect the canonical role catalogue,
   // persisted grants, active memberships and available organizations.
   if (
@@ -67,7 +71,9 @@ export async function resolveLoginNavigation(
     (!profile.canAccessAdmin &&
       !profile.permissions.includes(PERMISSIONS.PATIENT_READ))
   )
-    return { view: "RESTRICTED" };
+    return await ownAccessStatus(session.user.id)
+      ? { view: "REDIRECT", destination: "/aguardando-autorizacao" }
+      : { view: "RESTRICTED" };
 
   if (
     state.progress?.status !== "COMPLETED" ||

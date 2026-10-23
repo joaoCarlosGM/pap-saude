@@ -38,6 +38,10 @@ export async function requireInstitutionalInvitationTarget(
   normalizedEmail: string,
   client: Prisma.TransactionClient = db,
 ) {
+  // C consent/approval cannot be bypassed with an old institutional bearer link.
+  if (await client.accessInvitation.count({ where: {
+    email: normalizedEmail.toLowerCase(), OR: [{ status: "PENDING_ASSIGNMENT" }, { status: "PENDING_ACCEPTANCE", expiresAt: { gt: new Date() } }],
+  } })) throw new AccessDeniedError();
   const profile = await getEffectiveAccessProfile(actorUserId, client);
   const full = profile?.roles.some(
     (r) =>

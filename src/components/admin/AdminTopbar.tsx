@@ -53,6 +53,7 @@ export default function AdminTopbar({
       </div>
 
       <div className="flex shrink-0 items-center gap-1 sm:gap-2">
+        <a href="/notificacoes" className="rounded-lg px-2 py-3 text-sm underline" aria-label="Minhas notificações">Notificações</a>
         <button
           type="button"
           aria-label="Ajuda"

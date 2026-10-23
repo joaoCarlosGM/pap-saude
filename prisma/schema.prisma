@@ -240,6 +240,10 @@ model User {
   sentInvitations       UserInvitation[]         @relation("InvitationSender")
   receivedInvitations   UserInvitation[]         @relation("InvitationUser")
   onboardingProgress    UserOnboardingProgress[]
+  accessInvitations     AccessInvitation[] @relation("AccessRecipient")
+  sentAccessInvitations AccessInvitation[] @relation("AccessSender")
+  accessDecisions       AccessInvitation[] @relation("AccessReviewer")
+  notifications         UserNotification[]
 
   submittedFeedback ProductFeedback[] @relation("ProductFeedbackActor")
   resolvedFeedback  ProductFeedback[] @relation("ProductFeedbackResolver")
@@ -353,6 +357,68 @@ model UserInvitation {
   @@map("user_invitations")
 }
 
+// Independent from legacy institutional acceptance: consent never grants IAM.
+enum AccessInvitationStatus {
+  PENDING_ACCEPTANCE
+  PENDING_ASSIGNMENT
+  ACTIVE
+  REJECTED
+  EXPIRED
+  REVOKED
+}
+
+model AccessInvitation {
+  id               String @id @default(uuid())
+  email            String
+  displayName      String
+  proposedRoleKey  String
+  status           AccessInvitationStatus @default(PENDING_ACCEPTANCE)
+  activeSlot       Int? @default(1)
+  tokenHash        String? @unique
+  tokenVersion     Int @default(1)
+  expiresAt        DateTime
+  acceptedAt       DateTime?
+  decidedAt        DateTime?
+  decisionReason   String?
+  revokedAt        DateTime?
+  deliveryStatus   String @default("PENDING")
+  userId           String?
+  invitedByUserId  String
+  reviewedByUserId String?
+  assignmentId     String? @unique
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  user       User? @relation("AccessRecipient", fields: [userId], references: [id], onDelete: Restrict)
+  invitedBy  User @relation("AccessSender", fields: [invitedByUserId], references: [id], onDelete: Restrict)
+  reviewedBy User? @relation("AccessReviewer", fields: [reviewedByUserId], references: [id], onDelete: Restrict)
+  assignment RoleAssignment? @relation(fields: [assignmentId], references: [id], onDelete: SetNull)
+  notifications UserNotification[]
+
+  @@unique([email, activeSlot])
+  @@index([invitedByUserId, status, createdAt])
+  @@index([userId, createdAt])
+  @@index([status, expiresAt])
+  @@map("access_invitations")
+}
+
+model UserNotification {
+  id           String @id @default(uuid())
+  userId       String
+  invitationId String
+  kind         String
+  dedupeKey    String @unique
+  readAt       DateTime?
+  emailStatus  String @default("PENDING")
+  createdAt    DateTime @default(now())
+
+  user       User @relation(fields: [userId], references: [id], onDelete: Restrict)
+  invitation AccessInvitation @relation(fields: [invitationId], references: [id], onDelete: Restrict)
+
+  @@index([userId, createdAt])
+  @@map("user_notifications")
+}
+
 model OrganizationCandidate {
   id                      String                      @id @default(uuid())
   type                    OrganizationType
@@ -450,6 +516,7 @@ model RoleAssignment {
   user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
   role         Role          @relation(fields: [roleId], references: [id], onDelete: Cascade)
   organization Organization? @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  accessInvitation AccessInvitation?
 
   @@unique([userId, roleId, organizationId])
   @@index([userId, organizationId])

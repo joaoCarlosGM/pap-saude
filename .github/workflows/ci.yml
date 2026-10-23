@@ -51,7 +51,7 @@ jobs:
 
       - name: Start disposable PostgreSQL
         run: |
-          docker run --rm -d --name pap_saude_db --label pap.disposable=f0410 \
+          docker run --rm -d --name pap_saude_db --label pap.disposable=f0410 --label pap.mission=ci-f0410 \
             -e POSTGRES_USER=pap_user \
             -e POSTGRES_PASSWORD=pap_password \
             -e POSTGRES_DB=pap_saude \
@@ -116,6 +116,9 @@ jobs:
 
       - name: Mission 04 delegated IAM, legacy upgrade and clinical page boundaries
         run: npm run test:mission04:b:browser
+
+      - name: Mission 04 global invitations, authorization queue and notifications
+        run: npm run test:mission04:c:browser
 
       - name: PostgreSQL runtime and migrator separation
         run: bash scripts/test-f04-role-separation.sh

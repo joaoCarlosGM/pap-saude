@@ -61,47 +61,35 @@ export async function sendInvitationEmail(
   const expected = invitationBaseUrl();
   if (new URL(input.invitationUrl).origin !== expected)
     throw new EmailDeliveryError();
+  return sendPlatformEmail({ to: input.to, ...invitationTemplate(input),
+    messageId: input.invitationId ? `institutional/${input.invitationId}` : undefined,
+    idempotencyKey: input.invitationId ? `pap-invitation/${input.invitationId}` : undefined });
+}
+
+/** Shared provider adapter. C explicitly requests local-demo only; D owns external homologation. */
+export async function sendPlatformEmail(input: { to: string; subject: string; text: string; html: string; messageId?: string; eventTime?: string; idempotencyKey?: string; localDemoOnly?: boolean }): Promise<EmailDeliveryResult> {
+  if (input.localDemoOnly && process.env.PAP_EMAIL_PROVIDER !== "local-demo")
+    throw new EmailDeliveryError();
   if (process.env.PAP_EMAIL_PROVIDER === "local-demo") {
-    try {
-      await captureLocalDemoMail({
-        to: input.to,
-        ...invitationTemplate(input),
-      });
-    } catch {
-      throw new EmailDeliveryError();
-    }
+    try { await captureLocalDemoMail(input); } catch { throw new EmailDeliveryError(); }
     return { mode: "DEVELOPMENT" };
   }
   if (process.env.PAP_EMAIL_PROVIDER?.trim().toLowerCase() !== "resend") {
     if (process.env.NODE_ENV === "production") throw new EmailDeliveryError();
     return { mode: "DEVELOPMENT" };
   }
-  const apiKey = process.env.RESEND_API_KEY?.trim(),
-    from = process.env.PAP_EMAIL_FROM?.trim();
+  const apiKey = process.env.RESEND_API_KEY?.trim(), from = process.env.PAP_EMAIL_FROM?.trim();
   if (!apiKey || !from || /[\r\n]/.test(from)) throw new EmailDeliveryError();
   try {
     const response = await fetch("https://api.resend.com/emails", {
-      method: "POST",
-      signal: AbortSignal.timeout(10000),
-      headers: {
-        Authorization: `Bearer ${apiKey}`,
-        "Content-Type": "application/json",
-        ...(input.invitationId
-          ? { "Idempotency-Key": `pap-invitation/${input.invitationId}` }
-          : {}),
-      },
-      body: JSON.stringify({
-        from,
-        to: [input.to],
-        ...invitationTemplate(input),
-      }),
+      method: "POST", signal: AbortSignal.timeout(10000),
+      headers: { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json",
+        ...(input.idempotencyKey || input.messageId ? { "Idempotency-Key": input.idempotencyKey || `pap-mail/${input.messageId}` } : {}) },
+      body: JSON.stringify({ from, to: [input.to], subject: input.subject, text: input.text, html: input.html }),
     });
     if (!response.ok) throw new Error();
     const data = await response.json();
-    if (typeof data.id !== "string" || !/^[a-zA-Z0-9_-]{1,128}$/.test(data.id))
-      throw new Error();
-    return { mode: "RESEND", providerMessageId: data.id }; // Accepted by provider, NOT inbox delivery.
-  } catch {
-    throw new EmailDeliveryError();
-  }
+    if (typeof data.id !== "string" || !/^[a-zA-Z0-9_-]{1,128}$/.test(data.id)) throw new Error();
+    return { mode: "RESEND", providerMessageId: data.id };
+  } catch { throw new EmailDeliveryError(); }
 }

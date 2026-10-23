@@ -1,0 +1,41 @@
+{
+  "environment": "single-run local Next dev; diagnostic, not a production p75 or SLA",
+  "rows": [
+    {
+      "width": 1440,
+      "colorScheme": "light",
+      "lcpMs": 684,
+      "cls": 0
+    },
+    {
+      "width": 1440,
+      "colorScheme": "dark",
+      "lcpMs": 360,
+      "cls": 0
+    },
+    {
+      "width": 768,
+      "colorScheme": "light",
+      "lcpMs": 236,
+      "cls": 0
+    },
+    {
+      "width": 768,
+      "colorScheme": "dark",
+      "lcpMs": 256,
+      "cls": 0
+    },
+    {
+      "width": 320,
+      "colorScheme": "light",
+      "lcpMs": 232,
+      "cls": 0
+    },
+    {
+      "width": 320,
+      "colorScheme": "dark",
+      "lcpMs": 240,
+      "cls": 0
+    }
+  ]
+}

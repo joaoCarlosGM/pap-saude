@@ -126,6 +126,12 @@ const navigation: NavigationItem[] = [
     icon: Users,
     requiredAny: ["user.invite", "institution.invite"],
   },
+  {
+    label: "Convites e autorizações",
+    href: "/admin/convites-globais",
+    icon: Users,
+    requiredAny: ["institution.invite"],
+  },
 ];
 
 export default function AdminSidebar({
@@ -188,6 +194,7 @@ export default function AdminSidebar({
           "/admin/organizacoes",
           "/admin/usuarios",
           "/admin/convites",
+          "/admin/convites-globais",
           "/admin/acessos",
         ].includes(i.href),
       ),

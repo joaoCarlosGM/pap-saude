@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { test } from "node:test";
 import { readdirSync, readFileSync } from "node:fs";
 import { execFileSync } from "node:child_process";
-import { randomUUID } from "node:crypto";
+import { createHash, randomUUID } from "node:crypto";
 import pg from "pg";
 import * as OTPAuth from "otpauth";
 
@@ -83,9 +83,6 @@ test("forward-only upgrade of populated Beta preserves identities/password/TOTP/
       "../first-access/login-fixtures"
     );
     const { fixture } = await import("../first-access/fixtures");
-    const { createProfessionalInvitation } = await import(
-      "../../src/server/invitations/invitation.service"
-    );
     const f = await verifiedLoginFixture();
     const professional = await fixture("PROFESSIONAL");
     const candidate = await db.organizationCandidate.create({
@@ -103,12 +100,12 @@ test("forward-only upgrade of populated Beta preserves identities/password/TOTP/
     await db.organizationRequest.create({
       data: { candidateId: candidate.id, status: "RESOLVED" },
     });
-    await createProfessionalInvitation({
-      invitedByUserId: f.user.id,
-      organizationId: f.unit.id,
-      email: `${randomUUID()}@synthetic.invalid`,
-      displayName: "Convite legado",
-    });
+    // Construct pre-upgrade data without invoking post-C application guards:
+    // the legacy schema deliberately has no access_invitations table yet.
+    const legacyUser = await db.user.create({ data: { email: `${randomUUID()}@synthetic.invalid`, displayName: "Convite legado" } });
+    await db.membership.create({ data: { userId: legacyUser.id, organizationId: f.unit.id, status: "INVITED" } });
+    await db.userInvitation.create({ data: { invitedByUserId: f.user.id, userId: legacyUser.id, organizationId: f.unit.id,
+      email: legacyUser.email, displayName: legacyUser.displayName, roleKey: "PROFESSIONAL", tokenHash: createHash("sha256").update(randomUUID()).digest("hex"), expiresAt: new Date(Date.now() + 86400000), deliveryStatus: "DEVELOPMENT" } });
     const beforeAdmin = await navigationFingerprint(f.user.id),
       beforeProfessional = await navigationFingerprint(professional.user.id);
     const snapshot = async () =>

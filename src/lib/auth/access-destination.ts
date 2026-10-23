@@ -11,5 +11,7 @@ export function accessDestination(profile: EffectiveAccessProfile | null) {
     )
   )
     return "/dashboard";
+  if (profile?.roles.some(r => r.key === "COMMERCIAL" && r.scope === "GLOBAL" && r.permissions.includes("commercial.read")))
+    return "/comercial";
   return "/login";
 }

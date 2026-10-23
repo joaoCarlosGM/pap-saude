@@ -353,7 +353,9 @@ export default function AccessAdminClient() {
         body?.error ===
           "ACTIVE_MEMBERSHIP_REQUIRED"
           ? "O usuário precisa possuir membership ativo na organização."
-          : "Não foi possível atribuir o papel.",
+          : body?.error === "PENDING_ACCESS_AUTHORIZATION"
+            ? "Este usuário precisa concluir o fluxo em Convites e autorizações antes de receber um perfil."
+            : "Não foi possível atribuir o papel.",
       )
 
       return

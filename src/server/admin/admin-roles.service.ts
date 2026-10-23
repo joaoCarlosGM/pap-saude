@@ -1,3 +1,4 @@
+import { createAccessNotification } from "@/server/notifications/notification.service";
 import { requireAdminActor } from "./admin-session.service"
 import {
   MembershipStatus,
@@ -42,6 +43,7 @@ import {
   ConcurrentAdminRoleMutationError,
   LastPapAdminError,
   UnsupportedAdminRoleError,
+  PendingAccessAuthorizationError,
 } from "./admin-role.errors"
 
 function isSystemRoleKey(
@@ -282,7 +284,7 @@ export async function getAdminRoleOverview(
 }
 
 /** Called inside the mutation transaction: revocation cannot leave a stale authority snapshot. */
-async function requireRoleMutation(
+export async function requireRoleMutation(
   actorUserId: string,
   token: string | undefined,
   targetUserId: string,
@@ -349,7 +351,17 @@ export async function createAdminRoleAssignment(input: {
     (definition.scope !== "GLOBAL" && !input.organizationId)
   )
     throw new UnsupportedAdminRoleError();
-  return roleMutationTransaction(async (tx) => {
+  return roleMutationTransaction(tx => createAdminRoleAssignmentInTransaction(input, tx));
+}
+
+export async function createAdminRoleAssignmentInTransaction(input: Parameters<typeof createAdminRoleAssignment>[0], tx: Prisma.TransactionClient) {
+  if (!isSystemRoleKey(input.roleKey)) throw new UnsupportedAdminRoleError();
+  const definition = getSystemRoleDefinition(input.roleKey)!;
+  if (
+    (definition.scope === "GLOBAL" && input.organizationId != null) ||
+    (definition.scope !== "GLOBAL" && !input.organizationId)
+  )
+    throw new UnsupportedAdminRoleError();
     await requireRoleMutation(
       input.actorUserId,
       input.actorSessionToken,
@@ -360,9 +372,12 @@ export async function createAdminRoleAssignment(input: {
     );
     const target = await tx.user.findUnique({
       where: { id: input.targetUserId },
-      select: { isActive: true },
+      select: { isActive: true, email: true },
     });
     if (!target?.isActive) throw new UnsupportedAdminRoleError();
+    if (await tx.accessInvitation.count({ where: {
+      email: target.email, OR: [{ status: "PENDING_ASSIGNMENT" }, { status: "PENDING_ACCEPTANCE", expiresAt: { gt: new Date() } }],
+    } })) throw new PendingAccessAuthorizationError();
     if (definition.scope !== "GLOBAL") {
       const member = await tx.membership.findUnique({
         where: {
@@ -408,7 +423,6 @@ export async function createAdminRoleAssignment(input: {
         },
       });
     return assignment;
-  });
 }
 
 export async function revokeAdminRoleAssignment(input: {
@@ -416,7 +430,10 @@ export async function revokeAdminRoleAssignment(input: {
   actorSessionToken?: string;
   assignmentId: string;
 }) {
-  return roleMutationTransaction(async (tx) => {
+  return roleMutationTransaction(tx => revokeAdminRoleAssignmentInTransaction(input, tx));
+}
+
+export async function revokeAdminRoleAssignmentInTransaction(input: Parameters<typeof revokeAdminRoleAssignment>[0], tx: Prisma.TransactionClient) {
     const current = await tx.roleAssignment.findUnique({
       where: { id: input.assignmentId },
       include: { role: true, user: true },
@@ -451,6 +468,15 @@ export async function revokeAdminRoleAssignment(input: {
       });
       if (count <= 1) throw new LastPapAdminError();
     }
+    // A legitimate revocation through an old endpoint also closes C's state.
+    const accessInvitations = await tx.accessInvitation.findMany({ where: { assignmentId: current.id, status: "ACTIVE" } });
+    for (const invitation of accessInvitations) {
+      await tx.accessInvitation.update({ where: { id: invitation.id }, data: { status: "REVOKED", activeSlot: null, revokedAt: new Date(), assignmentId: null } });
+      await tx.userNotification.updateMany({ where: { invitationId: invitation.id, kind: "ACCESS_APPROVED", emailStatus: { in: ["PENDING", "FAILED"] } }, data: { emailStatus: "NOT_REQUESTED" } });
+      if (invitation.userId) await createAccessNotification(tx, invitation.userId, invitation.id, "ACCESS_REVOKED", input.actorUserId);
+      await tx.auditEvent.create({ data: { actorUserId: input.actorUserId, action: "ACCESS_INVITATION_REVOKED", resourceType: "INVITATION", resourceId: invitation.id,
+        after: { id: invitation.id, status: "REVOKED", userId: invitation.userId } } });
+    }
     const deleted = await tx.roleAssignment.deleteMany({
       where: { id: current.id },
     });
@@ -470,5 +496,4 @@ export async function revokeAdminRoleAssignment(input: {
       },
     });
     return { revoked: true, assignmentId: current.id };
-  });
 }

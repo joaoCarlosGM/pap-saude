@@ -1,6 +1,9 @@
 import { requireOwnPageSession } from "@/server/auth/require-page-session";
 import { redirect } from "next/navigation";
 import FirstAccessWizard from "@/components/security/FirstAccessWizard";
+import { getEffectiveAccessProfile } from "@/server/iam/effective-access-profile.service";
+import { ownAccessStatus } from "@/server/access-invitations/access-invitation.service";
+import { accessDestination } from "@/lib/auth/access-destination";
 export default async function FirstAccessPage({
   searchParams,
 }: {
@@ -9,6 +12,10 @@ export default async function FirstAccessPage({
   const { ajuda } = await searchParams;
   // Preserve existing bookmarks while keeping help outside initial setup.
   if (ajuda === "1") redirect("/ajuda/seguranca");
-  await requireOwnPageSession();
+  const session = await requireOwnPageSession();
+  const profile = await getEffectiveAccessProfile(session.user.id);
+  if (accessDestination(profile) === "/comercial") redirect("/comercial");
+  if (accessDestination(profile) === "/login" && await ownAccessStatus(session.user.id))
+    redirect("/aguardando-autorizacao");
   return <FirstAccessWizard />;
 }

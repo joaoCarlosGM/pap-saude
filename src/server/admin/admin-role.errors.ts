@@ -48,3 +48,7 @@ export class ConcurrentAdminRoleMutationError
     )
   }
 }
+
+export class PendingAccessAuthorizationError extends AdminRoleError {
+  constructor() { super("PENDING_ACCESS_AUTHORIZATION", 409); }
+}

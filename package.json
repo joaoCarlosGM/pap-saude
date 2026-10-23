@@ -83,7 +83,9 @@
     "test:first-access": "bash scripts/test-first-access.sh",
     "test:first-access:browser": "bash scripts/test-first-access.sh --browser",
     "test:mission04:b": "bash scripts/test-mission04-b.sh",
-    "test:mission04:b:browser": "bash scripts/test-mission04-b.sh --browser"
+    "test:mission04:b:browser": "bash scripts/test-mission04-b.sh --browser",
+    "test:mission04:c": "bash scripts/test-mission04-c.sh",
+    "test:mission04:c:browser": "bash scripts/test-mission04-c.sh --browser"
   },
   "dependencies": {
     "@capacitor/android": "^8.5.2",

@@ -1,0 +1,674 @@
+{
+  "base": "481d6a3dccafbd626355648ee52a19f8512434f3",
+  "branch": "feature/ux-iam-convites-vitrine-email",
+  "generatedAt": "2026-10-23T09:43:07.880292-03:00",
+  "environment": "Node 22.23.3, npm 11.9.0, Chromium /usr/bin/chromium; disposable PostgreSQL 16; Docker local only",
+  "results": [
+    {
+      "name": "c",
+      "command": "npm run test:mission04:c:browser",
+      "exitCode": 0,
+      "result": "PASS",
+      "seconds": 177.61,
+      "tapTests": 41,
+      "tapPass": 41,
+      "tapFail": 0,
+      "browserPass": 8
+    },
+    {
+      "name": "b",
+      "command": "npm run test:mission04:b:browser",
+      "exitCode": 0,
+      "result": "PASS",
+      "seconds": 88.94,
+      "tapTests": 28,
+      "tapPass": 28,
+      "tapFail": 0,
+      "browserPass": 5
+    },
+    {
+      "name": "auth",
+      "command": "npm run test:auth",
+      "exitCode": 0,
+      "result": "PASS",
+      "seconds": 264.04,
+      "tapTests": 202,
+      "tapPass": 202,
+      "tapFail": 0,
+      "browserPass": 0
+    },
+    {
+      "name": "f04",
+      "command": "npm run audit:f04:operations",
+      "exitCode": 0,
+      "result": "PASS",
+      "seconds": 180.32,
+      "tapTests": 78,
+      "tapPass": 78,
+      "tapFail": 0,
+      "browserPass": 0
+    },
+    {
+      "name": "beta1",
+      "command": "npm run test:admin:beta1",
+      "exitCode": 0,
+      "result": "PASS",
+      "seconds": 46.03,
+      "tapTests": 29,
+      "tapPass": 29,
+      "tapFail": 0,
+      "browserPass": 0
+    },
+    {
+      "name": "first-access",
+      "command": "npm run test:first-access:browser",
+      "exitCode": 0,
+      "result": "PASS",
+      "seconds": 117.58,
+      "tapTests": 21,
+      "tapPass": 21,
+      "tapFail": 0,
+      "browserPass": 15
+    },
+    {
+      "name": "f03",
+      "command": "npm run test:f03:smart:force",
+      "exitCode": 0,
+      "result": "PASS",
+      "seconds": 317.92,
+      "tapTests": 203,
+      "tapPass": 203,
+      "tapFail": 0,
+      "browserPass": 0
+    },
+    {
+      "name": "typescript",
+      "command": "npx tsc --noEmit",
+      "exitCode": 0,
+      "result": "PASS",
+      "seconds": 5.02,
+      "tapTests": 0,
+      "tapPass": 0,
+      "tapFail": 0,
+      "browserPass": 0
+    },
+    {
+      "name": "lint",
+      "command": "npm run lint",
+      "exitCode": 0,
+      "result": "PASS",
+      "seconds": 19.83,
+      "tapTests": 0,
+      "tapPass": 0,
+      "tapFail": 0,
+      "browserPass": 0
+    },
+    {
+      "name": "build",
+      "command": "npm run build",
+      "exitCode": 0,
+      "result": "PASS",
+      "seconds": 11.61,
+      "tapTests": 0,
+      "tapPass": 0,
+      "tapFail": 0,
+      "browserPass": 0
+    },
+    {
+      "name": "ci-guards",
+      "command": "node scripts/security/guard-f04-ci-workflow.mjs && node --test tests/security/f04-ci-workflow.test.mjs tests/security/f04-migration-preflight.test.mjs tests/local/policy.test.mjs",
+      "exitCode": 0,
+      "result": "PASS",
+      "seconds": 3.59,
+      "tapTests": 7,
+      "tapPass": 7,
+      "tapFail": 0,
+      "browserPass": 0
+    },
+    {
+      "name": "docker-web-build",
+      "command": "docker build --add-host \"proxy:$F04_DOCKER_PROXY_IP\" --build-arg HTTP_PROXY --build-arg HTTPS_PROXY --build-arg NO_PROXY --secret \"id=build_ca,src=$NODE_EXTRA_CA_CERTS\" --target runner -t pap-saude:c-audit-01 .",
+      "result": "PASS",
+      "exitCode": 0,
+      "seconds": 111
+    },
+    {
+      "name": "docker-web-functional",
+      "command": "bash scripts/test-f04-web-image.sh pap-saude:c-audit-01 pap-saude-migrator:m04-c",
+      "result": "PASS",
+      "exitCode": 0,
+      "seconds": 44
+    },
+    {
+      "name": "trivy",
+      "command": "bash scripts/security/scan-f04-images.sh pap-saude:c-audit-01 pap-saude-migrator:m04-c",
+      "result": "PASS",
+      "exitCode": 0,
+      "seconds": 43
+    },
+    {
+      "name": "audit-production",
+      "command": "npm audit --omit=dev --audit-level=high --json",
+      "exitCode": 0,
+      "result": "PASS",
+      "vulnerabilities": {
+        "info": 0,
+        "low": 0,
+        "moderate": 0,
+        "high": 0,
+        "critical": 0,
+        "total": 0
+      }
+    },
+    {
+      "name": "audit-migrator",
+      "command": "npm audit --prefix docker/migrator --include=dev --audit-level=high --json",
+      "exitCode": 0,
+      "result": "PASS",
+      "vulnerabilities": {
+        "info": 0,
+        "low": 0,
+        "moderate": 0,
+        "high": 0,
+        "critical": 0,
+        "total": 0
+      }
+    },
+    {
+      "name": "audit-complete",
+      "command": "npm audit --include=dev --json",
+      "exitCode": 1,
+      "result": "FAIL",
+      "vulnerabilities": {
+        "info": 0,
+        "low": 0,
+        "moderate": 1,
+        "high": 9,
+        "critical": 0,
+        "total": 10
+      }
+    },
+    {
+      "name": "CI remoto C-AUDIT-01",
+      "command": "CI remoto C-AUDIT-01",
+      "result": "NOT RUN",
+      "exitCode": null,
+      "reason": "Sem staging/commit/push; aguarda aprova\u00e7\u00e3o"
+    },
+    {
+      "name": "Laborat\u00f3rio manual",
+      "command": "Laborat\u00f3rio manual",
+      "result": "NOT RUN",
+      "exitCode": null,
+      "reason": "Acesso e altera\u00e7\u00e3o proibidos; apenas recursos sint\u00e9ticos descart\u00e1veis"
+    },
+    {
+      "name": "E-mail externo",
+      "command": "E-mail externo",
+      "result": "NOT RUN",
+      "exitCode": null,
+      "reason": "Slice D n\u00e3o iniciado; nenhuma entrega real"
+    },
+    {
+      "name": "Browser C em produ\u00e7\u00e3o",
+      "command": "Browser C em produ\u00e7\u00e3o",
+      "result": "NOT RUN",
+      "exitCode": null,
+      "reason": "Playwright no Next dev isolado; runner corrigido validado funcionalmente"
+    },
+    {
+      "name": "local-dev smoke",
+      "command": "local-dev smoke",
+      "result": "NOT RUN",
+      "exitCode": null,
+      "reason": "N\u00e3o executar harness com nomes do laborat\u00f3rio protegido; testes puros de pol\u00edtica passaram"
+    }
+  ],
+  "previousValidation": {
+    "scope": "Slice C before C-AUDIT-01; historical only",
+    "generatedAt": "2026-10-23T08:39:23.862806-03:00",
+    "results": [
+      {
+        "name": "npm-ci",
+        "command": "npm ci",
+        "result": "PASS",
+        "exitCode": 0,
+        "packages": 916
+      },
+      {
+        "name": "f04",
+        "command": "npm run audit:f04:operations",
+        "result": "PASS",
+        "exitCode": 0,
+        "tapTests": 78,
+        "tapPass": 78,
+        "tapFail": 0,
+        "browserPass": 0
+      },
+      {
+        "name": "beta1-final",
+        "command": "npm run test:admin:beta1",
+        "result": "PASS",
+        "exitCode": 0,
+        "tapTests": 29,
+        "tapPass": 29,
+        "tapFail": 0,
+        "browserPass": 0
+      },
+      {
+        "name": "b",
+        "command": "npm run test:mission04:b:browser",
+        "result": "PASS",
+        "exitCode": 0,
+        "tapTests": 28,
+        "tapPass": 28,
+        "tapFail": 0,
+        "browserPass": 5
+      },
+      {
+        "name": "first-access",
+        "command": "npm run test:first-access:browser",
+        "result": "PASS",
+        "exitCode": 0,
+        "tapTests": 21,
+        "tapPass": 21,
+        "tapFail": 0,
+        "browserPass": 15
+      },
+      {
+        "name": "auth",
+        "command": "npm run test:auth",
+        "result": "PASS",
+        "exitCode": 0,
+        "tapTests": 202,
+        "tapPass": 202,
+        "tapFail": 0,
+        "browserPass": 0
+      },
+      {
+        "name": "f03",
+        "command": "npm run test:f03:smart:force",
+        "result": "PASS",
+        "exitCode": 0,
+        "tapTests": 203,
+        "tapPass": 203,
+        "tapFail": 0,
+        "browserPass": 0
+      },
+      {
+        "name": "ci-guards",
+        "command": "node scripts/security/guard-f04-ci-workflow.mjs && node --test tests/security/f04-ci-workflow.test.mjs tests/security/f04-migration-preflight.test.mjs tests/local/policy.test.mjs",
+        "result": "PASS",
+        "exitCode": 0,
+        "tapTests": 7,
+        "tapPass": 7,
+        "tapFail": 0,
+        "browserPass": 0
+      },
+      {
+        "name": "roles",
+        "command": "bash scripts/test-f04-role-separation.sh",
+        "result": "PASS",
+        "exitCode": 0,
+        "tapTests": 0,
+        "tapPass": 0,
+        "tapFail": 0,
+        "browserPass": 0
+      },
+      {
+        "name": "readiness-config",
+        "command": "bash scripts/test-f04-postgres-readiness.sh",
+        "result": "PASS",
+        "exitCode": 0,
+        "tapTests": 0,
+        "tapPass": 0,
+        "tapFail": 0,
+        "browserPass": 0
+      },
+      {
+        "name": "c-complete",
+        "command": "npm run test:mission04:c:browser",
+        "result": "PASS",
+        "exitCode": 0,
+        "tapTests": 37,
+        "tapPass": 37,
+        "tapFail": 0,
+        "browserPass": 7
+      },
+      {
+        "name": "prisma-config-fail-closed",
+        "command": "env -u DATABASE_URL npx tsx -e 'import \"./prisma.config.ts\";'",
+        "result": "PASS",
+        "exitCode": 1,
+        "expectedExitCode": 1
+      },
+      {
+        "name": "typescript-final",
+        "command": "npx tsc --noEmit",
+        "result": "PASS",
+        "exitCode": 0
+      },
+      {
+        "name": "lint-final",
+        "command": "npm run lint",
+        "result": "PASS",
+        "exitCode": 0
+      },
+      {
+        "name": "build-final",
+        "command": "npm run build",
+        "result": "PASS",
+        "exitCode": 0
+      },
+      {
+        "name": "docker-web-build",
+        "command": "docker build --add-host \"proxy:$F04_DOCKER_PROXY_IP\" --build-arg HTTP_PROXY --build-arg HTTPS_PROXY --build-arg NO_PROXY --secret \"id=build_ca,src=$NODE_EXTRA_CA_CERTS\" --target runner -t pap-saude:m04-c .",
+        "result": "PASS",
+        "exitCode": 0,
+        "seconds": 104
+      },
+      {
+        "name": "docker-migrator-build",
+        "command": "docker build --add-host \"proxy:$F04_DOCKER_PROXY_IP\" --build-arg HTTP_PROXY --build-arg HTTPS_PROXY --build-arg NO_PROXY --secret \"id=build_ca,src=$NODE_EXTRA_CA_CERTS\" --target migrator -t pap-saude-migrator:m04-c .",
+        "result": "PASS",
+        "exitCode": 0,
+        "seconds": 0
+      },
+      {
+        "name": "docker-migrator-functional",
+        "command": "bash scripts/test-f04-migrator-image.sh pap-saude-migrator:m04-c",
+        "result": "PASS",
+        "exitCode": 0,
+        "seconds": 209
+      },
+      {
+        "name": "docker-web-functional",
+        "command": "bash scripts/test-f04-web-image.sh pap-saude:m04-c pap-saude-migrator:m04-c",
+        "result": "PASS",
+        "exitCode": 0,
+        "seconds": 30
+      },
+      {
+        "name": "trivy",
+        "command": "bash scripts/security/scan-f04-images.sh pap-saude:m04-c pap-saude-migrator:m04-c",
+        "result": "PASS",
+        "exitCode": 0,
+        "seconds": 35
+      },
+      {
+        "name": "audit-production",
+        "command": "npm audit --omit=dev --audit-level=high --json",
+        "result": "PASS",
+        "exitCode": 0,
+        "vulnerabilities": {
+          "info": 0,
+          "low": 0,
+          "moderate": 0,
+          "high": 0,
+          "critical": 0,
+          "total": 0
+        }
+      },
+      {
+        "name": "audit-migrator",
+        "command": "npm audit --prefix docker/migrator --include=dev --audit-level=high --json",
+        "result": "PASS",
+        "exitCode": 0,
+        "vulnerabilities": {
+          "info": 0,
+          "low": 0,
+          "moderate": 0,
+          "high": 0,
+          "critical": 0,
+          "total": 0
+        }
+      },
+      {
+        "name": "audit-complete",
+        "command": "npm audit --include=dev --json",
+        "result": "FAIL",
+        "exitCode": 1,
+        "vulnerabilities": {
+          "info": 0,
+          "low": 0,
+          "moderate": 1,
+          "high": 9,
+          "critical": 0,
+          "total": 10
+        }
+      },
+      {
+        "name": "remote-ci-C",
+        "result": "NOT RUN",
+        "reason": "C n\u00e3o commitado/pushado; aguardando revis\u00e3o humana"
+      },
+      {
+        "name": "manual-lab",
+        "result": "NOT RUN",
+        "reason": "Preserva\u00e7\u00e3o obrigat\u00f3ria; sem acesso ao ambiente real do operador"
+      },
+      {
+        "name": "local-dev-smoke",
+        "result": "NOT RUN",
+        "reason": "N\u00e3o executar harness que usa nomes do laborat\u00f3rio manual; testes puros de pol\u00edtica passaram"
+      },
+      {
+        "name": "external-email",
+        "result": "NOT RUN",
+        "reason": "Slice D; sem envio real, DNS, VPS ou t\u00fanel"
+      },
+      {
+        "name": "production-C-browser",
+        "result": "NOT RUN",
+        "reason": "Browser C executado em Next dev isolado; runner produ\u00e7\u00e3o validado funcionalmente, sem jornada C em produ\u00e7\u00e3o"
+      }
+    ],
+    "sourceSha256": {
+      ".github/workflows/ci.yml": "3f621aec891f39aaa8f05091515d7769aa90b4af55d97bb0ea92e071ca253c2a",
+      "package.json": "6fcd932806473e36cc93a13d6cc2f4e663c884e5b835a875c9fc318e8034120f",
+      "prisma/migrations/20261022050000_mission04_global_access/migration.sql": "6a54b2473adb9f683915bd953f39238088be496e0e23cddb759e362737eb3ce0",
+      "prisma/schema.prisma": "70d36b6acfd24595a77a5a8f5abffdfeed20b31431558fc283d564ba5ec4b7dd",
+      "scripts/test-mission04-c.sh": "e015c955d9f664c5bfdc39a79fdc89fd24602d2d81531d34c653bc92bb14f288",
+      "src/app/(admin)/admin/convites-globais/page.tsx": "f9e9b1effec9ab59f3363c2e711cdca7c2f9209afc0e6443e0541c8a713c71e8",
+      "src/app/(auth)/aceitar-convite/page.tsx": "1a1e6b73761f9befd9fe8e2b6ac05734137c564b386bb8f9a75399aefa25978d",
+      "src/app/(auth)/aguardando-autorizacao/page.tsx": "6c33d9dfdfcf8b7c4150bf8e26a5b0086faa65d8b6f9fcb8affe77279cbbc700",
+      "src/app/(auth)/comercial/page.tsx": "5309e2dcc620c399edaa9ec0754779a27a77e74640ce6f8b8ae14248969329a6",
+      "src/app/(auth)/notificacoes/page.tsx": "ffbb6bbb7eb1d26dc346b2d253dac68ed62428319b22a420736906cba3f7cd9d",
+      "src/app/(auth)/primeiros-passos/page.tsx": "e57431a00907c789ff4885c7ed15905f4768bae1a589e1450aa5ca1cccdfba79",
+      "src/app/api/access-invitations/accept/route.ts": "abe9211bec639b72b75ab7be7fecef09ed5c35a8a32ed5b3c8247f543b96b866",
+      "src/app/api/account/access-status/route.ts": "992a340d6d69c7fcb821ec76bf8fa9d0de972a52e5ddf075aef9a221aa4b047a",
+      "src/app/api/account/notifications/route.ts": "c571de6f4ddef03218b70de44b6d391c1547db37f7c1e39623be90dcbfac39bc",
+      "src/app/api/admin/access-invitations/route.ts": "b1e5ac32ce55ff8b8e9b729ab54f19050969e6ef0e587625f6201a3b484698f4",
+      "src/components/access/GlobalInvitationActivation.tsx": "18b2d80abafc6b84938ef95b5e979593815034bc3083f1013adac0fa3b8bd4da",
+      "src/components/access/NotificationInbox.tsx": "7b547b4c1400658e4e6b4d32836057374bc8255c8d4ffd7ac7c8b29f1a22bea9",
+      "src/components/access/WaitingAuthorization.tsx": "d5d07bb3a672d8ce8f513756f78d9bfc98aaf2317d8d02d0b03223b9bd5c10ae",
+      "src/components/access/access.css": "d8133b587807b2608b7d125e85cc2a71952226f57cff8283e0595c091a270dae",
+      "src/components/admin/AccessAdminClient.tsx": "240858ff44a79ff2fc5a84875bd0d8f481f094a3b46b0379f6c0c564da17cef3",
+      "src/components/admin/AccessInvitationsClient.tsx": "ba138046a990e248f174a6a89306982e608800252159d1851dc516f4726dca10",
+      "src/components/admin/AdminSidebar.tsx": "410370761d1c0a68ca3093f6e6190f515b1279c5e80b7b2cb9f41d819359a7de",
+      "src/components/admin/AdminTopbar.tsx": "af438e23041c9dbbe520792fb4c7728aaac8115bada121600f5f9d8c810c2c0c",
+      "src/components/auth/LoginSecurity.tsx": "3859a2b47b24edbf164e103e54ccf0684ff5657e799d9e25163090739073c075",
+      "src/components/layout/Topbar.tsx": "ec87790997a652347822507729dce9ca5dd90275f4f12874b35fc1d5548d973a",
+      "src/lib/auth/access-destination.ts": "e751ee4c91dd7f7935a0ad838a45b7be6c832def04ff4ff7653ed986fc4b85a5",
+      "src/server/access-invitations/access-invitation-http.ts": "3febbe5fbd29327ff5bc429a724c10012c01fc6be305b552aef85cd4f40147e9",
+      "src/server/access-invitations/access-invitation-policy.ts": "3e616a9af422e592817cf680fb19e1e2a6482d0e23a1a6b52a7179c722968537",
+      "src/server/access-invitations/access-invitation.errors.ts": "82ff47e195c9e4745f898e4b6061ebc24b7cf15520fca2cbcf8f8dfade16ab6d",
+      "src/server/access-invitations/access-invitation.service.ts": "53fc80ba30456173d9a5648f9ca223f8843c209f80795f4ccda502e41e759f72",
+      "src/server/admin/admin-role.errors.ts": "f8c4785d6d2d9e5ba1ab50731764f8be41046b15aad7b4fd1e6b3acf42581734",
+      "src/server/admin/admin-roles.service.ts": "8c25b6bae193aa9e3f4208a5277cf0c0ce9838e7be0111a7710d7603084929d5",
+      "src/server/admin/institutional-invitation-policy.ts": "f942a552aef668843129300b4e0e1ec476e2b518f403b77d39bb5dd2cdae8c09",
+      "src/server/audit/admin-audit-policy.ts": "176b1139fc501c5ffba502b99e966dccdcf6d4bfc61c5fedccdde992062dde07",
+      "src/server/auth/login-navigation.service.ts": "0d6f9fe6e40191889fbb78f19551c1f17476d62a148f24dceced872ff08fc096",
+      "src/server/email/email.service.ts": "e027c11fb9a4af6306bab3f34bfb4c26b1c8b3c6abe03a187e1388e350ddbad6",
+      "src/server/email/local-demo-mail.ts": "0a817b56c34c6f8e125725b300422aba6f5fbb8f7e9f70aca7ec5dbab4eebb27",
+      "src/server/notifications/notification.service.ts": "722a24af2202772c11e96c970b26c4bde01922d88853356ea253f41662eea4cc",
+      "tests/admin/admin-mfa.integration.test.ts": "8bdcc6ff425f17fd8d76be12c6899a3b007d52633bb89c9bc7a8440d9a39704f",
+      "tests/mission04-b/legacy-upgrade.test.ts": "79a26b5c294afc09bfc456558298a400573a818374ea9dc0b65e312d5dfeda6d",
+      "tests/mission04-c/fixtures.ts": "bcb78800949c2d842780a77d72f4817290236ff31dfec9e34cfb6c9fb687e51d",
+      "tests/mission04-c/invitations.test.ts": "86a96fa07087546b0b1ccaab2698ed9a08b0d3e39b2f42ab7f2a851597648273",
+      "tests/mission04-c/journey.spec.ts": "e4b47a79530c600467269c243feda6e04245ea6350e71bfd9f8f51bddd0f409c",
+      "tests/mission04-c/legacy-upgrade.test.ts": "1c767d42bd6a76a7233a04223851c8a2f21c58705b04f049d2ce8dde305e1c1d",
+      "tests/mission04-c/playwright.config.ts": "c3b961b013280b313bfe9e55831dcf8df687f7b34f1e1e6194a697fb3a5d5010"
+    }
+  },
+  "correction": {
+    "id": "C-AUDIT-01",
+    "finding": "PAP_ADMIN could replace a consented role during approval",
+    "contract": "roleKey must equal stored proposedRoleKey for every approver; approval never rewrites it",
+    "codeFilesChanged": [
+      "src/components/admin/AccessInvitationsClient.tsx",
+      "src/server/access-invitations/access-invitation.service.ts",
+      "tests/mission04-c/invitations.test.ts",
+      "tests/mission04-c/journey.spec.ts"
+    ],
+    "nodeCases": 4,
+    "browserCases": 1,
+    "denial": "409 INVITATION_ROLE_MISMATCH; delegated/ownership guards retain 403/404",
+    "sqlChange": false,
+    "infrastructureIncident": "Initial Docker functional FAIL: disk exhausted; only two cache IDs created by this build pruned; same image retested PASS; no unknown database/volume removed"
+  },
+  "sourceSha256": {
+    ".github/workflows/ci.yml": "3f621aec891f39aaa8f05091515d7769aa90b4af55d97bb0ea92e071ca253c2a",
+    "package.json": "6fcd932806473e36cc93a13d6cc2f4e663c884e5b835a875c9fc318e8034120f",
+    "prisma/migrations/20261022050000_mission04_global_access/migration.sql": "6a54b2473adb9f683915bd953f39238088be496e0e23cddb759e362737eb3ce0",
+    "prisma/schema.prisma": "70d36b6acfd24595a77a5a8f5abffdfeed20b31431558fc283d564ba5ec4b7dd",
+    "scripts/test-mission04-c.sh": "e015c955d9f664c5bfdc39a79fdc89fd24602d2d81531d34c653bc92bb14f288",
+    "src/app/(admin)/admin/convites-globais/page.tsx": "f9e9b1effec9ab59f3363c2e711cdca7c2f9209afc0e6443e0541c8a713c71e8",
+    "src/app/(auth)/aceitar-convite/page.tsx": "1a1e6b73761f9befd9fe8e2b6ac05734137c564b386bb8f9a75399aefa25978d",
+    "src/app/(auth)/aguardando-autorizacao/page.tsx": "6c33d9dfdfcf8b7c4150bf8e26a5b0086faa65d8b6f9fcb8affe77279cbbc700",
+    "src/app/(auth)/comercial/page.tsx": "5309e2dcc620c399edaa9ec0754779a27a77e74640ce6f8b8ae14248969329a6",
+    "src/app/(auth)/notificacoes/page.tsx": "ffbb6bbb7eb1d26dc346b2d253dac68ed62428319b22a420736906cba3f7cd9d",
+    "src/app/(auth)/primeiros-passos/page.tsx": "e57431a00907c789ff4885c7ed15905f4768bae1a589e1450aa5ca1cccdfba79",
+    "src/app/api/access-invitations/accept/route.ts": "abe9211bec639b72b75ab7be7fecef09ed5c35a8a32ed5b3c8247f543b96b866",
+    "src/app/api/account/access-status/route.ts": "992a340d6d69c7fcb821ec76bf8fa9d0de972a52e5ddf075aef9a221aa4b047a",
+    "src/app/api/account/notifications/route.ts": "c571de6f4ddef03218b70de44b6d391c1547db37f7c1e39623be90dcbfac39bc",
+    "src/app/api/admin/access-invitations/route.ts": "b1e5ac32ce55ff8b8e9b729ab54f19050969e6ef0e587625f6201a3b484698f4",
+    "src/components/access/GlobalInvitationActivation.tsx": "18b2d80abafc6b84938ef95b5e979593815034bc3083f1013adac0fa3b8bd4da",
+    "src/components/access/NotificationInbox.tsx": "7b547b4c1400658e4e6b4d32836057374bc8255c8d4ffd7ac7c8b29f1a22bea9",
+    "src/components/access/WaitingAuthorization.tsx": "d5d07bb3a672d8ce8f513756f78d9bfc98aaf2317d8d02d0b03223b9bd5c10ae",
+    "src/components/access/access.css": "d8133b587807b2608b7d125e85cc2a71952226f57cff8283e0595c091a270dae",
+    "src/components/admin/AccessAdminClient.tsx": "240858ff44a79ff2fc5a84875bd0d8f481f094a3b46b0379f6c0c564da17cef3",
+    "src/components/admin/AccessInvitationsClient.tsx": "603ed159c2005d4e946561c25397e68bbb724b276ac8ef00b38fca06cd4273b7",
+    "src/components/admin/AdminSidebar.tsx": "410370761d1c0a68ca3093f6e6190f515b1279c5e80b7b2cb9f41d819359a7de",
+    "src/components/admin/AdminTopbar.tsx": "af438e23041c9dbbe520792fb4c7728aaac8115bada121600f5f9d8c810c2c0c",
+    "src/components/auth/LoginSecurity.tsx": "3859a2b47b24edbf164e103e54ccf0684ff5657e799d9e25163090739073c075",
+    "src/components/layout/Topbar.tsx": "ec87790997a652347822507729dce9ca5dd90275f4f12874b35fc1d5548d973a",
+    "src/lib/auth/access-destination.ts": "e751ee4c91dd7f7935a0ad838a45b7be6c832def04ff4ff7653ed986fc4b85a5",
+    "src/server/access-invitations/access-invitation-http.ts": "3febbe5fbd29327ff5bc429a724c10012c01fc6be305b552aef85cd4f40147e9",
+    "src/server/access-invitations/access-invitation-policy.ts": "3e616a9af422e592817cf680fb19e1e2a6482d0e23a1a6b52a7179c722968537",
+    "src/server/access-invitations/access-invitation.errors.ts": "82ff47e195c9e4745f898e4b6061ebc24b7cf15520fca2cbcf8f8dfade16ab6d",
+    "src/server/access-invitations/access-invitation.service.ts": "4958e8eae23c3ba5dd8b09dc51a59122775e10bd8efaed918e7c1ff0a31b2f2d",
+    "src/server/admin/admin-role.errors.ts": "f8c4785d6d2d9e5ba1ab50731764f8be41046b15aad7b4fd1e6b3acf42581734",
+    "src/server/admin/admin-roles.service.ts": "8c25b6bae193aa9e3f4208a5277cf0c0ce9838e7be0111a7710d7603084929d5",
+    "src/server/admin/institutional-invitation-policy.ts": "f942a552aef668843129300b4e0e1ec476e2b518f403b77d39bb5dd2cdae8c09",
+    "src/server/audit/admin-audit-policy.ts": "176b1139fc501c5ffba502b99e966dccdcf6d4bfc61c5fedccdde992062dde07",
+    "src/server/auth/login-navigation.service.ts": "0d6f9fe6e40191889fbb78f19551c1f17476d62a148f24dceced872ff08fc096",
+    "src/server/email/email.service.ts": "e027c11fb9a4af6306bab3f34bfb4c26b1c8b3c6abe03a187e1388e350ddbad6",
+    "src/server/email/local-demo-mail.ts": "0a817b56c34c6f8e125725b300422aba6f5fbb8f7e9f70aca7ec5dbab4eebb27",
+    "src/server/notifications/notification.service.ts": "722a24af2202772c11e96c970b26c4bde01922d88853356ea253f41662eea4cc",
+    "tests/admin/admin-mfa.integration.test.ts": "8bdcc6ff425f17fd8d76be12c6899a3b007d52633bb89c9bc7a8440d9a39704f",
+    "tests/mission04-b/legacy-upgrade.test.ts": "79a26b5c294afc09bfc456558298a400573a818374ea9dc0b65e312d5dfeda6d",
+    "tests/mission04-c/fixtures.ts": "bcb78800949c2d842780a77d72f4817290236ff31dfec9e34cfb6c9fb687e51d",
+    "tests/mission04-c/invitations.test.ts": "496fc121cf4fe3ebd8f59175a52e206bad9940c84738e5945406974e8dbbc268",
+    "tests/mission04-c/journey.spec.ts": "94430c2e38e78630d06fc7e82553fd78a842d778c2ca95d472af6dc1500b71ce",
+    "tests/mission04-c/legacy-upgrade.test.ts": "1c767d42bd6a76a7233a04223851c8a2f21c58705b04f049d2ce8dde305e1c1d",
+    "tests/mission04-c/playwright.config.ts": "c3b961b013280b313bfe9e55831dcf8df687f7b34f1e1e6194a697fb3a5d5010"
+  },
+  "unchangedSecuritySha256": {
+    "src/server/admin/admin-session.service.ts": "0d65c8fecf00b7adc2b8f7662229a2b5d8f503d680951596aa648c3d1245e0cc",
+    "src/server/auth/first-access.service.ts": "fe83b6b80c53829c1c91c182c20a4606252b7be2d95bc77a6211213c4c32b498",
+    "src/server/iam/system-role-catalog.ts": "ec33b60949105da3bcb767b496842afbea9daf3ed36c4fa774f921617cbb4aa5",
+    "src/server/iam/permissions.ts": "27471c83343db7e911da49a6c2ec918afee2643ae54bdf683610239d70d50d0f",
+    "src/server/iam/bootstrap.service.ts": "205f51e18d27fb6048fd9f95c6c94633d68511eff224488135857a6910771c14",
+    "package-lock.json": "8952e811c44e119bf218b185853f77d27e292311ade9aa8fe4ab76a576752e19"
+  },
+  "manualLabAccessed": false,
+  "committed": false,
+  "pushed": false,
+  "imageResults": "docker-web-build PASS 111s (successful original build; unchanged image)\ndocker-web-functional PASS 44s\ntrivy PASS 43s\n[pap-saude:c-audit-01] sha256:ac1a462840f352bd863404a20f516f404d17eecac6eb0e13aa22cb70c26b8328 user=nextjs\n[pap-saude-migrator:m04-c] sha256:e6da22194091b0dff4569258a2003061871d15c415cb3439fe5dba5aadc6667d user=node\n",
+  "inventory": [
+    ".github/workflows/ci.yml",
+    "docs/codex/AUDITORIA-MISSAO-04-C.md",
+    "docs/codex/RELATORIO-MISSAO-04-SLICE-C.md",
+    "docs/evidence/missao-04-c/aceite-desktop.png",
+    "docs/evidence/missao-04-c/autorizado-mobile-dark.png",
+    "docs/evidence/missao-04-c/baseline-ci.json",
+    "docs/evidence/missao-04-c/cleanup.json",
+    "docs/evidence/missao-04-c/dependency-audits.json",
+    "docs/evidence/missao-04-c/espera-1440-dark.png",
+    "docs/evidence/missao-04-c/espera-1440-light.png",
+    "docs/evidence/missao-04-c/espera-320-dark.png",
+    "docs/evidence/missao-04-c/espera-320-light.png",
+    "docs/evidence/missao-04-c/espera-768-dark.png",
+    "docs/evidence/missao-04-c/espera-768-light.png",
+    "docs/evidence/missao-04-c/execution.log",
+    "docs/evidence/missao-04-c/fila-1440-light.png",
+    "docs/evidence/missao-04-c/fila-320-dark.png",
+    "docs/evidence/missao-04-c/fila-768-light.png",
+    "docs/evidence/missao-04-c/legacy-upgrade.json",
+    "docs/evidence/missao-04-c/performance.json",
+    "docs/evidence/missao-04-c/pr5.json",
+    "docs/evidence/missao-04-c/revogado-mobile-dark.png",
+    "docs/evidence/missao-04-c/validation.json",
+    "package.json",
+    "prisma/migrations/20261022050000_mission04_global_access/migration.sql",
+    "prisma/schema.prisma",
+    "scripts/test-mission04-c.sh",
+    "src/app/(admin)/admin/convites-globais/page.tsx",
+    "src/app/(auth)/aceitar-convite/page.tsx",
+    "src/app/(auth)/aguardando-autorizacao/page.tsx",
+    "src/app/(auth)/comercial/page.tsx",
+    "src/app/(auth)/notificacoes/page.tsx",
+    "src/app/(auth)/primeiros-passos/page.tsx",
+    "src/app/api/access-invitations/accept/route.ts",
+    "src/app/api/account/access-status/route.ts",
+    "src/app/api/account/notifications/route.ts",
+    "src/app/api/admin/access-invitations/route.ts",
+    "src/components/access/GlobalInvitationActivation.tsx",
+    "src/components/access/NotificationInbox.tsx",
+    "src/components/access/WaitingAuthorization.tsx",
+    "src/components/access/access.css",
+    "src/components/admin/AccessAdminClient.tsx",
+    "src/components/admin/AccessInvitationsClient.tsx",
+    "src/components/admin/AdminSidebar.tsx",
+    "src/components/admin/AdminTopbar.tsx",
+    "src/components/auth/LoginSecurity.tsx",
+    "src/components/layout/Topbar.tsx",
+    "src/lib/auth/access-destination.ts",
+    "src/server/access-invitations/access-invitation-http.ts",
+    "src/server/access-invitations/access-invitation-policy.ts",
+    "src/server/access-invitations/access-invitation.errors.ts",
+    "src/server/access-invitations/access-invitation.service.ts",
+    "src/server/admin/admin-role.errors.ts",
+    "src/server/admin/admin-roles.service.ts",
+    "src/server/admin/institutional-invitation-policy.ts",
+    "src/server/audit/admin-audit-policy.ts",
+    "src/server/auth/login-navigation.service.ts",
+    "src/server/email/email.service.ts",
+    "src/server/email/local-demo-mail.ts",
+    "src/server/notifications/notification.service.ts",
+    "tests/admin/admin-mfa.integration.test.ts",
+    "tests/mission04-b/legacy-upgrade.test.ts",
+    "tests/mission04-c/fixtures.ts",
+    "tests/mission04-c/invitations.test.ts",
+    "tests/mission04-c/journey.spec.ts",
+    "tests/mission04-c/legacy-upgrade.test.ts",
+    "tests/mission04-c/playwright.config.ts"
+  ],
+  "deliveryChecks": {
+    "exactInventory": "PASS",
+    "inventoryCount": 67,
+    "sourceHashes": "PASS",
+    "sourceFilesChecked": 45,
+    "unchangedSecurityFiles": "PASS",
+    "gitDiffCheck": "PASS",
+    "allUntrackedWhitespace": "PASS",
+    "secretPatternScan": "PASS; zero matching patterns, not an exhaustive proof",
+    "indexEmpty": true,
+    "head": "481d6a3dccafbd626355648ee52a19f8512434f3",
+    "pr5Draft": true,
+    "manualResourcesAccessed": false,
+    "committed": false,
+    "pushed": false
+  }
+}

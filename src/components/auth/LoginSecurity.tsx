@@ -79,7 +79,8 @@ export default function LoginSecurity({
       }
       setPassword("");
       setCode("");
-      router.replace("/primeiros-passos");
+      router.replace("/login");
+      router.refresh();
     } catch {
       setError("Não foi possível conectar. Tente novamente.");
     } finally {

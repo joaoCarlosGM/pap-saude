@@ -318,17 +318,23 @@ test("all privileged administrative routes require verified MFA, with IAM and bo
         period: 30,
         secret,
       });
-      // Complete enrollment in a prior step so login uses a fresh counter without sleeps.
+      // Use the current step: a previous-step code can expire while password
+      // reauthentication runs across a 30-second boundary on a loaded runner.
+      const enrollmentTime = Date.now();
       const confirmed = await selfSecurity.POST(
         req("/api/auth/security", primary.token, "POST", {
           action: "CONFIRM_MFA",
           password,
           factorId,
-          code: generator.generate({ timestamp: Date.now() - 30000 }),
+          code: generator.generate({ timestamp: enrollmentTime }),
         }),
       );
       assert.equal(confirmed.status, 200);
       await deniedEverywhere(primary.token); // Active factor alone is not proof for this session.
+      // Login must prove a fresh counter, preserving the real anti-replay guard.
+      if (Math.floor(Date.now() / 30000) === Math.floor(enrollmentTime / 30000)) {
+        await new Promise((resolve) => setTimeout(resolve, 30100 - Date.now() % 30000));
+      }
       const login = await authenticateLogin({
         email: actor.email,
         password,
