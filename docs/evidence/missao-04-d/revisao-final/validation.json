@@ -477,5 +477,288 @@
     "Earlier D evidence retained byte-for-byte",
     "First failed F04 full log not retained; actual captured TS2540 excerpt and exit/duration retained",
     "No account-dependent DB/provider work before public recovery response; after is not a durable queue"
-  ]
+  ],
+  "remoteCiAttempts": [
+    {
+      "runId": 40063921155,
+      "url": "https://github.com/joaoCarlosGM/pap-saude/actions/runs/40063921155",
+      "headSha": "ed8b1ca0cdd9fd69882b29d081575ba2bb3ee3d7",
+      "conclusion": "failure",
+      "jobs": [
+        {
+          "completedAt": "2026-10-24T04:53:46Z",
+          "conclusion": "failure",
+          "databaseId": 120783049425,
+          "name": "F04 security, migrations and production builds",
+          "startedAt": "2026-10-24T04:50:28Z",
+          "status": "completed",
+          "steps": [
+            {
+              "conclusion": "success",
+              "name": "Set up job",
+              "number": 1,
+              "status": "completed"
+            },
+            {
+              "conclusion": "success",
+              "name": "Checkout repository",
+              "number": 2,
+              "status": "completed"
+            },
+            {
+              "conclusion": "success",
+              "name": "Setup Node.js",
+              "number": 3,
+              "status": "completed"
+            },
+            {
+              "conclusion": "success",
+              "name": "Install dependencies",
+              "number": 4,
+              "status": "completed"
+            },
+            {
+              "conclusion": "success",
+              "name": "Audit production dependencies",
+              "number": 5,
+              "status": "completed"
+            },
+            {
+              "conclusion": "success",
+              "name": "Audit isolated migrator dependencies",
+              "number": 6,
+              "status": "completed"
+            },
+            {
+              "conclusion": "success",
+              "name": "Start disposable PostgreSQL",
+              "number": 7,
+              "status": "completed"
+            },
+            {
+              "conclusion": "success",
+              "name": "Verify PostgreSQL final-server readiness",
+              "number": 8,
+              "status": "completed"
+            },
+            {
+              "conclusion": "success",
+              "name": "Legacy data preflight and synthetic backup restore",
+              "number": 9,
+              "status": "completed"
+            },
+            {
+              "conclusion": "success",
+              "name": "Generate Prisma client",
+              "number": 10,
+              "status": "completed"
+            },
+            {
+              "conclusion": "success",
+              "name": "Generate Next.js route types",
+              "number": 11,
+              "status": "completed"
+            },
+            {
+              "conclusion": "success",
+              "name": "Verify Prisma fails closed without DATABASE_URL",
+              "number": 12,
+              "status": "completed"
+            },
+            {
+              "conclusion": "success",
+              "name": "Verify CI release guard",
+              "number": 13,
+              "status": "completed"
+            },
+            {
+              "conclusion": "success",
+              "name": "F04 integrated security and clinical regression gate",
+              "number": 14,
+              "status": "completed"
+            },
+            {
+              "conclusion": "success",
+              "name": "PAP Admin Beta 1 institutional and adversarial journey",
+              "number": 15,
+              "status": "completed"
+            },
+            {
+              "conclusion": "failure",
+              "name": "Isolated local development workflow",
+              "number": 16,
+              "status": "completed"
+            },
+            {
+              "conclusion": "skipped",
+              "name": "Install isolated browser for first-access regression",
+              "number": 17,
+              "status": "completed"
+            },
+            {
+              "conclusion": "skipped",
+              "name": "First-access MFA API, QR, browser and accessibility regression",
+              "number": 18,
+              "status": "completed"
+            },
+            {
+              "conclusion": "skipped",
+              "name": "Mission 04 delegated IAM, legacy upgrade and clinical page boundaries",
+              "number": 19,
+              "status": "completed"
+            },
+            {
+              "conclusion": "skipped",
+              "name": "Mission 04 global invitations, authorization queue and notifications",
+              "number": 20,
+              "status": "completed"
+            },
+            {
+              "conclusion": "skipped",
+              "name": "Mission 04 transactional email, reset and authenticated delivery webhooks",
+              "number": 21,
+              "status": "completed"
+            },
+            {
+              "conclusion": "skipped",
+              "name": "PostgreSQL runtime and migrator separation",
+              "number": 22,
+              "status": "completed"
+            },
+            {
+              "conclusion": "skipped",
+              "name": "Full F03 regression without cached results",
+              "number": 23,
+              "status": "completed"
+            },
+            {
+              "conclusion": "skipped",
+              "name": "Authentication and MFA regression",
+              "number": 24,
+              "status": "completed"
+            },
+            {
+              "conclusion": "skipped",
+              "name": "Build Docker web image",
+              "number": 25,
+              "status": "completed"
+            },
+            {
+              "conclusion": "skipped",
+              "name": "Build Docker migrator image",
+              "number": 26,
+              "status": "completed"
+            },
+            {
+              "conclusion": "skipped",
+              "name": "Verify isolated migrator image",
+              "number": 27,
+              "status": "completed"
+            },
+            {
+              "conclusion": "skipped",
+              "name": "Verify migrator migrations and idempotency",
+              "number": 28,
+              "status": "completed"
+            },
+            {
+              "conclusion": "skipped",
+              "name": "Verify runtime web image with least-privilege database role",
+              "number": 29,
+              "status": "completed"
+            },
+            {
+              "conclusion": "skipped",
+              "name": "Scan runtime and migrator images for HIGH and CRITICAL vulnerabilities",
+              "number": 30,
+              "status": "completed"
+            },
+            {
+              "conclusion": "success",
+              "name": "Stop disposable PostgreSQL",
+              "number": 31,
+              "status": "completed"
+            },
+            {
+              "conclusion": "skipped",
+              "name": "Post Setup Node.js",
+              "number": 61,
+              "status": "completed"
+            },
+            {
+              "conclusion": "success",
+              "name": "Post Checkout repository",
+              "number": 62,
+              "status": "completed"
+            },
+            {
+              "conclusion": "success",
+              "name": "Complete job",
+              "number": 63,
+              "status": "completed"
+            }
+          ],
+          "url": "https://github.com/joaoCarlosGM/pap-saude/actions/runs/40063921155/job/120783049425"
+        },
+        {
+          "completedAt": "2026-10-24T04:53:47Z",
+          "conclusion": "skipped",
+          "databaseId": 120783701137,
+          "name": "Publish Docker images",
+          "startedAt": "2026-10-24T04:53:47Z",
+          "status": "completed",
+          "steps": [],
+          "url": "https://github.com/joaoCarlosGM/pap-saude/actions/runs/40063921155/job/120783701137"
+        },
+        {
+          "completedAt": "2026-10-24T04:53:47Z",
+          "conclusion": "skipped",
+          "databaseId": 120783701779,
+          "name": "Deploy to VPS",
+          "startedAt": "2026-10-24T04:53:47Z",
+          "status": "completed",
+          "steps": [],
+          "url": "https://github.com/joaoCarlosGM/pap-saude/actions/runs/40063921155/job/120783701779"
+        }
+      ],
+      "status": "completed"
+    }
+  ],
+  "ciFailureCorrection": {
+    "cause": "Legacy smoke fixture still expected query bearer, actual new email correctly uses fragment",
+    "changedTest": "tests/local/provision.integration.test.ts",
+    "runtimeChanged": false,
+    "migrationsIamMfaChanged": false,
+    "localValidation": [
+      {
+        "name": "policy",
+        "command": [
+          "node",
+          "--test",
+          "tests/local/policy.test.mjs"
+        ],
+        "exitCode": 0
+      },
+      {
+        "name": "typescript",
+        "command": [
+          "npx",
+          "tsc",
+          "--noEmit"
+        ],
+        "exitCode": 0
+      },
+      {
+        "name": "lint",
+        "command": [
+          "npx",
+          "eslint",
+          "tests/local/provision.integration.test.ts"
+        ],
+        "exitCode": 0
+      }
+    ],
+    "policyTests": 4,
+    "integrationRetest": "Pending on new isolated GitHub runner; not run against operator lab or reserved-name resources on this host"
+  }
 }

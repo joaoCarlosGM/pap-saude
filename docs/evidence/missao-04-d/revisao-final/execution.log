@@ -9801,3 +9801,300 @@ Legend:
 - '0': Clean (no security findings detected)
 
 Scanner exit for pap-saude-migrator:m04-d: 0
+
+===== First remote CI: 40063921155 / ed8b1ca / GitHub disposable runner =====
+F04 security, migrations and production builds	Isolated local development workflow	﻿2026-10-24T04:53:31.3430957Z ##[group]Run npm run test:local-dev
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:31.3431179Z [36;1mnpm run test:local-dev[0m
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:31.3482401Z shell: /usr/bin/bash -e {0}
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:31.3482563Z env:
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:31.3482679Z   REGISTRY: ghcr.io
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:31.3482821Z   IMAGE_NAME: joaocarlosgm/pap-saude
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:31.3483257Z   DATABASE_URL: ***127.0.0.1:5432/pap_saude?schema=public
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:31.3483438Z ##[endgroup]
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:31.4172304Z
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:31.4173005Z > pap-saude@0.1.0 test:local-dev
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:31.4173395Z > node --test tests/local/policy.test.mjs && node scripts/local/test-smoke.mjs
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:31.4173627Z
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:31.4483598Z TAP version 13
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:31.4747698Z # Subtest: local database policy refuses all remote, default-port and ambiguous targets
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:31.4753176Z ok 1 - local database policy refuses all remote, default-port and ambiguous targets
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:31.4753643Z   ---
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:31.4753850Z   duration_ms: 0.642425
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:31.4754183Z   type: 'test'
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:31.4754370Z   ...
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:31.4754864Z # Subtest: only explicitly local Docker transports are accepted
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:31.4756293Z ok 2 - only explicitly local Docker transports are accepted
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:31.4756596Z   ---
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:31.4756791Z   duration_ms: 0.220778
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:31.4756996Z   type: 'test'
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:31.4757172Z   ...
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:31.4758842Z # Subtest: container isolation rejects bind mounts, foreign volumes and public bindings
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:31.4764823Z ok 3 - container isolation rejects bind mounts, foreign volumes and public bindings
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:31.4765537Z   ---
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:31.4765738Z   duration_ms: 0.265045
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:31.4765952Z   type: 'test'
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:31.4766136Z   ...
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:31.4766575Z # Subtest: private local credentials and captured tokens are excluded from Git and Docker contexts
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:31.4767235Z ok 4 - private local credentials and captured tokens are excluded from Git and Docker contexts
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:31.4767632Z   ---
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:31.4767808Z   duration_ms: 1.149209
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:31.4768009Z   type: 'test'
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:31.4768176Z   ...
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:31.4819823Z 1..4
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:31.4820500Z # tests 4
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:31.4820734Z # suites 0
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:31.4820965Z # pass 4
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:31.4821225Z # fail 0
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:31.4821476Z # cancelled 0
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:31.4821732Z # skipped 0
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:31.4821971Z # todo 0
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:31.4822254Z # duration_ms 41.925938
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:31.5848742Z Configuração privada criada; nenhuma conta de aplicação foi criada.
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:31.6246343Z Configuração existente preservada.
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:35.3030782Z PostgreSQL isolado pronto em 127.0.0.1:15432.
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:37.2351706Z PostgreSQL isolado pronto em 127.0.0.1:15432.
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:37.8435263Z Loaded Prisma config from ../../home/runner/work/pap-saude/pap-saude/prisma.config.ts.
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:37.8435702Z
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:37.9127518Z Prisma schema loaded from ../../home/runner/work/pap-saude/pap-saude/prisma/schema.prisma.
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:38.4739036Z
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:38.4740484Z ✔ Generated Prisma Client (v7.10.1) to ./../../home/runner/work/pap-saude/pap-saude/node_modules/@prisma/client in 381ms
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:38.4740914Z
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:38.4741242Z Start by importing your Prisma Client (See: https://pris.ly/d/importing-client)
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:38.4741520Z
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:38.4741526Z
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:38.9678045Z Loaded Prisma config from ../../home/runner/work/pap-saude/pap-saude/prisma.config.ts.
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:38.9678636Z
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:39.0436743Z Prisma schema loaded from ../../home/runner/work/pap-saude/pap-saude/prisma/schema.prisma.
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:39.0463726Z Datasource "db": PostgreSQL database "pap_admin_beta1_local", schema "public" at "127.0.0.1:15432"
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:39.0853921Z
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:39.0854559Z 32 migrations found in prisma/migrations
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:39.0855433Z
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:39.1283305Z Applying migration `20260909150044_init_clinical_schema`
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:39.1468894Z Applying migration `20260926001330_foundation_01`
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:39.2984896Z Applying migration `20260926014952_foundation_02_identity`
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:39.3347990Z Applying migration `20260926210500_foundation_02_email_identity`
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:39.3369365Z Applying migration `20260926220000_foundation_02_login_abuse_protection`
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:39.3455426Z Applying migration `20260927001500_foundation_02_mfa_challenge`
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:39.3560865Z Applying migration `20260927033000_foundation_02_mfa_reset`
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:39.3598054Z Applying migration `20260927043000_foundation_02_organization_lifecycle`
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:39.3715256Z Applying migration `20260927050000_foundation_02_membership_discovery`
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:39.3971733Z Applying migration `20261002010000_foundation_02_roles_permissions`
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:39.4000913Z Applying migration `20261002020000_foundation_02_product_activity`
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:39.4135828Z Applying migration `20261002030000_foundation_02_organization_metrics`
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:39.4246052Z Applying migration `20261002040000_foundation_02_feedback`
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:39.4423570Z Applying migration `20261002050000_foundation_02_health_alerts`
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:39.4573354Z Applying migration `20261003010000_foundation_03_patient_registry_core`
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:39.4650578Z Applying migration `20261003020000_foundation_03_pregnancy_core`
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:39.4718186Z Applying migration `20261003030000_foundation_03_encounter_core`
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:39.4827048Z Applying migration `20261003040000_foundation_03_vital_signs_core`
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:39.4940241Z Applying migration `20261003050000_foundation_03_obstetric_data_core`
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:39.5056309Z Applying migration `20261003060000_foundation_03_allergies_clinical_flags`
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:39.5222673Z Applying migration `20261003070000_foundation_03_meows_engine`
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:39.5343500Z Applying migration `20261005080000_foundation_03_clinical_revision_authorization`
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:39.5390641Z Applying migration `20261007094500_foundation_04_user_invitations`
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:39.5561611Z Applying migration `20261007101500_foundation_04_onboarding`
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:39.5691247Z Applying migration `20261016010000_foundation_04_password_reset_token`
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:39.5802322Z Applying migration `20261016200000_foundation_04_admin_audit_indexes`
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:39.5845488Z Applying migration `20261016210000_foundation_04_audit_integrity`
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:39.5886574Z Applying migration `20261019010000_foundation_04_schema_parity`
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:39.5939705Z Applying migration `20261020000000_admin_beta1`
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:39.6021213Z Applying migration `20261022040000_mission04_delegated_governance`
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:39.6070353Z Applying migration `20261022050000_mission04_global_access`
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:39.6320557Z Applying migration `20261023060000_mission04_transactional_email`
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:39.6545808Z
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:39.6558307Z ┌─────────────────────────────────────────────────────────┐
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:39.6558964Z The following migration(s) have been applied:
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:39.6559153Z
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:39.6559234Z migrations/
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:39.6559561Z   └─ 20260909150044_init_clinical_schema/
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:39.6559841Z     └─ migration.sql
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:39.6560116Z   └─ 20260926001330_foundation_01/
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:39.6560377Z     └─ migration.sql
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:39.6560658Z   └─ 20260926014952_foundation_02_identity/
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:39.6560927Z     └─ migration.sql
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:39.6561260Z   └─ 20260926210500_foundation_02_email_identity/
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:39.6561548Z     └─ migration.sql
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:39.6561860Z   └─ 20260926220000_foundation_02_login_abuse_protection/
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:39.6562172Z     └─ migration.sql
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:39.6562452Z   └─ 20260927001500_foundation_02_mfa_challenge/
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:39.6562727Z     └─ migration.sql
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:39.6562992Z   └─ 20260927033000_foundation_02_mfa_reset/
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:39.6563694Z     └─ migration.sql
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:39.6564002Z   └─ 20260927043000_foundation_02_organization_lifecycle/
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:39.6564302Z     └─ migration.sql
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:39.6564591Z   └─ 20260927050000_foundation_02_membership_discovery/
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:39.6564894Z     └─ migration.sql
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:39.6565359Z   └─ 20261002010000_foundation_02_roles_permissions/
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:39.6565641Z     └─ migration.sql
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:39.6565923Z   └─ 20261002020000_foundation_02_product_activity/
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:39.6566199Z     └─ migration.sql
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:39.6566508Z   └─ 20261002030000_foundation_02_organization_metrics/
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:39.6566794Z     └─ migration.sql
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:39.6567041Z   └─ 20261002040000_foundation_02_feedback/
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:39.6567300Z     └─ migration.sql
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:39.6567567Z   └─ 20261002050000_foundation_02_health_alerts/
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:39.6567835Z     └─ migration.sql
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:39.6568139Z   └─ 20261003010000_foundation_03_patient_registry_core/
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:39.6568422Z     └─ migration.sql
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:39.6568686Z   └─ 20261003020000_foundation_03_pregnancy_core/
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:39.6568953Z     └─ migration.sql
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:39.6569227Z   └─ 20261003030000_foundation_03_encounter_core/
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:39.6569501Z     └─ migration.sql
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:39.6569772Z   └─ 20261003040000_foundation_03_vital_signs_core/
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:39.6570036Z     └─ migration.sql
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:39.6570311Z   └─ 20261003050000_foundation_03_obstetric_data_core/
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:39.6570600Z     └─ migration.sql
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:39.6570968Z   └─ 20261003060000_foundation_03_allergies_clinical_flags/
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:39.6571273Z     └─ migration.sql
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:39.6571535Z   └─ 20261003070000_foundation_03_meows_engine/
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:39.6571799Z     └─ migration.sql
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:39.6572140Z   └─ 20261005080000_foundation_03_clinical_revision_authorization/
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:39.6572466Z     └─ migration.sql
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:39.6572736Z   └─ 20261007094500_foundation_04_user_invitations/
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:39.6573015Z     └─ migration.sql
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:39.6573272Z   └─ 20261007101500_foundation_04_onboarding/
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:39.6573533Z     └─ migration.sql
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:39.6573826Z   └─ 20261016010000_foundation_04_password_reset_token/
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:39.6574133Z     └─ migration.sql
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:39.6574430Z   └─ 20261016200000_foundation_04_admin_audit_indexes/
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:39.6574699Z     └─ migration.sql
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:39.6574978Z   └─ 20261016210000_foundation_04_audit_integrity/
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:39.6575630Z     └─ migration.sql
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:39.6575935Z   └─ 20261019010000_foundation_04_schema_parity/
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:39.6576219Z     └─ migration.sql
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:39.6576463Z   └─ 20261020000000_admin_beta1/
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:39.6576696Z     └─ migration.sql
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:39.6576981Z   └─ 20261022040000_mission04_delegated_governance/
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:39.6577265Z     └─ migration.sql
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:39.6577522Z   └─ 20261022050000_mission04_global_access/
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:39.6577785Z     └─ migration.sql
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:39.6578059Z   └─ 20261023060000_mission04_transactional_email/
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:39.6578330Z     └─ migration.sql
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:39.6578446Z
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:39.6578603Z All migrations have been successfully applied.
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:39.6579420Z │  Update available 7.10.1 -> 8.0.0-rc.27                 │
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:39.6579969Z │                                                         │
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:39.6580587Z │  This is a major update - please follow the guide at    │
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:39.6580965Z │  https://pris.ly/d/major-version-upgrade                │
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:39.6581235Z │                                                         │
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:39.6581490Z │  Run the following to update                            │
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:39.6581761Z │    npm i --save-dev prisma@latest                       │
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:39.6582220Z │    npm i @prisma/client@latest                          │
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:39.6582491Z └─────────────────────────────────────────────────────────┘
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:40.1274257Z IAM local inicializado (idempotente).
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:40.8560195Z Loaded Prisma config from ../../home/runner/work/pap-saude/pap-saude/prisma.config.ts.
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:40.8560603Z
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:40.9347595Z Prisma schema loaded from ../../home/runner/work/pap-saude/pap-saude/prisma/schema.prisma.
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:41.4628056Z
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:41.4629121Z ✔ Generated Prisma Client (v7.10.1) to ./../../home/runner/work/pap-saude/pap-saude/node_modules/@prisma/client in 351ms
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:41.4629469Z
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:41.4629672Z Start by importing your Prisma Client (See: https://pris.ly/d/importing-client)
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:41.4629863Z
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:41.4629867Z
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:41.9691513Z Loaded Prisma config from ../../home/runner/work/pap-saude/pap-saude/prisma.config.ts.
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:41.9691979Z
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:42.0480267Z Prisma schema loaded from ../../home/runner/work/pap-saude/pap-saude/prisma/schema.prisma.
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:42.0570446Z Datasource "db": PostgreSQL database "pap_admin_beta1_local", schema "public" at "127.0.0.1:15432"
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:42.0900968Z
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:42.0901700Z 32 migrations found in prisma/migrations
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:42.0901971Z
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:42.1275275Z
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:42.1277368Z No pending migrations to apply.
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:42.5509617Z IAM local inicializado (idempotente).
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:42.7638615Z TAP version 13
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:44.1115908Z # (node:8989) DeprecationWarning: Calling client.query() when the client is already executing a query is deprecated and will be removed in pg@9.0. Use async/await or an external async flow control mechanism instead.
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:44.1117080Z # (Use `node --trace-deprecation ...` to show where the warning was created)
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:44.5835000Z # Subtest: operator-selected admin has hashed password, global role and real enrollment; demo invitations are captured without network
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:44.5839970Z not ok 1 - operator-selected admin has hashed password, global role and real enrollment; demo invitations are captured without network
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:44.5840625Z   ---
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:44.5840897Z   duration_ms: 1454.925287
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:44.5841110Z   type: 'test'
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:44.5841548Z   location: '/home/runner/work/pap-saude/pap-saude/tests/local/provision.integration.test.ts:2:2261'
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:44.5841988Z   failureType: 'testCodeFailure'
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:44.5842241Z   error: |-
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:44.5842936Z     The expression evaluated to a falsy value:
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:44.5843192Z
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:44.5843432Z       assert.ok(mail.text.includes("/convite?token="))
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:44.5843696Z
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:44.5843872Z   code: 'ERR_ASSERTION'
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:44.5844081Z   name: 'AssertionError'
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:44.5844287Z   expected: true
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:44.5844485Z   actual: false
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:44.5844680Z   operator: '=='
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:44.5844863Z   stack: |-
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:44.5845499Z     TestContext.<anonymous> (/home/runner/work/pap-saude/pap-saude/tests/local/provision.integration.test.ts:207:10)
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:44.5846070Z     async Test.run (node:internal/test_runner/test:1054:7)
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:44.5846505Z     async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:44.5846860Z   ...
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:44.6139503Z 1..1
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:44.6139789Z # tests 1
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:44.6145587Z # suites 0
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:44.6151917Z # pass 0
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:44.6152087Z # fail 1
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:44.6152250Z # cancelled 0
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:44.6152442Z # skipped 0
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:44.6152605Z # todo 0
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:44.6152749Z # duration_ms 1858.635417
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:44.9942862Z file:///home/runner/work/pap-saude/pap-saude/scripts/local/test-smoke.mjs:20
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:44.9943284Z   if (r.status !== 0) throw new Error("LOCAL_SMOKE_FAILED");
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:44.9943806Z                             ^
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:44.9943898Z
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:44.9943979Z Error: LOCAL_SMOKE_FAILED
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:44.9944242Z     at run (file:///home/runner/work/pap-saude/pap-saude/scripts/local/test-smoke.mjs:20:29)
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:44.9944593Z     at file:///home/runner/work/pap-saude/pap-saude/scripts/local/test-smoke.mjs:157:3
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:44.9944890Z     at ModuleJob.run (node:internal/modules/esm/module_job:343:25)
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:44.9945330Z     at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:681:26)
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:44.9945682Z     at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:5)
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:44.9945865Z
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:44.9945917Z Node.js v22.23.3
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:45.0052410Z ##[error]Process completed with exit code 1.
+
+===== ci-fix-policy.log =====
+TAP version 13
+# Subtest: local database policy refuses all remote, default-port and ambiguous targets
+ok 1 - local database policy refuses all remote, default-port and ambiguous targets
+  ---
+  duration_ms: 1.140945
+  type: 'test'
+  ...
+# Subtest: only explicitly local Docker transports are accepted
+ok 2 - only explicitly local Docker transports are accepted
+  ---
+  duration_ms: 0.352079
+  type: 'test'
+  ...
+# Subtest: container isolation rejects bind mounts, foreign volumes and public bindings
+ok 3 - container isolation rejects bind mounts, foreign volumes and public bindings
+  ---
+  duration_ms: 0.496315
+  type: 'test'
+  ...
+# Subtest: private local credentials and captured tokens are excluded from Git and Docker contexts
+ok 4 - private local credentials and captured tokens are excluded from Git and Docker contexts
+  ---
+  duration_ms: 3.356152
+  type: 'test'
+  ...
+1..4
+# tests 4
+# suites 0
+# pass 4
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 90.560951
+
+===== ci-fix-typescript.log =====
+npm notice
+npm notice New major version of npm available! 11.9.0 -> 12.2.1
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.1
+npm notice To update run: npm install -g npm@12.2.1
+npm notice
+
+===== ci-fix-lint.log =====
+npm notice
+npm notice New major version of npm available! 11.9.0 -> 12.2.1
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.1
+npm notice To update run: npm install -g npm@12.2.1
+npm notice

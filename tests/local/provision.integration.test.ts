@@ -204,7 +204,14 @@ test("operator-selected admin has hashed password, global role and real enrollme
   assert.equal(files.length, 2);
   const mail = JSON.parse(await readFile(resolve(dir, files[0]), "utf8"));
   assert.ok(mail.html.includes("#064f50"));
-  assert.ok(mail.text.includes("/convite?token="));
+  const link = new URL(mail.html.match(/href="([^"]+)"/)![1].replaceAll("&amp;", "&"));
+  assert.equal(link.origin, "http://127.0.0.1:3100");
+  assert.equal(link.pathname, "/convite");
+  // Bearers belong in fragments, never HTTP request/analytics query strings.
+  // Boolean assertions avoid printing a bearer if this regresses in the future.
+  assert.ok(link.search === "", "invitation query must not contain secrets");
+  assert.ok(/^[A-Za-z0-9_-]{43}$/.test(new URLSearchParams(link.hash.slice(1)).get("token") || ""));
+  assert.ok(mail.text.includes("/convite#token=") && mail.text.includes(link.toString()));
   const previous = process.env.NODE_ENV;
   Object.assign(process.env, { NODE_ENV: "production" });
   await assert.rejects(
