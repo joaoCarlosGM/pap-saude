@@ -965,6 +965,249 @@
         }
       ],
       "status": "completed"
+    },
+    {
+      "runId": 40065245130,
+      "headSha": "ebe1536b9b5a0cdc4e070153aea987d8891b50ac",
+      "conclusion": "failure",
+      "jobs": [
+        {
+          "completedAt": "2026-10-24T05:17:12Z",
+          "conclusion": "failure",
+          "databaseId": 120786997463,
+          "name": "F04 security, migrations and production builds",
+          "startedAt": "2026-10-24T05:10:54Z",
+          "status": "completed",
+          "steps": [
+            {
+              "conclusion": "success",
+              "name": "Set up job",
+              "number": 1,
+              "status": "completed"
+            },
+            {
+              "conclusion": "success",
+              "name": "Checkout repository",
+              "number": 2,
+              "status": "completed"
+            },
+            {
+              "conclusion": "success",
+              "name": "Setup Node.js",
+              "number": 3,
+              "status": "completed"
+            },
+            {
+              "conclusion": "success",
+              "name": "Install dependencies",
+              "number": 4,
+              "status": "completed"
+            },
+            {
+              "conclusion": "success",
+              "name": "Audit production dependencies",
+              "number": 5,
+              "status": "completed"
+            },
+            {
+              "conclusion": "success",
+              "name": "Audit isolated migrator dependencies",
+              "number": 6,
+              "status": "completed"
+            },
+            {
+              "conclusion": "success",
+              "name": "Start disposable PostgreSQL",
+              "number": 7,
+              "status": "completed"
+            },
+            {
+              "conclusion": "success",
+              "name": "Verify PostgreSQL final-server readiness",
+              "number": 8,
+              "status": "completed"
+            },
+            {
+              "conclusion": "success",
+              "name": "Legacy data preflight and synthetic backup restore",
+              "number": 9,
+              "status": "completed"
+            },
+            {
+              "conclusion": "success",
+              "name": "Generate Prisma client",
+              "number": 10,
+              "status": "completed"
+            },
+            {
+              "conclusion": "success",
+              "name": "Generate Next.js route types",
+              "number": 11,
+              "status": "completed"
+            },
+            {
+              "conclusion": "success",
+              "name": "Verify Prisma fails closed without DATABASE_URL",
+              "number": 12,
+              "status": "completed"
+            },
+            {
+              "conclusion": "success",
+              "name": "Verify CI release guard",
+              "number": 13,
+              "status": "completed"
+            },
+            {
+              "conclusion": "success",
+              "name": "F04 integrated security and clinical regression gate",
+              "number": 14,
+              "status": "completed"
+            },
+            {
+              "conclusion": "success",
+              "name": "PAP Admin Beta 1 institutional and adversarial journey",
+              "number": 15,
+              "status": "completed"
+            },
+            {
+              "conclusion": "success",
+              "name": "Isolated local development workflow",
+              "number": 16,
+              "status": "completed"
+            },
+            {
+              "conclusion": "success",
+              "name": "Install isolated browser for first-access regression",
+              "number": 17,
+              "status": "completed"
+            },
+            {
+              "conclusion": "success",
+              "name": "First-access MFA API, QR, browser and accessibility regression",
+              "number": 18,
+              "status": "completed"
+            },
+            {
+              "conclusion": "failure",
+              "name": "Mission 04 delegated IAM, legacy upgrade and clinical page boundaries",
+              "number": 19,
+              "status": "completed"
+            },
+            {
+              "conclusion": "skipped",
+              "name": "Mission 04 global invitations, authorization queue and notifications",
+              "number": 20,
+              "status": "completed"
+            },
+            {
+              "conclusion": "skipped",
+              "name": "Mission 04 transactional email, reset and authenticated delivery webhooks",
+              "number": 21,
+              "status": "completed"
+            },
+            {
+              "conclusion": "skipped",
+              "name": "PostgreSQL runtime and migrator separation",
+              "number": 22,
+              "status": "completed"
+            },
+            {
+              "conclusion": "skipped",
+              "name": "Full F03 regression without cached results",
+              "number": 23,
+              "status": "completed"
+            },
+            {
+              "conclusion": "skipped",
+              "name": "Authentication and MFA regression",
+              "number": 24,
+              "status": "completed"
+            },
+            {
+              "conclusion": "skipped",
+              "name": "Build Docker web image",
+              "number": 25,
+              "status": "completed"
+            },
+            {
+              "conclusion": "skipped",
+              "name": "Build Docker migrator image",
+              "number": 26,
+              "status": "completed"
+            },
+            {
+              "conclusion": "skipped",
+              "name": "Verify isolated migrator image",
+              "number": 27,
+              "status": "completed"
+            },
+            {
+              "conclusion": "skipped",
+              "name": "Verify migrator migrations and idempotency",
+              "number": 28,
+              "status": "completed"
+            },
+            {
+              "conclusion": "skipped",
+              "name": "Verify runtime web image with least-privilege database role",
+              "number": 29,
+              "status": "completed"
+            },
+            {
+              "conclusion": "skipped",
+              "name": "Scan runtime and migrator images for HIGH and CRITICAL vulnerabilities",
+              "number": 30,
+              "status": "completed"
+            },
+            {
+              "conclusion": "success",
+              "name": "Stop disposable PostgreSQL",
+              "number": 31,
+              "status": "completed"
+            },
+            {
+              "conclusion": "skipped",
+              "name": "Post Setup Node.js",
+              "number": 61,
+              "status": "completed"
+            },
+            {
+              "conclusion": "success",
+              "name": "Post Checkout repository",
+              "number": 62,
+              "status": "completed"
+            },
+            {
+              "conclusion": "success",
+              "name": "Complete job",
+              "number": 63,
+              "status": "completed"
+            }
+          ],
+          "url": "https://github.com/joaoCarlosGM/pap-saude/actions/runs/40065245130/job/120786997463"
+        },
+        {
+          "completedAt": "2026-10-24T05:17:12Z",
+          "conclusion": "skipped",
+          "databaseId": 120788234616,
+          "name": "Publish Docker images",
+          "startedAt": "2026-10-24T05:17:13Z",
+          "status": "completed",
+          "steps": [],
+          "url": "https://github.com/joaoCarlosGM/pap-saude/actions/runs/40065245130/job/120788234616"
+        },
+        {
+          "completedAt": "2026-10-24T05:17:12Z",
+          "conclusion": "skipped",
+          "databaseId": 120788234873,
+          "name": "Deploy to VPS",
+          "startedAt": "2026-10-24T05:17:13Z",
+          "status": "completed",
+          "steps": [],
+          "url": "https://github.com/joaoCarlosGM/pap-saude/actions/runs/40065245130/job/120788234873"
+        }
+      ],
+      "status": "completed"
     }
   ],
   "ciFailureCorrection": {
@@ -1032,6 +1275,62 @@
     "localBrowserTests": 5,
     "chromium156Reproduction": "BLOCKED: official download returned HTTP 403 Domain forbidden",
     "change": "Privacy-safe diagnostic first line, without altering assertion/rules/retries/browser or disabling gate",
-    "rootCauseOfWcagViolation": "Not established; diagnostic run required"
+    "rootCauseOfWcagViolation": "Confirmed: generic color/background transitions interpolate inherited header control foreground after theme background changes; hover had light-only background",
+    "confirmedRemoteContrast": {
+      "minimumRequired": 4.5,
+      "actual": 3.83,
+      "foreground": "#758785",
+      "background": "#142d31",
+      "targets": [
+        "Ajuda",
+        "Minha segurança e perfil"
+      ]
+    },
+    "localRedReproduction": {
+      "failed": true,
+      "foregroundContrast": 3.83,
+      "profileHoverContrast": 1.5,
+      "log": "b-wcag-hover-red.log"
+    },
+    "targetedFix": "Remove generic transitions from 3 header controls; use dark hover #28484b; keep all WCAG assertions and add normal/hover/focus checks",
+    "finalValidation": [
+      {
+        "name": "b-wcag-green",
+        "command": "npm run test:mission04:b:browser",
+        "exitCode": 0,
+        "seconds": 65.25
+      },
+      {
+        "name": "c-wcag-green",
+        "command": "npm run test:mission04:c:browser",
+        "exitCode": 0,
+        "seconds": 122.38
+      },
+      {
+        "name": "wcag-typescript",
+        "command": "npx tsc --noEmit",
+        "exitCode": 0,
+        "seconds": 6.19
+      },
+      {
+        "name": "wcag-lint",
+        "command": "npx eslint src/components/admin/AdminTopbar.tsx tests/mission04-b/governance.spec.ts",
+        "exitCode": 0,
+        "seconds": 3.54
+      },
+      {
+        "name": "wcag-build",
+        "command": "npm run build",
+        "exitCode": 1,
+        "seconds": 25.85
+      },
+      {
+        "name": "wcag-build-retry",
+        "command": "DATABASE_URL=<owned disposable build context> npm run build",
+        "exitCode": 0,
+        "seconds": 10.21,
+        "previousFailure": "Required DATABASE_URL omitted from first build command; fail-closed guard preserved, no source change"
+      }
+    ]
   }
 }

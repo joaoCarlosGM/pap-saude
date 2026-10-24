@@ -9804,7 +9804,7 @@ Scanner exit for pap-saude-migrator:m04-d: 0
 
 ===== First remote CI: 40063921155 / ed8b1ca / GitHub disposable runner =====
 F04 security, migrations and production builds	Isolated local development workflow	﻿2026-10-24T04:53:31.3430957Z ##[group]Run npm run test:local-dev
-F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:31.3431179Z [36;1mnpm run test:local-dev[0m
+F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:31.3431179Z npm run test:local-dev
 F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:31.3482401Z shell: /usr/bin/bash -e {0}
 F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:31.3482563Z env:
 F04 security, migrations and production builds	Isolated local development workflow	2026-10-24T04:53:31.3482679Z   REGISTRY: ghcr.io
@@ -10101,7 +10101,7 @@ npm notice
 
 ===== Second remote CI failure: WCAG assertion / 40064414519 =====
 F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	﻿2026-10-24T05:02:23.8091043Z ##[group]Run npm run test:mission04:b:browser
-F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:02:23.8091399Z [36;1mnpm run test:mission04:b:browser[0m
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:02:23.8091399Z npm run test:mission04:b:browser
 F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:02:23.8143258Z shell: /usr/bin/bash -e {0}
 F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:02:23.8143431Z env:
 F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:02:23.8143548Z   REGISTRY: ghcr.io
@@ -10417,7 +10417,7 @@ F04 security, migrations and production builds	Mission 04 delegated IAM, legacy 
 F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:02:34.5875292Z # todo 0
 F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:02:34.5875521Z # duration_ms 7558.255764
 F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:02:41.3113518Z FAILED: Manager desktop/mobile/dark authorized controls, keyboard and WCAG AA
-F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:02:41.3114355Z Error: [2mexpect([22m[31mreceived[39m[2m).[22mtoEqual[2m([22m[32mexpected[39m[2m) // deep equality[22m
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:02:41.3114355Z Error: expect(received).toEqual(expected) // deep equality
 F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:02:41.3114661Z governance.spec.ts:89:69
 F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:02:45.8967370Z PASSED: Admin explicitly activates a reviewed pending UBS; Manager never sees activation
 F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:02:54.7417871Z PASSED: direct clinical HTML/RSC denied to anonymous/Admin/Manager/Commercial/unassigned without redirect loops
@@ -11123,6 +11123,1619 @@ npm notice To update run: npm install -g npm@12.2.1
 npm notice
 
 ===== b-diagnostics-lint.log =====
+npm notice
+npm notice New major version of npm available! 11.9.0 -> 12.2.1
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.1
+npm notice To update run: npm install -g npm@12.2.1
+npm notice
+
+===== remote-ci-third-failure.log =====
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	﻿2026-10-24T05:16:27.4584588Z ##[group]Run npm run test:mission04:b:browser
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:27.4584902Z npm run test:mission04:b:browser
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:27.4638628Z shell: /usr/bin/bash -e {0}
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:27.4638853Z env:
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:27.4639023Z   REGISTRY: ghcr.io
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:27.4639225Z   IMAGE_NAME: joaocarlosgm/pap-saude
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:27.4639797Z   DATABASE_URL: ***127.0.0.1:5432/pap_saude?schema=public
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:27.4640061Z ##[endgroup]
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:27.5484851Z
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:27.5485563Z > pap-saude@0.1.0 test:mission04:b:browser
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:27.5486023Z > bash scripts/test-mission04-b.sh --browser
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:27.5486206Z
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:27.6138264Z NOTICE:  database "pap_saude_m04_b_test" does not exist, skipping
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:27.6932847Z CREATE DATABASE
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:28.5366703Z Loaded Prisma config from prisma.config.ts.
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:28.5366989Z
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:28.6554796Z Prisma schema loaded from prisma/schema.prisma.
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:28.6627561Z Datasource "db": PostgreSQL database "pap_saude_m04_b_test", schema "public" at "127.0.0.1:5432"
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:28.7197254Z
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:28.7197989Z 32 migrations found in prisma/migrations
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:28.7198332Z
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:28.8362955Z Applying migration `20260909150044_init_clinical_schema`
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:28.8943517Z Applying migration `20260926001330_foundation_01`
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:29.1362584Z Applying migration `20260926014952_foundation_02_identity`
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:29.1766805Z Applying migration `20260926210500_foundation_02_email_identity`
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:29.1789730Z Applying migration `20260926220000_foundation_02_login_abuse_protection`
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:29.1881109Z Applying migration `20260927001500_foundation_02_mfa_challenge`
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:29.1991885Z Applying migration `20260927033000_foundation_02_mfa_reset`
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:29.2033168Z Applying migration `20260927043000_foundation_02_organization_lifecycle`
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:29.2165854Z Applying migration `20260927050000_foundation_02_membership_discovery`
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:29.3301708Z Applying migration `20261002010000_foundation_02_roles_permissions`
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:29.3330132Z Applying migration `20261002020000_foundation_02_product_activity`
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:29.3476968Z Applying migration `20261002030000_foundation_02_organization_metrics`
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:29.3603554Z Applying migration `20261002040000_foundation_02_feedback`
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:29.3810678Z Applying migration `20261002050000_foundation_02_health_alerts`
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:29.3972395Z Applying migration `20261003010000_foundation_03_patient_registry_core`
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:29.4057014Z Applying migration `20261003020000_foundation_03_pregnancy_core`
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:29.4130084Z Applying migration `20261003030000_foundation_03_encounter_core`
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:29.4276107Z Applying migration `20261003040000_foundation_03_vital_signs_core`
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:29.4408962Z Applying migration `20261003050000_foundation_03_obstetric_data_core`
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:29.4511838Z Applying migration `20261003060000_foundation_03_allergies_clinical_flags`
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:29.4779669Z Applying migration `20261003070000_foundation_03_meows_engine`
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:29.5350469Z Applying migration `20261005080000_foundation_03_clinical_revision_authorization`
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:29.5403170Z Applying migration `20261007094500_foundation_04_user_invitations`
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:29.5739094Z Applying migration `20261007101500_foundation_04_onboarding`
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:29.5875354Z Applying migration `20261016010000_foundation_04_password_reset_token`
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:29.6026785Z Applying migration `20261016200000_foundation_04_admin_audit_indexes`
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:29.6072758Z Applying migration `20261016210000_foundation_04_audit_integrity`
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:29.6115916Z Applying migration `20261019010000_foundation_04_schema_parity`
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:29.6172478Z Applying migration `20261020000000_admin_beta1`
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:29.6259805Z Applying migration `20261022040000_mission04_delegated_governance`
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:29.6311523Z Applying migration `20261022050000_mission04_global_access`
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:29.6643245Z Applying migration `20261023060000_mission04_transactional_email`
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:29.6896224Z
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:29.6903427Z The following migration(s) have been applied:
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:29.6903894Z
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:29.6903996Z migrations/
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:29.6904605Z   └─ 20260909150044_init_clinical_schema/
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:29.6905002Z     └─ migration.sql
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:29.6905374Z   └─ 20260926001330_foundation_01/
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:29.6905794Z     └─ migration.sql
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:29.6906222Z   └─ 20260926014952_foundation_02_identity/
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:29.6906658Z     └─ migration.sql
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:29.6907065Z   └─ 20260926210500_foundation_02_email_identity/
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:29.6907630Z     └─ migration.sql
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:29.6908249Z   └─ 20260926220000_foundation_02_login_abuse_protection/
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:29.6908896Z     └─ migration.sql
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:29.6909330Z   └─ 20260927001500_foundation_02_mfa_challenge/
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:29.6909731Z     └─ migration.sql
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:29.6910083Z   └─ 20260927033000_foundation_02_mfa_reset/
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:29.6910502Z     └─ migration.sql
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:29.6911065Z   └─ 20260927043000_foundation_02_organization_lifecycle/
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:29.6911598Z     └─ migration.sql
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:29.6912006Z   └─ 20260927050000_foundation_02_membership_discovery/
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:29.6912463Z     └─ migration.sql
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:29.6912939Z   └─ 20261002010000_foundation_02_roles_permissions/
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:29.6913403Z     └─ migration.sql
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:29.6913895Z   └─ 20261002020000_foundation_02_product_activity/
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:29.6914431Z     └─ migration.sql
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:29.6914898Z   └─ 20261002030000_foundation_02_organization_metrics/
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:29.6915437Z     └─ migration.sql
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:29.6915809Z   └─ 20261002040000_foundation_02_feedback/
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:29.6916158Z     └─ migration.sql
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:29.6916540Z   └─ 20261002050000_foundation_02_health_alerts/
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:29.6916814Z     └─ migration.sql
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:29.6917080Z   └─ 20261003010000_foundation_03_patient_registry_core/
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:29.6917358Z     └─ migration.sql
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:29.6917609Z   └─ 20261003020000_foundation_03_pregnancy_core/
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:29.6917884Z     └─ migration.sql
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:29.6918148Z   └─ 20261003030000_foundation_03_encounter_core/
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:29.6918405Z     └─ migration.sql
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:29.6918664Z   └─ 20261003040000_foundation_03_vital_signs_core/
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:29.6918945Z     └─ migration.sql
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:29.6919210Z   └─ 20261003050000_foundation_03_obstetric_data_core/
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:29.6919467Z     └─ migration.sql
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:29.6919754Z   └─ 20261003060000_foundation_03_allergies_clinical_flags/
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:29.6920050Z     └─ migration.sql
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:29.6920288Z   └─ 20261003070000_foundation_03_meows_engine/
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:29.6920542Z     └─ migration.sql
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:29.6920875Z   └─ 20261005080000_foundation_03_clinical_revision_authorization/
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:29.6921185Z     └─ migration.sql
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:29.6921431Z   └─ 20261007094500_foundation_04_user_invitations/
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:29.6921691Z     └─ migration.sql
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:29.6921937Z   └─ 20261007101500_foundation_04_onboarding/
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:29.6922185Z     └─ migration.sql
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:29.6922459Z   └─ 20261016010000_foundation_04_password_reset_token/
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:29.6922723Z     └─ migration.sql
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:29.6923286Z   └─ 20261016200000_foundation_04_admin_audit_indexes/
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:29.6923556Z     └─ migration.sql
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:29.6924079Z   └─ 20261016210000_foundation_04_audit_integrity/
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:29.6924329Z     └─ migration.sql
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:29.6924577Z   └─ 20261019010000_foundation_04_schema_parity/
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:29.6924823Z     └─ migration.sql
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:29.6925040Z   └─ 20261020000000_admin_beta1/
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:29.6925272Z     └─ migration.sql
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:29.6925712Z   └─ 20261022040000_mission04_delegated_governance/
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:29.6925970Z     └─ migration.sql
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:29.6926206Z   └─ 20261022050000_mission04_global_access/
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:29.6926458Z     └─ migration.sql
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:29.6926704Z   └─ 20261023060000_mission04_transactional_email/
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:29.6926954Z     └─ migration.sql
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:29.6927058Z
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:29.6927214Z All migrations have been successfully applied.
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:30.5303951Z Loaded Prisma config from prisma.config.ts.
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:30.5304354Z
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:30.6296098Z Prisma schema loaded from prisma/schema.prisma.
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:30.6355459Z Datasource "db": PostgreSQL database "pap_saude_m04_b_test", schema "public" at "127.0.0.1:5432"
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:30.6771808Z
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:30.6772602Z 32 migrations found in prisma/migrations
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:30.7224044Z
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:30.7224113Z
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:30.7234684Z No pending migrations to apply.
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:31.5644999Z Loaded Prisma config from prisma.config.ts.
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:31.5645293Z
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:31.8169500Z No difference detected.
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:31.8199958Z
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:32.1414829Z TAP version 13
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:35.4452999Z # (node:11497) DeprecationWarning: Calling client.query() when the client is already executing a query is deprecated and will be removed in pg@9.0. Use async/await or an external async flow control mechanism instead.
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:35.4454325Z # (Use `node --trace-deprecation ...` to show where the warning was created)
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:35.4723333Z # Subtest: PAP_ADMIN appoints PAP_MANAGER using real MFA and canonical global scope
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:35.4727472Z ok 1 - PAP_ADMIN appoints PAP_MANAGER using real MFA and canonical global scope
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:35.4727912Z   ---
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:35.4728164Z   duration_ms: 2593.846366
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:35.4728373Z   type: 'test'
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:35.4728676Z   ...
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:35.4941182Z # Subtest: Manager requires MFA for navigation and protected APIs even after completed onboarding
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:35.4942859Z ok 2 - Manager requires MFA for navigation and protected APIs even after completed onboarding
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:35.4945020Z   ---
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:35.4945330Z   duration_ms: 22.900743
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:35.4945647Z   type: 'test'
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:35.4945916Z   ...
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:35.5634876Z # Subtest: manager cannot grant/revoke Managers/Admins, self-elevate or inject actor/scope
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:35.5636130Z ok 3 - manager cannot grant/revoke Managers/Admins, self-elevate or inject actor/scope
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:35.5636649Z   ---
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:35.5636846Z   duration_ms: 69.638749
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:35.5637109Z   type: 'test'
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:35.5637294Z   ...
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:35.6328836Z # Subtest: manager authorizes/revokes eligible Commercial only; privileged targets protected
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:35.6330324Z ok 4 - manager authorizes/revokes eligible Commercial only; privileged targets protected
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:35.6331166Z   ---
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:35.6331553Z   duration_ms: 68.876415
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:35.6331983Z   type: 'test'
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:35.6332353Z   ...
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:35.6884361Z # Subtest: persisted grant drift cannot give Manager lifecycle, role.manage or patient privileges
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:35.6885391Z ok 5 - persisted grant drift cannot give Manager lifecycle, role.manage or patient privileges
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:35.6885888Z   ---
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:35.6886182Z   duration_ms: 55.397374
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:35.6886867Z   type: 'test'
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:35.6887187Z   ...
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:35.8223737Z # Subtest: manager requests corrections and forwards exactly one pending UBS under concurrency
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:35.8225156Z ok 6 - manager requests corrections and forwards exactly one pending UBS under concurrency
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:35.8225830Z   ---
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:35.8226030Z   duration_ms: 134.294606
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:35.8226280Z   type: 'test'
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:35.8226511Z   ...
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:35.8761376Z # Subtest: manager cannot activate/suspend/archive via legacy PATCH or alternative payloads
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:35.8763409Z ok 7 - manager cannot activate/suspend/archive via legacy PATCH or alternative payloads
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:35.8764060Z   ---
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:35.8764329Z   duration_ms: 53.314601
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:35.8764635Z   type: 'test'
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:35.8764881Z   ...
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:35.8855165Z # Subtest: privileged services bind MFA to exact actor session, not any verified sibling session
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:35.8856647Z ok 8 - privileged services bind MFA to exact actor session, not any verified sibling session
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:35.8857494Z   ---
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:35.8857964Z   duration_ms: 9.706573
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:35.8858242Z   type: 'test'
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:35.8858447Z   ...
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:35.8944603Z # Subtest: primary admin session blocked through old organization and role endpoints
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:35.8945825Z ok 9 - primary admin session blocked through old organization and role endpoints
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:35.8946694Z   ---
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:35.8947220Z   duration_ms: 8.503188
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:35.8947562Z   type: 'test'
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:35.8947841Z   ...
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:36.0208583Z # Subtest: verified PAP_ADMIN activation atomic and concurrent repeat records one activation
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:36.0210090Z ok 10 - verified PAP_ADMIN activation atomic and concurrent repeat records one activation
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:36.0210662Z   ---
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:36.0210931Z   duration_ms: 126.809321
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:36.0211232Z   type: 'test'
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:36.0211523Z   ...
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:36.0492794Z # Subtest: Manager denied other-admin security and metrics; organization list omits clinical counters
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:36.0494102Z ok 11 - Manager denied other-admin security and metrics; organization list omits clinical counters
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:36.0494655Z   ---
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:36.0494932Z   duration_ms: 28.316103
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:36.0495234Z   type: 'test'
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:36.0495470Z   ...
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:36.0825580Z # Subtest: Commercial denied private organizations, request contacts, roles, security and metrics
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:36.0826801Z ok 12 - Commercial denied private organizations, request contacts, roles, security and metrics
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:36.0827375Z   ---
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:36.0827654Z   duration_ms: 33.325256
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:36.0827962Z   type: 'test'
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:36.0828214Z   ...
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:36.7197549Z # Subtest: Manager organization.read returns only delegated fields across unrelated organizations
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:36.7198679Z ok 13 - Manager organization.read returns only delegated fields across unrelated organizations
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:36.7201930Z   ---
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:36.7202402Z   duration_ms: 632.156574
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:36.7202739Z   type: 'test'
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:36.7203000Z   ...
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:36.7822824Z # Subtest: Manager organization.read cannot authorize undelegated global resources
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:36.7824069Z ok 14 - Manager organization.read cannot authorize undelegated global resources
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:36.7824779Z   ---
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:36.7825099Z   duration_ms: 66.791558
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:36.7825488Z   type: 'test'
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:36.7825748Z   ...
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:36.8293088Z # Subtest: global nonclinical roles denied clinical GET/POST/PATCH with forged org and demo query
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:36.8294166Z ok 15 - global nonclinical roles denied clinical GET/POST/PATCH with forged org and demo query
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:36.8294562Z   ---
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:36.8294755Z   duration_ms: 47.638896
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:36.8295244Z   type: 'test'
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:36.8295411Z   ...
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:37.0034863Z # Subtest: Professional optional MFA retained: own-unit clinical access, foreign-unit denied
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:37.0036011Z ok 16 - Professional optional MFA retained: own-unit clinical access, foreign-unit denied
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:37.0036575Z   ---
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:37.0036852Z   duration_ms: 173.848592
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:37.0037156Z   type: 'test'
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:37.0037407Z   ...
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:37.6132206Z # Subtest: anonymous and unassigned accounts cannot read or self-promote through admin API
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:37.6134166Z ok 17 - anonymous and unassigned accounts cannot read or self-promote through admin API
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:37.6134652Z   ---
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:37.6134842Z   duration_ms: 609.681781
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:37.6135058Z   type: 'test'
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:37.6135228Z   ...
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:38.2170036Z # Subtest: CSRF rejects foreign origin; expired/revoked verified sessions cannot activate
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:38.2171217Z ok 18 - CSRF rejects foreign origin; expired/revoked verified sessions cannot activate
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:38.2176157Z   ---
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:38.2176489Z   duration_ms: 604.10424
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:38.2176798Z   type: 'test'
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:38.2177046Z   ...
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:38.2341037Z # Subtest: old PATCH archival requires exact name, password and fresh TOTP
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:38.2342151Z ok 19 - old PATCH archival requires exact name, password and fresh TOTP
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:38.2342968Z   ---
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:38.2343548Z   duration_ms: 12.399817
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:38.2344171Z   type: 'test'
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:38.2344571Z   ...
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:38.3109622Z # Subtest: Admin lifecycle audited and preserves existing password, sessions and MFA
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:38.3110763Z ok 20 - Admin lifecycle audited and preserves existing password, sessions and MFA
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:38.3111356Z   ---
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:38.3111645Z   duration_ms: 81.195022
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:38.3111974Z   type: 'test'
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:38.3112306Z   ...
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:38.3962499Z # Subtest: institutional invitations cannot self-elevate Manager through Beta or legacy route
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:38.3963504Z ok 21 - institutional invitations cannot self-elevate Manager through Beta or legacy route
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:38.3964124Z   ---
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:38.3964336Z   duration_ms: 85.422851
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:38.3964572Z   type: 'test'
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:38.3964834Z   ...
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:38.4647139Z # Subtest: Manager may invite a new professional but cannot bootstrap own institutional contact
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:38.4648247Z ok 22 - Manager may invite a new professional but cannot bootstrap own institutional contact
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:38.4648779Z   ---
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:38.4648968Z   duration_ms: 68.552667
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:38.4649168Z   type: 'test'
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:38.4649345Z   ...
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:38.6651838Z # Subtest: pending invitation cannot grant clinical access after target is appointed Manager
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:38.6652976Z ok 23 - pending invitation cannot grant clinical access after target is appointed Manager
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:38.6653849Z   ---
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:38.6654221Z   duration_ms: 200.308196
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:38.6654524Z   type: 'test'
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:38.6654777Z   ...
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:38.7017726Z # Subtest: PAP_ADMIN revocation of Manager immediately affects the same verified session
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:38.7019185Z ok 24 - PAP_ADMIN revocation of Manager immediately affects the same verified session
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:38.7019593Z   ---
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:38.7019844Z   duration_ms: 36.588089
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:38.7020065Z   type: 'test'
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:38.7020261Z   ...
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:38.8485731Z # Subtest: normal login still accepts existing password and recovery factor without identity reset
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:38.8486458Z ok 25 - normal login still accepts existing password and recovery factor without identity reset
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:38.8486816Z   ---
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:38.8487007Z   duration_ms: 146.863554
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:38.8487206Z   type: 'test'
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:38.8487730Z   ...
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:40.0514617Z # Subtest: strong archival succeeds without deleting clinical history and rejects code replay
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:40.0515735Z ok 26 - strong archival succeeds without deleting clinical history and rejects code replay
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:40.0516259Z   ---
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:40.0516516Z   duration_ms: 1202.703016
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:40.0516812Z   type: 'test'
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:40.0517019Z   ...
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:40.8732640Z # Subtest: revoked delegated inviter cannot authorize acceptance of an outstanding institutional invitation
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:40.8734728Z ok 27 - revoked delegated inviter cannot authorize acceptance of an outstanding institutional invitation
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:40.8735579Z   ---
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:40.8736065Z   duration_ms: 811.889149
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:40.8736432Z   type: 'test'
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:40.8736734Z   ...
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:40.9099343Z # Subtest: forward-only upgrade of populated Beta preserves identities/password/TOTP/sessions/memberships/approved UBS/invites; bootstrap idempotent
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:40.9100689Z ok 28 - forward-only upgrade of populated Beta preserves identities/password/TOTP/sessions/memberships/approved UBS/invites; bootstrap idempotent
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:40.9101346Z   ---
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:40.9101563Z   duration_ms: 2846.028676
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:40.9101810Z   type: 'test'
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:40.9102058Z   ...
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:40.9102222Z 1..28
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:40.9102376Z # tests 28
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:40.9102541Z # suites 0
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:40.9102713Z # pass 28
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:40.9102890Z # fail 0
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:40.9103042Z # cancelled 0
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:40.9103215Z # skipped 0
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:40.9103374Z # todo 0
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:40.9103546Z # duration_ms 8784.857362
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:48.3049432Z FAILED: Manager desktop/mobile/dark authorized controls, keyboard and WCAG AA
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:48.3050911Z Error: WCAG manager-dark: [{"rule":"color-contrast","impact":"serious","nodes":[{"target":[".sm\\:px-3 > .sm\\:inline.hidden"],"contrast":["contrast of 3.83","#758785","#142d31","ratio of 4.5"]},{"target":[".max-w-40"],"contrast":["contrast of 3.83","#758785","#142d31","ratio of 4.5"]}]}]
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:48.3051923Z governance.spec.ts:100:55
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:16:54.5044481Z PASSED: Admin explicitly activates a reviewed pending UBS; Manager never sees activation
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:17:04.9566990Z PASSED: direct clinical HTML/RSC denied to anonymous/Admin/Manager/Commercial/unassigned without redirect loops
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:17:07.0377899Z PASSED: Manager institutional directory excludes private values from API, HTML and RSC
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:17:09.2886934Z PASSED: Professional without mandatory MFA can access own clinical pages, foreign record denied by API
+F04 security, migrations and production builds	Mission 04 delegated IAM, legacy upgrade and clinical page boundaries	2026-10-24T05:17:09.5910828Z ##[error]Process completed with exit code 1.
+
+===== b-wcag-hover-red.log =====
+
+> pap-saude@0.1.0 test:mission04:b:browser
+> bash scripts/test-mission04-b.sh --browser --grep Manager desktop
+
+NOTICE:  database "pap_saude_m04_b_test" does not exist, skipping
+CREATE DATABASE
+Loaded Prisma config from prisma.config.ts.
+
+Prisma schema loaded from prisma/schema.prisma.
+Datasource "db": PostgreSQL database "pap_saude_m04_b_test", schema "public" at "127.0.0.1:5432"
+
+32 migrations found in prisma/migrations
+
+Applying migration `20260909150044_init_clinical_schema`
+Applying migration `20260926001330_foundation_01`
+Applying migration `20260926014952_foundation_02_identity`
+Applying migration `20260926210500_foundation_02_email_identity`
+Applying migration `20260926220000_foundation_02_login_abuse_protection`
+Applying migration `20260927001500_foundation_02_mfa_challenge`
+Applying migration `20260927033000_foundation_02_mfa_reset`
+Applying migration `20260927043000_foundation_02_organization_lifecycle`
+Applying migration `20260927050000_foundation_02_membership_discovery`
+Applying migration `20261002010000_foundation_02_roles_permissions`
+Applying migration `20261002020000_foundation_02_product_activity`
+Applying migration `20261002030000_foundation_02_organization_metrics`
+Applying migration `20261002040000_foundation_02_feedback`
+Applying migration `20261002050000_foundation_02_health_alerts`
+Applying migration `20261003010000_foundation_03_patient_registry_core`
+Applying migration `20261003020000_foundation_03_pregnancy_core`
+Applying migration `20261003030000_foundation_03_encounter_core`
+Applying migration `20261003040000_foundation_03_vital_signs_core`
+Applying migration `20261003050000_foundation_03_obstetric_data_core`
+Applying migration `20261003060000_foundation_03_allergies_clinical_flags`
+Applying migration `20261003070000_foundation_03_meows_engine`
+Applying migration `20261005080000_foundation_03_clinical_revision_authorization`
+Applying migration `20261007094500_foundation_04_user_invitations`
+Applying migration `20261007101500_foundation_04_onboarding`
+Applying migration `20261016010000_foundation_04_password_reset_token`
+Applying migration `20261016200000_foundation_04_admin_audit_indexes`
+Applying migration `20261016210000_foundation_04_audit_integrity`
+Applying migration `20261019010000_foundation_04_schema_parity`
+Applying migration `20261020000000_admin_beta1`
+Applying migration `20261022040000_mission04_delegated_governance`
+Applying migration `20261022050000_mission04_global_access`
+Applying migration `20261023060000_mission04_transactional_email`
+
+The following migration(s) have been applied:
+
+migrations/
+  └─ 20260909150044_init_clinical_schema/
+    └─ migration.sql
+  └─ 20260926001330_foundation_01/
+    └─ migration.sql
+  └─ 20260926014952_foundation_02_identity/
+    └─ migration.sql
+  └─ 20260926210500_foundation_02_email_identity/
+    └─ migration.sql
+  └─ 20260926220000_foundation_02_login_abuse_protection/
+    └─ migration.sql
+  └─ 20260927001500_foundation_02_mfa_challenge/
+    └─ migration.sql
+  └─ 20260927033000_foundation_02_mfa_reset/
+    └─ migration.sql
+  └─ 20260927043000_foundation_02_organization_lifecycle/
+    └─ migration.sql
+  └─ 20260927050000_foundation_02_membership_discovery/
+    └─ migration.sql
+  └─ 20261002010000_foundation_02_roles_permissions/
+    └─ migration.sql
+  └─ 20261002020000_foundation_02_product_activity/
+    └─ migration.sql
+  └─ 20261002030000_foundation_02_organization_metrics/
+    └─ migration.sql
+  └─ 20261002040000_foundation_02_feedback/
+    └─ migration.sql
+  └─ 20261002050000_foundation_02_health_alerts/
+    └─ migration.sql
+  └─ 20261003010000_foundation_03_patient_registry_core/
+    └─ migration.sql
+  └─ 20261003020000_foundation_03_pregnancy_core/
+    └─ migration.sql
+  └─ 20261003030000_foundation_03_encounter_core/
+    └─ migration.sql
+  └─ 20261003040000_foundation_03_vital_signs_core/
+    └─ migration.sql
+  └─ 20261003050000_foundation_03_obstetric_data_core/
+    └─ migration.sql
+  └─ 20261003060000_foundation_03_allergies_clinical_flags/
+    └─ migration.sql
+  └─ 20261003070000_foundation_03_meows_engine/
+    └─ migration.sql
+  └─ 20261005080000_foundation_03_clinical_revision_authorization/
+    └─ migration.sql
+  └─ 20261007094500_foundation_04_user_invitations/
+    └─ migration.sql
+  └─ 20261007101500_foundation_04_onboarding/
+    └─ migration.sql
+  └─ 20261016010000_foundation_04_password_reset_token/
+    └─ migration.sql
+  └─ 20261016200000_foundation_04_admin_audit_indexes/
+    └─ migration.sql
+  └─ 20261016210000_foundation_04_audit_integrity/
+    └─ migration.sql
+  └─ 20261019010000_foundation_04_schema_parity/
+    └─ migration.sql
+  └─ 20261020000000_admin_beta1/
+    └─ migration.sql
+  └─ 20261022040000_mission04_delegated_governance/
+    └─ migration.sql
+  └─ 20261022050000_mission04_global_access/
+    └─ migration.sql
+  └─ 20261023060000_mission04_transactional_email/
+    └─ migration.sql
+
+All migrations have been successfully applied.
+npm notice
+npm notice New major version of npm available! 11.9.0 -> 12.2.1
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.1
+npm notice To update run: npm install -g npm@12.2.1
+npm notice
+Loaded Prisma config from prisma.config.ts.
+
+Prisma schema loaded from prisma/schema.prisma.
+Datasource "db": PostgreSQL database "pap_saude_m04_b_test", schema "public" at "127.0.0.1:5432"
+
+32 migrations found in prisma/migrations
+
+
+No pending migrations to apply.
+npm notice
+npm notice New major version of npm available! 11.9.0 -> 12.2.1
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.1
+npm notice To update run: npm install -g npm@12.2.1
+npm notice
+Loaded Prisma config from prisma.config.ts.
+
+No difference detected.
+
+npm notice
+npm notice New major version of npm available! 11.9.0 -> 12.2.1
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.1
+npm notice To update run: npm install -g npm@12.2.1
+npm notice
+TAP version 13
+# (node:437159) DeprecationWarning: Calling client.query() when the client is already executing a query is deprecated and will be removed in pg@9.0. Use async/await or an external async flow control mechanism instead.
+# (Use `node --trace-deprecation ...` to show where the warning was created)
+# Subtest: PAP_ADMIN appoints PAP_MANAGER using real MFA and canonical global scope
+ok 1 - PAP_ADMIN appoints PAP_MANAGER using real MFA and canonical global scope
+  ---
+  duration_ms: 4153.139777
+  type: 'test'
+  ...
+# Subtest: Manager requires MFA for navigation and protected APIs even after completed onboarding
+ok 2 - Manager requires MFA for navigation and protected APIs even after completed onboarding
+  ---
+  duration_ms: 28.90438
+  type: 'test'
+  ...
+# Subtest: manager cannot grant/revoke Managers/Admins, self-elevate or inject actor/scope
+ok 3 - manager cannot grant/revoke Managers/Admins, self-elevate or inject actor/scope
+  ---
+  duration_ms: 115.082699
+  type: 'test'
+  ...
+# Subtest: manager authorizes/revokes eligible Commercial only; privileged targets protected
+ok 4 - manager authorizes/revokes eligible Commercial only; privileged targets protected
+  ---
+  duration_ms: 94.528053
+  type: 'test'
+  ...
+# Subtest: persisted grant drift cannot give Manager lifecycle, role.manage or patient privileges
+ok 5 - persisted grant drift cannot give Manager lifecycle, role.manage or patient privileges
+  ---
+  duration_ms: 90.001229
+  type: 'test'
+  ...
+# Subtest: manager requests corrections and forwards exactly one pending UBS under concurrency
+ok 6 - manager requests corrections and forwards exactly one pending UBS under concurrency
+  ---
+  duration_ms: 215.619011
+  type: 'test'
+  ...
+# Subtest: manager cannot activate/suspend/archive via legacy PATCH or alternative payloads
+ok 7 - manager cannot activate/suspend/archive via legacy PATCH or alternative payloads
+  ---
+  duration_ms: 76.008346
+  type: 'test'
+  ...
+# Subtest: privileged services bind MFA to exact actor session, not any verified sibling session
+ok 8 - privileged services bind MFA to exact actor session, not any verified sibling session
+  ---
+  duration_ms: 12.245697
+  type: 'test'
+  ...
+# Subtest: primary admin session blocked through old organization and role endpoints
+ok 9 - primary admin session blocked through old organization and role endpoints
+  ---
+  duration_ms: 11.860728
+  type: 'test'
+  ...
+# Subtest: verified PAP_ADMIN activation atomic and concurrent repeat records one activation
+ok 10 - verified PAP_ADMIN activation atomic and concurrent repeat records one activation
+  ---
+  duration_ms: 193.236527
+  type: 'test'
+  ...
+# Subtest: Manager denied other-admin security and metrics; organization list omits clinical counters
+ok 11 - Manager denied other-admin security and metrics; organization list omits clinical counters
+  ---
+  duration_ms: 50.465554
+  type: 'test'
+  ...
+# Subtest: Commercial denied private organizations, request contacts, roles, security and metrics
+ok 12 - Commercial denied private organizations, request contacts, roles, security and metrics
+  ---
+  duration_ms: 46.818952
+  type: 'test'
+  ...
+# Subtest: Manager organization.read returns only delegated fields across unrelated organizations
+ok 13 - Manager organization.read returns only delegated fields across unrelated organizations
+  ---
+  duration_ms: 1377.319489
+  type: 'test'
+  ...
+# Subtest: Manager organization.read cannot authorize undelegated global resources
+ok 14 - Manager organization.read cannot authorize undelegated global resources
+  ---
+  duration_ms: 164.372804
+  type: 'test'
+  ...
+# Subtest: global nonclinical roles denied clinical GET/POST/PATCH with forged org and demo query
+ok 15 - global nonclinical roles denied clinical GET/POST/PATCH with forged org and demo query
+  ---
+  duration_ms: 57.193507
+  type: 'test'
+  ...
+# Subtest: Professional optional MFA retained: own-unit clinical access, foreign-unit denied
+ok 16 - Professional optional MFA retained: own-unit clinical access, foreign-unit denied
+  ---
+  duration_ms: 209.375216
+  type: 'test'
+  ...
+# Subtest: anonymous and unassigned accounts cannot read or self-promote through admin API
+ok 17 - anonymous and unassigned accounts cannot read or self-promote through admin API
+  ---
+  duration_ms: 740.422417
+  type: 'test'
+  ...
+# Subtest: CSRF rejects foreign origin; expired/revoked verified sessions cannot activate
+ok 18 - CSRF rejects foreign origin; expired/revoked verified sessions cannot activate
+  ---
+  duration_ms: 1160.148745
+  type: 'test'
+  ...
+# Subtest: old PATCH archival requires exact name, password and fresh TOTP
+ok 19 - old PATCH archival requires exact name, password and fresh TOTP
+  ---
+  duration_ms: 17.737781
+  type: 'test'
+  ...
+# Subtest: Admin lifecycle audited and preserves existing password, sessions and MFA
+ok 20 - Admin lifecycle audited and preserves existing password, sessions and MFA
+  ---
+  duration_ms: 104.880343
+  type: 'test'
+  ...
+# Subtest: institutional invitations cannot self-elevate Manager through Beta or legacy route
+ok 21 - institutional invitations cannot self-elevate Manager through Beta or legacy route
+  ---
+  duration_ms: 124.17186
+  type: 'test'
+  ...
+# Subtest: Manager may invite a new professional but cannot bootstrap own institutional contact
+ok 22 - Manager may invite a new professional but cannot bootstrap own institutional contact
+  ---
+  duration_ms: 98.641054
+  type: 'test'
+  ...
+# Subtest: pending invitation cannot grant clinical access after target is appointed Manager
+ok 23 - pending invitation cannot grant clinical access after target is appointed Manager
+  ---
+  duration_ms: 265.733767
+  type: 'test'
+  ...
+# Subtest: PAP_ADMIN revocation of Manager immediately affects the same verified session
+ok 24 - PAP_ADMIN revocation of Manager immediately affects the same verified session
+  ---
+  duration_ms: 34.791353
+  type: 'test'
+  ...
+# Subtest: normal login still accepts existing password and recovery factor without identity reset
+ok 25 - normal login still accepts existing password and recovery factor without identity reset
+  ---
+  duration_ms: 177.014321
+  type: 'test'
+  ...
+# Subtest: strong archival succeeds without deleting clinical history and rejects code replay
+ok 26 - strong archival succeeds without deleting clinical history and rejects code replay
+  ---
+  duration_ms: 1873.068263
+  type: 'test'
+  ...
+# Subtest: revoked delegated inviter cannot authorize acceptance of an outstanding institutional invitation
+ok 27 - revoked delegated inviter cannot authorize acceptance of an outstanding institutional invitation
+  ---
+  duration_ms: 985.765714
+  type: 'test'
+  ...
+# Subtest: forward-only upgrade of populated Beta preserves identities/password/TOTP/sessions/memberships/approved UBS/invites; bootstrap idempotent
+ok 28 - forward-only upgrade of populated Beta preserves identities/password/TOTP/sessions/memberships/approved UBS/invites; bootstrap idempotent
+  ---
+  duration_ms: 3587.824257
+  type: 'test'
+  ...
+1..28
+# tests 28
+# suites 0
+# pass 28
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 13292.700981
+npm notice
+npm notice New major version of npm available! 11.9.0 -> 12.2.1
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.1
+npm notice To update run: npm install -g npm@12.2.1
+npm notice
+FAILED: Manager desktop/mobile/dark authorized controls, keyboard and WCAG AA
+Error: WCAG manager-dark: [{"rule":"color-contrast","impact":"serious","nodes":[{"target":[".sm\\:px-3 > .sm\\:inline.hidden"],"contrast":["contrast of 3.83","#758785","#142d31","ratio of 4.5"]},{"target":[".max-w-40"],"contrast":["contrast of 1.5","#758785","#576a6e","ratio of 4.5"]}]}]
+governance.spec.ts:74:51, governance.spec.ts:104:5
+npm notice
+npm notice New major version of npm available! 11.9.0 -> 12.2.1
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.1
+npm notice To update run: npm install -g npm@12.2.1
+npm notice
+npm notice
+npm notice New major version of npm available! 11.9.0 -> 12.2.1
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.1
+npm notice To update run: npm install -g npm@12.2.1
+npm notice
+
+===== b-wcag-green.log =====
+
+> pap-saude@0.1.0 test:mission04:b:browser
+> bash scripts/test-mission04-b.sh --browser
+
+NOTICE:  database "pap_saude_m04_b_test" does not exist, skipping
+CREATE DATABASE
+Loaded Prisma config from prisma.config.ts.
+
+Prisma schema loaded from prisma/schema.prisma.
+Datasource "db": PostgreSQL database "pap_saude_m04_b_test", schema "public" at "127.0.0.1:5432"
+
+32 migrations found in prisma/migrations
+
+Applying migration `20260909150044_init_clinical_schema`
+Applying migration `20260926001330_foundation_01`
+Applying migration `20260926014952_foundation_02_identity`
+Applying migration `20260926210500_foundation_02_email_identity`
+Applying migration `20260926220000_foundation_02_login_abuse_protection`
+Applying migration `20260927001500_foundation_02_mfa_challenge`
+Applying migration `20260927033000_foundation_02_mfa_reset`
+Applying migration `20260927043000_foundation_02_organization_lifecycle`
+Applying migration `20260927050000_foundation_02_membership_discovery`
+Applying migration `20261002010000_foundation_02_roles_permissions`
+Applying migration `20261002020000_foundation_02_product_activity`
+Applying migration `20261002030000_foundation_02_organization_metrics`
+Applying migration `20261002040000_foundation_02_feedback`
+Applying migration `20261002050000_foundation_02_health_alerts`
+Applying migration `20261003010000_foundation_03_patient_registry_core`
+Applying migration `20261003020000_foundation_03_pregnancy_core`
+Applying migration `20261003030000_foundation_03_encounter_core`
+Applying migration `20261003040000_foundation_03_vital_signs_core`
+Applying migration `20261003050000_foundation_03_obstetric_data_core`
+Applying migration `20261003060000_foundation_03_allergies_clinical_flags`
+Applying migration `20261003070000_foundation_03_meows_engine`
+Applying migration `20261005080000_foundation_03_clinical_revision_authorization`
+Applying migration `20261007094500_foundation_04_user_invitations`
+Applying migration `20261007101500_foundation_04_onboarding`
+Applying migration `20261016010000_foundation_04_password_reset_token`
+Applying migration `20261016200000_foundation_04_admin_audit_indexes`
+Applying migration `20261016210000_foundation_04_audit_integrity`
+Applying migration `20261019010000_foundation_04_schema_parity`
+Applying migration `20261020000000_admin_beta1`
+Applying migration `20261022040000_mission04_delegated_governance`
+Applying migration `20261022050000_mission04_global_access`
+Applying migration `20261023060000_mission04_transactional_email`
+
+The following migration(s) have been applied:
+
+migrations/
+  └─ 20260909150044_init_clinical_schema/
+    └─ migration.sql
+  └─ 20260926001330_foundation_01/
+    └─ migration.sql
+  └─ 20260926014952_foundation_02_identity/
+    └─ migration.sql
+  └─ 20260926210500_foundation_02_email_identity/
+    └─ migration.sql
+  └─ 20260926220000_foundation_02_login_abuse_protection/
+    └─ migration.sql
+  └─ 20260927001500_foundation_02_mfa_challenge/
+    └─ migration.sql
+  └─ 20260927033000_foundation_02_mfa_reset/
+    └─ migration.sql
+  └─ 20260927043000_foundation_02_organization_lifecycle/
+    └─ migration.sql
+  └─ 20260927050000_foundation_02_membership_discovery/
+    └─ migration.sql
+  └─ 20261002010000_foundation_02_roles_permissions/
+    └─ migration.sql
+  └─ 20261002020000_foundation_02_product_activity/
+    └─ migration.sql
+  └─ 20261002030000_foundation_02_organization_metrics/
+    └─ migration.sql
+  └─ 20261002040000_foundation_02_feedback/
+    └─ migration.sql
+  └─ 20261002050000_foundation_02_health_alerts/
+    └─ migration.sql
+  └─ 20261003010000_foundation_03_patient_registry_core/
+    └─ migration.sql
+  └─ 20261003020000_foundation_03_pregnancy_core/
+    └─ migration.sql
+  └─ 20261003030000_foundation_03_encounter_core/
+    └─ migration.sql
+  └─ 20261003040000_foundation_03_vital_signs_core/
+    └─ migration.sql
+  └─ 20261003050000_foundation_03_obstetric_data_core/
+    └─ migration.sql
+  └─ 20261003060000_foundation_03_allergies_clinical_flags/
+    └─ migration.sql
+  └─ 20261003070000_foundation_03_meows_engine/
+    └─ migration.sql
+  └─ 20261005080000_foundation_03_clinical_revision_authorization/
+    └─ migration.sql
+  └─ 20261007094500_foundation_04_user_invitations/
+    └─ migration.sql
+  └─ 20261007101500_foundation_04_onboarding/
+    └─ migration.sql
+  └─ 20261016010000_foundation_04_password_reset_token/
+    └─ migration.sql
+  └─ 20261016200000_foundation_04_admin_audit_indexes/
+    └─ migration.sql
+  └─ 20261016210000_foundation_04_audit_integrity/
+    └─ migration.sql
+  └─ 20261019010000_foundation_04_schema_parity/
+    └─ migration.sql
+  └─ 20261020000000_admin_beta1/
+    └─ migration.sql
+  └─ 20261022040000_mission04_delegated_governance/
+    └─ migration.sql
+  └─ 20261022050000_mission04_global_access/
+    └─ migration.sql
+  └─ 20261023060000_mission04_transactional_email/
+    └─ migration.sql
+
+All migrations have been successfully applied.
+npm notice
+npm notice New major version of npm available! 11.9.0 -> 12.2.1
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.1
+npm notice To update run: npm install -g npm@12.2.1
+npm notice
+Loaded Prisma config from prisma.config.ts.
+
+Prisma schema loaded from prisma/schema.prisma.
+Datasource "db": PostgreSQL database "pap_saude_m04_b_test", schema "public" at "127.0.0.1:5432"
+
+32 migrations found in prisma/migrations
+
+
+No pending migrations to apply.
+npm notice
+npm notice New major version of npm available! 11.9.0 -> 12.2.1
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.1
+npm notice To update run: npm install -g npm@12.2.1
+npm notice
+Loaded Prisma config from prisma.config.ts.
+
+No difference detected.
+
+npm notice
+npm notice New major version of npm available! 11.9.0 -> 12.2.1
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.1
+npm notice To update run: npm install -g npm@12.2.1
+npm notice
+TAP version 13
+# (node:437801) DeprecationWarning: Calling client.query() when the client is already executing a query is deprecated and will be removed in pg@9.0. Use async/await or an external async flow control mechanism instead.
+# (Use `node --trace-deprecation ...` to show where the warning was created)
+# Subtest: PAP_ADMIN appoints PAP_MANAGER using real MFA and canonical global scope
+ok 1 - PAP_ADMIN appoints PAP_MANAGER using real MFA and canonical global scope
+  ---
+  duration_ms: 3568.734632
+  type: 'test'
+  ...
+# Subtest: Manager requires MFA for navigation and protected APIs even after completed onboarding
+ok 2 - Manager requires MFA for navigation and protected APIs even after completed onboarding
+  ---
+  duration_ms: 35.879969
+  type: 'test'
+  ...
+# Subtest: manager cannot grant/revoke Managers/Admins, self-elevate or inject actor/scope
+ok 3 - manager cannot grant/revoke Managers/Admins, self-elevate or inject actor/scope
+  ---
+  duration_ms: 97.081506
+  type: 'test'
+  ...
+# Subtest: manager authorizes/revokes eligible Commercial only; privileged targets protected
+ok 4 - manager authorizes/revokes eligible Commercial only; privileged targets protected
+  ---
+  duration_ms: 82.227451
+  type: 'test'
+  ...
+# Subtest: persisted grant drift cannot give Manager lifecycle, role.manage or patient privileges
+ok 5 - persisted grant drift cannot give Manager lifecycle, role.manage or patient privileges
+  ---
+  duration_ms: 81.634389
+  type: 'test'
+  ...
+# Subtest: manager requests corrections and forwards exactly one pending UBS under concurrency
+ok 6 - manager requests corrections and forwards exactly one pending UBS under concurrency
+  ---
+  duration_ms: 189.912584
+  type: 'test'
+  ...
+# Subtest: manager cannot activate/suspend/archive via legacy PATCH or alternative payloads
+ok 7 - manager cannot activate/suspend/archive via legacy PATCH or alternative payloads
+  ---
+  duration_ms: 76.768069
+  type: 'test'
+  ...
+# Subtest: privileged services bind MFA to exact actor session, not any verified sibling session
+ok 8 - privileged services bind MFA to exact actor session, not any verified sibling session
+  ---
+  duration_ms: 12.122961
+  type: 'test'
+  ...
+# Subtest: primary admin session blocked through old organization and role endpoints
+ok 9 - primary admin session blocked through old organization and role endpoints
+  ---
+  duration_ms: 16.35416
+  type: 'test'
+  ...
+# Subtest: verified PAP_ADMIN activation atomic and concurrent repeat records one activation
+ok 10 - verified PAP_ADMIN activation atomic and concurrent repeat records one activation
+  ---
+  duration_ms: 194.592813
+  type: 'test'
+  ...
+# Subtest: Manager denied other-admin security and metrics; organization list omits clinical counters
+ok 11 - Manager denied other-admin security and metrics; organization list omits clinical counters
+  ---
+  duration_ms: 35.36848
+  type: 'test'
+  ...
+# Subtest: Commercial denied private organizations, request contacts, roles, security and metrics
+ok 12 - Commercial denied private organizations, request contacts, roles, security and metrics
+  ---
+  duration_ms: 42.726859
+  type: 'test'
+  ...
+# Subtest: Manager organization.read returns only delegated fields across unrelated organizations
+ok 13 - Manager organization.read returns only delegated fields across unrelated organizations
+  ---
+  duration_ms: 1221.146689
+  type: 'test'
+  ...
+# Subtest: Manager organization.read cannot authorize undelegated global resources
+ok 14 - Manager organization.read cannot authorize undelegated global resources
+  ---
+  duration_ms: 171.534816
+  type: 'test'
+  ...
+# Subtest: global nonclinical roles denied clinical GET/POST/PATCH with forged org and demo query
+ok 15 - global nonclinical roles denied clinical GET/POST/PATCH with forged org and demo query
+  ---
+  duration_ms: 74.942588
+  type: 'test'
+  ...
+# Subtest: Professional optional MFA retained: own-unit clinical access, foreign-unit denied
+ok 16 - Professional optional MFA retained: own-unit clinical access, foreign-unit denied
+  ---
+  duration_ms: 208.915347
+  type: 'test'
+  ...
+# Subtest: anonymous and unassigned accounts cannot read or self-promote through admin API
+ok 17 - anonymous and unassigned accounts cannot read or self-promote through admin API
+  ---
+  duration_ms: 806.081582
+  type: 'test'
+  ...
+# Subtest: CSRF rejects foreign origin; expired/revoked verified sessions cannot activate
+ok 18 - CSRF rejects foreign origin; expired/revoked verified sessions cannot activate
+  ---
+  duration_ms: 1212.57849
+  type: 'test'
+  ...
+# Subtest: old PATCH archival requires exact name, password and fresh TOTP
+ok 19 - old PATCH archival requires exact name, password and fresh TOTP
+  ---
+  duration_ms: 20.403056
+  type: 'test'
+  ...
+# Subtest: Admin lifecycle audited and preserves existing password, sessions and MFA
+ok 20 - Admin lifecycle audited and preserves existing password, sessions and MFA
+  ---
+  duration_ms: 127.398187
+  type: 'test'
+  ...
+# Subtest: institutional invitations cannot self-elevate Manager through Beta or legacy route
+ok 21 - institutional invitations cannot self-elevate Manager through Beta or legacy route
+  ---
+  duration_ms: 132.61543
+  type: 'test'
+  ...
+# Subtest: Manager may invite a new professional but cannot bootstrap own institutional contact
+ok 22 - Manager may invite a new professional but cannot bootstrap own institutional contact
+  ---
+  duration_ms: 99.774556
+  type: 'test'
+  ...
+# Subtest: pending invitation cannot grant clinical access after target is appointed Manager
+ok 23 - pending invitation cannot grant clinical access after target is appointed Manager
+  ---
+  duration_ms: 242.143753
+  type: 'test'
+  ...
+# Subtest: PAP_ADMIN revocation of Manager immediately affects the same verified session
+ok 24 - PAP_ADMIN revocation of Manager immediately affects the same verified session
+  ---
+  duration_ms: 33.257957
+  type: 'test'
+  ...
+# Subtest: normal login still accepts existing password and recovery factor without identity reset
+ok 25 - normal login still accepts existing password and recovery factor without identity reset
+  ---
+  duration_ms: 182.914137
+  type: 'test'
+  ...
+# Subtest: strong archival succeeds without deleting clinical history and rejects code replay
+ok 26 - strong archival succeeds without deleting clinical history and rejects code replay
+  ---
+  duration_ms: 1868.094132
+  type: 'test'
+  ...
+# Subtest: revoked delegated inviter cannot authorize acceptance of an outstanding institutional invitation
+ok 27 - revoked delegated inviter cannot authorize acceptance of an outstanding institutional invitation
+  ---
+  duration_ms: 1152.823586
+  type: 'test'
+  ...
+# Subtest: forward-only upgrade of populated Beta preserves identities/password/TOTP/sessions/memberships/approved UBS/invites; bootstrap idempotent
+ok 28 - forward-only upgrade of populated Beta preserves identities/password/TOTP/sessions/memberships/approved UBS/invites; bootstrap idempotent
+  ---
+  duration_ms: 3545.709761
+  type: 'test'
+  ...
+1..28
+# tests 28
+# suites 0
+# pass 28
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 12685.734362
+npm notice
+npm notice New major version of npm available! 11.9.0 -> 12.2.1
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.1
+npm notice To update run: npm install -g npm@12.2.1
+npm notice
+PASSED: Manager desktop/mobile/dark authorized controls, keyboard and WCAG AA
+PASSED: Admin explicitly activates a reviewed pending UBS; Manager never sees activation
+PASSED: direct clinical HTML/RSC denied to anonymous/Admin/Manager/Commercial/unassigned without redirect loops
+PASSED: Manager institutional directory excludes private values from API, HTML and RSC
+PASSED: Professional without mandatory MFA can access own clinical pages, foreign record denied by API
+npm notice
+npm notice New major version of npm available! 11.9.0 -> 12.2.1
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.1
+npm notice To update run: npm install -g npm@12.2.1
+npm notice
+npm notice
+npm notice New major version of npm available! 11.9.0 -> 12.2.1
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.1
+npm notice To update run: npm install -g npm@12.2.1
+npm notice
+
+===== c-wcag-green.log =====
+
+> pap-saude@0.1.0 test:mission04:c:browser
+> bash scripts/test-mission04-c.sh --browser
+
+CREATE DATABASE
+Loaded Prisma config from prisma.config.ts.
+
+Prisma schema loaded from prisma/schema.prisma.
+
+✔ Generated Prisma Client (v7.10.1) to ./node_modules/@prisma/client in 547ms
+
+Start by importing your Prisma Client (See: https://pris.ly/d/importing-client)
+
+
+npm notice
+npm notice New major version of npm available! 11.9.0 -> 12.2.1
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.1
+npm notice To update run: npm install -g npm@12.2.1
+npm notice
+Loaded Prisma config from prisma.config.ts.
+
+Prisma schema loaded from prisma/schema.prisma.
+Datasource "db": PostgreSQL database "pap_saude_m04_c_test", schema "public" at "127.0.0.1:5432"
+
+32 migrations found in prisma/migrations
+
+Applying migration `20260909150044_init_clinical_schema`
+Applying migration `20260926001330_foundation_01`
+Applying migration `20260926014952_foundation_02_identity`
+Applying migration `20260926210500_foundation_02_email_identity`
+Applying migration `20260926220000_foundation_02_login_abuse_protection`
+Applying migration `20260927001500_foundation_02_mfa_challenge`
+Applying migration `20260927033000_foundation_02_mfa_reset`
+Applying migration `20260927043000_foundation_02_organization_lifecycle`
+Applying migration `20260927050000_foundation_02_membership_discovery`
+Applying migration `20261002010000_foundation_02_roles_permissions`
+Applying migration `20261002020000_foundation_02_product_activity`
+Applying migration `20261002030000_foundation_02_organization_metrics`
+Applying migration `20261002040000_foundation_02_feedback`
+Applying migration `20261002050000_foundation_02_health_alerts`
+Applying migration `20261003010000_foundation_03_patient_registry_core`
+Applying migration `20261003020000_foundation_03_pregnancy_core`
+Applying migration `20261003030000_foundation_03_encounter_core`
+Applying migration `20261003040000_foundation_03_vital_signs_core`
+Applying migration `20261003050000_foundation_03_obstetric_data_core`
+Applying migration `20261003060000_foundation_03_allergies_clinical_flags`
+Applying migration `20261003070000_foundation_03_meows_engine`
+Applying migration `20261005080000_foundation_03_clinical_revision_authorization`
+Applying migration `20261007094500_foundation_04_user_invitations`
+Applying migration `20261007101500_foundation_04_onboarding`
+Applying migration `20261016010000_foundation_04_password_reset_token`
+Applying migration `20261016200000_foundation_04_admin_audit_indexes`
+Applying migration `20261016210000_foundation_04_audit_integrity`
+Applying migration `20261019010000_foundation_04_schema_parity`
+Applying migration `20261020000000_admin_beta1`
+Applying migration `20261022040000_mission04_delegated_governance`
+Applying migration `20261022050000_mission04_global_access`
+Applying migration `20261023060000_mission04_transactional_email`
+
+The following migration(s) have been applied:
+
+migrations/
+  └─ 20260909150044_init_clinical_schema/
+    └─ migration.sql
+  └─ 20260926001330_foundation_01/
+    └─ migration.sql
+  └─ 20260926014952_foundation_02_identity/
+    └─ migration.sql
+  └─ 20260926210500_foundation_02_email_identity/
+    └─ migration.sql
+  └─ 20260926220000_foundation_02_login_abuse_protection/
+    └─ migration.sql
+  └─ 20260927001500_foundation_02_mfa_challenge/
+    └─ migration.sql
+  └─ 20260927033000_foundation_02_mfa_reset/
+    └─ migration.sql
+  └─ 20260927043000_foundation_02_organization_lifecycle/
+    └─ migration.sql
+  └─ 20260927050000_foundation_02_membership_discovery/
+    └─ migration.sql
+  └─ 20261002010000_foundation_02_roles_permissions/
+    └─ migration.sql
+  └─ 20261002020000_foundation_02_product_activity/
+    └─ migration.sql
+  └─ 20261002030000_foundation_02_organization_metrics/
+    └─ migration.sql
+  └─ 20261002040000_foundation_02_feedback/
+    └─ migration.sql
+  └─ 20261002050000_foundation_02_health_alerts/
+    └─ migration.sql
+  └─ 20261003010000_foundation_03_patient_registry_core/
+    └─ migration.sql
+  └─ 20261003020000_foundation_03_pregnancy_core/
+    └─ migration.sql
+  └─ 20261003030000_foundation_03_encounter_core/
+    └─ migration.sql
+  └─ 20261003040000_foundation_03_vital_signs_core/
+    └─ migration.sql
+  └─ 20261003050000_foundation_03_obstetric_data_core/
+    └─ migration.sql
+  └─ 20261003060000_foundation_03_allergies_clinical_flags/
+    └─ migration.sql
+  └─ 20261003070000_foundation_03_meows_engine/
+    └─ migration.sql
+  └─ 20261005080000_foundation_03_clinical_revision_authorization/
+    └─ migration.sql
+  └─ 20261007094500_foundation_04_user_invitations/
+    └─ migration.sql
+  └─ 20261007101500_foundation_04_onboarding/
+    └─ migration.sql
+  └─ 20261016010000_foundation_04_password_reset_token/
+    └─ migration.sql
+  └─ 20261016200000_foundation_04_admin_audit_indexes/
+    └─ migration.sql
+  └─ 20261016210000_foundation_04_audit_integrity/
+    └─ migration.sql
+  └─ 20261019010000_foundation_04_schema_parity/
+    └─ migration.sql
+  └─ 20261020000000_admin_beta1/
+    └─ migration.sql
+  └─ 20261022040000_mission04_delegated_governance/
+    └─ migration.sql
+  └─ 20261022050000_mission04_global_access/
+    └─ migration.sql
+  └─ 20261023060000_mission04_transactional_email/
+    └─ migration.sql
+
+All migrations have been successfully applied.
+npm notice
+npm notice New major version of npm available! 11.9.0 -> 12.2.1
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.1
+npm notice To update run: npm install -g npm@12.2.1
+npm notice
+Loaded Prisma config from prisma.config.ts.
+
+Prisma schema loaded from prisma/schema.prisma.
+Datasource "db": PostgreSQL database "pap_saude_m04_c_test", schema "public" at "127.0.0.1:5432"
+
+32 migrations found in prisma/migrations
+
+
+No pending migrations to apply.
+npm notice
+npm notice New major version of npm available! 11.9.0 -> 12.2.1
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.1
+npm notice To update run: npm install -g npm@12.2.1
+npm notice
+Loaded Prisma config from prisma.config.ts.
+
+No difference detected.
+
+npm notice
+npm notice New major version of npm available! 11.9.0 -> 12.2.1
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.1
+npm notice To update run: npm install -g npm@12.2.1
+npm notice
+TAP version 13
+# (node:438754) DeprecationWarning: Calling client.query() when the client is already executing a query is deprecated and will be removed in pg@9.0. Use async/await or an external async flow control mechanism instead.
+# (Use `node --trace-deprecation ...` to show where the warning was created)
+# Subtest: global invite has no UBS requirement, stores only domain-separated hash and does not create identity or grant
+ok 1 - global invite has no UBS requirement, stores only domain-separated hash and does not create identity or grant
+  ---
+  duration_ms: 5571.590597
+  type: 'test'
+  ...
+# Subtest: acceptance creates password identity but no membership or role; login goes to real waiting state
+ok 2 - acceptance creates password identity but no membership or role; login goes to real waiting state
+  ---
+  duration_ms: 1186.388858
+  type: 'test'
+  ...
+# Subtest: manager authorizes only Commercial; notification and release capture are persistent and idempotent
+ok 3 - manager authorizes only Commercial; notification and release capture are persistent and idempotent
+  ---
+  duration_ms: 609.538311
+  type: 'test'
+  ...
+# Subtest: Admin can appoint Manager; an existing MFA account, password, valid session and completed onboarding remain intact
+ok 4 - Admin can appoint Manager; an existing MFA account, password, valid session and completed onboarding remain intact
+  ---
+  duration_ms: 1625.485964
+  type: 'test'
+  ...
+# Subtest: new Manager cannot enter admin before real MFA setup/login and receives no clinical permission
+ok 5 - new Manager cannot enter admin before real MFA setup/login and receives no clinical permission
+  ---
+  duration_ms: 553.720185
+  type: 'test'
+  ...
+# Subtest: primary Admin/Manager sessions cannot inherit MFA from a verified sibling session
+ok 6 - primary Admin/Manager sessions cannot inherit MFA from a verified sibling session
+  ---
+  duration_ms: 77.924982
+  type: 'test'
+  ...
+# Subtest: anonymous, Commercial and primary actors cannot read or write the privileged queue; CSRF and injected fields are rejected
+ok 7 - anonymous, Commercial and primary actors cannot read or write the privileged queue; CSRF and injected fields are rejected
+  ---
+  duration_ms: 43.001136
+  type: 'test'
+  ...
+# Subtest: manager cannot propose Manager/Admin, authorize a scoped role, modify another manager's invite, or target privileged identities
+ok 8 - manager cannot propose Manager/Admin, authorize a scoped role, modify another manager's invite, or target privileged identities
+  ---
+  duration_ms: 664.660359
+  type: 'test'
+  ...
+# Subtest: pending C identity cannot bypass authorization through old role APIs or institutional invitations
+ok 9 - pending C identity cannot bypass authorization through old role APIs or institutional invitations
+  ---
+  duration_ms: 915.980378
+  type: 'test'
+  ...
+# Subtest: reusing, revoking or expiring a link never creates identity or grants; resend invalidates the previous token
+ok 10 - reusing, revoking or expiring a link never creates identity or grants; resend invalidates the previous token
+  ---
+  duration_ms: 645.821365
+  type: 'test'
+  ...
+# Subtest: duplicate concurrent creation captures one invitation and no premature user
+ok 11 - duplicate concurrent creation captures one invitation and no premature user
+  ---
+  duration_ms: 87.003138
+  type: 'test'
+  ...
+# Subtest: concurrent acceptance consumes the token once without password/session/role duplication
+ok 12 - concurrent acceptance consumes the token once without password/session/role duplication
+  ---
+  duration_ms: 268.552911
+  type: 'test'
+  ...
+# Subtest: concurrent approvals produce one assignment, audit decision, in-app notification and captured release email
+ok 13 - concurrent approvals produce one assignment, audit decision, in-app notification and captured release email
+  ---
+  duration_ms: 365.496905
+  type: 'test'
+  ...
+# Subtest: concurrent approve/revoke cannot resurrect access; final state is revoked
+ok 14 - concurrent approve/revoke cannot resurrect access; final state is revoked
+  ---
+  duration_ms: 288.389518
+  type: 'test'
+  ...
+# Subtest: concurrent resend/accept cannot accept a superseded token or confer IAM
+ok 15 - concurrent resend/accept cannot accept a superseded token or confer IAM
+  ---
+  duration_ms: 849.637109
+  type: 'test'
+  ...
+# Subtest: sender demotion/revocation blocks outstanding consent and approval; Admin can revoke the stale request
+ok 16 - sender demotion/revocation blocks outstanding consent and approval; Admin can revoke the stale request
+  ---
+  duration_ms: 1243.743591
+  type: 'test'
+  ...
+# Subtest: target privilege changes and revoked MFA proof are rechecked inside authorization transactions
+ok 17 - target privilege changes and revoked MFA proof are rechecked inside authorization transactions
+  ---
+  duration_ms: 1869.853352
+  type: 'test'
+  ...
+# Subtest: old revoke endpoint closes C state and posts a persistent revocation notification without altering session/password/MFA
+ok 18 - old revoke endpoint closes C state and posts a persistent revocation notification without altering session/password/MFA
+  ---
+  duration_ms: 520.738378
+  type: 'test'
+  ...
+# Subtest: existing password and MFA must be proven; bearer link cannot overwrite credentials or borrow another identity
+ok 19 - existing password and MFA must be proven; bearer link cannot overwrite credentials or borrow another identity
+  ---
+  duration_ms: 2185.581912
+  type: 'test'
+  ...
+# Subtest: a password changed between consent attempts is respected and never replaced
+ok 20 - a password changed between consent attempts is respected and never replaced
+  ---
+  duration_ms: 940.005926
+  type: 'test'
+  ...
+# Subtest: no approval before acceptance; rejection and revocation preserve identity credentials and valid primary sessions
+ok 21 - no approval before acceptance; rejection and revocation preserve identity credentials and valid primary sessions
+  ---
+  duration_ms: 1260.724402
+  type: 'test'
+  ...
+# Subtest: scoped proposal requires Global approval and an existing active membership; never activates UBS or another tenant
+ok 22 - scoped proposal requires Global approval and an existing active membership; never activates UBS or another tenant
+  ---
+  duration_ms: 607.148655
+  type: 'test'
+  ...
+# Subtest: notification read is self-scoped, persistent, idempotent and CSRF protected
+ok 23 - notification read is self-scoped, persistent, idempotent and CSRF protected
+  ---
+  duration_ms: 549.765814
+  type: 'test'
+  ...
+# Subtest: queue visibility, status pagination and own status do not leak another reviewer, recipient, tenant or reason
+ok 24 - queue visibility, status pagination and own status do not leak another reviewer, recipient, tenant or reason
+  ---
+  duration_ms: 1002.525082
+  type: 'test'
+  ...
+# Subtest: atomic distributed rate limits allow only one creation at the last quota slot
+ok 25 - atomic distributed rate limits allow only one creation at the last quota slot
+  ---
+  duration_ms: 830.617775
+  type: 'test'
+  ...
+# Subtest: public identity proof is throttled per hashed invitation token without storing secrets in buckets
+ok 26 - public identity proof is throttled per hashed invitation token without storing secrets in buckets
+  ---
+  duration_ms: 69.135119
+  type: 'test'
+  ...
+# Subtest: public CSRF, query-string tokens, malformed/oversized bodies and unauthorized fields fail closed
+ok 27 - public CSRF, query-string tokens, malformed/oversized bodies and unauthorized fields fail closed
+  ---
+  duration_ms: 55.62675
+  type: 'test'
+  ...
+# Subtest: C audit events and HTTP responses contain no invitation secret or password
+ok 28 - C audit events and HTTP responses contain no invitation secret or password
+  ---
+  duration_ms: 335.799793
+  type: 'test'
+  ...
+# Subtest: exact session revocation after HTTP MFA guard but before transaction prevents approval
+ok 29 - exact session revocation after HTTP MFA guard but before transaction prevents approval
+  ---
+  duration_ms: 1631.910263
+  type: 'test'
+  ...
+# Subtest: IAM revocation between request guard and transaction is observed; cached role snapshot cannot authorize
+ok 30 - IAM revocation between request guard and transaction is observed; cached role snapshot cannot authorize
+  ---
+  duration_ms: 985.104768
+  type: 'test'
+  ...
+# Subtest: capture failure keeps an authorized in-app notification and retries without duplicate mail or privilege changes
+ok 31 - capture failure keeps an authorized in-app notification and retries without duplicate mail or privilege changes
+  ---
+  duration_ms: 1050.333609
+  type: 'test'
+  ...
+# Subtest: invitation capture failure revokes the bearer link; C never sends through a real provider
+ok 32 - invitation capture failure revokes the bearer link; C never sends through a real provider
+  ---
+  duration_ms: 58.981534
+  type: 'test'
+  ...
+# Subtest: database refuses ACTIVE consent without its matching authorized assignment, rolling back atomically
+ok 33 - database refuses ACTIVE consent without its matching authorized assignment, rolling back atomically
+  ---
+  duration_ms: 310.836214
+  type: 'test'
+  ...
+# Subtest: profile authorization never activates UBS; a subsequently suspended scope is unavailable without lying about the approval state
+ok 34 - profile authorization never activates UBS; a subsequently suspended scope is unavailable without lying about the approval state
+  ---
+  duration_ms: 1925.690237
+  type: 'test'
+  ...
+# Subtest: municipal proposal follows the existing scope policy: only Global with active municipality membership; wrong scope and clinical access denied
+ok 35 - municipal proposal follows the existing scope policy: only Global with active municipality membership; wrong scope and clinical access denied
+  ---
+  duration_ms: 2494.610265
+  type: 'test'
+  ...
+# Subtest: untrusted Host never poisons the captured invitation origin and scoped payload cannot turn a global role into a tenant grant
+ok 36 - untrusted Host never poisons the captured invitation origin and scoped payload cannot turn a global role into a tenant grant
+  ---
+  duration_ms: 305.13088
+  type: 'test'
+  ...
+# Subtest: C-AUDIT-01: Admin cannot replace accepted Commercial or Professional roles; repeated/concurrent denials have no side effects
+ok 37 - C-AUDIT-01: Admin cannot replace accepted Commercial or Professional roles; repeated/concurrent denials have no side effects
+  ---
+  duration_ms: 2228.778377
+  type: 'test'
+  ...
+# Subtest: C-AUDIT-01: Global approves only the accepted Professional role with legitimate scope and membership; replay never rewrites consent
+ok 38 - C-AUDIT-01: Global approves only the accepted Professional role with legitimate scope and membership; replay never rewrites consent
+  ---
+  duration_ms: 1850.071656
+  type: 'test'
+  ...
+# Subtest: C-AUDIT-01: racing legitimate and substituted approvals preserve one Commercial grant and delegated ownership
+ok 39 - C-AUDIT-01: racing legitimate and substituted approvals preserve one Commercial grant and delegated ownership
+  ---
+  duration_ms: 2423.873629
+  type: 'test'
+  ...
+# Subtest: C-AUDIT-01: a different role needs a new invitation and explicit acceptance, preserving the closed original proposal
+ok 40 - C-AUDIT-01: a different role needs a new invitation and explicit acceptance, preserving the closed original proposal
+  ---
+  duration_ms: 1346.816631
+  type: 'test'
+  ...
+# (node:438755) DeprecationWarning: Calling client.query() when the client is already executing a query is deprecated and will be removed in pg@9.0. Use async/await or an external async flow control mechanism instead.
+# (Use `node --trace-deprecation ...` to show where the warning was created)
+# Subtest: real Prisma forward upgrade and backup restoration preserve legacy passwords/MFA/sessions/users/UBS/invites; existing TOTP login and institutional acceptance still work
+ok 41 - real Prisma forward upgrade and backup restoration preserve legacy passwords/MFA/sessions/users/UBS/invites; existing TOTP login and institutional acceptance still work
+  ---
+  duration_ms: 13219.409766
+  type: 'test'
+  ...
+1..41
+# tests 41
+# suites 0
+# pass 41
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 42551.208382
+npm notice
+npm notice New major version of npm available! 11.9.0 -> 12.2.1
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.1
+npm notice To update run: npm install -g npm@12.2.1
+npm notice
+PASSED: recipient accepts by fragment, waits without wizard, checks authorization and receives a persistent notification; 320/768/1440 light/dark and keyboard
+PASSED: Manager issues and reviews own Commercial invitation through queue; never sees Manager approval or UBS activation; revoke reaches recipient
+PASSED: Global appoints Manager and completed MFA identity returns to admin without restarting onboarding or rotating factor/session
+PASSED: newly approved Manager completes real QR/TOTP and new MFA login before privileged access; reload never reopens completed wizard
+PASSED: pending, Admin, Manager and Commercial direct clinical HTML/RSC requests expose no clinical fixture or redirect loop
+PASSED: expired, reused and revoked invitation links show unavailable UX without account creation or operational access
+PASSED: resending while the old activation page is open consumes only the new fragment and discards stale password/token state
+PASSED: C-AUDIT-01: Global approval displays the accepted role without a selector and sends only that role
+npm notice
+npm notice New major version of npm available! 11.9.0 -> 12.2.1
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.1
+npm notice To update run: npm install -g npm@12.2.1
+npm notice
+npm notice
+npm notice New major version of npm available! 11.9.0 -> 12.2.1
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.1
+npm notice To update run: npm install -g npm@12.2.1
+npm notice
+
+===== wcag-typescript.log =====
+npm notice
+npm notice New major version of npm available! 11.9.0 -> 12.2.1
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.1
+npm notice To update run: npm install -g npm@12.2.1
+npm notice
+
+===== wcag-lint.log =====
+npm notice
+npm notice New major version of npm available! 11.9.0 -> 12.2.1
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.1
+npm notice To update run: npm install -g npm@12.2.1
+npm notice
+
+===== wcag-build.log =====
+
+> pap-saude@0.1.0 build
+> next build
+
+▲ Next.js 16.4.2 (Turbopack)
+✓ Running next.config.ts took 51ms
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 8.2s
+  Running TypeScript ...
+  Finished TypeScript in 14.5s ...
+  Collecting page data using 4 workers ...
+Error: Failed to collect configuration for /api/access-invitations/accept
+    at ignore-listed frames {
+  [cause]: Error: DATABASE_URL is required to initialize Prisma.
+      at <unknown> (src/server/db/client.ts:12:11)
+      at <unknown> (src/server/db/client.ts:24:1)
+    10 |
+    11 |   if (!connectionString) {
+  > 12 |     throw new Error(
+       |           ^
+    13 |       "DATABASE_URL is required to initialize Prisma.",
+    14 |     );
+    15 |   }
+}
+
+> Build error occurred
+Error: Failed to collect page data for /api/access-invitations/accept
+    at ignore-listed frames {
+  type: 'Error'
+}
+npm notice
+npm notice New major version of npm available! 11.9.0 -> 12.2.1
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.1
+npm notice To update run: npm install -g npm@12.2.1
+npm notice
+
+===== wcag-build-retry.log =====
+
+> pap-saude@0.1.0 build
+> next build
+
+▲ Next.js 16.4.2 (Turbopack)
+✓ Running next.config.ts took 74ms
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 1739ms
+  Running TypeScript ...
+  Finished TypeScript in 4.3s ...
+  Collecting page data using 4 workers ...
+  Generating static pages using 4 workers (0/42) ...
+  Generating static pages using 4 workers (10/42)
+  Generating static pages using 4 workers (20/42)
+  Generating static pages using 4 workers (31/42)
+✓ Generating static pages using 4 workers (42/42) in 424ms
+  Finalizing page optimization ...
+
+Route (app)
+┌ ○ /
+├ ○ /_not-found
+├ ○ /aceitar-convite
+├ ƒ /admin
+├ ƒ /admin/acessos
+├ ƒ /admin/auditoria
+├ ƒ /admin/comercial
+├ ƒ /admin/convites
+├ ƒ /admin/convites-globais
+├ ƒ /admin/integracoes
+├ ƒ /admin/metricas
+├ ƒ /admin/minha-seguranca
+├ ƒ /admin/monitoramento
+├ ƒ /admin/organizacoes
+├ ƒ /admin/seguranca
+├ ƒ /admin/solicitacoes
+├ ƒ /admin/usuarios
+├ ƒ /aguardando-autorizacao
+├ ○ /ajuda/seguranca
+├ ƒ /api/access-invitations/accept
+├ ƒ /api/account/access-status
+├ ƒ /api/account/notifications
+├ ƒ /api/admin/access-invitations
+├ ƒ /api/admin/audit
+├ ƒ /api/admin/beta/invitations
+├ ƒ /api/admin/beta/metrics
+├ ƒ /api/admin/beta/requests
+├ ƒ /api/admin/beta/users
+├ ƒ /api/admin/context
+├ ƒ /api/admin/invitations
+├ ƒ /api/admin/operations/integrations
+├ ƒ /api/admin/operations/metrics
+├ ƒ /api/admin/operations/monitoring
+├ ƒ /api/admin/organizations
+├ ƒ /api/admin/organizations/[organizationId]
+├ ƒ /api/admin/role-assignments
+├ ƒ /api/admin/role-assignments/[assignmentId]
+├ ƒ /api/admin/roles
+├ ƒ /api/admin/security
+├ ƒ /api/admin/users
+├ ƒ /api/auth/login
+├ ƒ /api/auth/logout
+├ ƒ /api/auth/mfa/verify
+├ ƒ /api/auth/password/forced-change
+├ ƒ /api/auth/password/forgot
+├ ƒ /api/auth/password/reset
+├ ƒ /api/auth/security
+├ ƒ /api/auth/session
+├ ƒ /api/clinical/[[...path]]
+├ ƒ /api/email/resend/webhook
+├ ƒ /api/health
+├ ƒ /api/invitations/accept
+├ ƒ /api/onboarding/[tourKey]
+├ ƒ /api/organization-requests
+├ ƒ /atendimentos
+├ ƒ /casos
+├ ƒ /chat
+├ ƒ /comercial
+├ ƒ /configuracoes
+├ ƒ /convite
+├ ƒ /cursos
+├ ƒ /dashboard
+├ ƒ /ferramentas
+├ ƒ /login
+├ ƒ /minha-seguranca
+├ ƒ /notificacoes
+├ ƒ /pacientes
+├ ƒ /pacientes/[id]
+├ ƒ /primeiros-passos
+├ ƒ /protocolos
+├ ○ /recuperar-senha
+├ ○ /redefinir-senha
+├ ƒ /registro
+└ ○ /solicitar-adesao
+
+
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
+
 npm notice
 npm notice New major version of npm available! 11.9.0 -> 12.2.1
 npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.1

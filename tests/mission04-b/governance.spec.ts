@@ -41,6 +41,39 @@ async function capture(page: Page, name: string) {
   });
 }
 
+async function assertWcag(page: Page, name: string) {
+  const violations = (
+    await new AxeBuilder({ page })
+      .withTags(["wcag2a", "wcag2aa", "wcag21aa"])
+      .analyze()
+  ).violations;
+  if (violations.length)
+    await writeFile(
+      `/tmp/m04-b-axe-${name}.json`,
+      JSON.stringify(
+        violations.map((v) => ({
+          id: v.id,
+          nodes: v.nodes.map((n) => ({
+            target: n.target,
+            summary: n.failureSummary,
+          })),
+        })),
+      ),
+    );
+  // The safe reporter preserves only the first error line. Keep actionable
+  // WCAG diagnostics there without DOM HTML, attribute values or account data.
+  const diagnostics = violations.map((v) => ({
+    rule: v.id,
+    impact: v.impact,
+    nodes: v.nodes.map((n) => ({
+      target: n.target.map((selector) => String(selector).replace(/\[[^\]]*\]/g, "[attribute]")),
+      contrast: n.failureSummary?.match(/contrast of [\d.]+|#[0-9a-fA-F]{6}|ratio of [\d.]+/g),
+    })),
+  }));
+  expect(violations.map((v) => ({ id: v.id, impact: v.impact })),
+    `WCAG ${name}: ${JSON.stringify(diagnostics)}`).toEqual([]);
+}
+
 test("Manager desktop/mobile/dark authorized controls, keyboard and WCAG AA", async ({
   page,
 }) => {
@@ -68,36 +101,15 @@ test("Manager desktop/mobile/dark authorized controls, keyboard and WCAG AA", as
       (dark) => document.documentElement.classList.toggle("dark", dark),
       dark,
     );
-    const violations = (
-      await new AxeBuilder({ page })
-        .withTags(["wcag2a", "wcag2aa", "wcag21aa"])
-        .analyze()
-    ).violations;
-    if (violations.length)
-      await writeFile(
-        `/tmp/m04-b-axe-${name}.json`,
-        JSON.stringify(
-          violations.map((v) => ({
-            id: v.id,
-            nodes: v.nodes.map((n) => ({
-              target: n.target,
-              summary: n.failureSummary,
-            })),
-          })),
-        ),
-      );
-    // The safe reporter preserves only the first error line. Keep actionable
-    // WCAG diagnostics there without DOM HTML, attribute values or account data.
-    const diagnostics = violations.map((v) => ({
-      rule: v.id,
-      impact: v.impact,
-      nodes: v.nodes.map((n) => ({
-        target: n.target.map((selector) => String(selector).replace(/\[[^\]]*\]/g, "[attribute]")),
-        contrast: n.failureSummary?.match(/contrast of [\d.]+|#[0-9a-fA-F]{6}|ratio of [\d.]+/g),
-      })),
-    }));
-    expect(violations.map((v) => ({ id: v.id, impact: v.impact })),
-      `WCAG ${name}: ${JSON.stringify(diagnostics)}`).toEqual([]);
+    await assertWcag(page, name);
+    for (const [label, control] of [
+      ["help", page.getByRole("button", { name: "Ajuda", exact: true })],
+      ["profile", page.getByRole("link", { name: "Minha segurança e perfil" })],
+    ] as const) {
+      await control.hover();
+      await control.focus();
+      await assertWcag(page, `${name}-${label}-hover-focus`);
+    }
     await capture(page, name);
   }
   await page.setViewportSize({ width: 1440, height: 900 });

@@ -187,3 +187,15 @@ O reporter sanitiza erros para a primeira linha; a regra WCAG e o alvo não cons
 Mudança pontual de observabilidade em tests/mission04-b/governance.spec.ts: a primeira linha da asserção passa a incluir viewport, regra, impacto, seletor sem valores de atributos e dados numéricos de contraste. Sem HTML, dados de conta, request, tokens ou DOM completo. A mesma asserção exige zero violações e mantém tags WCAG, browser, ausência de retries e todos os guards. Nenhuma alteração funcional para mascarar a falha. Novo CI necessário; não declarar essa falha resolvida sem evidência.
 
 Inventário deste follow-up: tests/mission04-b/governance.spec.ts e os mesmos três caminhos de relatório/validation.json/execution.log. Nenhum arquivo E; laboratório intacto.
+
+## Terceiro CI: causa WCAG comprovada e correção RED/GREEN
+
+[Workflow 40065245130](https://github.com/joaoCarlosGM/pap-saude/actions/runs/40065245130), SHA `ebe1536b9b5a0cdc4e070153aea987d8891b50ac`: **FAIL**, novamente no B; diagnóstico sanitizado mostrou color-contrast serious em manager-dark nos controles Ajuda e Minha segurança e perfil. Cor intermediária #758785 sobre #142d31: **3,83:1**, exigido **4,5:1**.
+
+Causa comprovada: `transition` genérico nos controles anima a cor herdada entre #172c2c e #e6f4ef enquanto o fundo do header já mudou. Hover também usava fundo claro no tema escuro. Ao ampliar o teste para hover/foco, o erro foi reproduzido localmente ANTES do patch: 3,83:1 e 1,5:1 no perfil com fundo de hover intermediário. Não é atribuída falha ao Chromium; a diferença de timing expôs uma violação real da UI.
+
+Patch mínimo em src/components/admin/AdminTopbar.tsx: remover a transição genérica de três controles (menu, ajuda e perfil) e definir dark:hover #28484b. Cores de texto/fundo mudam juntas; nenhum delay, retry, exclusão de alvo ou desativação de regra foi usado. Asserção WCAG preservada e ampliada para normal/hover/foco nos dois controles identificados. Sem alterações de IAM, MFA, dados ou regras de negócio.
+
+Matriz atual: B **PASS: 28 Node + 5 browser**, incluindo 9 estados WCAG por viewport/interação no cenário do gerente; C **PASS: 41 Node + 8 browser**; TypeScript **PASS**; ESLint dos arquivos alterados **PASS**; build **PASS** após corrigir o comando de execução local. A primeira invocação do build falhou corretamente por ausência de DATABASE_URL; a reexecução usou apenas a URL do PostgreSQL descartável próprio, mantendo o guard fail-closed sem alteração de código. Logs RED, GREEN, tentativa de build e reexecução preservados.
+
+Inventário seletivo deste follow-up: src/components/admin/AdminTopbar.tsx; tests/mission04-b/governance.spec.ts; docs/codex/RELATORIO-MISSAO-04-SLICE-D.md; docs/evidence/missao-04-d/revisao-final/validation.json; docs/evidence/missao-04-d/revisao-final/execution.log. Capturas geradas de B/C e a mudança automática de título AGENTS foram arquivadas fora do Git e restauradas aos bytes do HEAD. E não iniciado; exige SUCCESS completo do próximo CI.
