@@ -1,4 +1,5 @@
 import {
+  type Prisma,
   MembershipStatus,
   OrganizationStatus,
   OrganizationType,
@@ -93,8 +94,9 @@ function allowsTarget(input: {
 
 export async function authorize(
   input: AuthorizationInput,
+  client: Prisma.TransactionClient = db,
 ): Promise<AuthorizationDecision> {
-  const user = await db.user.findUnique({
+  const user = await client.user.findUnique({
     where: {
       id: input.userId,
     },
@@ -113,7 +115,7 @@ export async function authorize(
 
   const targetOrganization =
     input.organizationId
-      ? await db.organization.findUnique({
+      ? await client.organization.findUnique({
           where: {
             id: input.organizationId,
           },
@@ -142,7 +144,7 @@ export async function authorize(
   }
 
   const assignments =
-    await db.roleAssignment.findMany({
+    await client.roleAssignment.findMany({
       where: {
         userId: input.userId,
         role: {
@@ -226,7 +228,7 @@ export async function authorize(
       }
 
       const membership =
-        await db.membership.findUnique({
+        await client.membership.findUnique({
           where: {
             userId_organizationId: {
               userId: input.userId,
@@ -295,9 +297,10 @@ export async function authorize(
 
 export async function requirePermission(
   input: AuthorizationInput,
+  client: Prisma.TransactionClient = db,
 ) {
   const decision =
-    await authorize(input)
+    await authorize(input, client)
 
   if (!decision.allowed) {
     throw new AccessDeniedError()

@@ -1,0 +1,91 @@
+{
+  "results": [
+    {
+      "name": "docker-final-web-build",
+      "command": "docker build --target runner -t pap-saude:m04-d-final . (proxy/CA ef\u00eameros via build secret)",
+      "exitCode": 0,
+      "result": "PASS",
+      "seconds": 116.51
+    },
+    {
+      "name": "docker-final-web-functional",
+      "command": [
+        "bash",
+        "scripts/test-f04-web-image.sh",
+        "pap-saude:m04-d-final",
+        "pap-saude-migrator:m04-d"
+      ],
+      "exitCode": 0,
+      "result": "PASS",
+      "seconds": 52.66
+    },
+    {
+      "name": "trivy-final",
+      "command": [
+        "bash",
+        "scripts/security/scan-f04-images.sh",
+        "pap-saude:m04-d-final",
+        "pap-saude-migrator:m04-d"
+      ],
+      "exitCode": 0,
+      "result": "PASS",
+      "seconds": 108.64,
+      "previousAttempt": {
+        "exitCode": 1,
+        "cause": "Disposable disk exhausted during Java DB extraction",
+        "log": "trivy-final-disk-failure.log"
+      },
+      "log": "trivy-final.log",
+      "retry": "same final images; no live test DB; only own caches and owned PostgreSQL volume removed"
+    }
+  ],
+  "migratorFunctional": "PASS",
+  "images": [
+    {
+      "Id": "sha256:7493a9c2d211143d4792cd4a17449895326c5a1feb96cc5eba9c9de175c9adc8",
+      "RepoTags": [
+        "pap-saude:m04-d-final"
+      ],
+      "Created": "2026-10-23T15:37:52.240331671Z",
+      "user": "nextjs"
+    },
+    {
+      "Id": "sha256:3b55e9742c9b3d34542fd6b52799a2b119780563249514824af4ef1f539e6f86",
+      "RepoTags": [
+        "pap-saude-migrator:m04-d"
+      ],
+      "Created": "2026-10-23T15:15:15.458867156Z",
+      "user": "node"
+    }
+  ],
+  "ownBuilderCacheCleanup": [
+    {
+      "ID": "3t9c8rc6p38wa2d1delviijju",
+      "Parents": "",
+      "Created at": "2026-10-23 15:36:25.740454311 +0000 UTC",
+      "Mutable": "false",
+      "Reclaimable": "true",
+      "Shared": "false",
+      "Size": "9.88MB",
+      "Description": "[builder 2/3] COPY . .",
+      "Usage count": "1",
+      "Last used": "7 seconds ago",
+      "Type": "regular"
+    },
+    {
+      "ID": "yif5sqoo1t8f4ctj6he6turgd",
+      "Parents": "",
+      "Created at": "2026-10-23 15:36:41.464840295 +0000 UTC",
+      "Mutable": "true",
+      "Reclaimable": "true",
+      "Shared": "false",
+      "Size": "185.5MB",
+      "Description": "mount / from exec /bin/sh -c if [ -f /run/secrets/build_ca ]; then export NODE_EXTRA_CA_CERTS=/run/secrets/build_ca; fi;     if [ -f /run/secrets/build_ca ]; then cat /run/secrets/build_ca >> /etc/ssl/cert.pem; fi;     npx prisma generate && npm run build",
+      "Usage count": "1",
+      "Last used": "7 seconds ago",
+      "Type": "regular"
+    }
+  ],
+  "firstBuild": "CANCELLED disk pressure; exact own cache IDs pruned",
+  "firstScanner": "FAIL Java DB mirror Forbidden; official GHCR configured, same scanners/severities"
+}

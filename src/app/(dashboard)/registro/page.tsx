@@ -1,6 +1,8 @@
+import { requireClinicalPageSession } from "@/server/clinical/clinical-page-session";
 import RegistrationWizard from "@/components/registro/RegistrationWizard"
 
-export default function RegistroPage() {
+export default async function RegistroPage() {
+  await requireClinicalPageSession();
   return (
     <div className="mx-auto w-full max-w-6xl">
       <header className="mb-4 sm:mb-6">

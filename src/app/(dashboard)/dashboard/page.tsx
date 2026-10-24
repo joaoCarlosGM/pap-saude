@@ -1,3 +1,4 @@
+import { requireClinicalPageSession } from "@/server/clinical/clinical-page-session";
 import {
   CalendarDays,
 } from "lucide-react"
@@ -17,7 +18,8 @@ import {
   upcomingDeliveries,
 } from "@/lib/mock-dashboard"
 
-export default function DashboardPage() {
+export default async function DashboardPage() {
+  await requireClinicalPageSession();
   return (
     <div className="mx-auto w-full max-w-[1600px]">
       <header className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">

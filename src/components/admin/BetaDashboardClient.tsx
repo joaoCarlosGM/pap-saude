@@ -1,4 +1,6 @@
 "use client";
+
+import { emailDeliveryLabel } from "@/lib/email-delivery";
 import { Suspense, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { BetaTitle, DataState, useBetaData } from "./BetaWidgets";
@@ -211,7 +213,7 @@ function InvitationWidget({ query }: { query: string }) {
                     <tr key={i}>
                       <td>{r.role}</td>
                       <td>{r.status}</td>
-                      <td>{r.delivery}</td>
+                      <td>{emailDeliveryLabel(r.delivery)}</td>
                       <td>{r.count}</td>
                     </tr>
                   ))}
@@ -222,8 +224,9 @@ function InvitationWidget({ query }: { query: string }) {
             <p>Nenhum convite na janela.</p>
           )}
           <p className="mt-4 text-xs text-slate-500">
-            SENT significa aceito pelo provedor; recebimento em inbox não foi
-            confirmado.
+            CAPTURED significa captura local. ACCEPTED_BY_PROVIDER e o legado SENT
+            significam aceite pelo provedor. DELIVERED exige webhook autenticado;
+            não comprova leitura nem posicionamento na caixa de entrada.
           </p>
         </>
       )}

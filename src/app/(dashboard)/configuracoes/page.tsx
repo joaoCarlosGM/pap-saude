@@ -1,8 +1,10 @@
+import { requireClinicalPageSession } from "@/server/clinical/clinical-page-session";
 import SettingsLayout from "@/components/configuracoes/SettingsLayout"
 
 import { mockUserSettings } from "@/lib/mock-configuracao"
 
-export default function ConfiguracoesPage() {
+export default async function ConfiguracoesPage() {
+  await requireClinicalPageSession();
   return (
     <div className="mx-auto w-full max-w-[1600px]">
       <header className="mb-6">

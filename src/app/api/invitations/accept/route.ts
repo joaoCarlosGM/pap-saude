@@ -139,6 +139,12 @@ export async function POST(request: NextRequest) {
       throw new InvitationPayloadError();
     }
 
+    if (record.operation === "INSPECT") {
+      const invitation = await inspectInvitation(record.token);
+      return NextResponse.json({ invitation }, { headers: { "Cache-Control": "no-store", "Referrer-Policy": "no-referrer" } });
+    }
+    if (record.operation !== undefined) throw new InvitationPayloadError();
+
     if (record.password !== undefined && typeof record.password !== "string") {
       throw new InvitationPayloadError();
     }

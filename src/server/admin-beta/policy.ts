@@ -29,14 +29,14 @@ export function uuid(value: unknown) {
     return invalid();
   return value;
 }
-export async function requirePapReviewer(userId: string) {
-  const profile = await getEffectiveAccessProfile(userId);
+export async function requirePapReviewer(userId: string, client: Prisma.TransactionClient = db) {
+  const profile = await getEffectiveAccessProfile(userId, client);
   if (
     !profile?.roles.some(
       (r) =>
-        r.key === "PAP_ADMIN" &&
+        ["PAP_ADMIN", "PAP_MANAGER"].includes(r.key) &&
         r.scope === "GLOBAL" &&
-        r.permissions.includes("organization.manage"),
+        r.permissions.includes("organization.request.review"),
     )
   )
     throw new AccessDeniedError();

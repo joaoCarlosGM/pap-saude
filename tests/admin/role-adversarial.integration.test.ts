@@ -1,3 +1,4 @@
+import { verifiedSessionToken } from "../helpers/verified-admin-session"
 import assert from "node:assert/strict"
 import { randomUUID } from "node:crypto"
 import { after, before, beforeEach, test } from "node:test"
@@ -16,12 +17,19 @@ import { PERMISSIONS } from "../../src/server/iam/permissions"
 import { assignSystemRole } from "../../src/server/iam/role-assignment.service"
 import { SYSTEM_ROLE_KEYS } from "../../src/server/iam/system-role-catalog"
 import {
-  createAdminRoleAssignment,
+  createAdminRoleAssignment as createRoleService,
   getAdminRoleOverview,
-  revokeAdminRoleAssignment,
+  revokeAdminRoleAssignment as revokeRoleService,
 } from "../../src/server/admin/admin-roles.service"
 import { AdminRoleAssignmentNotFoundError } from "../../src/server/admin/admin-role.errors"
 import { readAdminJson } from "../../src/server/admin/admin-http"
+
+async function createAdminRoleAssignment(input: Parameters<typeof createRoleService>[0]) {
+  return createRoleService({ ...input, actorSessionToken: await verifiedSessionToken(input.actorUserId) });
+}
+async function revokeAdminRoleAssignment(input: Parameters<typeof revokeRoleService>[0]) {
+  return revokeRoleService({ ...input, actorSessionToken: await verifiedSessionToken(input.actorUserId) });
+}
 
 const TEST_DATABASE = "pap_saude_f04_role_adversarial_test"
 

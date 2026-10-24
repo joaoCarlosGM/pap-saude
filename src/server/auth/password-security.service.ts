@@ -27,24 +27,38 @@ export async function issuePasswordReset(input: {
   email: string;
   origin: string;
   now?: Date;
-  deliver: (email: string, token: string) => Promise<void>;
+  deliver: (email: string, token: string, metadata?: { id: string; expiresAt: Date; createdAt: Date }) => Promise<void>;
 }): Promise<void> {
   const now = input.now ?? new Date();
   const email = normalizeEmail(input.email);
   const originHash = sha256(`password-reset-origin:v1\0${input.origin}`);
   const cutoff = new Date(now.getTime() - WINDOW_MS);
-  // Shared count for known users. Unknown identities still return the same response.
-  const originCount = await db.passwordResetToken.count({where:{ originHash, createdAt:{gte:cutoff}}});
-  if (originCount >= 20) return;
-  const user = await db.user.findUnique({where:{email},select:{id:true,email:true,isActive:true,passwordCredential:{select:{id:true}}}});
-  if (!user?.isActive || !user.passwordCredential) return;
-  const count = await db.passwordResetToken.count({where:{userId:user.id,createdAt:{gte:cutoff}}});
-  if (count >= 3) return;
   const token = randomBytes(32).toString("base64url");
-  const tokenHash = hashPasswordResetToken(token);
-  const saved = await db.passwordResetToken.create({data:{userId:user.id,tokenHash,originHash,createdAt:now,expiresAt:new Date(now.getTime()+RESET_TTL_MS)}});
+  const saved = await db.$transaction(async tx => {
+    // Read-committed, atomic counter UPSERTs lock origin first and identity
+    // second in every worker. Rolling counts are evaluated under those locks.
+    // Atomic shared buckets also count unknown identities. Never expose throttle
+    // or account existence in the HTTP response. Existing 15-minute limits stay.
+    for (const [identity, limit] of [[originHash, 20], [sha256(`reset-email:v1\0${email}`), 3]] as const) {
+      const window = Math.floor(now.getTime() / WINDOW_MS);
+      const key = sha256(`reset-limit:v1:${window}:${identity}`);
+      const bucket = await tx.betaAbuseBucket.upsert({ where: { key },
+        create: { key, count: 1, expiresAt: new Date((window + 2) * WINDOW_MS) },
+        update: { count: { increment: 1 } } });
+      if (bucket.count > limit) return null;
+    }
+    const user = await tx.user.findUnique({where:{email},select:{id:true,email:true,isActive:true,passwordCredential:{select:{id:true}}}});
+    if (!user?.isActive || !user.passwordCredential) return null;
+    // Retain the rolling-window limits as well as atomic window buckets.
+    if (await tx.passwordResetToken.count({where:{originHash,createdAt:{gte:cutoff}}}) >= 20 ||
+        await tx.passwordResetToken.count({where:{userId:user.id,createdAt:{gte:cutoff}}}) >= 3) return null;
+    const reset = await tx.passwordResetToken.create({data:{userId:user.id,tokenHash:hashPasswordResetToken(token),originHash,createdAt:now,expiresAt:new Date(now.getTime()+RESET_TTL_MS)}});
+    await tx.auditEvent.create({ data: { action: "PASSWORD_RESET_REQUESTED", resourceType: "USER", resourceId: user.id, after: { resetId: reset.id } } });
+    return { ...reset, email: user.email };
+  });
+  if (!saved) return;
   try {
-    await input.deliver(user.email,token);
+    await input.deliver(saved.email,token,saved);
   } catch {
     await db.passwordResetToken.updateMany({where:{id:saved.id,consumedAt:null},data:{revokedAt:new Date()}});
     // Do not expose mail configuration or account existence to a caller.

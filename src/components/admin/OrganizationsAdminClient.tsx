@@ -4,6 +4,7 @@ import {
   useCallback,
   useEffect,
   useMemo,
+  useRef,
   useState,
 } from "react"
 
@@ -19,9 +20,9 @@ type Organization = {
     | "SUSPENDED"
     | "ARCHIVED"
   name: string
-  code: string | null
-  cnes: string | null
-  cnpj: string | null
+  code?: string | null
+  cnes?: string | null
+  cnpj?: string | null
   city: string | null
   state: string | null
   parentId: string | null
@@ -32,9 +33,9 @@ type Organization = {
   } | null
   _count: {
     children: number
-    memberships: number
-    patientLinks: number
-    encounters: number
+    memberships?: number
+    patientLinks?: number
+    encounters?: number
   }
 }
 
@@ -68,7 +69,28 @@ function typeLabel(
   }
 }
 
-export default function OrganizationsAdminClient() {
+export default function OrganizationsAdminClient({ permissions }: { permissions: string[] }) {
+  const [archiving, setArchiving] = useState<Organization | null>(null);
+  const [confirmationName, setConfirmationName] = useState("");
+  const [password, setPassword] = useState("");
+  const [code, setCode] = useState("");
+  const [archiveBusy, setArchiveBusy] = useState(false);
+  const dialog = useRef<HTMLDialogElement>(null);
+  useEffect(() => { if (archiving) dialog.current?.showModal(); else dialog.current?.close(); }, [archiving]);
+  function closeArchive() { setArchiving(null); setPassword(""); setCode(""); setConfirmationName(""); }
+  function canOperate(org: Organization, permission: string) {
+    return permissions.includes(org.type === "HEALTH_UNIT" ? permission : "organization.manage");
+  }
+  async function archive(event: React.FormEvent) {
+    event.preventDefault(); if (!archiving || archiveBusy) return;
+    setArchiveBusy(true); setError(null);
+    try {
+      const response = await fetch(`/api/admin/organizations/${archiving.id}`, { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ operation: "ARCHIVE", confirmationName, password, code }) });
+      if (!response.ok) throw new Error();
+      closeArchive(); await load();
+    } catch { setError("Exclusão recusada. Confira nome, senha e um código TOTP ainda não utilizado. O histórico é preservado."); }
+    finally { setArchiveBusy(false); setPassword(""); setCode(""); }
+  }
   const [search,setSearch]=useState("");
   const [page,setPage]=useState(1);
 
@@ -345,7 +367,7 @@ export default function OrganizationsAdminClient() {
 
   return (
     <section className="mx-auto max-w-7xl">
-      <p className="text-xs font-semibold uppercase tracking-[0.18em] text-pink-500">
+      <p className="text-xs font-semibold uppercase tracking-[0.18em] text-teal-700">
         PAP Admin Beta 1
       </p>
 
@@ -371,8 +393,8 @@ export default function OrganizationsAdminClient() {
         </div>
       )}
 
-      <div className="mt-7 grid gap-6 xl:grid-cols-[360px_minmax(0,1fr)]">
-        <form
+      <div className={permissions.includes("organization.manage") ? "mt-7 grid gap-6 xl:grid-cols-[360px_minmax(0,1fr)]" : "mt-7 grid gap-6"}>
+        {permissions.includes("organization.manage") && <form
           onSubmit={
             createOrganization
           }
@@ -563,7 +585,7 @@ export default function OrganizationsAdminClient() {
                 : "Criar organização"}
             </button>
           </div>
-        </form>
+        </form>}
 
         <div className="min-w-0 rounded-2xl border border-slate-200 bg-white shadow-sm">
           <div className="border-b border-slate-100 px-5 py-4">
@@ -631,37 +653,23 @@ export default function OrganizationsAdminClient() {
                         </p>
 
                         <div className="mt-3 flex flex-wrap gap-4 text-xs text-slate-500">
-                          <span>
+                          {organization._count.memberships !== undefined && <span>
                             {
                               organization
                                 ._count
                                 .memberships
                             }{" "}
                             usuários
-                          </span>
+                          </span>}
 
-                          <span>
-                            {
-                              organization
-                                ._count
-                                .patientLinks
-                            }{" "}
-                            pacientes
-                          </span>
+                          {organization._count.patientLinks !== undefined && <span>{organization._count.patientLinks} pacientes</span>}
 
-                          <span>
-                            {
-                              organization
-                                ._count
-                                .encounters
-                            }{" "}
-                            atendimentos
-                          </span>
+                          {organization._count.encounters !== undefined && <span>{organization._count.encounters} atendimentos</span>}
                         </div>
                       </div>
 
                       <div className="flex flex-wrap gap-2">
-                        {organization.status !==
+                        {canOperate(organization, "organization.activate") && organization.status !==
                           "ACTIVE" &&
                           organization.status !==
                             "ARCHIVED" && (
@@ -679,7 +687,7 @@ export default function OrganizationsAdminClient() {
                             </button>
                           )}
 
-                        {organization.status ===
+                        {canOperate(organization, "organization.deactivate") && organization.status ===
                           "ACTIVE" &&
                           organization.type !==
                             "PAP" && (
@@ -697,21 +705,18 @@ export default function OrganizationsAdminClient() {
                             </button>
                           )}
 
-                        {organization.type !==
+                        {canOperate(organization, "organization.delete") && organization.type !==
                           "PAP" &&
                           organization.status !==
                             "ARCHIVED" && (
                             <button
                               type="button"
                               onClick={() =>
-                                void mutate(
-                                  organization.id,
-                                  "ARCHIVE",
-                                )
+                                setArchiving(organization)
                               }
                               className="rounded-lg border border-red-200 px-3 py-1.5 text-xs font-medium text-red-700 hover:bg-red-50"
                             >
-                              Arquivar
+                              Excluir (arquivar)
                             </button>
                           )}
                       </div>
@@ -723,6 +728,17 @@ export default function OrganizationsAdminClient() {
           )}
         </div>
       </div>
+      <dialog ref={dialog} onCancel={closeArchive} aria-labelledby="archive-title" className="m-auto w-[calc(100%-2rem)] max-w-lg rounded-2xl border bg-white p-6 text-slate-950 backdrop:bg-slate-950/60 dark:bg-slate-900 dark:text-slate-50">
+        <h2 id="archive-title" className="text-xl font-semibold">Excluir UBS ou município</h2>
+        <p className="my-3">A exclusão é lógica (arquivamento) para preservar vínculos e histórico. Confirme {archiving?.name}. Esta ação não apaga prontuários.</p>
+        <form onSubmit={archive} className="space-y-3">
+          <label className="block">Nome completo da organização<input autoFocus required value={confirmationName} onChange={e => setConfirmationName(e.target.value)} className="mt-1 w-full rounded-lg border p-2" /></label>
+          <label className="block">Sua senha<input data-sensitive type="password" autoComplete="current-password" required maxLength={1024} value={password} onChange={e => setPassword(e.target.value)} className="mt-1 w-full rounded-lg border p-2" /></label>
+          <label className="block">Código TOTP atual<input data-sensitive inputMode="numeric" autoComplete="one-time-code" pattern="[0-9]{6}" maxLength={6} required value={code} onChange={e => setCode(e.target.value)} className="mt-1 w-full rounded-lg border p-2" /></label>
+          <p role="status">{error}</p>
+          <div className="flex gap-3"><button type="submit" disabled={archiveBusy || confirmationName !== archiving?.name} className="rounded-lg bg-red-800 p-3 text-white disabled:opacity-50">Confirmar exclusão lógica</button><button type="button" disabled={archiveBusy} onClick={closeArchive}>Cancelar</button></div>
+        </form>
+      </dialog>
     </section>
   )
 }

@@ -1,0 +1,154 @@
+{
+  "date": "2026-10-22",
+  "baseCommit": "efdbbad14f508139b12abd1a4867c4f97ad1488e",
+  "branch": "feature/ux-iam-convites-vitrine-email",
+  "decision": "NO-GO commit/push",
+  "codeModifiedInFinalReview": false,
+  "sourceManifestMatch": true,
+  "sourceFilesVerified": 68,
+  "sourceSha256": "61e3ed29c782324650e459bf74762d2d3a426d166edd96e94599d40a90e2265b",
+  "checks": {
+    "gitDiffCheck": "PASS",
+    "sliceB": {
+      "status": "PASS",
+      "tests": 26,
+      "failed": 0,
+      "skipped": 0
+    },
+    "clinicalBrowser": {
+      "status": "PASS",
+      "tests": 2,
+      "roles": [
+        "anonymous",
+        "PAP_ADMIN",
+        "PAP_MANAGER",
+        "COMMERCIAL",
+        "unassigned",
+        "PROFESSIONAL"
+      ]
+    },
+    "f04": {
+      "status": "PASS",
+      "nodeTests": 78,
+      "includes": [
+        "TypeScript",
+        "ESLint",
+        "Next build",
+        "SQL invariants"
+      ]
+    },
+    "adversarialPrivacy": {
+      "status": "FAIL",
+      "tests": 1,
+      "endpoint": "/api/admin/organizations",
+      "httpStatus": 200,
+      "settingsReturned": true,
+      "syntheticPrivateCanaryVisible": true,
+      "clinicalCountersReturned": false
+    },
+    "undelegatedGlobalEndpoints": {
+      "status": "PASS",
+      "tests": 1,
+      "http403": [
+        "/api/admin/audit",
+        "/api/admin/beta/users",
+        "/api/admin/security",
+        "/api/admin/beta/metrics",
+        "/api/admin/operations/metrics",
+        "/api/admin/operations/monitoring",
+        "/api/admin/operations/integrations"
+      ],
+      "empty200": [
+        "/api/admin/users"
+      ]
+    },
+    "realOperatorAccountAndMfa": "NOT RUN - manual lab deliberately not accessed",
+    "deterministicInterleavedMfaResetOrRevocationRace": "NOT RUN",
+    "remoteSliceBCI": "NOT RUN - no commit/push authorized",
+    "untrackedTextWhitespace": {
+      "status": "PASS",
+      "files": 20
+    }
+  },
+  "logs": {
+    "sliceB": {
+      "path": "/tmp/m04-b-final-review-tests.log",
+      "sha256": "9c8abc2d12a1ec337c2ab50f74b53392eac3e1af152422bff6e1904d2cb39f2e"
+    },
+    "sliceBAndClinicalBrowser": {
+      "path": "/tmp/m04-b-final-review-browser.log",
+      "sha256": "27ae95202502c2ef62ae7cbc2d46a0596a0c0f75eda1993a42132ff8afb0837a"
+    },
+    "f04AndStatic": {
+      "path": "/tmp/m04-b-final-review-f04.log",
+      "sha256": "021b90f4fd8d65267d95a2284cddba6851dba70db733c4d8d47c4846540df42d"
+    },
+    "privacyProbe": {
+      "path": "/tmp/m04-b-final-review-privacy.log",
+      "sha256": "1243888fd72924ae11287084ff7bb1686a8b7eddce235bb710c908e362d42638"
+    }
+  },
+  "previousEvidenceHashCorrection": {
+    "note": "Two previous stored hashes did not match complete local log files. No cause assumed; fresh F04/static gate completed with exit 0; new hash recorded, original values preserved here.",
+    "previousValues": {
+      "f04": "f0bcc9a66fc05957df5dc8d70ebbc1b618ed6289ad283d0014770b7ee3058be5",
+      "typescriptLintBuild": "7bd0e1c4d7a32e5c9abd627373e4c7ae928d514c9e4c07de5525a07cc574339d"
+    }
+  },
+  "npmAudit": {
+    "all": {
+      "status": "FAIL",
+      "vulnerabilities": {
+        "info": 0,
+        "low": 0,
+        "moderate": 0,
+        "high": 9,
+        "critical": 0,
+        "total": 9
+      },
+      "sha256": "be216db234f4c381cd17a5cce8f67f5580a0aa26a5fab34fec7b6b54fd0cf56a"
+    },
+    "production": {
+      "status": "PASS",
+      "vulnerabilities": {
+        "info": 0,
+        "low": 0,
+        "moderate": 0,
+        "high": 0,
+        "critical": 0,
+        "total": 0
+      },
+      "sha256": "acff3a399a96b4842afc85045b8d87d3a6c5bcb490039f82bddb17a1e2cd5d09"
+    },
+    "migratorIncludingDev": {
+      "status": "PASS",
+      "vulnerabilities": {
+        "info": 0,
+        "low": 0,
+        "moderate": 0,
+        "high": 0,
+        "critical": 0,
+        "total": 0
+      },
+      "sha256": "05dbce07429f7de21040b4c65a385aea733fc0a32815ce7ebb88f3dcfdb3db7a"
+    }
+  },
+  "pr": {
+    "baseRefName": "develop",
+    "headRefName": "feature/ux-iam-convites-vitrine-email",
+    "isDraft": true,
+    "state": "OPEN",
+    "url": "https://github.com/joaoCarlosGM/pap-saude/pull/5"
+  },
+  "disposableResources": {
+    "createdContainer": "pap_saude_db",
+    "ownershipLabels": {
+      "pap.disposable": "f0410",
+      "pap.mission": "m04-b-final-audit"
+    },
+    "cleanup": "PASS - own container removed after both labels verified",
+    "manualLabAccessed": false
+  },
+  "historicalSnapshot": true,
+  "supersededBy": "../../codex/AUDITORIA-FINAL-MISSAO-04-B.md"
+}

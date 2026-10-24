@@ -55,9 +55,9 @@ export default function Topbar({
         </button>
 
         {/* Notificações */}
-        <button
-          type="button"
-          aria-label="Notificações"
+        <a
+          href="/notificacoes"
+          aria-label="Minhas notificações"
           className="relative flex h-9 w-9 items-center justify-center rounded-md transition hover:bg-white/10"
         >
           <Bell
@@ -65,9 +65,7 @@ export default function Topbar({
             strokeWidth={1.8}
           />
 
-          {/* Indicador de notificação */}
-          <span className="absolute right-1.5 top-1.5 h-1.5 w-1.5 rounded-full bg-pink-400" />
-        </button>
+        </a>
 
         {/* Usuário */}
         <button

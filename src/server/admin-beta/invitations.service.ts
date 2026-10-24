@@ -1,6 +1,5 @@
 import { db } from "@/server/db/client";
-import { requireAdminOrganizationAccess } from "@/server/admin/admin-access.service";
-import { PERMISSIONS } from "@/server/iam/permissions";
+import { requireInstitutionalInvitationAccess, requireInstitutionalInvitationTarget } from "@/server/admin/institutional-invitation-policy";
 import { writeAdminAudit } from "@/server/audit/admin-audit-writer.service";
 import {
   createHealthUnitAdminInvitation,
@@ -14,11 +13,7 @@ export async function listBetaInvitations(
 ) {
   uuid(organizationId);
   if (!Number.isInteger(page) || page < 1 || page > 10000) invalid();
-  await requireAdminOrganizationAccess(
-    userId,
-    PERMISSIONS.USER_INVITE,
-    organizationId,
-  );
+  await requireInstitutionalInvitationAccess(userId, organizationId);
   const where = { organizationId };
   const [rows, total] = await db.$transaction([
     db.userInvitation.findMany({
@@ -49,11 +44,7 @@ export async function mutateBetaInvitation(
   body: Record<string, unknown>,
 ) {
   const organizationId = uuid(body.organizationId);
-  await requireAdminOrganizationAccess(
-    userId,
-    PERMISSIONS.USER_INVITE,
-    organizationId,
-  );
+  await requireInstitutionalInvitationAccess(userId, organizationId);
   if (body.operation === "BOOTSTRAP") {
     const candidate = await db.organizationCandidate.findFirst({
       where: { convertedOrganizationId: organizationId, status: "APPROVED" },
@@ -71,6 +62,7 @@ export async function mutateBetaInvitation(
       where: { id: uuid(body.id), organizationId },
     });
     if (!invitation || invitation.status === "ACCEPTED") invalid();
+    await requireInstitutionalInvitationTarget(userId, invitation.email);
     if (body.operation === "RESEND") {
       const create =
         invitation.roleKey === "HEALTH_UNIT_ADMIN"

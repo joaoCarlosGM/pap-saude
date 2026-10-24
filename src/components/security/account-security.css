@@ -1,0 +1,73 @@
+/* Scoped surfaces: no changes to the clinical dashboard or its pink accents. */
+.account-security {
+  padding-block: 32px;
+}
+.account-security--admin {
+  --ob-bg: #f5f7f6;
+  --ob-soft: #e1f6ef;
+}
+.account-security h1 {
+  color: var(--ob-green);
+}
+.account-security .ob-card {
+  max-width: 780px;
+}
+.account-login {
+  display: grid;
+  grid-template-columns: minmax(0, 440px) minmax(0, 440px);
+  justify-content: center;
+  align-items: center;
+  gap: 64px;
+  padding-block: 40px;
+}
+.account-login-art h2 {
+  color: var(--ob-green);
+  font-size: clamp(28px, 4vw, 40px);
+  line-height: 1.15;
+  letter-spacing: -0.035em;
+}
+.account-login-art p {
+  color: var(--ob-muted);
+  line-height: 1.7;
+}
+.account-login-art .ob-eyebrow {
+  color: var(--ob-pink);
+}
+.account-login-art img {
+  display: block;
+  width: 100%;
+  height: auto;
+  margin-top: 24px;
+}
+@media (prefers-color-scheme: dark) {
+  .account-security--admin {
+    --ob-bg: #09282c;
+    --ob-soft: #193635;
+  }
+}
+@media (max-width: 760px) {
+  .account-login {
+    grid-template-columns: minmax(0, 440px);
+    gap: 24px;
+    padding-block: 24px;
+  }
+  .account-login form {
+    grid-row: 1;
+  }
+  .account-login-art {
+    display: grid;
+    grid-template-columns: 1fr 100px;
+    align-items: center;
+    gap: 10px;
+  }
+  .account-login-art h2 {
+    font-size: 22px;
+    margin: 0;
+  }
+  .account-login-art > p {
+    display: none;
+  }
+  .account-login-art img {
+    margin-top: 0;
+  }
+}

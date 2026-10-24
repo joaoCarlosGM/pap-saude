@@ -1,0 +1,36 @@
+{
+  "checkedAt": "2026-10-23T17:53:30.946441+00:00",
+  "containerId": "fafde931dd46e29dc9c653f67ae9eb0c7ddb08500d4d95c77b6a00c1fddc7920",
+  "ownershipLabelsVerifiedBeforeRemoval": {
+    "pap.disposable": "f0410",
+    "pap.mission": "mission04-c",
+    "pap.slice": "mission04-d"
+  },
+  "baseDatabaseNamesVerifiedBeforeRemoval": [
+    "pap_saude",
+    "postgres"
+  ],
+  "ownContainerRemoved": true,
+  "ownVolumeId": "5dc291bf125a109d3b2dc6f77d82a2c5ece7ccfb472a789fa3766ed4a8626c4d",
+  "ownVolumeRemoved": true,
+  "explicitOwnVolumeRemovalNeeded": true,
+  "provenance": [
+    {
+      "Type": "volume",
+      "Action": "unmount",
+      "Actor": {
+        "ID": "5dc291bf125a109d3b2dc6f77d82a2c5ece7ccfb472a789fa3766ed4a8626c4d",
+        "Attributes": {
+          "container": "fafde931dd46e29dc9c653f67ae9eb0c7ddb08500d4d95c77b6a00c1fddc7920",
+          "driver": "local"
+        }
+      },
+      "scope": "local",
+      "time": 1792777918,
+      "timeNano": 1792777918858938024
+    }
+  ],
+  "manualLabAccessed": false,
+  "existingOperatorResourcesModified": false,
+  "cacheCleanup": "Only exact IDs of own D builds; no global prune; see images.json"
+}

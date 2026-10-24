@@ -1,0 +1,525 @@
+{
+  "base": "c28f76014316a1f2f4c5a1f3ca55e37d0ec4130b",
+  "branch": "feature/ux-iam-convites-vitrine-email",
+  "generatedAt": "2026-10-22T18:02:42.735311+00:00",
+  "runtime": "Node 22.23.3; npm 11.9.0 local; npm 10.9.9 Docker",
+  "results": [
+    {
+      "name": "npm-ci",
+      "command": "npm ci",
+      "exitCode": 0,
+      "result": "PASS",
+      "log": "/tmp/sec01-npm-ci.log",
+      "logSha256": "83d5b216eec442560c51fd6b871e3d6e8879d5aef8f8983c21ac12a4b3e59d6c",
+      "tap": {
+        "tests": 0,
+        "pass": 0,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      },
+      "browserPass": 0
+    },
+    {
+      "name": "versions",
+      "command": "npm ls next eslint-config-next react react-dom",
+      "exitCode": 0,
+      "result": "PASS",
+      "seconds": 1.9,
+      "log": "/tmp/sec01-versions.log",
+      "logSha256": "e74e607588965e01391d92776680f03723437db79fc1c2ff79e746c4d5a0cc56",
+      "tap": {
+        "tests": 0,
+        "pass": 0,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      },
+      "browserPass": 0
+    },
+    {
+      "name": "audit-prod",
+      "command": "npm audit --omit=dev --audit-level=high --json",
+      "exitCode": 0,
+      "result": "PASS",
+      "seconds": 1.28,
+      "log": "/tmp/sec01-audit-prod.log",
+      "logSha256": "acff3a399a96b4842afc85045b8d87d3a6c5bcb490039f82bddb17a1e2cd5d09",
+      "tap": {
+        "tests": 0,
+        "pass": 0,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      },
+      "browserPass": 0
+    },
+    {
+      "name": "audit-migrator",
+      "command": "npm audit --prefix docker/migrator --include=dev --audit-level=high --json",
+      "exitCode": 0,
+      "result": "PASS",
+      "seconds": 0.7,
+      "log": "/tmp/sec01-audit-migrator.log",
+      "logSha256": "05dbce07429f7de21040b4c65a385aea733fc0a32815ce7ebb88f3dcfdb3db7a",
+      "tap": {
+        "tests": 0,
+        "pass": 0,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      },
+      "browserPass": 0
+    },
+    {
+      "name": "audit-full",
+      "command": "npm audit --include=dev --json",
+      "exitCode": 1,
+      "result": "FAIL",
+      "seconds": 10.44,
+      "log": "/tmp/sec01-audit-full.log",
+      "logSha256": "be216db234f4c381cd17a5cce8f67f5580a0aa26a5fab34fec7b6b54fd0cf56a",
+      "tap": {
+        "tests": 0,
+        "pass": 0,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      },
+      "browserPass": 0
+    },
+    {
+      "name": "prisma",
+      "command": "npx prisma generate && npx next typegen",
+      "exitCode": 0,
+      "result": "PASS",
+      "seconds": 7.18,
+      "log": "/tmp/sec01-prisma.log",
+      "logSha256": "83c5d91fd2d31f4802fe4761d2e09fcdf92b02e30960dd7fcd89d1d0070c7228",
+      "tap": {
+        "tests": 0,
+        "pass": 0,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      },
+      "browserPass": 0
+    },
+    {
+      "name": "typescript",
+      "command": "npx tsc --noEmit",
+      "exitCode": 0,
+      "result": "PASS",
+      "seconds": 23.1,
+      "log": "/tmp/sec01-typescript.log",
+      "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "tap": {
+        "tests": 0,
+        "pass": 0,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      },
+      "browserPass": 0
+    },
+    {
+      "name": "lint",
+      "command": "npm run lint",
+      "exitCode": 0,
+      "result": "PASS",
+      "seconds": 21.44,
+      "log": "/tmp/sec01-lint.log",
+      "logSha256": "7d811359e56923172d7fd72566aab5be66321d5080ec6640d52f6997ada53bf8",
+      "tap": {
+        "tests": 0,
+        "pass": 0,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      },
+      "browserPass": 0
+    },
+    {
+      "name": "build",
+      "command": "npm run build",
+      "exitCode": 0,
+      "result": "PASS",
+      "seconds": 36.53,
+      "log": "/tmp/sec01-build.log",
+      "logSha256": "631eb6625d92917a022ab8fbd8e8b691e51dd61a0f69279758335c69ffff15ff",
+      "tap": {
+        "tests": 0,
+        "pass": 0,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      },
+      "browserPass": 0
+    },
+    {
+      "name": "mission04-b",
+      "command": "npm run test:mission04:b:browser",
+      "exitCode": 0,
+      "result": "PASS",
+      "seconds": 96.55,
+      "log": "/tmp/sec01-mission04-b.log",
+      "logSha256": "c9fb2d1f14ba05acb6d141376d8ecb1565ddcaa8f82af7ff289de55d67f4adff",
+      "tap": {
+        "tests": 28,
+        "pass": 28,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      },
+      "browserPass": 5
+    },
+    {
+      "name": "first-access",
+      "command": "npm run test:first-access:browser",
+      "exitCode": 0,
+      "result": "PASS",
+      "seconds": 145.09,
+      "log": "/tmp/sec01-first-access.log",
+      "logSha256": "5a8aaa9f366cf0bcab7d24fd0a7f90c35eb67fc793903603515b6c87c41fe71f",
+      "tap": {
+        "tests": 21,
+        "pass": 21,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      },
+      "browserPass": 15
+    },
+    {
+      "name": "auth",
+      "command": "npm run test:auth",
+      "exitCode": 0,
+      "result": "PASS",
+      "seconds": 299.64,
+      "log": "/tmp/sec01-auth.log",
+      "logSha256": "5940f01f85a9ec802d07fc84b38bc3cac6431b8d95c318f350a59b05b59b7b4f",
+      "tap": {
+        "tests": 202,
+        "pass": 202,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      },
+      "browserPass": 0
+    },
+    {
+      "name": "beta1",
+      "command": "npm run test:admin:beta1",
+      "exitCode": 0,
+      "result": "PASS",
+      "seconds": 33.14,
+      "log": "/tmp/sec01-beta1.log",
+      "logSha256": "e86c597fb19ba45411c62747dee70163bf82299bd204c2c4332731095bdd73ab",
+      "tap": {
+        "tests": 29,
+        "pass": 29,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      },
+      "browserPass": 0
+    },
+    {
+      "name": "f04",
+      "command": "npm run audit:f04:operations",
+      "exitCode": 0,
+      "result": "PASS",
+      "seconds": 231.04,
+      "log": "/tmp/sec01-f04.log",
+      "logSha256": "60cc086a925b4ec918eba7b44208094db17505743638db08e2e190e1c909ebaa",
+      "tap": {
+        "tests": 78,
+        "pass": 78,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      },
+      "browserPass": 0
+    },
+    {
+      "name": "f03",
+      "command": "npm run test:f03:smart:force",
+      "exitCode": 0,
+      "result": "PASS",
+      "seconds": 344.03,
+      "log": "/tmp/sec01-f03.log",
+      "logSha256": "f030970333d9ac815d0df9f5f8e7a93b31400e46cc8b355ba839210374dca8e0",
+      "tap": {
+        "tests": 203,
+        "pass": 203,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      },
+      "browserPass": 0
+    },
+    {
+      "name": "migrator-build",
+      "command": "docker build --add-host \"proxy:$F04_DOCKER_PROXY_IP\" --build-arg HTTP_PROXY --build-arg HTTPS_PROXY --build-arg NO_PROXY --secret \"id=build_ca,src=$NODE_EXTRA_CA_CERTS\" --target migrator -t pap-saude-migrator:sec01 .",
+      "exitCode": 0,
+      "result": "PASS",
+      "seconds": 0.41,
+      "log": "/tmp/sec01-migrator-build.log",
+      "logSha256": "76abf7d6c9ecb82bdb5b37a4ac3d0ed03b1599a1bdccc3efb2d77c7bd85e3406",
+      "tap": {
+        "tests": 0,
+        "pass": 0,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      },
+      "browserPass": 0
+    },
+    {
+      "name": "migrator-functional",
+      "command": "bash scripts/test-f04-migrator-image.sh pap-saude-migrator:sec01",
+      "exitCode": 0,
+      "result": "PASS",
+      "seconds": 200.23,
+      "log": "/tmp/sec01-migrator-functional.log",
+      "logSha256": "b526334a2286c5365079dcf81ccef91a976bb3d4afa130342b4dd962008bf0a5",
+      "tap": {
+        "tests": 0,
+        "pass": 0,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      },
+      "browserPass": 0
+    },
+    {
+      "name": "web-functional",
+      "command": "bash scripts/test-f04-web-image.sh pap-saude:sec01 pap-saude-migrator:sec01",
+      "exitCode": 0,
+      "result": "PASS",
+      "seconds": 40.32,
+      "log": "/tmp/sec01-web-functional.log",
+      "logSha256": "87657d7e0efddde0b17c1016e5968d3ecc2ed27a93e6f5beb2944a3de94d8060",
+      "tap": {
+        "tests": 0,
+        "pass": 0,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      },
+      "browserPass": 0
+    },
+    {
+      "name": "trivy",
+      "command": "bash scripts/security/scan-f04-images.sh pap-saude:sec01 pap-saude-migrator:sec01",
+      "exitCode": 0,
+      "result": "PASS",
+      "seconds": 29.89,
+      "log": "/tmp/sec01-trivy.log",
+      "logSha256": "f6b554177599643bd71cac4fef8a7f4c392558cff1b79819912485e2cf053ad4",
+      "tap": {
+        "tests": 0,
+        "pass": 0,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      },
+      "browserPass": 0
+    },
+    {
+      "name": "runner-build",
+      "command": "docker build --add-host \"proxy:$F04_DOCKER_PROXY_IP\" --build-arg HTTP_PROXY --build-arg HTTPS_PROXY --build-arg NO_PROXY --secret \"id=build_ca,src=$NODE_EXTRA_CA_CERTS\" --target runner -t pap-saude:sec01 .",
+      "exitCode": 0,
+      "result": "PASS",
+      "log": "/tmp/sec01-runner-build.log",
+      "logSha256": "07b8b48ee2d59128a248f0dc1a85c45e33c5c9e0d27b9937866a4613556538d9",
+      "tap": {
+        "tests": 0,
+        "pass": 0,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      },
+      "browserPass": 0
+    }
+  ],
+  "advisoryChecks": [
+    {
+      "id": "GHSA-2464-fhr4-w9xw",
+      "url": "https://github.com/advisories/GHSA-2464-fhr4-w9xw",
+      "severity": "critical",
+      "publishedAt": "2026-10-22T15:52:53Z",
+      "ranges": [
+        ">= 10.0.0  <= 15.5.27",
+        ">= 16.0.0  <= 16.4.0"
+      ],
+      "beforeAffected": true,
+      "afterAffected": false,
+      "patchedVersions": [
+        "15.5.28",
+        "16.4.1"
+      ],
+      "result": "PASS"
+    },
+    {
+      "id": "GHSA-p3m5-59mp-jv5r",
+      "url": "https://github.com/advisories/GHSA-p3m5-59mp-jv5r",
+      "severity": "high",
+      "publishedAt": "2026-10-22T15:50:34Z",
+      "ranges": [
+        ">= 13.0.0  <= 15.5.27",
+        ">= 16.0.0  <= 16.4.0"
+      ],
+      "beforeAffected": true,
+      "afterAffected": false,
+      "patchedVersions": [
+        "15.5.28",
+        "16.4.1"
+      ],
+      "result": "PASS"
+    },
+    {
+      "id": "GHSA-673q-mjm6-r5xr",
+      "url": "https://github.com/advisories/GHSA-673q-mjm6-r5xr",
+      "severity": "critical",
+      "publishedAt": "2026-10-22T16:42:31Z",
+      "ranges": [
+        ">= 16.0.0  <= 16.4.0"
+      ],
+      "beforeAffected": true,
+      "afterAffected": false,
+      "patchedVersions": [
+        "16.4.1"
+      ],
+      "result": "PASS"
+    }
+  ],
+  "images": [
+    {
+      "id": "sha256:a6e88ed33ad75cb119b496567ff8b51aaa044823a45306255637f3f40c052900",
+      "tags": [
+        "pap-saude:sec01"
+      ],
+      "testedTag": "pap-saude:sec01",
+      "user": "nextjs"
+    },
+    {
+      "id": "sha256:a67cfb42a3a3a0be42440e29baee4942e2216ab306effbaf242d6dac3fcb4adc",
+      "tags": [
+        "pap-saude-migrator:m04-b",
+        "pap-saude-migrator:m04-b-audit",
+        "pap-saude-migrator:sec01"
+      ],
+      "testedTag": "pap-saude-migrator:sec01",
+      "user": "node"
+    }
+  ],
+  "changedLockEntries": [
+    {
+      "path": "node_modules/@next/env",
+      "before": "16.3.8",
+      "after": "16.4.2"
+    },
+    {
+      "path": "node_modules/@next/eslint-plugin-next",
+      "before": "16.3.8",
+      "after": "16.4.2"
+    },
+    {
+      "path": "node_modules/@next/swc-darwin-arm64",
+      "before": "16.3.8",
+      "after": "16.4.2"
+    },
+    {
+      "path": "node_modules/@next/swc-darwin-x64",
+      "before": "16.3.8",
+      "after": "16.4.2"
+    },
+    {
+      "path": "node_modules/@next/swc-linux-arm64-gnu",
+      "before": "16.3.8",
+      "after": "16.4.2"
+    },
+    {
+      "path": "node_modules/@next/swc-linux-arm64-musl",
+      "before": "16.3.8",
+      "after": "16.4.2"
+    },
+    {
+      "path": "node_modules/@next/swc-linux-x64-gnu",
+      "before": "16.3.8",
+      "after": "16.4.2"
+    },
+    {
+      "path": "node_modules/@next/swc-linux-x64-musl",
+      "before": "16.3.8",
+      "after": "16.4.2"
+    },
+    {
+      "path": "node_modules/@next/swc-win32-arm64-msvc",
+      "before": "16.3.8",
+      "after": "16.4.2"
+    },
+    {
+      "path": "node_modules/@next/swc-win32-x64-msvc",
+      "before": "16.3.8",
+      "after": "16.4.2"
+    },
+    {
+      "path": "node_modules/eslint-config-next",
+      "before": "16.3.8",
+      "after": "16.4.2"
+    },
+    {
+      "path": "node_modules/next",
+      "before": "16.3.8",
+      "after": "16.4.2"
+    }
+  ],
+  "inventory": [
+    "package.json",
+    "package-lock.json",
+    "docs/codex/RELATORIO-HOTFIX-SEC-01.md",
+    "docs/evidence/hotfix-sec01/validation.json",
+    "docs/evidence/hotfix-sec01/execution.log",
+    "docs/evidence/hotfix-sec01/dependency-audits.json",
+    "docs/evidence/hotfix-sec01/advisories.json"
+  ],
+  "sourceHashes": {
+    "package.json": "4aaa7b56976049a052c61587a27dbaea5a6b259aa22e091b0a2db10c6bbaa181",
+    "package-lock.json": "8952e811c44e119bf218b185853f77d27e292311ade9aa8fe4ab76a576752e19"
+  },
+  "externalValidation": "NOT RUN: no commit/push authorized; previous B remote CI remains FAILURE",
+  "manualLab": "NOT ACCESSED OR MODIFIED",
+  "cleanup": {
+    "containerId": "6e0a1fba6c535c1ee12c46e46e7671c41ec67424f91f0061071c7baae70f24fc",
+    "labels": {
+      "pap.disposable": "f0410",
+      "pap.mission": "sec01"
+    },
+    "removed": true,
+    "existingVolumesOrBindsUsed": false
+  },
+  "executionLogNormalization": "Only trailing whitespace stripped; original individual stdout hashes retained; originals in /tmp/sec01-*.log",
+  "combinedLogSha256": "11a8f03caddecbce8648fd61a7988466b88801430a38b4eb7c94db4cd783a434"
+}

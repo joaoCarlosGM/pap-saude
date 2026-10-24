@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>PAP Saúde — prévia visual: aguardando autorização</title>
+<style>
+:root{--teal:#064f50;--teal-900:#09282c;--mint:#e1f6ef;--rose:#f72c86;--rose-50:#fff1f6;--ink:#132b32;--muted:#5b7179;--line:#e2e8eb;--bg:#fbf8fa;--white:#fff;font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,sans-serif;color:var(--ink)}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 16% 15%,#fce8ef 0,transparent 38%),radial-gradient(circle at 90% 81%,#dcf5ee 0,transparent 42%),var(--bg);min-height:100vh}
+.top{max-width:1200px;margin:auto;padding:24px 32px;display:flex;align-items:center;justify-content:space-between;gap:20px}.logo{display:flex;align-items:center;gap:12px;color:var(--teal-900);font-size:22px;font-weight:800;letter-spacing:-.9px}.symbol{height:38px;width:38px;border-radius:12px;background:var(--mint);display:grid;place-items:center;font-weight:900;color:var(--teal);font-size:28px}.label{font-size:12px;color:var(--muted);font-weight:700;letter-spacing:1px;text-transform:uppercase}
+.layout{max-width:1200px;margin:30px auto 60px;padding:0 32px;display:grid;grid-template-columns:minmax(300px,.9fr) minmax(410px,1.1fr);gap:28px;align-items:stretch}
+.hero{background:linear-gradient(155deg,#fff6fa 5%,#f1fbf7);border:1px solid #f2dfe7;border-radius:30px;padding:40px 38px;display:flex;flex-direction:column;min-height:610px;overflow:hidden}.eyebrow{color:#a9004b;font-size:12px;font-weight:800;letter-spacing:2px;text-transform:uppercase}.hero h1{font-size:clamp(35px,4vw,53px);line-height:1.08;letter-spacing:-2px;color:var(--teal);margin:22px 0}.hero p{color:#425d61;line-height:1.7;max-width:400px;margin:0}.art{max-width:100%;width:440px;margin:auto auto -20px;filter:drop-shadow(0 10px 20px #0a4e4e12)}
+.card{background:white;border:1px solid #dfe7e8;border-radius:30px;box-shadow:0 20px 60px #0a303014;padding:42px 44px;display:flex;flex-direction:column;gap:22px}
+.heading{display:flex;align-items:center;gap:16px}.clock{height:70px;width:70px;border-radius:22px;background:var(--rose-50);color:var(--rose);display:grid;place-items:center;font-size:37px;flex-shrink:0}.heading h2{font-size:27px;line-height:1.1;margin:0 0 6px;letter-spacing:-.6px}.heading p{font-size:14px;line-height:1.5;color:var(--muted);margin:0}
+.notice{padding:17px 20px;border-radius:16px;background:#ebf8f4;border-left:4px solid var(--teal);font-size:14px;line-height:1.65;color:#164d4b}
+.timeline{list-style:none;padding:0;margin:2px 0 0}.timeline li{display:grid;grid-template-columns:29px 1fr;gap:13px;min-height:80px;position:relative}.timeline li:not(:last-child)::before{position:absolute;content:"";left:14px;top:35px;bottom:0;width:2px;background:#dbe6e7}.dot{height:29px;width:29px;border-radius:50%;display:grid;place-items:center;border:2px solid #dae2e5;background:white;font-weight:800;font-size:12px;z-index:1}.done .dot{background:#098074;color:white;border-color:#098074}.active .dot{border-color:var(--rose);color:var(--rose);background:#fff1f6}.timeline strong{display:block;font-size:15px;margin:1px 0 4px}.timeline small{display:block;color:var(--muted);font-size:13px;line-height:1.6}
+.actions{display:flex;gap:12px;flex-wrap:wrap}.button{display:inline-flex;align-items:center;justify-content:center;padding:15px 20px;border-radius:13px;background:var(--teal);color:white;font-size:14px;font-weight:750;min-width:190px}.button.secondary{background:white;color:var(--teal);border:1px solid #bed8d4}.foot{font-size:12px;color:#647b82;line-height:1.6;border-top:1px solid var(--line);padding-top:20px}
+.theme-preview{max-width:1200px;margin:0 auto 65px;padding:0 32px}.theme-preview h3{font-size:19px}.swatches{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:15px}.swatch{border:1px solid #dfe5e7;background:white;border-radius:16px;padding:18px;display:flex;justify-content:space-between;align-items:center;gap:10px}.swatch b{font-size:14px}.sample{padding:9px 14px;color:white;border-radius:11px;font-size:12px;font-weight:700}.admin{background:var(--teal)}.clinical{background:var(--rose)}
+@media(max-width:930px){.layout{grid-template-columns:1fr}.hero{min-height:280px}.art{width:320px;max-height:230px;margin:0 auto -30px}.card{padding:30px}.swatches{grid-template-columns:1fr}}@media(max-width:470px){.top,.layout,.theme-preview{padding-left:16px;padding-right:16px}.hero{padding:24px}.hero h1{font-size:34px}.card{padding:24px}.heading h2{font-size:23px}.heading{align-items:start}.clock{height:55px;width:55px;font-size:28px}.actions .button{width:100%}}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;animation:none!important}}
+</style>
+</head>
+<body>
+<header class="top"><div class="logo"><span class="symbol" aria-hidden="true">✚</span><span>PAP Saúde</span></div><span class="label">Prévia visual — não funcional</span></header>
+<main class="layout">
+<section class="hero" aria-label="Identidade visual PAP Saúde"><div class="eyebrow">Cadastro concluído</div><h1>Seu próximo passo<br>começa aqui.</h1><p>Estamos preparando seu acesso à plataforma PAP Saúde. Você será avisado assim que a administração liberar o perfil.</p><img class="art" src="../../public/illustrations/pap-login-care.svg" alt="Ilustração de cuidado em saúde e tecnologia"></section>
+<section class="card" aria-labelledby="title">
+ <div class="heading"><div class="clock" aria-hidden="true">◷</div><div><h2 id="title">Aguardando autorização</h2><p>Seu convite foi aceito e a conta foi criada com sucesso.</p></div></div>
+ <div class="notice"><strong>Nenhuma ação adicional é necessária.</strong> Por enquanto, sua conta ainda não oferece acesso aos módulos operacionais.</div>
+ <ol class="timeline">
+  <li class="done"><span class="dot" aria-hidden="true">✓</span><div><strong>Convite aceito</strong><small>Convite individual confirmado.</small></div></li>
+  <li class="done"><span class="dot" aria-hidden="true">✓</span><div><strong>Conta criada</strong><small>Identidade registrada e protegida.</small></div></li>
+  <li class="active"><span class="dot" aria-hidden="true">3</span><div><strong>Em análise pela administração</strong><small>Estamos aguardando a atribuição do seu perfil de acesso.</small></div></li>
+  <li><span class="dot" aria-hidden="true">4</span><div><strong>Acesso liberado</strong><small>Você receberá uma notificação na plataforma e um e-mail quando houver autorização.</small></div></li>
+ </ol>
+ <div class="actions" aria-label="Controles de referência"><span class="button">Consultar status ↻</span><span class="button secondary">Sair da conta</span></div>
+ <p class="foot">Referência de interface; controles são ilustrativos. A implementação deve verificar sessão, status e permissões no servidor. Não exibir estimativas de prazo sem compromisso formal.</p>
+</section>
+</main>
+<section class="theme-preview"><h3>Temas separados por perfil</h3><div class="swatches"><div class="swatch"><b>Administração e Gerente</b><span class="sample admin">Verde petróleo</span></div><div class="swatch"><b>Clínico e /vitrine</b><span class="sample clinical">Rosa PAP Saúde</span></div></div></section>
+</body></html>

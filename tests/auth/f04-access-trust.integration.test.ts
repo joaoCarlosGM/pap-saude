@@ -8,7 +8,7 @@ import { createSession } from "../../src/server/auth/session.service";
 import { issuePasswordReset,consumePasswordReset,changeOwnPassword,hashPasswordResetToken,PasswordSecurityError } from "../../src/server/auth/password-security.service";
 import { accountSecurityPosture,runOwnSecurityAction } from "../../src/server/auth/account-security.service";
 import { POST as ownPOST,GET as ownGET } from "../../src/app/api/auth/security/route";
-import { POST as forgotPOST } from "../../src/app/api/auth/password/forgot/route";
+import { createForgotPasswordHandler } from "../../src/server/auth/password-recovery-http";
 import { POST as resetPOST } from "../../src/app/api/auth/password/reset/route";
 import { SESSION_COOKIE_NAME } from "../../src/server/security/constants";
 import { decryptSecret } from "../../src/server/security/secret-encryption";
@@ -89,7 +89,9 @@ test("F: forged/expired/reset tokens fail closed; unknown email same public resp
  let issued="";const now=new Date("2030-01-01T00:00:00Z");
  await issuePasswordReset({email,origin:"expiry",now,deliver:async(_e,value)=>{issued=value;}});
  await assert.rejects(()=>consumePasswordReset({token:issued,newPassword:nextPassword,now:new Date("2030-01-01T01:00:00Z")}),PasswordSecurityError);
- const res=await forgotPOST(req("/api/auth/password/forgot",{email:"unknown@example.test"}));assert.equal(res.status,202);assert.deepEqual(await res.json(),{accepted:true});
+ const tasks: (() => Promise<void>)[] = [];
+ const res=await createForgotPasswordHandler(task => { tasks.push(task); })(req("/api/auth/password/forgot",{email:"unknown@example.test"}));assert.equal(res.status,202);assert.deepEqual(await res.json(),{accepted:true});
+ await Promise.all(tasks.map(task => task()));
 });
 
 test("G: password change invalidates all sessions and rejects stale credential",async()=>{

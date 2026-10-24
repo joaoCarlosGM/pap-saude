@@ -1,0 +1,20 @@
+{
+  "context": "Chromium headless, servidor de desenvolvimento aquecido; não são métricas de campo nem baseline comparativo",
+  "measurements": [
+    {
+      "width": 320,
+      "cls": 0,
+      "lcp": 372
+    },
+    {
+      "width": 768,
+      "cls": 0,
+      "lcp": 216
+    },
+    {
+      "width": 1440,
+      "cls": 0,
+      "lcp": 184
+    }
+  ]
+}

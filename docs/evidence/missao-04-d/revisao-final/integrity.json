@@ -1,0 +1,215 @@
+{
+  "initial53FilesMatchedRecordedHashes": true,
+  "initialSnapshot": ".test-audit/mission04-d/review-baseline.tar.gz (ignored, not staged)",
+  "original53Hashes": {
+    ".github/workflows/ci.yml": "46458a37d9dd0c16dd2cceb21d0503fc97bc1f087f68cc9933c56fedd8febfa1",
+    "docs/codex/AUDITORIA-MISSAO-04-D.md": "64ed73ea8b892591275de88d10bde0a70884adb64005b7a861b82f0996b81ebb",
+    "docs/codex/HOMOLOGACAO-EMAILS-SLICE-D.md": "5151f1e122a9c8c6affcf274d54bb5c85153df1524f07ef86e64198df8f8e3d9",
+    "docs/codex/RELATORIO-MISSAO-04-SLICE-D.md": "fc015024937b81bd5b96fa72f177e01ed0ed73234cc6b4bf88a97dc2dd79005b",
+    "docs/evidence/missao-04-d/cleanup.json": "e2b2ce4e956a1e5e712bb16b7c4a8ad70deeb318bc1e9267e0c2e8871f8e1193",
+    "docs/evidence/missao-04-d/dependency-audits.json": "36645be938e6bcc5a13d8481c675909f7b91992565a55e0844a882bd8b1186a3",
+    "docs/evidence/missao-04-d/email-1440-dark.png": "f69af701544dcf8ca97ef4798b6b6cdedaca3e10166ad3d11b276641da5874c2",
+    "docs/evidence/missao-04-d/email-1440-light.png": "f69af701544dcf8ca97ef4798b6b6cdedaca3e10166ad3d11b276641da5874c2",
+    "docs/evidence/missao-04-d/email-320-dark.png": "0cea213f0de7498fb526a57d0ea77933861be59b1f3ff1851e25fcbfa12235bb",
+    "docs/evidence/missao-04-d/email-320-light.png": "0cea213f0de7498fb526a57d0ea77933861be59b1f3ff1851e25fcbfa12235bb",
+    "docs/evidence/missao-04-d/email-768-dark.png": "c2a9a9e9fc75bd3f495f0fc5178aaf9a6b8fc72cd3b881f4970e4e5953a46856",
+    "docs/evidence/missao-04-d/email-768-light.png": "c2a9a9e9fc75bd3f495f0fc5178aaf9a6b8fc72cd3b881f4970e4e5953a46856",
+    "docs/evidence/missao-04-d/execution.log": "14b47358c23b50d75b3ae93fc7e2372acec70e5faffdc68bfc0d66dac6e3bc6e",
+    "docs/evidence/missao-04-d/images.json": "ba06c1c1d9749b5772eaea27c9e99fce065bb080812ba012bdd170913a6c4b1e",
+    "docs/evidence/missao-04-d/legacy-upgrade.json": "4db572774ccb0f5b221ca8ba8a1cfd50c64c69e4418cca2efe8acfc0b91ce021",
+    "docs/evidence/missao-04-d/pr5.json": "48c04ad2f45b3d0cd548cbeb3328b8cc8f5a7eb9fd4c5671ba3bb432abffe16a",
+    "docs/evidence/missao-04-d/regressao-c-fila-1440-light.png": "44554b6440631972f66a3e3d14d158d53693704cf3e152c4708e3927ef07e84a",
+    "docs/evidence/missao-04-d/regressao-c-fila-320-dark.png": "d05670f9c7b4d45510b285e36f91729c88769828f31fd489a4712610744ff9aa",
+    "docs/evidence/missao-04-d/regressao-c-fila-768-light.png": "c9211b0345c9b50532ec1c170ca426285bd39cf7dd20c50febafd65b1b92b1de",
+    "docs/evidence/missao-04-d/regressao-c-performance.json": "8b5b6ac617badaf9f08a8bbb62937d2dfad2c941dc466063616372d83919621f",
+    "docs/evidence/missao-04-d/validation.json": "d02641aa6a35d75ca878d0fee2b75d0a40c330da5956fcf959f40dccc86a063e",
+    "package.json": "fe9c2286d2625e2cfd5a6901eac89646f275b983a3a3fa1607c12c7ea83deacf",
+    "prisma/migrations/20261023060000_mission04_transactional_email/migration.sql": "7b1fdc6e48acb2be25a429b309ba6ae50acbb3a932b1cbe03c819beb9b0d2a42",
+    "prisma/schema.prisma": "3dc193643d8074de4c1dc724eca9d40a9838d4716a3b8274a6ee16c8e9611c2e",
+    "scripts/security/scan-f04-images.sh": "9df010fcbd3429f43b4d2f8ef4c03348b36b1982351ffb0a2186170088429526",
+    "scripts/test-mission04-d.sh": "6137cc4a5129233e95abe46c437466daca44d222944f24be9939efd61b27c682",
+    "src/app/(auth)/convite/page.tsx": "c31d88788f003a62708205ab6445153e0c5547058bbfa4f95961ae2f473857b5",
+    "src/app/api/email/resend/webhook/route.ts": "0434ec039d08b40b344cf190553aab68a87fcc778e180983be7904652e074c64",
+    "src/app/api/invitations/accept/route.ts": "5a3dd078cde01ca8e77fe1661f8e44774897d1887e2c60a29b741eca36fdacd4",
+    "src/components/admin/AccessInvitationsClient.tsx": "dacc7b42d22b293dc27c2ffc5b579548793289c01f287db15b04e54e9f755bf9",
+    "src/components/admin/BetaDashboardClient.tsx": "ed32418679c066230b12b3948a751f8e2f43a041073a05a69171f729b205fc4f",
+    "src/components/admin/BetaInvitationsClient.tsx": "c36c2928fda1b37ae4522f17fee83fca43eeae3d4954f99a2f44d5a649f69eab",
+    "src/components/auth/InvitationActivation.tsx": "97188bbca6ba18cb27ebd6b1f14f1d0bc5df3dabd67a612406af57a21fcbbead",
+    "src/lib/email-delivery.ts": "9a1b90f1bcea5257776a83c2174568a52f3854b3cd424a7483163d634a11975e",
+    "src/server/access-invitations/access-invitation.service.ts": "57afe74fc8fa5a71553d66c229d502700b6a2811d8eb61bcad9c4f8fdd866012",
+    "src/server/admin/admin-organizations.service.ts": "b662691dbfa12ec1755a1a366e11790fd684f3baff40581a830f79e58f03bb8f",
+    "src/server/auth/password-security.service.ts": "bcba1851fc182c2082d0feccb0a954db6564dc0587d8c41027e574f5b124f7bc",
+    "src/server/email/delivery-projection.ts": "44c7254a1ef3ed964764fc15858b28bba085818425be1690d04520d91853e2e0",
+    "src/server/email/email-config.ts": "447ad2c0f24c210d6485653ccc6843f70268b573bc3d59ef5e246e5d9d6e5c90",
+    "src/server/email/email.service.ts": "e108a77d1721bab5e0d54e1954283e06b2417312f7774254f0b322d5c52feb26",
+    "src/server/email/local-demo-mail.ts": "f01f2c3c69dc6ebf02e1747e661c3cd5276d075b0e549c6cb8af63cd01a1dd7f",
+    "src/server/email/organization-activation-email.service.ts": "e28383a642f4fee31377229a9dd2456d2443fb22fe06fec9f9a0685874d5eab9",
+    "src/server/email/password-reset-email.service.ts": "84c40736d3e8eaf7e76425af56aa8858d6d2d316aaa0c3d6684266f471bf8042",
+    "src/server/email/resend-webhook.service.ts": "25de2ea85d3fc73a4db584471c07684a9608f0726e35652b8d1e76f8cab17001",
+    "src/server/email/templates.ts": "5c714edd2b7a72fbb45c4a3c8a83c922339b924b41fcccb484df404272de328e",
+    "src/server/invitations/invitation.service.ts": "dad1667c112b2c84ed382c1f4d027c6b1918d9bdccdfe2378473f955c8cc47d5",
+    "tests/admin-beta/email.test.ts": "ccaeab67f47059aba770162460478d5acc07e3a5be06567c4776ee527a1dcc89",
+    "tests/admin-beta/journey.integration.test.ts": "115e72afc707a37487cabf6090cfe4ca8bfd89ff64af8808560ea7122d737ddb",
+    "tests/mission04-c/legacy-upgrade.test.ts": "d2834e070f9ca68476a344b6cc5ecdf800aa8169774be01356a6b7630ae05d58",
+    "tests/mission04-d/email.test.ts": "c8608fa6a01d4414fcc29e6563a7069a6827585988ba1958386cad89591981e9",
+    "tests/mission04-d/legacy-upgrade.test.ts": "e6198bc68b2c0cc376921440c291e3c24d97913ee979b17705b91f9c3703c560",
+    "tests/mission04-d/mail.spec.ts": "9d32de0536bb837724b71a501b8593cfbefe9381fb0314b62dfd5874d03dae0f",
+    "tests/mission04-d/playwright.config.ts": "97a21f82bb736c44b465449587e381308d211bb89404b91191b27b5f371b38c9"
+  },
+  "all17OriginalEvidenceFilesStillIdentical": true,
+  "unchangedProtectedFiles": {
+    "docker/migrator/migrate.mjs": "a5e964ddd6859e28565d4cf789d2f841d47f28d9e61f0420cd2cbd5f8bada926",
+    "docker/migrator/package-lock.json": "997fe24862bb62b02b173b8d6cc4d31afee2e50d92ffd96aa266e8c1138e1e88",
+    "docker/migrator/package.json": "6ef5b07e5e3ad45a6b50d241e7e579368ec6d83b39ce6056ad573afcd80e8c30",
+    "next.config.ts": "bebf22cc359d13b8f5c3d37482dc99e960f99ae9fccdadc87b25b6e863367fc4",
+    "package-lock.json": "8952e811c44e119bf218b185853f77d27e292311ade9aa8fe4ab76a576752e19",
+    "prisma/migrations/20260909150044_init_clinical_schema/migration.sql": "a6284fc87a40087d2e5dbd8265802e17bbb5f4a86c9aed2275501cd9ff63f0ed",
+    "prisma/migrations/20260926001330_foundation_01/migration.sql": "1ac0dc1d871731c05dcf253f2f53db19fd61d953e0cb650af5bf83cbf31e70d6",
+    "prisma/migrations/20260926014952_foundation_02_identity/migration.sql": "65156c3264ed77ecc300e7d2a619143601c940633ad363ebf8506ed8444fcc8a",
+    "prisma/migrations/20260926210500_foundation_02_email_identity/migration.sql": "484f15cc41dac21de6c48a92a24553e2f4b31aa7e2ecb2d68fc0bc6fffdb8c3d",
+    "prisma/migrations/20260926220000_foundation_02_login_abuse_protection/migration.sql": "a5dfac82f901f2cf6f8a1b9edfe829d1a515265b22021477294de2fcb8b022d8",
+    "prisma/migrations/20260927001500_foundation_02_mfa_challenge/migration.sql": "1f14cbd2b0ed6d921612aa2c9df49bb5ccbcf05dbe2a329d2a39759b40e61f8b",
+    "prisma/migrations/20260927033000_foundation_02_mfa_reset/migration.sql": "cfb7e1436b54f97f5f33a121bbde1549bf116e2b6498dcf1f6533b946afdeadc",
+    "prisma/migrations/20260927043000_foundation_02_organization_lifecycle/migration.sql": "81bb3b8c46d22a172a47c88073dc90c85c3d2bbb6438f8877df112edeec4441f",
+    "prisma/migrations/20260927050000_foundation_02_membership_discovery/migration.sql": "fc46757785c75913eac38b0ebe20165653ee35934c852474ca0a1d2d5e043df8",
+    "prisma/migrations/20261002010000_foundation_02_roles_permissions/migration.sql": "deb472ad0f792670286424079c2307e71918eb18a3e1b687d04609f95af090a2",
+    "prisma/migrations/20261002020000_foundation_02_product_activity/migration.sql": "5bf2b771e76a9ec62101606e7ea407fe64ec6927f4f1c1ba3e56f0bb73afe1da",
+    "prisma/migrations/20261002030000_foundation_02_organization_metrics/migration.sql": "dab1cfeff9b22e736c07b5e0de6b2962e04c64e58316177d3d50a2dae306b681",
+    "prisma/migrations/20261002040000_foundation_02_feedback/migration.sql": "37286838815f2263a73bc22edd6f5bb800086800fafe6459cc88882c9869f950",
+    "prisma/migrations/20261002050000_foundation_02_health_alerts/migration.sql": "d52af98b493090602313a1b5501ab5beda6753d5770e3655bcc038e52175f5b0",
+    "prisma/migrations/20261003010000_foundation_03_patient_registry_core/migration.sql": "9e55060b6307f171566849c3ff6f89ed22c57ab82e0d4cb4909043192f1d6d40",
+    "prisma/migrations/20261003020000_foundation_03_pregnancy_core/migration.sql": "7910d9b5e888c3adc332e19cf44fdf168ba45ead23b45e0674cf26b0e9e378f8",
+    "prisma/migrations/20261003030000_foundation_03_encounter_core/migration.sql": "d88da8ad430beacc707a96d86ede5459a8bc15db8af10be788a30534c3d60efb",
+    "prisma/migrations/20261003040000_foundation_03_vital_signs_core/migration.sql": "d9d669557813b8491ccfa49fc5a6ccf2afa39d073d2170350d1c1c4dd2f1d1d5",
+    "prisma/migrations/20261003050000_foundation_03_obstetric_data_core/migration.sql": "b21155565504d3287027f3839882b0b4cf36574e41a351b4b30e2211d663201b",
+    "prisma/migrations/20261003060000_foundation_03_allergies_clinical_flags/migration.sql": "c4aeb221a28abfdc01b4554d396e7a6397bb5ea0c6d05b3f3c3a70b1dc451e02",
+    "prisma/migrations/20261003070000_foundation_03_meows_engine/migration.sql": "1d3eaeb991e5bf2bb088f11c525abfb041beb5e6750937a6f68436bbc75f91d9",
+    "prisma/migrations/20261005080000_foundation_03_clinical_revision_authorization/migration.sql": "410fccba2558be39d44d275a6f7ca5ee1dde5a41586b2986b76dfa232eaa1c58",
+    "prisma/migrations/20261007094500_foundation_04_user_invitations/migration.sql": "7e7eaa37f669f86cd96b8cb52ad3c67c971bc43086f22290e7f2ca8d75622759",
+    "prisma/migrations/20261007101500_foundation_04_onboarding/migration.sql": "55cad879b016e0850885778d9052abf2cd6a2a24380767fe1fa78ffce31503e5",
+    "prisma/migrations/20261016010000_foundation_04_password_reset_token/migration.sql": "58ee86841a5b710a43626c2c9396b0c5371c8a83ccef1333dd7bc1146721868a",
+    "prisma/migrations/20261016200000_foundation_04_admin_audit_indexes/migration.sql": "7e22a6bdcd0972e51c0fedfbd2e71b90f49c714b3394053394d8f158aa5c8834",
+    "prisma/migrations/20261016210000_foundation_04_audit_integrity/migration.sql": "ba36b2f00e96d04f7231043a8fa6e2ae047dd5a16ec571b603260faa0fd56f64",
+    "prisma/migrations/20261019010000_foundation_04_schema_parity/migration.sql": "892dd4dd8aacc0af8ffa4f3493c0e84bbba879559667656f714256b3e9d3c6b5",
+    "prisma/migrations/20261020000000_admin_beta1/migration.sql": "7774a88339262c74a9980c360874a0dca37370498722c70b1ad04875fb101be6",
+    "prisma/migrations/20261022040000_mission04_delegated_governance/migration.sql": "2e8ca2a183b1dfaf301cfa086e4a0cea063767bd4ff0171338d12f6904fe52b6",
+    "prisma/migrations/20261022050000_mission04_global_access/migration.sql": "6a54b2473adb9f683915bd953f39238088be496e0e23cddb759e362737eb3ce0",
+    "prisma/migrations/migration_lock.toml": "99836963713b4f5b269ad49af0ed3d7b0b2e336115c2f92dc9ac683d139d0900",
+    "src/server/admin/admin-roles.service.ts": "8c25b6bae193aa9e3f4208a5277cf0c0ce9838e7be0111a7710d7603084929d5",
+    "src/server/admin/admin-session.service.ts": "0d65c8fecf00b7adc2b8f7662229a2b5d8f503d680951596aa648c3d1245e0cc",
+    "src/server/auth/account-security.service.ts": "1f0ec7a7ca5ccb764842e511fe17fa85e2bf06eb3e5c2d2e5243c3e0928ab46e",
+    "src/server/auth/first-access.service.ts": "fe83b6b80c53829c1c91c182c20a4606252b7be2d95bc77a6211213c4c32b498",
+    "src/server/auth/mfa-challenge.service.ts": "e85b779f984d6726cd14861abeac2a9808b4a40b01e5ca6dd267c5ce0a627dd9",
+    "src/server/auth/mfa-login.service.ts": "a15696e27b38364ac93faa200510fafa95325e09fc0cb53bb8b8e0b8aaa14faf",
+    "src/server/auth/mfa-reset.service.ts": "2094fb9e7f05c018ca31ec23842ddfe9d4f72897310b0610a8c95f4404e82d2e",
+    "src/server/auth/mfa.errors.ts": "7a937c62e2117d40ca7a22adb4da9bbe0cfd3c0855496d4d13f1fb0c315e5084",
+    "src/server/auth/session.service.ts": "446a944fd176cefb324b4161c726693de0bd8602cc5215f8f0ad423b0f5e5d4a",
+    "src/server/auth/totp-login.service.ts": "84d532a650fbe9475b86e7de531476ec140e8005ef935451a72a6ae161b47713",
+    "src/server/auth/totp.service.ts": "6df60c4bac27251d709f12a74d64776dffddfa4ae23c57e1e8898579f19f5706",
+    "src/server/http/clinical-api-response.ts": "781771d298275995f7886e2657a15c47eac6462df73048009eee56b338f539ef",
+    "src/server/http/clinical-api.ts": "54effe821064662458be6221878abbe30cbe92e2d0271227076380d4e29461fb",
+    "src/server/http/http-auth-response.ts": "8f2fca4fc56fe2d8c31399e0a6183c7422b168d34957149994279ec7e51745dc",
+    "src/server/http/http-auth.errors.ts": "0f01e298ff5a069e663c5633a6f49815a126070053c16155cdd299955e97f618",
+    "src/server/http/http-auth.guard.ts": "df2e1a3b67b7d01c27916c2b5b7865d6babff7656cd021267d4f5323062aae2d",
+    "src/server/http/http-auth.types.ts": "a661e1278b3ff39d469a1cbeaeb5b5e0f9332faa31a16d840b5e43c3ab9677ad",
+    "src/server/http/index.ts": "41eebdbb67aecdf32bbfda74b8020c9717c76aacf40514a31478b70fbd22d877",
+    "src/server/http/organization-context.ts": "17e3731c7e37a1bb043c8c9b9baee57cb55409f4550b9b1a255ee4f40539b6df",
+    "src/server/iam/authorization.errors.ts": "9ec4af096c0ca01727380deb5a59f0b71648985475ef63cc69270fbb6c2a6fb9",
+    "src/server/iam/authorization.service.ts": "85d3d07451dbd8f3dd4398dca3a34f4f67b69d813c5edc4ee2bc5e978d2862e8",
+    "src/server/iam/bootstrap.service.ts": "205f51e18d27fb6048fd9f95c6c94633d68511eff224488135857a6910771c14",
+    "src/server/iam/effective-access-profile.service.ts": "c234ae34794daf542fb0d04434cb58d6e0025933efee0de5de12188c27098004",
+    "src/server/iam/index.ts": "409a0411dedb3865ed53db3a97788a2061e189dea2e97278f798d3ed43590900",
+    "src/server/iam/permissions.ts": "27471c83343db7e911da49a6c2ec918afee2643ae54bdf683610239d70d50d0f",
+    "src/server/iam/role-assignment.errors.ts": "0aea50f337ebfa2d88bb46118bb6f32c39f6777e5a494cb7fba2a87c5179ff2f",
+    "src/server/iam/role-assignment.service.ts": "3af13b49034374f783d44876cebf2e55fbea9ae5e655929d3c188a9ef77a76eb",
+    "src/server/iam/system-role-catalog.ts": "ec33b60949105da3bcb767b496842afbea9daf3ed36c4fa774f921617cbb4aa5",
+    "src/server/security/constants.ts": "e5e7a4c7df6c2392dee44c45848c7e3b96aa896d2050b2ba58e19b135add3c14",
+    "src/server/security/crypto.ts": "b971bdc855d2b0e7ac4f07474ba641cb35907579d047fed80599a66e2daf3e68",
+    "src/server/security/secret-encryption.errors.ts": "ce17a2b68a86075c37c48367d3eb6c94b8fa12a2f9d42a9eadc6c788b839003e",
+    "src/server/security/secret-encryption.ts": "63656c1e580de14f9aef7ecdd8d7202faa4da6f2b98419b0f8ddac0ef5366ea3"
+  },
+  "pngsPreserved": {
+    "docs/evidence/missao-04-d/email-1440-dark.png": {
+      "sha256": "f69af701544dcf8ca97ef4798b6b6cdedaca3e10166ad3d11b276641da5874c2",
+      "dimensions": [
+        1440,
+        1000
+      ]
+    },
+    "docs/evidence/missao-04-d/email-1440-light.png": {
+      "sha256": "f69af701544dcf8ca97ef4798b6b6cdedaca3e10166ad3d11b276641da5874c2",
+      "dimensions": [
+        1440,
+        1000
+      ]
+    },
+    "docs/evidence/missao-04-d/email-320-dark.png": {
+      "sha256": "0cea213f0de7498fb526a57d0ea77933861be59b1f3ff1851e25fcbfa12235bb",
+      "dimensions": [
+        320,
+        1000
+      ]
+    },
+    "docs/evidence/missao-04-d/email-320-light.png": {
+      "sha256": "0cea213f0de7498fb526a57d0ea77933861be59b1f3ff1851e25fcbfa12235bb",
+      "dimensions": [
+        320,
+        1000
+      ]
+    },
+    "docs/evidence/missao-04-d/email-768-dark.png": {
+      "sha256": "c2a9a9e9fc75bd3f495f0fc5178aaf9a6b8fc72cd3b881f4970e4e5953a46856",
+      "dimensions": [
+        768,
+        1000
+      ]
+    },
+    "docs/evidence/missao-04-d/email-768-light.png": {
+      "sha256": "c2a9a9e9fc75bd3f495f0fc5178aaf9a6b8fc72cd3b881f4970e4e5953a46856",
+      "dimensions": [
+        768,
+        1000
+      ]
+    },
+    "docs/evidence/missao-04-d/regressao-c-fila-1440-light.png": {
+      "sha256": "44554b6440631972f66a3e3d14d158d53693704cf3e152c4708e3927ef07e84a",
+      "dimensions": [
+        1440,
+        1096
+      ]
+    },
+    "docs/evidence/missao-04-d/regressao-c-fila-320-dark.png": {
+      "sha256": "d05670f9c7b4d45510b285e36f91729c88769828f31fd489a4712610744ff9aa",
+      "dimensions": [
+        320,
+        1796
+      ]
+    },
+    "docs/evidence/missao-04-d/regressao-c-fila-768-light.png": {
+      "sha256": "c9211b0345c9b50532ec1c170ca426285bd39cf7dd20c50febafd65b1b92b1de",
+      "dimensions": [
+        768,
+        1463
+      ]
+    }
+  },
+  "manualLabAccessed": false,
+  "manualLabChanged": false,
+  "operatorDatabaseConfigurationTest": "Synthetic URL parsing only; no connection or credential access",
+  "emailsSentExternally": false,
+  "commitStagingPushPerformed": false,
+  "sliceEStarted": false,
+  "secretScan": {
+    "filesChecked": 57,
+    "pngsVerifiedByOriginalHashes": 9,
+    "findings": [],
+    "checks": [
+      "URL bearer",
+      "private key blocks",
+      "known provider/GitHub token prefixes",
+      "serialized password/session/recovery secrets",
+      "TOTP URI"
+    ],
+    "scope": "Current code, reports and text evidence; original PNG bytes preserved. No claim about external proxy/APM logs."
+  }
+}
