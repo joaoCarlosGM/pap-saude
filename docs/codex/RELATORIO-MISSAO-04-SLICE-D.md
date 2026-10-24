@@ -177,3 +177,13 @@ Causa raiz comprovada pelo log: `tests/local/provision.integration.test.ts` aind
 Validação local da correção: `node --test tests/local/policy.test.mjs` **PASS (4)**; `npx tsc --noEmit` **PASS**; `npx eslint tests/local/provision.integration.test.ts` **PASS**; `git diff --check` **PASS**. O smoke com nomes fixos/porta de laboratório **NOT RUN neste host**, para preservar a fronteira do operador. Será reexecutado integralmente em runner GitHub descartável pelo CI do commit de correção; não foi executado local:init/local:admin no laboratório manual.
 
 Inventário seletivo do follow-up autorizado pela cláusula de correção do CI: tests/local/provision.integration.test.ts; docs/codex/RELATORIO-MISSAO-04-SLICE-D.md; docs/evidence/missao-04-d/revisao-final/validation.json; docs/evidence/missao-04-d/revisao-final/execution.log. Nenhum arquivo E. E continua bloqueado até SUCCESS completo do novo CI.
+
+## Segundo CI: investigação WCAG sem relaxamento do gate
+
+Correção do smoke enviada em `8b8b28f4bd35a56b3e018e690aaa701293ccf3de`. [Workflow 40064414519](https://github.com/joaoCarlosGM/pap-saude/actions/runs/40064414519): smoke e primeiro acesso/MFA **PASS**; B teve **28 Node PASS + 4 browser PASS + 1 browser FAIL** na asserção WCAG de Manager desktop/mobile/dark (governance.spec.ts). C/D/auth completo/Docker seguintes SKIPPED. Detalhes de cada job/step preservados em remoteCiAttempts.
+
+O reporter sanitiza erros para a primeira linha; a regra WCAG e o alvo não constavam do log e os arquivos temporários não foram publicados pelo workflow. Causa da violação **ainda não estabelecida**. Reexecuções locais completas com Chromium 154: 28 Node + 5 browser **PASS**. TypeScript e lint **PASS**. Chromium 156 usado no CI: reprodução local **BLOCKED**, download oficial retornou HTTP 403 Domain forbidden. Não se atribui a causa ao browser sem evidência.
+
+Mudança pontual de observabilidade em tests/mission04-b/governance.spec.ts: a primeira linha da asserção passa a incluir viewport, regra, impacto, seletor sem valores de atributos e dados numéricos de contraste. Sem HTML, dados de conta, request, tokens ou DOM completo. A mesma asserção exige zero violações e mantém tags WCAG, browser, ausência de retries e todos os guards. Nenhuma alteração funcional para mascarar a falha. Novo CI necessário; não declarar essa falha resolvida sem evidência.
+
+Inventário deste follow-up: tests/mission04-b/governance.spec.ts e os mesmos três caminhos de relatório/validation.json/execution.log. Nenhum arquivo E; laboratório intacto.

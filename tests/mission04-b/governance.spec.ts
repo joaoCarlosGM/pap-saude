@@ -86,7 +86,18 @@ test("Manager desktop/mobile/dark authorized controls, keyboard and WCAG AA", as
           })),
         ),
       );
-    expect(violations.map((v) => ({ id: v.id, impact: v.impact }))).toEqual([]);
+    // The safe reporter preserves only the first error line. Keep actionable
+    // WCAG diagnostics there without DOM HTML, attribute values or account data.
+    const diagnostics = violations.map((v) => ({
+      rule: v.id,
+      impact: v.impact,
+      nodes: v.nodes.map((n) => ({
+        target: n.target.map((selector) => String(selector).replace(/\[[^\]]*\]/g, "[attribute]")),
+        contrast: n.failureSummary?.match(/contrast of [\d.]+|#[0-9a-fA-F]{6}|ratio of [\d.]+/g),
+      })),
+    }));
+    expect(violations.map((v) => ({ id: v.id, impact: v.impact })),
+      `WCAG ${name}: ${JSON.stringify(diagnostics)}`).toEqual([]);
     await capture(page, name);
   }
   await page.setViewportSize({ width: 1440, height: 900 });
