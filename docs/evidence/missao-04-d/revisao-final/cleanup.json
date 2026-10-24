@@ -1,0 +1,43 @@
+{
+  "containerId": "db4df3c15bf4328f5c2d203c5cb77448fe30025b2a324aa898d3faa4801bbf42",
+  "labels": {
+    "pap.disposable": "f0410",
+    "pap.mission": "mission04-c",
+    "pap.slice": "mission04-d-review"
+  },
+  "mounts": [
+    {
+      "name": "ab6b540561e6c1bf6a30be7d06da60645c2bd5040557f8000018d6c099df6ccc",
+      "type": "volume",
+      "destination": "/var/lib/postgresql/data"
+    }
+  ],
+  "containerRemoved": true,
+  "anonymousVolumes": [
+    {
+      "name": "ab6b540561e6c1bf6a30be7d06da60645c2bd5040557f8000018d6c099df6ccc",
+      "removed": true,
+      "proof": "Mount of exact newly created labeled review container; no other reference"
+    }
+  ],
+  "generatedCachesRemoved": [
+    ".next-first-access",
+    ".next/cache",
+    ".next/dev/cache"
+  ],
+  "manualLabAccessed": false,
+  "globalPruneUsed": false,
+  "freeBytesAfter": 4695195648,
+  "knownGeneratedArtifactsArchivedAndRestored": [
+    "AGENTS.md",
+    "docs/evidence/missao-03/qr-mascarado.png",
+    "docs/evidence/missao-04-a1/performance-laboratorio.json",
+    "docs/evidence/missao-04-b/manager-dark.png",
+    "docs/evidence/missao-04-b/manager-desktop.png",
+    "docs/evidence/missao-04-b/manager-mobile.png",
+    "docs/evidence/missao-04-c/fila-1440-light.png",
+    "docs/evidence/missao-04-c/fila-320-dark.png",
+    "docs/evidence/missao-04-c/fila-768-light.png",
+    "docs/evidence/missao-04-c/performance.json"
+  ]
+}

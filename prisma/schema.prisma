@@ -1144,3 +1144,50 @@ model BetaAbuseBucket {
   @@index([expiresAt])
   @@map("beta_abuse_buckets")
 }
+
+// No bodies, recipient addresses, links or bearer secrets are stored here.
+model TransactionalEmail {
+  id                String @id @default(uuid())
+  keyHash           String @unique
+  contentHash       String
+  provider          String
+  status            String @default("PENDING")
+  providerMessageId String? @unique
+  referenceKind     String?
+  referenceId       String?
+  referenceVersion  Int?
+  attempts          Int @default(0)
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  events            TransactionalEmailEvent[]
+
+  @@index([referenceKind, referenceId])
+  @@map("transactional_emails")
+}
+
+model TransactionalEmailEvent {
+  id          String @id @default(uuid())
+  eventHash   String @unique
+  emailId     String
+  kind        String
+  occurredAt  DateTime
+  createdAt   DateTime @default(now())
+  email       TransactionalEmail @relation(fields: [emailId], references: [id], onDelete: Restrict)
+
+  @@index([emailId, occurredAt])
+  @@map("transactional_email_events")
+}
+
+model OrganizationActivationNotice {
+  id               String @id @default(uuid())
+  organizationId   String
+  userId           String
+  organizationName String
+  activatedAt      DateTime
+  emailStatus      String @default("PENDING")
+  createdAt        DateTime @default(now())
+
+  @@unique([organizationId, userId, activatedAt], map: "activation_notice_recipient_event_key")
+  @@index([organizationId, emailStatus])
+  @@map("organization_activation_notices")
+}

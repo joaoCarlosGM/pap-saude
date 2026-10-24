@@ -43,6 +43,11 @@ import { betaRateLimit } from "../../src/server/admin-beta/policy";
 const password = "Synthetic-Beta1-Password!2026",
   origin = "http://localhost:3000";
 const realFetch = global.fetch;
+const previousMailConfiguration = { ...process.env };
+// HTTPS/sender opt-ins are required even with a completely mocked provider.
+Object.assign(process.env, { PAP_PUBLIC_URL: "https://beta-mail.example.test",
+  PAP_EMAIL_ALLOWED_HOSTS: "beta-mail.example.test", PAP_EMAIL_ALLOWED_SENDERS: "convites@synthetic.invalid",
+  PAP_EMAIL_EXTERNAL_ENABLED: "1" });
 const links: string[] = [];
 let providerStatus = 200;
 let deliveryMode: "normal" | "timeout" = "normal";
@@ -55,7 +60,7 @@ global.fetch = async (input, init) => {
   assert.ok(init?.signal, "provider has timeout");
   assert.ok(new Headers(init?.headers).get("Idempotency-Key"));
   const body = JSON.parse(String(init?.body));
-  const match = body.text.match(/http[^\s]+\/convite\?token=[^\s]+/);
+  const match = body.text.match(/http[^\s]+\/convite#token=[^\s]+/);
   assert.ok(match);
   links.push(match[0]);
   assert.ok(body.html.includes("#064f50"));
@@ -67,6 +72,8 @@ global.fetch = async (input, init) => {
 };
 after(async () => {
   global.fetch = realFetch;
+  for (const k of Object.keys(process.env)) if (!(k in previousMailConfiguration)) delete process.env[k];
+  Object.assign(process.env, previousMailConfiguration);
   await db.$disconnect();
 });
 function req(
@@ -85,7 +92,7 @@ function req(
     ...(body === undefined ? {} : { body: JSON.stringify(body) }),
   });
 }
-const invitationToken = () => new URL(links.at(-1)!).searchParams.get("token")!;
+const invitationToken = () => new URLSearchParams(new URL(links.at(-1)!).hash.slice(1)).get("token")!;
 async function mfaSession(userId: string, email: string) {
   const previous = new Date(Date.now() - 65000);
   const enrollment = await startTotpEnrollment({ userId, now: previous });
@@ -366,7 +373,7 @@ test("institutional onboarding journey, provider contract and adversarial bounda
         where: { id: response.invitation.id },
       });
       assert.notEqual(record.tokenHash, token);
-      assert.equal(record.deliveryStatus, "SENT");
+      assert.equal(record.deliveryStatus, "ACCEPTED_BY_PROVIDER");
       const activated = await accept(
         req("/api/invitations/accept", undefined, { token, password }),
       );

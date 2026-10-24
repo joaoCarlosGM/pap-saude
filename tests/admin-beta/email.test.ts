@@ -11,14 +11,16 @@ const input = {
   organizationName: "UBS & <fake>",
   invitationUrl: "http://localhost:3000/convite?token=synthetic-token",
   invitationId: "synthetic-id",
+  expiresAt: new Date("2026-10-25T12:00:00Z"),
 };
 test("institutional template escapes content and includes plain text, validity and support", () => {
   const result = invitationTemplate(input);
   assert.ok(result.html.includes("&lt;script&gt;"));
   assert.ok(!result.html.includes("<script>"));
   assert.ok(result.html.includes("UBS &amp; &lt;fake&gt;"));
-  assert.ok(result.text.includes("48 horas"));
-  assert.ok(result.html.includes("administrador da sua UBS"));
+  assert.ok(result.text.includes("25/10/2026, 09:00:00"));
+  assert.ok(result.text.includes("#token=") && !result.text.includes("?token="));
+  assert.ok(result.html.includes("responsável pelo convite"));
 });
 test("production origin allowlist, credentials and provider fail closed", async () => {
   const previous = { ...process.env };

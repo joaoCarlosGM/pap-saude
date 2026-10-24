@@ -1,3 +1,4 @@
+import { prepareOrganizationActivationNotices, dispatchOrganizationActivationNotices } from "@/server/email/organization-activation-email.service";
 import { requireAdminActor } from "./admin-session.service";
 import { getEffectiveAccessProfile } from "@/server/iam/effective-access-profile.service";
 import {
@@ -265,7 +266,7 @@ export async function mutateAdminOrganization(
       await requireReauthentication(userId, input.password, input.code);
     }
   }
-  return serializable(async (tx) => {
+  const result = await serializable(async (tx) => {
     await requireAdminActor(userId, actorSessionToken, tx);
     const { profile, organization } = await requireAdminOrganizationAccess(
       userId,
@@ -385,6 +386,11 @@ export async function mutateAdminOrganization(
         tx,
       );
     }
+    if (input.operation === "ACTIVATE" && after.type === "HEALTH_UNIT" &&
+        (before.status !== "ACTIVE" || !before.isActive))
+      await prepareOrganizationActivationNotices(tx, after);
     return after;
   });
+  if (input.operation === "ACTIVATE") await dispatchOrganizationActivationNotices(organizationId);
+  return result;
 }

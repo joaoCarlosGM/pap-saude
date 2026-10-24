@@ -1,0 +1,481 @@
+{
+  "validatedAtFortaleza": "2026-10-23T19:05:53.180533-03:00",
+  "branch": "feature/ux-iam-convites-vitrine-email",
+  "head": "68c6c2ac6785f08b75663aa59151bdc146a0bb20",
+  "paths": [
+    ".github/workflows/ci.yml",
+    "docs/codex/AUDITORIA-MISSAO-04-D.md",
+    "docs/codex/HOMOLOGACAO-EMAILS-SLICE-D.md",
+    "docs/codex/RELATORIO-MISSAO-04-SLICE-D.md",
+    "docs/evidence/missao-04-d/cleanup.json",
+    "docs/evidence/missao-04-d/dependency-audits.json",
+    "docs/evidence/missao-04-d/email-1440-dark.png",
+    "docs/evidence/missao-04-d/email-1440-light.png",
+    "docs/evidence/missao-04-d/email-320-dark.png",
+    "docs/evidence/missao-04-d/email-320-light.png",
+    "docs/evidence/missao-04-d/email-768-dark.png",
+    "docs/evidence/missao-04-d/email-768-light.png",
+    "docs/evidence/missao-04-d/execution.log",
+    "docs/evidence/missao-04-d/images.json",
+    "docs/evidence/missao-04-d/legacy-upgrade.json",
+    "docs/evidence/missao-04-d/pr5.json",
+    "docs/evidence/missao-04-d/regressao-c-fila-1440-light.png",
+    "docs/evidence/missao-04-d/regressao-c-fila-320-dark.png",
+    "docs/evidence/missao-04-d/regressao-c-fila-768-light.png",
+    "docs/evidence/missao-04-d/regressao-c-performance.json",
+    "docs/evidence/missao-04-d/revisao-final/cleanup.json",
+    "docs/evidence/missao-04-d/revisao-final/dependency-audits.json",
+    "docs/evidence/missao-04-d/revisao-final/diff.txt",
+    "docs/evidence/missao-04-d/revisao-final/execution.log",
+    "docs/evidence/missao-04-d/revisao-final/images.json",
+    "docs/evidence/missao-04-d/revisao-final/integrity.json",
+    "docs/evidence/missao-04-d/revisao-final/pr5.json",
+    "docs/evidence/missao-04-d/revisao-final/validation.json",
+    "docs/evidence/missao-04-d/validation.json",
+    "package.json",
+    "prisma/migrations/20261023060000_mission04_transactional_email/migration.sql",
+    "prisma/schema.prisma",
+    "scripts/security/scan-f04-images.sh",
+    "scripts/test-mission04-d.sh",
+    "src/app/(auth)/convite/page.tsx",
+    "src/app/api/auth/password/forgot/route.ts",
+    "src/app/api/email/resend/webhook/route.ts",
+    "src/app/api/invitations/accept/route.ts",
+    "src/components/admin/AccessInvitationsClient.tsx",
+    "src/components/admin/BetaDashboardClient.tsx",
+    "src/components/admin/BetaInvitationsClient.tsx",
+    "src/components/auth/InvitationActivation.tsx",
+    "src/components/auth/PasswordRecoveryClient.tsx",
+    "src/lib/email-delivery.ts",
+    "src/server/access-invitations/access-invitation.service.ts",
+    "src/server/admin/admin-organizations.service.ts",
+    "src/server/auth/password-recovery-http.ts",
+    "src/server/auth/password-security.service.ts",
+    "src/server/email/delivery-projection.ts",
+    "src/server/email/email-config.ts",
+    "src/server/email/email.service.ts",
+    "src/server/email/local-demo-mail.ts",
+    "src/server/email/organization-activation-email.service.ts",
+    "src/server/email/password-reset-email.service.ts",
+    "src/server/email/resend-webhook.service.ts",
+    "src/server/email/templates.ts",
+    "src/server/invitations/invitation.service.ts",
+    "tests/admin-beta/email.test.ts",
+    "tests/admin-beta/journey.integration.test.ts",
+    "tests/auth/f04-access-trust.integration.test.ts",
+    "tests/mission04-c/legacy-upgrade.test.ts",
+    "tests/mission04-d/email.test.ts",
+    "tests/mission04-d/legacy-upgrade.test.ts",
+    "tests/mission04-d/mail.spec.ts",
+    "tests/mission04-d/playwright.config.ts",
+    "tests/mission04-d/recovery.spec.ts"
+  ],
+  "sourceHashes": {
+    ".github/workflows/ci.yml": "46458a37d9dd0c16dd2cceb21d0503fc97bc1f087f68cc9933c56fedd8febfa1",
+    "package.json": "fe9c2286d2625e2cfd5a6901eac89646f275b983a3a3fa1607c12c7ea83deacf",
+    "prisma/migrations/20261023060000_mission04_transactional_email/migration.sql": "7b1fdc6e48acb2be25a429b309ba6ae50acbb3a932b1cbe03c819beb9b0d2a42",
+    "prisma/schema.prisma": "3dc193643d8074de4c1dc724eca9d40a9838d4716a3b8274a6ee16c8e9611c2e",
+    "scripts/security/scan-f04-images.sh": "9df010fcbd3429f43b4d2f8ef4c03348b36b1982351ffb0a2186170088429526",
+    "scripts/test-mission04-d.sh": "6137cc4a5129233e95abe46c437466daca44d222944f24be9939efd61b27c682",
+    "src/app/(auth)/convite/page.tsx": "c31d88788f003a62708205ab6445153e0c5547058bbfa4f95961ae2f473857b5",
+    "src/app/api/auth/password/forgot/route.ts": "91dbb846bd1209d3d90b41296c35b27be224a97eb875545b07a9dd78ae6f95be",
+    "src/app/api/email/resend/webhook/route.ts": "0434ec039d08b40b344cf190553aab68a87fcc778e180983be7904652e074c64",
+    "src/app/api/invitations/accept/route.ts": "5a3dd078cde01ca8e77fe1661f8e44774897d1887e2c60a29b741eca36fdacd4",
+    "src/components/admin/AccessInvitationsClient.tsx": "dacc7b42d22b293dc27c2ffc5b579548793289c01f287db15b04e54e9f755bf9",
+    "src/components/admin/BetaDashboardClient.tsx": "ed32418679c066230b12b3948a751f8e2f43a041073a05a69171f729b205fc4f",
+    "src/components/admin/BetaInvitationsClient.tsx": "c36c2928fda1b37ae4522f17fee83fca43eeae3d4954f99a2f44d5a649f69eab",
+    "src/components/auth/InvitationActivation.tsx": "97188bbca6ba18cb27ebd6b1f14f1d0bc5df3dabd67a612406af57a21fcbbead",
+    "src/components/auth/PasswordRecoveryClient.tsx": "0874dbf8da00b929fd3e3c3161384d390aab5ac3fd2d32e23ad9dfa70136d298",
+    "src/lib/email-delivery.ts": "9a1b90f1bcea5257776a83c2174568a52f3854b3cd424a7483163d634a11975e",
+    "src/server/access-invitations/access-invitation.service.ts": "57afe74fc8fa5a71553d66c229d502700b6a2811d8eb61bcad9c4f8fdd866012",
+    "src/server/admin/admin-organizations.service.ts": "b662691dbfa12ec1755a1a366e11790fd684f3baff40581a830f79e58f03bb8f",
+    "src/server/auth/password-recovery-http.ts": "ff19a32290b895f261f49b20edb83ba472091f786bf24a572fb54535bd51f2db",
+    "src/server/auth/password-security.service.ts": "bcba1851fc182c2082d0feccb0a954db6564dc0587d8c41027e574f5b124f7bc",
+    "src/server/email/delivery-projection.ts": "44c7254a1ef3ed964764fc15858b28bba085818425be1690d04520d91853e2e0",
+    "src/server/email/email-config.ts": "75986c122a6f520ab7a548b4c30ad86f486c820fc81bd05d2ec130a1a585beb3",
+    "src/server/email/email.service.ts": "e108a77d1721bab5e0d54e1954283e06b2417312f7774254f0b322d5c52feb26",
+    "src/server/email/local-demo-mail.ts": "f01f2c3c69dc6ebf02e1747e661c3cd5276d075b0e549c6cb8af63cd01a1dd7f",
+    "src/server/email/organization-activation-email.service.ts": "e28383a642f4fee31377229a9dd2456d2443fb22fe06fec9f9a0685874d5eab9",
+    "src/server/email/password-reset-email.service.ts": "84c40736d3e8eaf7e76425af56aa8858d6d2d316aaa0c3d6684266f471bf8042",
+    "src/server/email/resend-webhook.service.ts": "25de2ea85d3fc73a4db584471c07684a9608f0726e35652b8d1e76f8cab17001",
+    "src/server/email/templates.ts": "5c714edd2b7a72fbb45c4a3c8a83c922339b924b41fcccb484df404272de328e",
+    "src/server/invitations/invitation.service.ts": "1d9c3972569dde87513909a651d41f71289e259b4189f316542d2ff9289151f1",
+    "tests/admin-beta/email.test.ts": "ccaeab67f47059aba770162460478d5acc07e3a5be06567c4776ee527a1dcc89",
+    "tests/admin-beta/journey.integration.test.ts": "115e72afc707a37487cabf6090cfe4ca8bfd89ff64af8808560ea7122d737ddb",
+    "tests/auth/f04-access-trust.integration.test.ts": "fe026498a0e8100d5ec3adf6a7e483d5216cedd0af22ec8d57bd50f4d57da900",
+    "tests/mission04-c/legacy-upgrade.test.ts": "d2834e070f9ca68476a344b6cc5ecdf800aa8169774be01356a6b7630ae05d58",
+    "tests/mission04-d/email.test.ts": "f0f342a7bbc08f69889cfeaaa5996094cea512469cb62ffe798b7b70c44fae61",
+    "tests/mission04-d/legacy-upgrade.test.ts": "e6198bc68b2c0cc376921440c291e3c24d97913ee979b17705b91f9c3703c560",
+    "tests/mission04-d/mail.spec.ts": "9d32de0536bb837724b71a501b8593cfbefe9381fb0314b62dfd5874d03dae0f",
+    "tests/mission04-d/playwright.config.ts": "73d38de004bced8f3c5763fa31fdfab96b171eda07ff40675d1cbe4f0e01e95e",
+    "tests/mission04-d/recovery.spec.ts": "78725f3df2d0a48db805f8d3b47e4381dd859d7884886ba62cb73f467e221588"
+  },
+  "commands": [
+    {
+      "name": "d",
+      "command": "npm run test:mission04:d:browser",
+      "exitCode": 0,
+      "result": "PASS",
+      "seconds": 55.87,
+      "log": "d.log",
+      "phase": "initial"
+    },
+    {
+      "name": "auth",
+      "command": "npm run test:auth",
+      "exitCode": 0,
+      "result": "PASS",
+      "seconds": 251.49,
+      "log": "auth.log",
+      "phase": "initial",
+      "counts": {
+        "node": 202,
+        "passed": 202,
+        "failed": 0,
+        "browser": 0
+      }
+    },
+    {
+      "name": "f04",
+      "command": "npm run audit:f04:operations",
+      "exitCode": 2,
+      "result": "FAIL",
+      "seconds": 129.59,
+      "log": "f04-initial-failure.log",
+      "phase": "initial"
+    },
+    {
+      "name": "d-final",
+      "command": "npm run test:mission04:d:browser",
+      "exitCode": 1,
+      "result": "FAIL",
+      "seconds": 55.57,
+      "phase": "before-client-fix",
+      "log": "d-final-first-failure.log"
+    },
+    {
+      "name": "f04",
+      "command": "npm run audit:f04:operations",
+      "exitCode": 0,
+      "result": "PASS",
+      "seconds": 164.21,
+      "log": "f04-retry.log",
+      "counts": {
+        "node": 78,
+        "passed": 78,
+        "failed": 0,
+        "browser": 0
+      },
+      "phase": "final"
+    },
+    {
+      "name": "beta1",
+      "command": "npm run test:admin:beta1",
+      "exitCode": 0,
+      "result": "PASS",
+      "seconds": 43.0,
+      "log": "beta1.log",
+      "counts": {
+        "node": 29,
+        "passed": 29,
+        "failed": 0,
+        "browser": 0
+      },
+      "phase": "final"
+    },
+    {
+      "name": "typescript",
+      "command": "npx tsc --noEmit",
+      "exitCode": 0,
+      "result": "PASS",
+      "seconds": 6.41,
+      "log": "typescript.log",
+      "counts": {
+        "node": 0,
+        "passed": 0,
+        "failed": 0,
+        "browser": 0
+      },
+      "phase": "final"
+    },
+    {
+      "name": "lint",
+      "command": "npm run lint",
+      "exitCode": 0,
+      "result": "PASS",
+      "seconds": 15.73,
+      "log": "lint.log",
+      "counts": {
+        "node": 0,
+        "passed": 0,
+        "failed": 0,
+        "browser": 0
+      },
+      "phase": "final"
+    },
+    {
+      "name": "build",
+      "command": "npm run build",
+      "exitCode": 0,
+      "result": "PASS",
+      "seconds": 10.96,
+      "log": "build.log",
+      "counts": {
+        "node": 0,
+        "passed": 0,
+        "failed": 0,
+        "browser": 0
+      },
+      "phase": "final"
+    },
+    {
+      "name": "security-guards",
+      "command": "npm run guard:sql-injection && node scripts/security/guard-f04-ci-workflow.mjs && node --test tests/security/f04-ci-workflow.test.mjs tests/security/f04-migration-preflight.test.mjs tests/local/policy.test.mjs",
+      "exitCode": 0,
+      "result": "PASS",
+      "seconds": 3.11,
+      "log": "security-guards.log",
+      "counts": {
+        "node": 7,
+        "passed": 7,
+        "failed": 0,
+        "browser": 0
+      },
+      "phase": "final"
+    },
+    {
+      "name": "c",
+      "command": "npm run test:mission04:c:browser",
+      "exitCode": 0,
+      "result": "PASS",
+      "seconds": 138.53,
+      "log": "c.log",
+      "counts": {
+        "node": 41,
+        "passed": 41,
+        "failed": 0,
+        "browser": 8
+      },
+      "phase": "final"
+    },
+    {
+      "name": "b",
+      "command": "npm run test:mission04:b:browser",
+      "exitCode": 0,
+      "result": "PASS",
+      "seconds": 69.91,
+      "log": "b.log",
+      "counts": {
+        "node": 28,
+        "passed": 28,
+        "failed": 0,
+        "browser": 5
+      },
+      "phase": "final"
+    },
+    {
+      "name": "first-access",
+      "command": "npm run test:first-access:browser",
+      "exitCode": 0,
+      "result": "PASS",
+      "seconds": 99.89,
+      "log": "first-access.log",
+      "counts": {
+        "node": 21,
+        "passed": 21,
+        "failed": 0,
+        "browser": 15
+      },
+      "phase": "final"
+    },
+    {
+      "name": "f03",
+      "command": "npm run test:f03:smart:force",
+      "exitCode": 0,
+      "result": "PASS",
+      "seconds": 286.08,
+      "log": "f03.log",
+      "counts": {
+        "node": 203,
+        "passed": 203,
+        "failed": 0,
+        "browser": 0
+      },
+      "phase": "final"
+    },
+    {
+      "name": "typescript-final",
+      "command": "npx tsc --noEmit",
+      "exitCode": 0,
+      "result": "PASS",
+      "seconds": 16.89,
+      "log": "typescript-final.log",
+      "counts": {
+        "node": 0,
+        "passed": 0,
+        "failed": 0,
+        "browser": 0
+      },
+      "phase": "final"
+    },
+    {
+      "name": "d-final",
+      "command": "npm run test:mission04:d:browser",
+      "exitCode": 0,
+      "result": "PASS",
+      "seconds": 52.43,
+      "log": "d-final.log",
+      "counts": {
+        "node": 32,
+        "passed": 32,
+        "failed": 0,
+        "browser": 8
+      },
+      "phase": "final"
+    },
+    {
+      "name": "typescript-after-browser",
+      "command": "npx tsc --noEmit",
+      "exitCode": 0,
+      "result": "PASS",
+      "seconds": 4.58,
+      "log": "typescript-after-browser.log",
+      "counts": {
+        "node": 0,
+        "passed": 0,
+        "failed": 0,
+        "browser": 0
+      },
+      "phase": "final"
+    },
+    {
+      "name": "lint-final",
+      "command": "npm run lint",
+      "exitCode": 0,
+      "result": "PASS",
+      "seconds": 18.83,
+      "log": "lint-final.log",
+      "counts": {
+        "node": 0,
+        "passed": 0,
+        "failed": 0,
+        "browser": 0
+      },
+      "phase": "final"
+    },
+    {
+      "name": "build-final",
+      "command": "npm run build",
+      "exitCode": 0,
+      "result": "PASS",
+      "seconds": 22.34,
+      "log": "build-final.log",
+      "counts": {
+        "node": 0,
+        "passed": 0,
+        "failed": 0,
+        "browser": 0
+      },
+      "phase": "final"
+    }
+  ],
+  "imageGates": [
+    {
+      "name": "web-build",
+      "command": [
+        "docker",
+        "build",
+        "--add-host",
+        "proxy:172.31.3.45",
+        "--build-arg",
+        "HTTP_PROXY",
+        "--build-arg",
+        "HTTPS_PROXY",
+        "--build-arg",
+        "NO_PROXY",
+        "--secret",
+        "id=build_ca,src=/usr/local/share/ca-certificates/environment-proxy-ca.crt",
+        "--target",
+        "runner",
+        "-t",
+        "pap-saude:m04-d-review",
+        "."
+      ],
+      "exitCode": 0,
+      "result": "PASS",
+      "seconds": 90.79
+    },
+    {
+      "name": "web-functional",
+      "command": [
+        "bash",
+        "scripts/test-f04-web-image.sh",
+        "pap-saude:m04-d-review",
+        "pap-saude-migrator:m04-d"
+      ],
+      "exitCode": 0,
+      "result": "PASS",
+      "seconds": 36.57
+    },
+    {
+      "name": "trivy",
+      "command": [
+        "bash",
+        "scripts/security/scan-f04-images.sh",
+        "pap-saude:m04-d-review",
+        "pap-saude-migrator:m04-d"
+      ],
+      "exitCode": 0,
+      "result": "PASS",
+      "seconds": 72.78
+    }
+  ],
+  "audits": {
+    "production": {
+      "command": "npm audit --omit=dev --audit-level=high --json",
+      "exitCode": 0,
+      "vulnerabilities": {
+        "info": 0,
+        "low": 0,
+        "moderate": 0,
+        "high": 0,
+        "critical": 0,
+        "total": 0
+      }
+    },
+    "migrator": {
+      "command": "npm audit --prefix docker/migrator --include=dev --audit-level=high --json",
+      "exitCode": 0,
+      "vulnerabilities": {
+        "info": 0,
+        "low": 0,
+        "moderate": 0,
+        "high": 0,
+        "critical": 0,
+        "total": 0
+      }
+    },
+    "development": {
+      "command": "npm audit  --json",
+      "exitCode": 1,
+      "vulnerabilities": {
+        "info": 0,
+        "low": 0,
+        "moderate": 1,
+        "high": 1,
+        "critical": 0,
+        "total": 2
+      }
+    }
+  },
+  "notRun": [
+    "D remote CI (no approved commit/push)",
+    "External Resend delivery, DNS, public webhook, real mail clients",
+    "Manual operator lab validation/upgrade"
+  ],
+  "notes": [
+    "Earlier D evidence retained byte-for-byte",
+    "First failed F04 full log not retained; actual captured TS2540 excerpt and exit/duration retained",
+    "No account-dependent DB/provider work before public recovery response; after is not a durable queue"
+  ]
+}

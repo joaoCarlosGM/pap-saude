@@ -352,11 +352,13 @@ async function createInvitation(
 
         invitationUrl,
         invitationId: invitation.id,
+        roleKey: invitation.roleKey,
+        expiresAt: invitation.expiresAt,
       })
 
     await db.$transaction(async tx => {
-      await tx.userInvitation.update({where:{id:invitation.id},data:{deliveryStatus:delivery.mode === "RESEND" ? "SENT" : "DEVELOPMENT",providerMessageId:delivery.mode === "RESEND" ? delivery.providerMessageId : null,deliveryAttemptedAt:new Date()}});
-      await writeAdminAudit({actorUserId:input.invitedByUserId,organizationId:organization.id,action:"INVITATION_DELIVERY",resourceType:"INVITATION",resourceId:invitation.id,reason:delivery.mode === "RESEND" ? "PROVIDER_ACCEPTED" : "DEVELOPMENT_ONLY"},tx);
+      await tx.userInvitation.updateMany({where:{id:invitation.id,deliveryStatus:{in:["SENDING","NOT_ATTEMPTED"]}},data:{deliveryStatus:delivery.status,providerMessageId:delivery.mode === "RESEND" ? delivery.providerMessageId : null,deliveryAttemptedAt:new Date()}});
+      await writeAdminAudit({actorUserId:input.invitedByUserId,organizationId:organization.id,action:"INVITATION_DELIVERY",resourceType:"INVITATION",resourceId:invitation.id,reason:delivery.status},tx);
     });
     return {
       invitation: {
@@ -385,7 +387,7 @@ async function createInvitation(
       delivery,
 
       developmentUrl:
-        delivery.mode ===
+        process.env.NODE_ENV !== "production" && delivery.mode ===
         "DEVELOPMENT"
           ? invitationUrl
           : undefined,

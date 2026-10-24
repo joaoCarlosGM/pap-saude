@@ -5,6 +5,7 @@ import Link from "next/link"
 import {
   useEffect,
   useState,
+  useRef,
 } from "react"
 
 type InvitationInfo = {
@@ -17,10 +18,11 @@ type InvitationInfo = {
 }
 
 export default function InvitationActivation({
-  token,
+  token: legacyToken,
 }: {
   token: string
 }) {
+  const token = useRef(legacyToken);
   const [
     invitation,
     setInvitation,
@@ -63,12 +65,21 @@ export default function InvitationActivation({
 
   useEffect(
     () => {
+      token.current ||= new URLSearchParams(window.location.hash.slice(1)).get("token") || "";
+      if (window.location.hash || window.location.search)
+        window.history.replaceState(null, "", window.location.pathname);
+      const newLink = () => window.location.reload();
+      window.addEventListener("hashchange", newLink);
       const controller =
         new AbortController()
 
       void fetch(
-        `/api/invitations/accept?token=${encodeURIComponent(token)}`,
+        "/api/invitations/accept",
         {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ operation: "INSPECT", token: token.current }),
+          referrerPolicy: "no-referrer",
           cache:
             "no-store",
 
@@ -124,10 +135,12 @@ export default function InvitationActivation({
           },
         )
 
-      return () =>
-        controller.abort()
+      return () => {
+        controller.abort();
+        window.removeEventListener("hashchange", newLink);
+      }
     },
-    [token],
+    [legacyToken],
   )
 
   async function activate(
@@ -164,7 +177,7 @@ export default function InvitationActivation({
 
             body:
               JSON.stringify({
-                token,
+                token: token.current,
 
                 ...(invitation.requiresPassword
                   ? {

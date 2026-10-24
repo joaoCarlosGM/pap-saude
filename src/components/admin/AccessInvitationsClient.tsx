@@ -1,4 +1,6 @@
 "use client";
+
+import { emailDeliveryLabel } from "@/lib/email-delivery";
 import { useRef, useState } from "react";
 import { useBetaData, DataState } from "./BetaWidgets";
 import "@/components/access/access.css";
@@ -90,22 +92,12 @@ function Review({
       </p>
       <p className="access-muted">
         Convite:{" "}
-        {row.deliveryStatus === "CAPTURED"
-          ? "capturado na caixa local; não enviado externamente"
-          : row.deliveryStatus === "FAILED"
-            ? "captura falhou; link invalidado"
-            : "aguardando captura"}
+        {emailDeliveryLabel(row.deliveryStatus)}
       </p>
       {row.releaseEmailStatus && (
         <p className="access-muted">
           Aviso de liberação:{" "}
-          {row.releaseEmailStatus === "CAPTURED"
-            ? "capturado na caixa local"
-            : row.releaseEmailStatus === "FAILED"
-              ? "falhou; pode tentar novamente"
-              : row.releaseEmailStatus === "NOT_REQUESTED"
-                ? "cancelado após revogação"
-                : "pendente"}
+          {emailDeliveryLabel(row.releaseEmailStatus)}
           .
         </p>
       )}
@@ -223,7 +215,7 @@ function Review({
               void action({ operation: "RETRY_NOTICE", id: row.id })
             }
           >
-            Repetir captura do aviso
+            Tentar novamente o aviso
           </button>
         )}
       </div>
@@ -257,16 +249,16 @@ export default function AccessInvitationsClient() {
         throw new Error(
           data.error === "INVITATION_ALREADY_EXISTS"
             ? "Já existe um convite aberto para este e-mail. Consulte a fila e use o reenvio para invalidar o link anterior."
-            : data.error === "LOCAL_DEMO_MAIL_REQUIRED" ||
+            : data.error === "EMAIL_DELIVERY_FAILED" ||
                 data.error === "LOCAL_MAIL_FAILED"
-              ? "A captura local de e-mail não está disponível. Confira a configuração local-demo; nenhum e-mail real foi enviado."
+              ? "O envio ou a captura não foi confirmado. Confira a configuração do provedor antes de reenviar."
               : data.error === "RATE_LIMITED"
                 ? "Limite de operações atingido. Aguarde antes de tentar novamente."
                 : "A operação não foi autorizada ou o estado mudou. Atualize a fila e confira o perfil, o vínculo e a verificação MFA.",
         );
       setMessage(
         body.operation === "CREATE" || body.operation === "RESEND"
-          ? "Convite capturado na caixa local. Nenhum envio externo realizado. O aceite ainda exigirá autorização do perfil."
+          ? "Convite registrado. Consulte o estado de entrega na fila; o aceite ainda exigirá autorização do perfil."
           : "Operação registrada. Consulte o estado atualizado na fila.",
       );
       result.refresh();

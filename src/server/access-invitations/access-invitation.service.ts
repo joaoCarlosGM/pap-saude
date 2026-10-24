@@ -29,7 +29,9 @@ import { validateSession } from "@/server/auth/session.service";
 import {
   invitationBaseUrl,
   sendPlatformEmail,
+  requireTransactionalMail,
 } from "@/server/email/email.service";
+import { transactionalTemplate } from "@/server/email/templates";
 import { writeAdminAudit } from "@/server/audit/admin-audit-writer.service";
 import { AccessInvitationError } from "./access-invitation.errors";
 import {
@@ -138,38 +140,35 @@ async function eligibleIdentity(
     throw new AccessInvitationError("INVITATION_TARGET_UNAVAILABLE");
   return user;
 }
-function requireLocalMail() {
-  if (process.env.PAP_EMAIL_PROVIDER !== "local-demo")
-    throw new AccessInvitationError("LOCAL_DEMO_MAIL_REQUIRED", 503);
-}
 async function deliverInvitation(row: AccessInvitation, token: string) {
   const url = new URL("/aceitar-convite", invitationBaseUrl());
   url.hash = `token=${encodeURIComponent(token)}`;
   try {
-    await sendPlatformEmail({
+    const delivery = await sendPlatformEmail({
       to: row.email,
-      subject: "Seu convite para o PAP Saúde",
-      text: `Olá. Você recebeu um convite individual do PAP Saúde. Aceite em ${url.toString()} . Válido até ${row.expiresAt.toISOString()}. O aceite cria/confirma sua conta e aguarda autorização do perfil; não libera acesso operacional. Não compartilhe o link.`,
-      html: `<html lang="pt-BR"><body><h1>PAP Saúde</h1><p>Você recebeu um convite individual, válido até ${row.expiresAt.toISOString()}.</p><p><a href="${url.toString()}">Aceitar convite</a></p><p>O aceite não libera acesso operacional. Seu perfil ainda precisará de autorização. Não compartilhe o link.</p></body></html>`,
+      ...transactionalTemplate({ kind: "INVITATION", displayName: row.displayName,
+        roleKey: row.proposedRoleKey, expiresAt: row.expiresAt, url: url.toString() }),
       messageId: `access/${row.id}/${row.tokenVersion}`,
       eventTime: new Date(row.expiresAt.getTime() - ttl).toISOString(),
-      localDemoOnly: true,
+      reference: { kind: "ACCESS_INVITATION", id: row.id, version: row.tokenVersion },
     });
     await db.accessInvitation.updateMany({
       where: {
         id: row.id,
         tokenVersion: row.tokenVersion,
         status: "PENDING_ACCEPTANCE",
+        deliveryStatus: "PENDING",
       },
-      data: { deliveryStatus: "CAPTURED" },
+      data: { deliveryStatus: delivery.status },
     });
     await writeAdminAudit({
       actorUserId: row.invitedByUserId,
       action: "ACCESS_INVITATION_DELIVERY",
       resourceType: "INVITATION",
       resourceId: row.id,
-      reason: "LOCAL_CAPTURED",
+      reason: delivery.status,
     });
+    return delivery.status;
   } catch {
     await serializable(async (tx) => {
       const result = await tx.accessInvitation.updateMany({
@@ -192,7 +191,7 @@ async function deliverInvitation(row: AccessInvitation, token: string) {
           status: "REVOKED",
         });
     });
-    throw new AccessInvitationError("LOCAL_MAIL_FAILED", 503);
+    throw new AccessInvitationError("EMAIL_DELIVERY_FAILED", 503);
   }
 }
 
@@ -266,7 +265,7 @@ export async function createAccessInvitation(
   input: { email: unknown; displayName: unknown; proposedRoleKey: unknown },
 ) {
   await invitationActor(actor.userId, actor.sessionToken);
-  requireLocalMail();
+  requireTransactionalMail();
   const address = email(input.email),
     displayName = text(input.displayName, 200);
   const token = randomBytes(32).toString("base64url");
@@ -306,8 +305,8 @@ export async function createAccessInvitation(
     await audit(tx, actor.userId, "ACCESS_INVITATION_CREATED", created);
     return created;
   });
-  await deliverInvitation(row, token);
-  return { invitation: visible({ ...row, deliveryStatus: "CAPTURED" }) };
+  const deliveryStatus = await deliverInvitation(row, token);
+  return { invitation: visible({ ...row, deliveryStatus }) };
 }
 
 export async function resendAccessInvitation(
@@ -315,7 +314,7 @@ export async function resendAccessInvitation(
   id: string,
 ) {
   await invitationActor(actor.userId, actor.sessionToken);
-  requireLocalMail();
+  requireTransactionalMail();
   uuid(id);
   const token = randomBytes(32).toString("base64url");
   const row = await serializable(async (tx) => {
@@ -356,8 +355,8 @@ export async function resendAccessInvitation(
     await audit(tx, actor.userId, "ACCESS_INVITATION_RESENT", updated);
     return updated;
   });
-  await deliverInvitation(row, token);
-  return { invitation: visible({ ...row, deliveryStatus: "CAPTURED" }) };
+  const deliveryStatus = await deliverInvitation(row, token);
+  return { invitation: visible({ ...row, deliveryStatus }) };
 }
 
 async function pendingToken(token: string, tx: Prisma.TransactionClient = db) {
@@ -583,7 +582,7 @@ export async function closeAccessInvitation(
 ) {
   uuid(id);
   const reason = text(reasonValue, 400, 3);
-  return serializable(async (tx) => {
+  const result = await serializable(async (tx) => {
     const { full } = await invitationActor(
       actor.userId,
       actor.sessionToken,
@@ -646,9 +645,28 @@ export async function closeAccessInvitation(
       );
     return operation === "REJECT" ? { rejected: true } : { revoked: true };
   });
+  // Only an accepted identity receives a decision notice. Never disclose private
+  // reasons, reviewer identity or tenant details. Explicit replay safely retries.
+  const row = await db.accessInvitation.findUnique({ where: { id } });
+  if (row?.userId && row.acceptedAt && ["REJECTED", "REVOKED"].includes(row.status)) {
+    try {
+      requireTransactionalMail();
+      await sendPlatformEmail({ to: row.email,
+        ...transactionalTemplate({ kind: "ACCESS_CLOSED", rejected: row.status === "REJECTED",
+          url: new URL("/aguardando-autorizacao", invitationBaseUrl()).toString() }),
+        messageId: `access-closed/${row.id}/${row.status}`,
+        eventTime: (row.decidedAt || row.revokedAt || row.createdAt).toISOString(),
+      });
+    } catch {
+      await writeAdminAudit({ actorUserId: actor.userId,
+        action: "ACCESS_INVITATION_DECISION_EMAIL_FAILED", resourceType: "INVITATION",
+        resourceId: row.id, reason: "MAIL_UNAVAILABLE" });
+    }
+  }
+  return result;
 }
 
-/** In-app is transactional. Mail is a deduplicated, retryable local-only side effect. */
+/** In-app is transactional. Mail is a deduplicated, retryable provider side effect. */
 export async function dispatchAccessRelease(notificationId: string) {
   const notice = await db.userNotification.findUnique({
     where: { id: notificationId },
@@ -657,29 +675,28 @@ export async function dispatchAccessRelease(notificationId: string) {
   if (
     !notice ||
     notice.kind !== "ACCESS_APPROVED" ||
-    ["CAPTURED", "NOT_REQUESTED"].includes(notice.emailStatus)
+    ["CAPTURED", "ACCEPTED_BY_PROVIDER", "DELIVERED", "BOUNCED", "COMPLAINED", "NOT_REQUESTED"].includes(notice.emailStatus)
   )
     return;
   if (notice.invitation.status !== "ACTIVE" || !notice.invitation.assignmentId)
     return;
   try {
     const url = new URL("/login", invitationBaseUrl()).toString();
-    await sendPlatformEmail({
+    const delivery = await sendPlatformEmail({
       to: notice.user.email,
-      subject: "Seu perfil foi autorizado — PAP Saúde",
-      text: `Uma autorização de perfil foi registrada na sua conta PAP Saúde. Entre em ${url} para consultar a situação atual e concluir a verificação de segurança exigida. A autorização de perfil não ativa UBS nem concede acesso clínico fora do escopo autorizado.`,
-      html: `<html lang="pt-BR"><body><h1>PAP Saúde</h1><p>Uma autorização de perfil foi registrada na sua conta.</p><p><a href="${url}">Consultar meu acesso</a></p><p>Entre para consultar a situação atual e concluir a verificação de segurança exigida. Perfil autorizado não significa UBS ativada.</p></body></html>`,
+      ...transactionalTemplate({ kind: "ACCESS_APPROVED", displayName: notice.user.displayName,
+        roleKey: notice.invitation.proposedRoleKey, url }),
       messageId: notice.dedupeKey,
       eventTime: notice.createdAt.toISOString(),
-      localDemoOnly: true,
+      reference: { kind: "ACCESS_NOTIFICATION", id: notice.id },
     });
-    await db.userNotification.update({
-      where: { id: notice.id },
-      data: { emailStatus: "CAPTURED" },
+    await db.userNotification.updateMany({
+      where: { id: notice.id, emailStatus: { in: ["PENDING", "FAILED"] } },
+      data: { emailStatus: delivery.status },
     });
   } catch {
     await db.userNotification.updateMany({
-      where: { id: notice.id, emailStatus: { not: "CAPTURED" } },
+      where: { id: notice.id, emailStatus: { in: ["PENDING", "FAILED"] } },
       data: { emailStatus: "FAILED" },
     });
   }

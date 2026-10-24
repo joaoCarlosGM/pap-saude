@@ -120,6 +120,9 @@ jobs:
       - name: Mission 04 global invitations, authorization queue and notifications
         run: npm run test:mission04:c:browser
 
+      - name: Mission 04 transactional email, reset and authenticated delivery webhooks
+        run: npm run test:mission04:d:browser
+
       - name: PostgreSQL runtime and migrator separation
         run: bash scripts/test-f04-role-separation.sh
 

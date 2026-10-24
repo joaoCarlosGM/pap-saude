@@ -6,10 +6,16 @@ export default function PasswordRecoveryClient({reset=false}:{reset?:boolean}){
  useEffect(()=>{
   if(!reset)return;
   const hash=new URLSearchParams(window.location.hash.slice(1));
-  tokenRef.current=hash.get("token")??"";
+  // Strict Mode repeats effects after the URL has already been cleared.
+  // Keep the bearer in memory; never erase it because that second hash is empty.
+  tokenRef.current ||= hash.get("token")??"";
   window.history.replaceState(
    null,"",window.location.pathname+window.location.search
   );
+  // A replacement link discards the previous bearer/password state entirely.
+  const newLink=()=>window.location.reload();
+  window.addEventListener("hashchange",newLink);
+  return ()=>window.removeEventListener("hashchange",newLink);
  },[reset]);
  const send=async()=>{setMessage("");const url=reset?"/api/auth/password/reset":"/api/auth/password/forgot";const r=await fetch(url,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(reset?{token:tokenRef.current,newPassword:password}:{email})});
  setMessage(reset?(r.ok?"Senha redefinida. Você pode entrar novamente.":"O link não é válido ou expirou."):"Se a conta existir, você receberá um link por e-mail.");};

@@ -46,7 +46,7 @@ test("real Prisma forward upgrade and backup restoration preserve legacy passwor
   mkdirSync(migrations);
   const migration = "20261022050000_mission04_global_access";
   for (const d of readdirSync("prisma/migrations").filter(
-    (d) => d !== migration,
+    (d) => d < migration || d === "migration_lock.toml",
   ))
     cpSync(join("prisma/migrations", d), join(migrations, d), {
       recursive: true,

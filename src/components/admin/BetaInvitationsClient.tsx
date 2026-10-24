@@ -1,4 +1,6 @@
 "use client";
+
+import { emailDeliveryLabel } from "@/lib/email-delivery";
 import { useState } from "react";
 import { BetaTitle, DataState, useBetaData } from "./BetaWidgets";
 type Org = { id: string; name: string; type: string; status: string; isActive: boolean };
@@ -150,9 +152,7 @@ function History({
                     <td>{r.roleKey}</td>
                     <td>{r.status}</td>
                     <td>
-                      {r.deliveryStatus === "SENT"
-                        ? "Aceito pelo Resend; entrega não confirmada"
-                        : r.deliveryStatus}
+                      {emailDeliveryLabel(r.deliveryStatus)}
                     </td>
                     <td>{new Date(r.expiresAt).toLocaleString("pt-BR")}</td>
                     <td>
