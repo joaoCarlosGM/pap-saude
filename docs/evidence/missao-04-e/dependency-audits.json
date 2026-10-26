@@ -1,0 +1,1690 @@
+{
+  "date": "2026-10-24T11:01:41.447108+00:00",
+  "previousMetadata": {
+    "full": {
+      "info": 0,
+      "low": 0,
+      "moderate": 2,
+      "high": 3,
+      "critical": 0,
+      "total": 5
+    },
+    "production": {
+      "info": 0,
+      "low": 0,
+      "moderate": 1,
+      "high": 0,
+      "critical": 0,
+      "total": 1
+    },
+    "migrator": {
+      "info": 0,
+      "low": 0,
+      "moderate": 1,
+      "high": 0,
+      "critical": 0,
+      "total": 1
+    }
+  },
+  "runs": [
+    {
+      "name": "full",
+      "command": "npm audit --json",
+      "exitCode": 1,
+      "result": "FAIL"
+    },
+    {
+      "name": "production",
+      "command": "npm audit --omit=dev --audit-level=high --json",
+      "exitCode": 0,
+      "result": "PASS"
+    },
+    {
+      "name": "migrator",
+      "command": "npm audit --prefix docker/migrator --include=dev --audit-level=high --json",
+      "exitCode": 0,
+      "result": "PASS"
+    }
+  ],
+  "audits": {
+    "full": {
+      "auditReportVersion": 2,
+      "vulnerabilities": {
+        "body-parser": {
+          "name": "body-parser",
+          "severity": "high",
+          "isDirect": false,
+          "via": [
+            {
+              "source": 1243074,
+              "name": "body-parser",
+              "dependency": "body-parser",
+              "title": "body-parser vulnerable to Denial of Service via trailing bytes after a compressed request body",
+              "url": "https://github.com/advisories/GHSA-27r3-jxmh-p828",
+              "severity": "high",
+              "cwe": [
+                "CWE-248"
+              ],
+              "cvss": {
+                "score": 7.5,
+                "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H"
+              },
+              "range": ">=2.0.0 <2.4.0"
+            }
+          ],
+          "effects": [],
+          "range": "2.0.0 - 2.3.0",
+          "nodes": [
+            "node_modules/body-parser"
+          ],
+          "fixAvailable": true
+        },
+        "fast-uri": {
+          "name": "fast-uri",
+          "severity": "moderate",
+          "isDirect": false,
+          "via": [
+            {
+              "source": 1243098,
+              "name": "fast-uri",
+              "dependency": "fast-uri",
+              "title": "fast-uri vulnerable to URI scheme spoofing via percent-encoded scheme decoding",
+              "url": "https://github.com/advisories/GHSA-w74x-v6f9-j3xg",
+              "severity": "moderate",
+              "cwe": [
+                "CWE-172",
+                "CWE-180"
+              ],
+              "cvss": {
+                "score": 6.1,
+                "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:C/C:L/I:L/A:N"
+              },
+              "range": ">=3.0.0 <3.1.9"
+            },
+            {
+              "source": 1243101,
+              "name": "fast-uri",
+              "dependency": "fast-uri",
+              "title": "fast-uri vulnerable to improper path equivalence in relative reference normalization",
+              "url": "https://github.com/advisories/GHSA-xhq7-xmqj-769h",
+              "severity": "low",
+              "cwe": [
+                "CWE-41"
+              ],
+              "cvss": {
+                "score": 3.7,
+                "vectorString": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:N/I:L/A:N"
+              },
+              "range": ">=3.0.0 <3.1.9"
+            },
+            {
+              "source": 1243104,
+              "name": "fast-uri",
+              "dependency": "fast-uri",
+              "title": "fast-uri vulnerable to host confusion via unchecked WHATWG host canonicalization",
+              "url": "https://github.com/advisories/GHSA-wjr9-j795-jxcr",
+              "severity": "moderate",
+              "cwe": [
+                "CWE-20",
+                "CWE-436"
+              ],
+              "cvss": {
+                "score": 4.8,
+                "vectorString": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:L/I:L/A:N"
+              },
+              "range": ">=3.1.3 <3.1.9"
+            },
+            {
+              "source": 1243107,
+              "name": "fast-uri",
+              "dependency": "fast-uri",
+              "title": "fast-uri vulnerable to scheme injection via an unescaped first-segment colon in suffix references",
+              "url": "https://github.com/advisories/GHSA-333x-w4r6-6crp",
+              "severity": "low",
+              "cwe": [
+                "CWE-41",
+                "CWE-116"
+              ],
+              "cvss": {
+                "score": 3.7,
+                "vectorString": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:N/I:L/A:N"
+              },
+              "range": ">=3.0.0 <3.1.9"
+            }
+          ],
+          "effects": [],
+          "range": "3.0.0 - 3.1.8",
+          "nodes": [
+            "node_modules/fast-uri"
+          ],
+          "fixAvailable": true
+        },
+        "ip-address": {
+          "name": "ip-address",
+          "severity": "moderate",
+          "isDirect": false,
+          "via": [
+            {
+              "source": 1242883,
+              "name": "ip-address",
+              "dependency": "ip-address",
+              "title": "ip-address: Address6 matches a zone identifier in quadratic time ahead of its length limit, allowing a single long string to stall the process",
+              "url": "https://github.com/advisories/GHSA-rxp7-6hxx-x8q5",
+              "severity": "moderate",
+              "cwe": [
+                "CWE-1333"
+              ],
+              "cvss": {
+                "score": 0,
+                "vectorString": null
+              },
+              "range": "<=10.7.3"
+            }
+          ],
+          "effects": [],
+          "range": "<=10.7.3",
+          "nodes": [
+            "node_modules/ip-address"
+          ],
+          "fixAvailable": true
+        },
+        "undici": {
+          "name": "undici",
+          "severity": "high",
+          "isDirect": false,
+          "via": [
+            {
+              "source": 1243078,
+              "name": "undici",
+              "dependency": "undici",
+              "title": "undici vulnerable to Denial of Service via unbounded memory in the EventSource parser",
+              "url": "https://github.com/advisories/GHSA-4qv8-2p9j-2685",
+              "severity": "moderate",
+              "cwe": [
+                "CWE-770"
+              ],
+              "cvss": {
+                "score": 5.9,
+                "vectorString": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:N/I:N/A:H"
+              },
+              "range": ">=7.0.0 <7.30.1"
+            },
+            {
+              "source": 1243081,
+              "name": "undici",
+              "dependency": "undici",
+              "title": "undici vulnerable to Subresource Integrity bypass via non-lowercase algorithm tokens",
+              "url": "https://github.com/advisories/GHSA-f72v-6w45-q472",
+              "severity": "moderate",
+              "cwe": [
+                "CWE-178"
+              ],
+              "cvss": {
+                "score": 5.9,
+                "vectorString": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:N/I:H/A:N"
+              },
+              "range": ">=7.15.0 <7.30.1"
+            },
+            {
+              "source": 1243113,
+              "name": "undici",
+              "dependency": "undici",
+              "title": "undici vulnerable to Denial of Service via unhandled error on excessive content-encodings",
+              "url": "https://github.com/advisories/GHSA-xjj6-f33q-929c",
+              "severity": "high",
+              "cwe": [
+                "CWE-248",
+                "CWE-459"
+              ],
+              "cvss": {
+                "score": 7.5,
+                "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H"
+              },
+              "range": ">=7.18.0 <7.30.1"
+            }
+          ],
+          "effects": [],
+          "range": "7.0.0 - 7.30.0",
+          "nodes": [
+            "node_modules/undici"
+          ],
+          "fixAvailable": true
+        },
+        "zod": {
+          "name": "zod",
+          "severity": "high",
+          "isDirect": false,
+          "via": [
+            {
+              "source": 1243066,
+              "name": "zod",
+              "dependency": "zod",
+              "title": "Zod can exhaust memory while validating oversized constrained collections",
+              "url": "https://github.com/advisories/GHSA-mrhx-c7xc-m3w5",
+              "severity": "high",
+              "cwe": [
+                "CWE-770"
+              ],
+              "cvss": {
+                "score": 7.5,
+                "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H"
+              },
+              "range": "<4.6.6"
+            }
+          ],
+          "effects": [],
+          "range": "<4.6.6",
+          "nodes": [
+            "node_modules/zod"
+          ],
+          "fixAvailable": true
+        }
+      },
+      "metadata": {
+        "vulnerabilities": {
+          "info": 0,
+          "low": 0,
+          "moderate": 2,
+          "high": 3,
+          "critical": 0,
+          "total": 5
+        },
+        "dependencies": {
+          "prod": 373,
+          "dev": 608,
+          "optional": 122,
+          "peer": 0,
+          "peerOptional": 0,
+          "total": 1019
+        }
+      }
+    },
+    "production": {
+      "auditReportVersion": 2,
+      "vulnerabilities": {
+        "fast-uri": {
+          "name": "fast-uri",
+          "severity": "moderate",
+          "isDirect": false,
+          "via": [
+            {
+              "source": 1243098,
+              "name": "fast-uri",
+              "dependency": "fast-uri",
+              "title": "fast-uri vulnerable to URI scheme spoofing via percent-encoded scheme decoding",
+              "url": "https://github.com/advisories/GHSA-w74x-v6f9-j3xg",
+              "severity": "moderate",
+              "cwe": [
+                "CWE-172",
+                "CWE-180"
+              ],
+              "cvss": {
+                "score": 6.1,
+                "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:C/C:L/I:L/A:N"
+              },
+              "range": ">=3.0.0 <3.1.9"
+            },
+            {
+              "source": 1243101,
+              "name": "fast-uri",
+              "dependency": "fast-uri",
+              "title": "fast-uri vulnerable to improper path equivalence in relative reference normalization",
+              "url": "https://github.com/advisories/GHSA-xhq7-xmqj-769h",
+              "severity": "low",
+              "cwe": [
+                "CWE-41"
+              ],
+              "cvss": {
+                "score": 3.7,
+                "vectorString": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:N/I:L/A:N"
+              },
+              "range": ">=3.0.0 <3.1.9"
+            },
+            {
+              "source": 1243104,
+              "name": "fast-uri",
+              "dependency": "fast-uri",
+              "title": "fast-uri vulnerable to host confusion via unchecked WHATWG host canonicalization",
+              "url": "https://github.com/advisories/GHSA-wjr9-j795-jxcr",
+              "severity": "moderate",
+              "cwe": [
+                "CWE-20",
+                "CWE-436"
+              ],
+              "cvss": {
+                "score": 4.8,
+                "vectorString": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:L/I:L/A:N"
+              },
+              "range": ">=3.1.3 <3.1.9"
+            },
+            {
+              "source": 1243107,
+              "name": "fast-uri",
+              "dependency": "fast-uri",
+              "title": "fast-uri vulnerable to scheme injection via an unescaped first-segment colon in suffix references",
+              "url": "https://github.com/advisories/GHSA-333x-w4r6-6crp",
+              "severity": "low",
+              "cwe": [
+                "CWE-41",
+                "CWE-116"
+              ],
+              "cvss": {
+                "score": 3.7,
+                "vectorString": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:N/I:L/A:N"
+              },
+              "range": ">=3.0.0 <3.1.9"
+            }
+          ],
+          "effects": [],
+          "range": "3.0.0 - 3.1.8",
+          "nodes": [
+            "node_modules/fast-uri"
+          ],
+          "fixAvailable": true
+        }
+      },
+      "metadata": {
+        "vulnerabilities": {
+          "info": 0,
+          "low": 0,
+          "moderate": 1,
+          "high": 0,
+          "critical": 0,
+          "total": 1
+        },
+        "dependencies": {
+          "prod": 373,
+          "dev": 608,
+          "optional": 122,
+          "peer": 0,
+          "peerOptional": 0,
+          "total": 1019
+        }
+      }
+    },
+    "migrator": {
+      "auditReportVersion": 2,
+      "vulnerabilities": {
+        "fast-uri": {
+          "name": "fast-uri",
+          "severity": "moderate",
+          "isDirect": false,
+          "via": [
+            {
+              "source": 1243098,
+              "name": "fast-uri",
+              "dependency": "fast-uri",
+              "title": "fast-uri vulnerable to URI scheme spoofing via percent-encoded scheme decoding",
+              "url": "https://github.com/advisories/GHSA-w74x-v6f9-j3xg",
+              "severity": "moderate",
+              "cwe": [
+                "CWE-172",
+                "CWE-180"
+              ],
+              "cvss": {
+                "score": 6.1,
+                "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:C/C:L/I:L/A:N"
+              },
+              "range": ">=3.0.0 <3.1.9"
+            },
+            {
+              "source": 1243101,
+              "name": "fast-uri",
+              "dependency": "fast-uri",
+              "title": "fast-uri vulnerable to improper path equivalence in relative reference normalization",
+              "url": "https://github.com/advisories/GHSA-xhq7-xmqj-769h",
+              "severity": "low",
+              "cwe": [
+                "CWE-41"
+              ],
+              "cvss": {
+                "score": 3.7,
+                "vectorString": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:N/I:L/A:N"
+              },
+              "range": ">=3.0.0 <3.1.9"
+            },
+            {
+              "source": 1243104,
+              "name": "fast-uri",
+              "dependency": "fast-uri",
+              "title": "fast-uri vulnerable to host confusion via unchecked WHATWG host canonicalization",
+              "url": "https://github.com/advisories/GHSA-wjr9-j795-jxcr",
+              "severity": "moderate",
+              "cwe": [
+                "CWE-20",
+                "CWE-436"
+              ],
+              "cvss": {
+                "score": 4.8,
+                "vectorString": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:L/I:L/A:N"
+              },
+              "range": ">=3.1.3 <3.1.9"
+            },
+            {
+              "source": 1243107,
+              "name": "fast-uri",
+              "dependency": "fast-uri",
+              "title": "fast-uri vulnerable to scheme injection via an unescaped first-segment colon in suffix references",
+              "url": "https://github.com/advisories/GHSA-333x-w4r6-6crp",
+              "severity": "low",
+              "cwe": [
+                "CWE-41",
+                "CWE-116"
+              ],
+              "cvss": {
+                "score": 3.7,
+                "vectorString": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:N/I:L/A:N"
+              },
+              "range": ">=3.0.0 <3.1.9"
+            }
+          ],
+          "effects": [],
+          "range": "3.0.0 - 3.1.8",
+          "nodes": [
+            "node_modules/fast-uri"
+          ],
+          "fixAvailable": true
+        }
+      },
+      "metadata": {
+        "vulnerabilities": {
+          "info": 0,
+          "low": 0,
+          "moderate": 1,
+          "high": 0,
+          "critical": 0,
+          "total": 1
+        },
+        "dependencies": {
+          "prod": 145,
+          "dev": 0,
+          "optional": 1,
+          "peer": 5,
+          "peerOptional": 0,
+          "total": 150
+        }
+      }
+    }
+  },
+  "installedVersions": {
+    "version": "0.1.0",
+    "name": "pap-saude",
+    "dependencies": {
+      "@hugeicons/react": {
+        "version": "1.1.10",
+        "resolved": "https://registry.npmjs.org/@hugeicons/react/-/react-1.1.10.tgz",
+        "overridden": false,
+        "dependencies": {
+          "react": {
+            "version": "19.2.8"
+          }
+        }
+      },
+      "eslint-config-next": {
+        "version": "16.4.2",
+        "resolved": "https://registry.npmjs.org/eslint-config-next/-/eslint-config-next-16.4.2.tgz",
+        "overridden": false
+      },
+      "lucide-react": {
+        "version": "1.43.0",
+        "resolved": "https://registry.npmjs.org/lucide-react/-/lucide-react-1.43.0.tgz",
+        "overridden": false,
+        "dependencies": {
+          "react": {
+            "version": "19.2.8"
+          }
+        }
+      },
+      "next": {
+        "version": "16.4.2",
+        "resolved": "https://registry.npmjs.org/next/-/next-16.4.2.tgz",
+        "overridden": false,
+        "dependencies": {
+          "react-dom": {
+            "version": "19.2.8"
+          },
+          "react": {
+            "version": "19.2.8"
+          },
+          "styled-jsx": {
+            "version": "5.1.6",
+            "resolved": "https://registry.npmjs.org/styled-jsx/-/styled-jsx-5.1.6.tgz",
+            "overridden": false,
+            "dependencies": {
+              "react": {
+                "version": "19.2.8"
+              }
+            }
+          }
+        }
+      },
+      "prisma": {
+        "version": "7.10.1",
+        "resolved": "https://registry.npmjs.org/prisma/-/prisma-7.10.1.tgz",
+        "overridden": false,
+        "dependencies": {
+          "@prisma/studio-core": {
+            "version": "0.33.0",
+            "resolved": "https://registry.npmjs.org/@prisma/studio-core/-/studio-core-0.33.0.tgz",
+            "overridden": false,
+            "dependencies": {
+              "@radix-ui/react-toggle": {
+                "version": "1.1.10",
+                "resolved": "https://registry.npmjs.org/@radix-ui/react-toggle/-/react-toggle-1.1.10.tgz",
+                "overridden": false,
+                "dependencies": {
+                  "@radix-ui/react-primitive": {
+                    "version": "2.1.3",
+                    "resolved": "https://registry.npmjs.org/@radix-ui/react-primitive/-/react-primitive-2.1.3.tgz",
+                    "overridden": false,
+                    "dependencies": {
+                      "@radix-ui/react-slot": {
+                        "version": "1.2.3",
+                        "resolved": "https://registry.npmjs.org/@radix-ui/react-slot/-/react-slot-1.2.3.tgz",
+                        "overridden": false,
+                        "dependencies": {
+                          "@radix-ui/react-compose-refs": {
+                            "version": "1.1.2",
+                            "resolved": "https://registry.npmjs.org/@radix-ui/react-compose-refs/-/react-compose-refs-1.1.2.tgz",
+                            "overridden": false,
+                            "dependencies": {
+                              "react": {
+                                "version": "19.2.8"
+                              }
+                            }
+                          },
+                          "react": {
+                            "version": "19.2.8"
+                          }
+                        }
+                      },
+                      "react-dom": {
+                        "version": "19.2.8"
+                      },
+                      "react": {
+                        "version": "19.2.8"
+                      }
+                    }
+                  },
+                  "@radix-ui/react-use-controllable-state": {
+                    "version": "1.2.2",
+                    "resolved": "https://registry.npmjs.org/@radix-ui/react-use-controllable-state/-/react-use-controllable-state-1.2.2.tgz",
+                    "overridden": false,
+                    "dependencies": {
+                      "@radix-ui/react-use-effect-event": {
+                        "version": "0.0.2",
+                        "resolved": "https://registry.npmjs.org/@radix-ui/react-use-effect-event/-/react-use-effect-event-0.0.2.tgz",
+                        "overridden": false,
+                        "dependencies": {
+                          "react": {
+                            "version": "19.2.8"
+                          }
+                        }
+                      },
+                      "@radix-ui/react-use-layout-effect": {
+                        "version": "1.1.1",
+                        "resolved": "https://registry.npmjs.org/@radix-ui/react-use-layout-effect/-/react-use-layout-effect-1.1.1.tgz",
+                        "overridden": false,
+                        "dependencies": {
+                          "react": {
+                            "version": "19.2.8"
+                          }
+                        }
+                      },
+                      "react": {
+                        "version": "19.2.8"
+                      }
+                    }
+                  },
+                  "react-dom": {
+                    "version": "19.2.8"
+                  },
+                  "react": {
+                    "version": "19.2.8"
+                  }
+                }
+              },
+              "@visx/grid": {
+                "version": "4.0.1-alpha.0",
+                "resolved": "https://registry.npmjs.org/@visx/grid/-/grid-4.0.1-alpha.0.tgz",
+                "overridden": false,
+                "dependencies": {
+                  "react": {
+                    "version": "19.2.8"
+                  }
+                }
+              },
+              "@visx/group": {
+                "version": "4.0.1-alpha.0",
+                "resolved": "https://registry.npmjs.org/@visx/group/-/group-4.0.1-alpha.0.tgz",
+                "overridden": false,
+                "dependencies": {
+                  "react": {
+                    "version": "19.2.8"
+                  }
+                }
+              },
+              "@visx/responsive": {
+                "version": "4.0.1-alpha.0",
+                "resolved": "https://registry.npmjs.org/@visx/responsive/-/responsive-4.0.1-alpha.0.tgz",
+                "overridden": false,
+                "dependencies": {
+                  "react": {
+                    "version": "19.2.8"
+                  }
+                }
+              },
+              "@visx/shape": {
+                "version": "4.0.1-alpha.0",
+                "resolved": "https://registry.npmjs.org/@visx/shape/-/shape-4.0.1-alpha.0.tgz",
+                "overridden": false,
+                "dependencies": {
+                  "react": {
+                    "version": "19.2.8"
+                  }
+                }
+              },
+              "react-dom": {
+                "version": "19.2.8"
+              },
+              "react": {
+                "version": "19.2.8"
+              }
+            }
+          }
+        }
+      },
+      "radix-ui": {
+        "version": "1.6.7",
+        "resolved": "https://registry.npmjs.org/radix-ui/-/radix-ui-1.6.7.tgz",
+        "overridden": false,
+        "dependencies": {
+          "@radix-ui/react-accessible-icon": {
+            "version": "1.1.15",
+            "resolved": "https://registry.npmjs.org/@radix-ui/react-accessible-icon/-/react-accessible-icon-1.1.15.tgz",
+            "overridden": false,
+            "dependencies": {
+              "react-dom": {
+                "version": "19.2.8"
+              },
+              "react": {
+                "version": "19.2.8"
+              }
+            }
+          },
+          "@radix-ui/react-accordion": {
+            "version": "1.2.20",
+            "resolved": "https://registry.npmjs.org/@radix-ui/react-accordion/-/react-accordion-1.2.20.tgz",
+            "overridden": false,
+            "dependencies": {
+              "@radix-ui/react-id": {
+                "version": "1.1.4",
+                "resolved": "https://registry.npmjs.org/@radix-ui/react-id/-/react-id-1.1.4.tgz",
+                "overridden": false,
+                "dependencies": {
+                  "react": {
+                    "version": "19.2.8"
+                  }
+                }
+              },
+              "react-dom": {
+                "version": "19.2.8"
+              },
+              "react": {
+                "version": "19.2.8"
+              }
+            }
+          },
+          "@radix-ui/react-alert-dialog": {
+            "version": "1.1.23",
+            "resolved": "https://registry.npmjs.org/@radix-ui/react-alert-dialog/-/react-alert-dialog-1.1.23.tgz",
+            "overridden": false,
+            "dependencies": {
+              "react-dom": {
+                "version": "19.2.8"
+              },
+              "react": {
+                "version": "19.2.8"
+              }
+            }
+          },
+          "@radix-ui/react-arrow": {
+            "version": "1.1.15",
+            "resolved": "https://registry.npmjs.org/@radix-ui/react-arrow/-/react-arrow-1.1.15.tgz",
+            "overridden": false,
+            "dependencies": {
+              "react-dom": {
+                "version": "19.2.8"
+              },
+              "react": {
+                "version": "19.2.8"
+              }
+            }
+          },
+          "@radix-ui/react-aspect-ratio": {
+            "version": "1.1.15",
+            "resolved": "https://registry.npmjs.org/@radix-ui/react-aspect-ratio/-/react-aspect-ratio-1.1.15.tgz",
+            "overridden": false,
+            "dependencies": {
+              "react-dom": {
+                "version": "19.2.8"
+              },
+              "react": {
+                "version": "19.2.8"
+              }
+            }
+          },
+          "@radix-ui/react-avatar": {
+            "version": "1.2.6",
+            "resolved": "https://registry.npmjs.org/@radix-ui/react-avatar/-/react-avatar-1.2.6.tgz",
+            "overridden": false,
+            "dependencies": {
+              "react-dom": {
+                "version": "19.2.8"
+              },
+              "react": {
+                "version": "19.2.8"
+              }
+            }
+          },
+          "@radix-ui/react-checkbox": {
+            "version": "1.3.11",
+            "resolved": "https://registry.npmjs.org/@radix-ui/react-checkbox/-/react-checkbox-1.3.11.tgz",
+            "overridden": false,
+            "dependencies": {
+              "react-dom": {
+                "version": "19.2.8"
+              },
+              "react": {
+                "version": "19.2.8"
+              }
+            }
+          },
+          "@radix-ui/react-collapsible": {
+            "version": "1.1.20",
+            "resolved": "https://registry.npmjs.org/@radix-ui/react-collapsible/-/react-collapsible-1.1.20.tgz",
+            "overridden": false,
+            "dependencies": {
+              "react-dom": {
+                "version": "19.2.8"
+              },
+              "react": {
+                "version": "19.2.8"
+              }
+            }
+          },
+          "@radix-ui/react-collection": {
+            "version": "1.1.15",
+            "resolved": "https://registry.npmjs.org/@radix-ui/react-collection/-/react-collection-1.1.15.tgz",
+            "overridden": false,
+            "dependencies": {
+              "react-dom": {
+                "version": "19.2.8"
+              },
+              "react": {
+                "version": "19.2.8"
+              }
+            }
+          },
+          "@radix-ui/react-compose-refs": {
+            "version": "1.1.5",
+            "resolved": "https://registry.npmjs.org/@radix-ui/react-compose-refs/-/react-compose-refs-1.1.5.tgz",
+            "overridden": false,
+            "dependencies": {
+              "react": {
+                "version": "19.2.8"
+              }
+            }
+          },
+          "@radix-ui/react-context-menu": {
+            "version": "2.3.7",
+            "resolved": "https://registry.npmjs.org/@radix-ui/react-context-menu/-/react-context-menu-2.3.7.tgz",
+            "overridden": false,
+            "dependencies": {
+              "react-dom": {
+                "version": "19.2.8"
+              },
+              "react": {
+                "version": "19.2.8"
+              }
+            }
+          },
+          "@radix-ui/react-context": {
+            "version": "1.2.2",
+            "resolved": "https://registry.npmjs.org/@radix-ui/react-context/-/react-context-1.2.2.tgz",
+            "overridden": false,
+            "dependencies": {
+              "react": {
+                "version": "19.2.8"
+              }
+            }
+          },
+          "@radix-ui/react-dialog": {
+            "version": "1.1.23",
+            "resolved": "https://registry.npmjs.org/@radix-ui/react-dialog/-/react-dialog-1.1.23.tgz",
+            "overridden": false,
+            "dependencies": {
+              "react-dom": {
+                "version": "19.2.8"
+              },
+              "react-remove-scroll": {
+                "version": "2.7.2",
+                "resolved": "https://registry.npmjs.org/react-remove-scroll/-/react-remove-scroll-2.7.2.tgz",
+                "overridden": false,
+                "dependencies": {
+                  "react-remove-scroll-bar": {
+                    "version": "2.3.8",
+                    "resolved": "https://registry.npmjs.org/react-remove-scroll-bar/-/react-remove-scroll-bar-2.3.8.tgz",
+                    "overridden": false,
+                    "dependencies": {
+                      "react": {
+                        "version": "19.2.8"
+                      }
+                    }
+                  },
+                  "react-style-singleton": {
+                    "version": "2.2.3",
+                    "resolved": "https://registry.npmjs.org/react-style-singleton/-/react-style-singleton-2.2.3.tgz",
+                    "overridden": false,
+                    "dependencies": {
+                      "react": {
+                        "version": "19.2.8"
+                      }
+                    }
+                  },
+                  "react": {
+                    "version": "19.2.8"
+                  },
+                  "use-callback-ref": {
+                    "version": "1.3.3",
+                    "resolved": "https://registry.npmjs.org/use-callback-ref/-/use-callback-ref-1.3.3.tgz",
+                    "overridden": false,
+                    "dependencies": {
+                      "react": {
+                        "version": "19.2.8"
+                      }
+                    }
+                  },
+                  "use-sidecar": {
+                    "version": "1.1.3",
+                    "resolved": "https://registry.npmjs.org/use-sidecar/-/use-sidecar-1.1.3.tgz",
+                    "overridden": false,
+                    "dependencies": {
+                      "react": {
+                        "version": "19.2.8"
+                      }
+                    }
+                  }
+                }
+              },
+              "react": {
+                "version": "19.2.8"
+              }
+            }
+          },
+          "@radix-ui/react-direction": {
+            "version": "1.1.4",
+            "resolved": "https://registry.npmjs.org/@radix-ui/react-direction/-/react-direction-1.1.4.tgz",
+            "overridden": false,
+            "dependencies": {
+              "react": {
+                "version": "19.2.8"
+              }
+            }
+          },
+          "@radix-ui/react-dismissable-layer": {
+            "version": "1.1.19",
+            "resolved": "https://registry.npmjs.org/@radix-ui/react-dismissable-layer/-/react-dismissable-layer-1.1.19.tgz",
+            "overridden": false,
+            "dependencies": {
+              "react-dom": {
+                "version": "19.2.8"
+              },
+              "react": {
+                "version": "19.2.8"
+              }
+            }
+          },
+          "@radix-ui/react-dropdown-menu": {
+            "version": "2.1.24",
+            "resolved": "https://registry.npmjs.org/@radix-ui/react-dropdown-menu/-/react-dropdown-menu-2.1.24.tgz",
+            "overridden": false,
+            "dependencies": {
+              "react-dom": {
+                "version": "19.2.8"
+              },
+              "react": {
+                "version": "19.2.8"
+              }
+            }
+          },
+          "@radix-ui/react-focus-guards": {
+            "version": "1.1.6",
+            "resolved": "https://registry.npmjs.org/@radix-ui/react-focus-guards/-/react-focus-guards-1.1.6.tgz",
+            "overridden": false,
+            "dependencies": {
+              "react": {
+                "version": "19.2.8"
+              }
+            }
+          },
+          "@radix-ui/react-focus-scope": {
+            "version": "1.1.16",
+            "resolved": "https://registry.npmjs.org/@radix-ui/react-focus-scope/-/react-focus-scope-1.1.16.tgz",
+            "overridden": false,
+            "dependencies": {
+              "react-dom": {
+                "version": "19.2.8"
+              },
+              "react": {
+                "version": "19.2.8"
+              }
+            }
+          },
+          "@radix-ui/react-form": {
+            "version": "0.1.16",
+            "resolved": "https://registry.npmjs.org/@radix-ui/react-form/-/react-form-0.1.16.tgz",
+            "overridden": false,
+            "dependencies": {
+              "react-dom": {
+                "version": "19.2.8"
+              },
+              "react": {
+                "version": "19.2.8"
+              }
+            }
+          },
+          "@radix-ui/react-hover-card": {
+            "version": "1.1.23",
+            "resolved": "https://registry.npmjs.org/@radix-ui/react-hover-card/-/react-hover-card-1.1.23.tgz",
+            "overridden": false,
+            "dependencies": {
+              "react-dom": {
+                "version": "19.2.8"
+              },
+              "react": {
+                "version": "19.2.8"
+              }
+            }
+          },
+          "@radix-ui/react-label": {
+            "version": "2.1.15",
+            "resolved": "https://registry.npmjs.org/@radix-ui/react-label/-/react-label-2.1.15.tgz",
+            "overridden": false,
+            "dependencies": {
+              "react-dom": {
+                "version": "19.2.8"
+              },
+              "react": {
+                "version": "19.2.8"
+              }
+            }
+          },
+          "@radix-ui/react-menu": {
+            "version": "2.1.24",
+            "resolved": "https://registry.npmjs.org/@radix-ui/react-menu/-/react-menu-2.1.24.tgz",
+            "overridden": false,
+            "dependencies": {
+              "react-dom": {
+                "version": "19.2.8"
+              },
+              "react": {
+                "version": "19.2.8"
+              }
+            }
+          },
+          "@radix-ui/react-menubar": {
+            "version": "1.1.24",
+            "resolved": "https://registry.npmjs.org/@radix-ui/react-menubar/-/react-menubar-1.1.24.tgz",
+            "overridden": false,
+            "dependencies": {
+              "react-dom": {
+                "version": "19.2.8"
+              },
+              "react": {
+                "version": "19.2.8"
+              }
+            }
+          },
+          "@radix-ui/react-navigation-menu": {
+            "version": "1.2.22",
+            "resolved": "https://registry.npmjs.org/@radix-ui/react-navigation-menu/-/react-navigation-menu-1.2.22.tgz",
+            "overridden": false,
+            "dependencies": {
+              "@radix-ui/react-use-previous": {
+                "version": "1.1.4",
+                "resolved": "https://registry.npmjs.org/@radix-ui/react-use-previous/-/react-use-previous-1.1.4.tgz",
+                "overridden": false,
+                "dependencies": {
+                  "react": {
+                    "version": "19.2.8"
+                  }
+                }
+              },
+              "react-dom": {
+                "version": "19.2.8"
+              },
+              "react": {
+                "version": "19.2.8"
+              }
+            }
+          },
+          "@radix-ui/react-one-time-password-field": {
+            "version": "0.1.16",
+            "resolved": "https://registry.npmjs.org/@radix-ui/react-one-time-password-field/-/react-one-time-password-field-0.1.16.tgz",
+            "overridden": false,
+            "dependencies": {
+              "react-dom": {
+                "version": "19.2.8"
+              },
+              "react": {
+                "version": "19.2.8"
+              }
+            }
+          },
+          "@radix-ui/react-password-toggle-field": {
+            "version": "0.1.11",
+            "resolved": "https://registry.npmjs.org/@radix-ui/react-password-toggle-field/-/react-password-toggle-field-0.1.11.tgz",
+            "overridden": false,
+            "dependencies": {
+              "react-dom": {
+                "version": "19.2.8"
+              },
+              "react": {
+                "version": "19.2.8"
+              }
+            }
+          },
+          "@radix-ui/react-popover": {
+            "version": "1.1.23",
+            "resolved": "https://registry.npmjs.org/@radix-ui/react-popover/-/react-popover-1.1.23.tgz",
+            "overridden": false,
+            "dependencies": {
+              "react-dom": {
+                "version": "19.2.8"
+              },
+              "react": {
+                "version": "19.2.8"
+              }
+            }
+          },
+          "@radix-ui/react-popper": {
+            "version": "1.3.7",
+            "resolved": "https://registry.npmjs.org/@radix-ui/react-popper/-/react-popper-1.3.7.tgz",
+            "overridden": false,
+            "dependencies": {
+              "@floating-ui/react-dom": {
+                "version": "2.1.9",
+                "resolved": "https://registry.npmjs.org/@floating-ui/react-dom/-/react-dom-2.1.9.tgz",
+                "overridden": false,
+                "dependencies": {
+                  "react-dom": {
+                    "version": "19.2.8"
+                  },
+                  "react": {
+                    "version": "19.2.8"
+                  }
+                }
+              },
+              "@radix-ui/react-use-rect": {
+                "version": "1.1.4",
+                "resolved": "https://registry.npmjs.org/@radix-ui/react-use-rect/-/react-use-rect-1.1.4.tgz",
+                "overridden": false,
+                "dependencies": {
+                  "react": {
+                    "version": "19.2.8"
+                  }
+                }
+              },
+              "react-dom": {
+                "version": "19.2.8"
+              },
+              "react": {
+                "version": "19.2.8"
+              }
+            }
+          },
+          "@radix-ui/react-portal": {
+            "version": "1.1.17",
+            "resolved": "https://registry.npmjs.org/@radix-ui/react-portal/-/react-portal-1.1.17.tgz",
+            "overridden": false,
+            "dependencies": {
+              "react-dom": {
+                "version": "19.2.8"
+              },
+              "react": {
+                "version": "19.2.8"
+              }
+            }
+          },
+          "@radix-ui/react-presence": {
+            "version": "1.1.10",
+            "resolved": "https://registry.npmjs.org/@radix-ui/react-presence/-/react-presence-1.1.10.tgz",
+            "overridden": false,
+            "dependencies": {
+              "react-dom": {
+                "version": "19.2.8"
+              },
+              "react": {
+                "version": "19.2.8"
+              }
+            }
+          },
+          "@radix-ui/react-primitive": {
+            "version": "2.1.10",
+            "resolved": "https://registry.npmjs.org/@radix-ui/react-primitive/-/react-primitive-2.1.10.tgz",
+            "overridden": false,
+            "dependencies": {
+              "react-dom": {
+                "version": "19.2.8"
+              },
+              "react": {
+                "version": "19.2.8"
+              }
+            }
+          },
+          "@radix-ui/react-progress": {
+            "version": "1.1.16",
+            "resolved": "https://registry.npmjs.org/@radix-ui/react-progress/-/react-progress-1.1.16.tgz",
+            "overridden": false,
+            "dependencies": {
+              "react-dom": {
+                "version": "19.2.8"
+              },
+              "react": {
+                "version": "19.2.8"
+              }
+            }
+          },
+          "@radix-ui/react-radio-group": {
+            "version": "1.4.7",
+            "resolved": "https://registry.npmjs.org/@radix-ui/react-radio-group/-/react-radio-group-1.4.7.tgz",
+            "overridden": false,
+            "dependencies": {
+              "react-dom": {
+                "version": "19.2.8"
+              },
+              "react": {
+                "version": "19.2.8"
+              }
+            }
+          },
+          "@radix-ui/react-roving-focus": {
+            "version": "1.1.19",
+            "resolved": "https://registry.npmjs.org/@radix-ui/react-roving-focus/-/react-roving-focus-1.1.19.tgz",
+            "overridden": false,
+            "dependencies": {
+              "react-dom": {
+                "version": "19.2.8"
+              },
+              "react": {
+                "version": "19.2.8"
+              }
+            }
+          },
+          "@radix-ui/react-scroll-area": {
+            "version": "1.2.18",
+            "resolved": "https://registry.npmjs.org/@radix-ui/react-scroll-area/-/react-scroll-area-1.2.18.tgz",
+            "overridden": false,
+            "dependencies": {
+              "react-dom": {
+                "version": "19.2.8"
+              },
+              "react": {
+                "version": "19.2.8"
+              }
+            }
+          },
+          "@radix-ui/react-select": {
+            "version": "2.3.7",
+            "resolved": "https://registry.npmjs.org/@radix-ui/react-select/-/react-select-2.3.7.tgz",
+            "overridden": false,
+            "dependencies": {
+              "react-dom": {
+                "version": "19.2.8"
+              },
+              "react": {
+                "version": "19.2.8"
+              }
+            }
+          },
+          "@radix-ui/react-separator": {
+            "version": "1.1.15",
+            "resolved": "https://registry.npmjs.org/@radix-ui/react-separator/-/react-separator-1.1.15.tgz",
+            "overridden": false,
+            "dependencies": {
+              "react-dom": {
+                "version": "19.2.8"
+              },
+              "react": {
+                "version": "19.2.8"
+              }
+            }
+          },
+          "@radix-ui/react-slider": {
+            "version": "1.4.7",
+            "resolved": "https://registry.npmjs.org/@radix-ui/react-slider/-/react-slider-1.4.7.tgz",
+            "overridden": false,
+            "dependencies": {
+              "react-dom": {
+                "version": "19.2.8"
+              },
+              "react": {
+                "version": "19.2.8"
+              }
+            }
+          },
+          "@radix-ui/react-slot": {
+            "version": "1.3.3",
+            "resolved": "https://registry.npmjs.org/@radix-ui/react-slot/-/react-slot-1.3.3.tgz",
+            "overridden": false,
+            "dependencies": {
+              "react": {
+                "version": "19.2.8"
+              }
+            }
+          },
+          "@radix-ui/react-switch": {
+            "version": "1.3.7",
+            "resolved": "https://registry.npmjs.org/@radix-ui/react-switch/-/react-switch-1.3.7.tgz",
+            "overridden": false,
+            "dependencies": {
+              "react-dom": {
+                "version": "19.2.8"
+              },
+              "react": {
+                "version": "19.2.8"
+              }
+            }
+          },
+          "@radix-ui/react-tabs": {
+            "version": "1.1.21",
+            "resolved": "https://registry.npmjs.org/@radix-ui/react-tabs/-/react-tabs-1.1.21.tgz",
+            "overridden": false,
+            "dependencies": {
+              "react-dom": {
+                "version": "19.2.8"
+              },
+              "react": {
+                "version": "19.2.8"
+              }
+            }
+          },
+          "@radix-ui/react-toast": {
+            "version": "1.2.23",
+            "resolved": "https://registry.npmjs.org/@radix-ui/react-toast/-/react-toast-1.2.23.tgz",
+            "overridden": false,
+            "dependencies": {
+              "react-dom": {
+                "version": "19.2.8"
+              },
+              "react": {
+                "version": "19.2.8"
+              }
+            }
+          },
+          "@radix-ui/react-toggle-group": {
+            "version": "1.1.19",
+            "resolved": "https://registry.npmjs.org/@radix-ui/react-toggle-group/-/react-toggle-group-1.1.19.tgz",
+            "overridden": false,
+            "dependencies": {
+              "react-dom": {
+                "version": "19.2.8"
+              },
+              "react": {
+                "version": "19.2.8"
+              }
+            }
+          },
+          "@radix-ui/react-toggle": {
+            "version": "1.1.18",
+            "resolved": "https://registry.npmjs.org/@radix-ui/react-toggle/-/react-toggle-1.1.18.tgz",
+            "overridden": false,
+            "dependencies": {
+              "react-dom": {
+                "version": "19.2.8"
+              },
+              "react": {
+                "version": "19.2.8"
+              }
+            }
+          },
+          "@radix-ui/react-toolbar": {
+            "version": "1.1.19",
+            "resolved": "https://registry.npmjs.org/@radix-ui/react-toolbar/-/react-toolbar-1.1.19.tgz",
+            "overridden": false,
+            "dependencies": {
+              "react-dom": {
+                "version": "19.2.8"
+              },
+              "react": {
+                "version": "19.2.8"
+              }
+            }
+          },
+          "@radix-ui/react-tooltip": {
+            "version": "1.2.16",
+            "resolved": "https://registry.npmjs.org/@radix-ui/react-tooltip/-/react-tooltip-1.2.16.tgz",
+            "overridden": false,
+            "dependencies": {
+              "react-dom": {
+                "version": "19.2.8"
+              },
+              "react": {
+                "version": "19.2.8"
+              }
+            }
+          },
+          "@radix-ui/react-use-callback-ref": {
+            "version": "1.1.4",
+            "resolved": "https://registry.npmjs.org/@radix-ui/react-use-callback-ref/-/react-use-callback-ref-1.1.4.tgz",
+            "overridden": false,
+            "dependencies": {
+              "react": {
+                "version": "19.2.8"
+              }
+            }
+          },
+          "@radix-ui/react-use-controllable-state": {
+            "version": "1.2.6",
+            "resolved": "https://registry.npmjs.org/@radix-ui/react-use-controllable-state/-/react-use-controllable-state-1.2.6.tgz",
+            "overridden": false,
+            "dependencies": {
+              "react": {
+                "version": "19.2.8"
+              }
+            }
+          },
+          "@radix-ui/react-use-effect-event": {
+            "version": "0.0.5",
+            "resolved": "https://registry.npmjs.org/@radix-ui/react-use-effect-event/-/react-use-effect-event-0.0.5.tgz",
+            "overridden": false,
+            "dependencies": {
+              "react": {
+                "version": "19.2.8"
+              }
+            }
+          },
+          "@radix-ui/react-use-escape-keydown": {
+            "version": "1.1.5",
+            "resolved": "https://registry.npmjs.org/@radix-ui/react-use-escape-keydown/-/react-use-escape-keydown-1.1.5.tgz",
+            "overridden": false,
+            "dependencies": {
+              "react": {
+                "version": "19.2.8"
+              }
+            }
+          },
+          "@radix-ui/react-use-is-hydrated": {
+            "version": "0.1.3",
+            "resolved": "https://registry.npmjs.org/@radix-ui/react-use-is-hydrated/-/react-use-is-hydrated-0.1.3.tgz",
+            "overridden": false,
+            "dependencies": {
+              "react": {
+                "version": "19.2.8"
+              }
+            }
+          },
+          "@radix-ui/react-use-layout-effect": {
+            "version": "1.1.4",
+            "resolved": "https://registry.npmjs.org/@radix-ui/react-use-layout-effect/-/react-use-layout-effect-1.1.4.tgz",
+            "overridden": false,
+            "dependencies": {
+              "react": {
+                "version": "19.2.8"
+              }
+            }
+          },
+          "@radix-ui/react-use-size": {
+            "version": "1.1.4",
+            "resolved": "https://registry.npmjs.org/@radix-ui/react-use-size/-/react-use-size-1.1.4.tgz",
+            "overridden": false,
+            "dependencies": {
+              "react": {
+                "version": "19.2.8"
+              }
+            }
+          },
+          "@radix-ui/react-visually-hidden": {
+            "version": "1.2.11",
+            "resolved": "https://registry.npmjs.org/@radix-ui/react-visually-hidden/-/react-visually-hidden-1.2.11.tgz",
+            "overridden": false,
+            "dependencies": {
+              "react-dom": {
+                "version": "19.2.8"
+              },
+              "react": {
+                "version": "19.2.8"
+              }
+            }
+          },
+          "react-dom": {
+            "version": "19.2.8"
+          },
+          "react": {
+            "version": "19.2.8"
+          }
+        }
+      },
+      "react-dom": {
+        "version": "19.2.8",
+        "resolved": "https://registry.npmjs.org/react-dom/-/react-dom-19.2.8.tgz",
+        "overridden": false,
+        "dependencies": {
+          "react": {
+            "version": "19.2.8"
+          }
+        }
+      },
+      "react": {
+        "version": "19.2.8",
+        "resolved": "https://registry.npmjs.org/react/-/react-19.2.8.tgz",
+        "overridden": false
+      }
+    }
+  },
+  "affectedTree": {
+    "version": "0.1.0",
+    "name": "pap-saude",
+    "dependencies": {
+      "eslint-config-next": {
+        "version": "16.4.2",
+        "resolved": "https://registry.npmjs.org/eslint-config-next/-/eslint-config-next-16.4.2.tgz",
+        "overridden": false,
+        "dependencies": {
+          "eslint-plugin-react-hooks": {
+            "version": "7.1.1",
+            "resolved": "https://registry.npmjs.org/eslint-plugin-react-hooks/-/eslint-plugin-react-hooks-7.1.1.tgz",
+            "overridden": false,
+            "dependencies": {
+              "zod-validation-error": {
+                "version": "4.0.2",
+                "resolved": "https://registry.npmjs.org/zod-validation-error/-/zod-validation-error-4.0.2.tgz",
+                "overridden": false,
+                "dependencies": {
+                  "zod": {
+                    "version": "4.5.4"
+                  }
+                }
+              },
+              "zod": {
+                "version": "4.5.4"
+              }
+            }
+          }
+        }
+      },
+      "prisma": {
+        "version": "7.10.1",
+        "resolved": "https://registry.npmjs.org/prisma/-/prisma-7.10.1.tgz",
+        "overridden": false,
+        "dependencies": {
+          "@prisma/dev": {
+            "version": "0.24.17",
+            "resolved": "https://registry.npmjs.org/@prisma/dev/-/dev-0.24.17.tgz",
+            "overridden": false,
+            "dependencies": {
+              "@prisma/streams-local": {
+                "version": "0.1.11",
+                "resolved": "https://registry.npmjs.org/@prisma/streams-local/-/streams-local-0.1.11.tgz",
+                "overridden": false,
+                "dependencies": {
+                  "ajv": {
+                    "version": "8.20.0",
+                    "resolved": "https://registry.npmjs.org/ajv/-/ajv-8.20.0.tgz",
+                    "overridden": false,
+                    "dependencies": {
+                      "fast-uri": {
+                        "version": "3.1.8"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "shadcn": {
+        "version": "4.22.0",
+        "resolved": "https://registry.npmjs.org/shadcn/-/shadcn-4.22.0.tgz",
+        "overridden": false,
+        "dependencies": {
+          "@dotenvx/dotenvx": {
+            "version": "1.75.1",
+            "resolved": "https://registry.npmjs.org/@dotenvx/dotenvx/-/dotenvx-1.75.1.tgz",
+            "overridden": false,
+            "dependencies": {
+              "conf": {
+                "version": "10.2.0",
+                "resolved": "https://registry.npmjs.org/conf/-/conf-10.2.0.tgz",
+                "overridden": false,
+                "dependencies": {
+                  "ajv": {
+                    "version": "8.20.0",
+                    "resolved": "https://registry.npmjs.org/ajv/-/ajv-8.20.0.tgz",
+                    "overridden": false,
+                    "dependencies": {
+                      "fast-uri": {
+                        "version": "3.1.8"
+                      }
+                    }
+                  }
+                }
+              },
+              "undici": {
+                "version": "7.29.1"
+              }
+            }
+          },
+          "@modelcontextprotocol/sdk": {
+            "version": "1.32.1",
+            "resolved": "https://registry.npmjs.org/@modelcontextprotocol/sdk/-/sdk-1.32.1.tgz",
+            "overridden": false,
+            "dependencies": {
+              "ajv-formats": {
+                "version": "3.0.1",
+                "resolved": "https://registry.npmjs.org/ajv-formats/-/ajv-formats-3.0.1.tgz",
+                "overridden": false,
+                "dependencies": {
+                  "ajv": {
+                    "version": "8.20.0",
+                    "resolved": "https://registry.npmjs.org/ajv/-/ajv-8.20.0.tgz",
+                    "overridden": false,
+                    "dependencies": {
+                      "fast-uri": {
+                        "version": "3.1.8"
+                      }
+                    }
+                  }
+                }
+              },
+              "ajv": {
+                "version": "8.20.0",
+                "resolved": "https://registry.npmjs.org/ajv/-/ajv-8.20.0.tgz",
+                "overridden": false,
+                "dependencies": {
+                  "fast-uri": {
+                    "version": "3.1.8",
+                    "resolved": "https://registry.npmjs.org/fast-uri/-/fast-uri-3.1.8.tgz",
+                    "overridden": false
+                  }
+                }
+              },
+              "express-rate-limit": {
+                "version": "8.7.1",
+                "resolved": "https://registry.npmjs.org/express-rate-limit/-/express-rate-limit-8.7.1.tgz",
+                "overridden": false,
+                "dependencies": {
+                  "ip-address": {
+                    "version": "10.7.3"
+                  }
+                }
+              },
+              "express": {
+                "version": "5.3.0",
+                "resolved": "https://registry.npmjs.org/express/-/express-5.3.0.tgz",
+                "overridden": false,
+                "dependencies": {
+                  "body-parser": {
+                    "version": "2.3.0",
+                    "resolved": "https://registry.npmjs.org/body-parser/-/body-parser-2.3.0.tgz",
+                    "overridden": false
+                  }
+                }
+              },
+              "zod-to-json-schema": {
+                "version": "3.25.2",
+                "resolved": "https://registry.npmjs.org/zod-to-json-schema/-/zod-to-json-schema-3.25.2.tgz",
+                "overridden": false,
+                "dependencies": {
+                  "zod": {
+                    "version": "4.5.4"
+                  }
+                }
+              },
+              "zod": {
+                "version": "4.5.4"
+              }
+            }
+          },
+          "@shadcn/registry": {
+            "version": "0.2.0",
+            "resolved": "https://registry.npmjs.org/@shadcn/registry/-/registry-0.2.0.tgz",
+            "overridden": false,
+            "dependencies": {
+              "undici": {
+                "version": "7.29.1"
+              },
+              "zod": {
+                "version": "4.5.4"
+              }
+            }
+          },
+          "socks": {
+            "version": "2.8.10",
+            "resolved": "https://registry.npmjs.org/socks/-/socks-2.8.10.tgz",
+            "overridden": false,
+            "dependencies": {
+              "ip-address": {
+                "version": "10.7.3",
+                "resolved": "https://registry.npmjs.org/ip-address/-/ip-address-10.7.3.tgz",
+                "overridden": false
+              }
+            }
+          },
+          "undici": {
+            "version": "7.29.1",
+            "resolved": "https://registry.npmjs.org/undici/-/undici-7.29.1.tgz",
+            "overridden": false
+          },
+          "zod": {
+            "version": "4.5.4",
+            "resolved": "https://registry.npmjs.org/zod/-/zod-4.5.4.tgz",
+            "overridden": false
+          }
+        }
+      }
+    }
+  }
+}

@@ -8,10 +8,12 @@ import type {
 
 type Props = {
   data: MonthlyAttendance[]
+  comparisonLabel?: string
 }
 
 export default function AttendanceChart({
   data,
+  comparisonLabel = "+12,1%",
 }: Props) {
   const max =
     Math.max(...data.map((item) => item.total)) || 1
@@ -31,7 +33,7 @@ export default function AttendanceChart({
 
         <div className="flex w-fit items-center gap-1.5 rounded-full bg-emerald-50 px-2.5 py-1 text-xs font-semibold text-emerald-600">
           <TrendingUp size={13} />
-          +12,1%
+          {comparisonLabel}
         </div>
       </div>
 

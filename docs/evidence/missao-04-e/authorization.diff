@@ -1,0 +1,540 @@
+diff --git a/src/app/(auth)/comercial/page.tsx b/src/app/(auth)/comercial/page.tsx
+index 6c539e8..a153ffa 100644
+--- a/src/app/(auth)/comercial/page.tsx
++++ b/src/app/(auth)/comercial/page.tsx
+@@ -1,6 +1,2 @@
+-import Link from "next/link";
+-import { redirect } from "next/navigation";
+-import { requireOwnPageSession } from "@/server/auth/require-page-session";
+-import { getEffectiveAccessProfile } from "@/server/iam/effective-access-profile.service";
+-import { accessDestination } from "@/lib/auth/access-destination";
+-import NotificationInbox from "@/components/access/NotificationInbox";
++import { requireCommercialPageSession } from "@/server/demo/commercial-page-session";
++import CommercialWorkspace, { CommercialMfaNotice } from "@/components/commercial/CommercialWorkspace";
+@@ -7,0 +4 @@ import "@/components/access/access.css";
++import "@/components/demo/workspace.css";
+@@ -10,24 +7,3 @@ export default async function CommercialPage() {
+-  const { user } = await requireOwnPageSession();
+-  const profile = await getEffectiveAccessProfile(user.id);
+-  if (accessDestination(profile) !== "/comercial") redirect("/login");
+-  return (
+-    <main className="access-page">
+-      <section className="access-card access-single">
+-        <p className="access-eyebrow">PAP Saúde · Comercial</p>
+-        <h1>Seu perfil comercial está autorizado</h1>
+-        <p>
+-          Bem-vindo, {user.displayName}. Os recursos comerciais e a vitrine
+-          demonstrativa estão em construção.
+-        </p>
+-        <p>
+-          Este perfil não concede acesso a prontuários, dados privados de UBS ou
+-          funções administrativas.
+-        </p>
+-        <NotificationInbox />
+-        <nav aria-label="Conta">
+-          <Link href="/minha-seguranca">Minha segurança</Link>
+-          <Link href="/notificacoes">Minhas notificações</Link>
+-        </nav>
+-      </section>
+-    </main>
+-  );
++    const actor = await requireCommercialPageSession({ allowMfaNotice: true });
++    if (actor.mfaRequired) return <CommercialMfaNotice />;
++    return <CommercialWorkspace name={actor.displayName}/>;
+diff --git a/src/app/(dashboard)/dashboard/page.tsx b/src/app/(dashboard)/dashboard/page.tsx
+index 2b1f480..949720f 100644
+--- a/src/app/(dashboard)/dashboard/page.tsx
++++ b/src/app/(dashboard)/dashboard/page.tsx
+@@ -2,19 +2,2 @@ import { requireClinicalPageSession } from "@/server/clinical/clinical-page-sess
+-import {
+-  CalendarDays,
+-} from "lucide-react"
+-
+-import AttendanceChart from "@/components/dashboard/AttendanceChart"
+-import DashboardKpi from "@/components/dashboard/DashboardKpi"
+-import QuickActions from "@/components/dashboard/QuickActions"
+-import RecentAttendances from "@/components/dashboard/RecentAttendances"
+-import RiskDistribution from "@/components/dashboard/RiskDistribution"
+-import UpcomingDeliveries from "@/components/dashboard/UpcomingDeliveries"
+-
+-import {
+-  dashboardKpis,
+-  monthlyAttendances,
+-  recentAttendances,
+-  riskDistribution,
+-  upcomingDeliveries,
+-} from "@/lib/mock-dashboard"
+-
++import ClinicalDashboardView from "@/components/dashboard/ClinicalDashboardView";
++import { dashboardKpis, monthlyAttendances, recentAttendances, riskDistribution, upcomingDeliveries } from "@/lib/mock-dashboard";
+@@ -22,83 +5,3 @@ export default async function DashboardPage() {
+-  await requireClinicalPageSession();
+-  return (
+-    <div className="mx-auto w-full max-w-[1600px]">
+-      <header className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+-        <div>
+-          <h1 className="text-xl font-semibold tracking-tight text-slate-900 sm:text-2xl">
+-            Dashboard
+-          </h1>
+-
+-          <p className="mt-1 text-sm text-slate-500">
+-            Visão geral dos atendimentos e acompanhamento das pacientes
+-          </p>
+-        </div>
+-
+-        <div className="flex w-fit items-center gap-2 rounded-lg border border-slate-200 bg-white px-3 py-2 text-xs text-slate-500 shadow-sm">
+-          <CalendarDays
+-            size={15}
+-            className="text-pink-500"
+-          />
+-
+-          Atualizado hoje
+-        </div>
+-      </header>
+-
+-      <section
+-        className="
+-          grid
+-          grid-cols-1
+-          gap-3
+-          sm:grid-cols-2
+-          lg:grid-cols-4
+-        "
+-      >
+-        {dashboardKpis.map((kpi) => (
+-          <DashboardKpi
+-            key={kpi.id}
+-            kpi={kpi}
+-          />
+-        ))}
+-      </section>
+-
+-      <div className="mt-6">
+-        <QuickActions />
+-      </div>
+-
+-      <section
+-        className="
+-          mt-6
+-          grid
+-          grid-cols-1
+-          gap-4
+-          xl:grid-cols-[minmax(0,2fr)_minmax(320px,1fr)]
+-        "
+-      >
+-        <AttendanceChart
+-          data={monthlyAttendances}
+-        />
+-
+-        <RiskDistribution
+-          data={riskDistribution}
+-        />
+-      </section>
+-
+-      <section
+-        className="
+-          mt-4
+-          grid
+-          grid-cols-1
+-          gap-4
+-          xl:grid-cols-[minmax(0,2fr)_minmax(320px,1fr)]
+-        "
+-      >
+-        <RecentAttendances
+-          data={recentAttendances}
+-        />
+-
+-        <UpcomingDeliveries
+-          data={upcomingDeliveries}
+-        />
+-      </section>
+-    </div>
+-  )
+-}
+\ No newline at end of file
++    await requireClinicalPageSession();
++    return <ClinicalDashboardView data={{ kpis: dashboardKpis, monthly: monthlyAttendances, recent: recentAttendances, risks: riskDistribution, deliveries: upcomingDeliveries }}/>;
++}
+diff --git a/src/components/layout/DashboardShell.tsx b/src/components/layout/DashboardShell.tsx
+index 961323f..1ec4507 100644
+--- a/src/components/layout/DashboardShell.tsx
++++ b/src/components/layout/DashboardShell.tsx
+@@ -3 +3 @@
+-import { useState } from "react";
++import { useCallback, useState } from "react";
+@@ -9,0 +10 @@ export default function DashboardShell({
++  demo = false,
+@@ -11,0 +13 @@ export default function DashboardShell({
++  demo?: boolean;
+@@ -14,0 +17,2 @@ export default function DashboardShell({
++  const closeSidebar = useCallback(() => setSidebarOpen(false), []);
++
+@@ -16,2 +20,3 @@ export default function DashboardShell({
+-    <div className="flex min-h-screen bg-gray-50">
+-      <Sidebar open={sidebarOpen} onClose={() => setSidebarOpen(false)} />
++    <div className={`${demo ? "pap-demo" : ""} flex min-h-screen bg-gray-50`}>
++      {demo && <a className="workspace-skip" href="#demo-main">Ir para o conteúdo</a>}
++      <Sidebar open={sidebarOpen} onClose={closeSidebar} demo={demo} />
+@@ -20 +25 @@ export default function DashboardShell({
+-        <Topbar onMenuClick={() => setSidebarOpen(true)} />
++        <Topbar onMenuClick={() => setSidebarOpen(true)} demo={demo} />
+@@ -22 +27 @@ export default function DashboardShell({
+-        <main className="min-h-0 flex-1 overflow-auto p-4 sm:p-5 lg:p-6">
++        <main id={demo ? "demo-main" : undefined} tabIndex={demo ? -1 : undefined} className="min-h-0 flex-1 overflow-auto p-4 sm:p-5 lg:p-6">
+@@ -27,2 +32,2 @@ export default function DashboardShell({
+-            <a href="/ajuda/seguranca">Ajuda de segurança</a>
+-            <a href="/minha-seguranca">Segurança da minha conta</a>
++            <a href={demo ? "/vitrine/ajuda" : "/ajuda/seguranca"}>{demo ? "Sobre a demonstração" : "Ajuda de segurança"}</a>
++            <a href={demo ? "/comercial" : "/minha-seguranca"}>{demo ? "Voltar ao Comercial" : "Segurança da minha conta"}</a>
+@@ -29,0 +35 @@ export default function DashboardShell({
++          {demo && <div className="demo-banner" role="note"><strong>DEMONSTRAÇÃO · Dados simulados</strong><span>Personagens e conteúdos fictícios. Nenhuma leitura ou gravação clínica real.</span></div>}
+diff --git a/src/server/demo/commercial-access.service.ts b/src/server/demo/commercial-access.service.ts
+new file mode 100644
+index 0000000..9f41949
+--- /dev/null
++++ b/src/server/demo/commercial-access.service.ts
+@@ -0,0 +1,49 @@
++import { Prisma } from "@prisma/client";
++import { db } from "@/server/db/client";
++import { validateSession } from "@/server/auth/session.service";
++import { InvalidSessionError, ExpiredSessionError, RevokedSessionError, InactiveSessionUserError } from "@/server/auth/session.errors";
++import { getSystemRoleDefinition } from "@/server/iam/system-role-catalog";
++export class CommercialAccessError extends Error {
++    constructor(readonly status: 401 | 403) { super(status === 401 ? "UNAUTHENTICATED" : "ACCESS_DENIED"); }
++}
++export class CommercialMfaRequiredError extends CommercialAccessError {
++    constructor() { super(403); }
++}
++/** Authentication/IAM metadata only. Never joins memberships or organizations.
++ * No implicit preview for administrators: an explicit global COMMERCIAL grant is
++ * required. Existing optional MFA stays optional until a factor is active.
++ */
++export async function requireCommercialSession(token: string | null | undefined) {
++    if (!token)
++        throw new CommercialAccessError(401);
++    try {
++        return await db.$transaction(async (tx) => {
++            const actor = await validateSession(token, { updateLastSeen: false, client: tx });
++            const grants = await tx.roleAssignment.findMany({
++                where: { userId: actor.user.id, organizationId: null, role: { system: true, key: { in: ["COMMERCIAL", "PAP_ADMIN", "PAP_MANAGER"] } } },
++                select: { role: { select: { key: true, permissions: { select: { permission: { select: { key: true } } } } } } },
++            });
++            const definition = getSystemRoleDefinition("COMMERCIAL");
++            if (!definition?.permissions.includes("commercial.read") || !grants.some(g => g.role.key === "COMMERCIAL" && g.role.permissions.some(p => p.permission.key === "commercial.read")))
++                throw new CommercialAccessError(403);
++            const factor = await tx.mfaFactor.findFirst({
++                where: { userId: actor.user.id, type: "TOTP", status: "ACTIVE" },
++                orderBy: { enabledAt: "desc" }, select: { enabledAt: true },
++            });
++            const administrative = grants.some(g => ["PAP_ADMIN", "PAP_MANAGER"].includes(g.role.key));
++            if (factor || administrative) {
++                const verified = actor.session.mfaVerifiedAt;
++                if (!verified || !factor?.enabledAt || verified < factor.enabledAt ||
++                    verified < actor.session.createdAt || verified > new Date())
++                    throw new CommercialMfaRequiredError();
++            }
++            return { userId: actor.user.id, displayName: actor.user.displayName };
++        }, { isolationLevel: Prisma.TransactionIsolationLevel.RepeatableRead });
++    }
++    catch (error) {
++        if (error instanceof InvalidSessionError || error instanceof ExpiredSessionError ||
++            error instanceof RevokedSessionError || error instanceof InactiveSessionUserError)
++            throw new CommercialAccessError(401);
++        throw error;
++    }
++}
+diff --git a/src/server/demo/commercial-page-session.ts b/src/server/demo/commercial-page-session.ts
+new file mode 100644
+index 0000000..1ac25f9
+--- /dev/null
++++ b/src/server/demo/commercial-page-session.ts
+@@ -0,0 +1,19 @@
++import { cookies } from "next/headers";
++import { redirect } from "next/navigation";
++import { SESSION_COOKIE_NAME } from "@/server/security/constants";
++import { CommercialAccessError, CommercialMfaRequiredError, requireCommercialSession } from "./commercial-access.service";
++export async function requireCommercialPageSession({ allowMfaNotice = false }: { allowMfaNotice?: boolean } = {}) {
++    const token = (await cookies()).get(SESSION_COOKIE_NAME)?.value;
++    try {
++        return { ...await requireCommercialSession(token), mfaRequired: false as const };
++    }
++    catch (error) {
++        if (error instanceof CommercialMfaRequiredError) {
++            if (allowMfaNotice) return { mfaRequired: true as const };
++            redirect("/comercial");
++        }
++        if (error instanceof CommercialAccessError)
++            redirect("/login");
++        throw error;
++    }
++}
+diff --git a/src/server/demo/fixtures.ts b/src/server/demo/fixtures.ts
+new file mode 100644
+index 0000000..a65ea64
+--- /dev/null
++++ b/src/server/demo/fixtures.ts
+@@ -0,0 +1,46 @@
++import type { DemoContent, DemoSection } from "@/lib/demo/types";
++/** Deliberately independent of every database, clinical service and integration.
++ * Only fictional identifiers; each call returns a fresh, unshared object graph.
++ */
++const patients = [
++    { id: "demo-patient-aurora", name: "Paciente Demo Aurora", age: 29, gestationalAge: "18 semanas", note: "Personagem fictícia para apresentar o acompanhamento." },
++    { id: "demo-patient-iara", name: "Paciente Demo Iara", age: 34, gestationalAge: "32 semanas", note: "Personagem fictícia para apresentar uma linha de cuidado." },
++    { id: "demo-patient-vitoria", name: "Paciente Demo Vitória", age: 25, gestationalAge: "28 semanas", note: "Personagem fictícia para apresentar um retorno." },
++];
++const content: Omit<DemoContent, "section"> = {
++    mode: "DEMO", scope: "SYNTHETIC", patients,
++    dashboard: {
++        kpis: [
++            { id: "demo-kpi-patients", title: "Pacientes simuladas", value: "3", description: "Personagens deste cenário", icon: "users", tone: "pink" },
++            { id: "demo-kpi-visits", title: "Atendimentos fictícios", value: "3", description: "Exemplos, sem validade clínica", icon: "clipboard", tone: "blue" },
++            { id: "demo-kpi-courses", title: "Cursos demonstrativos", value: "3", description: "Conteúdos inteiramente fictícios", icon: "calendar", tone: "emerald" },
++            { id: "demo-kpi-tools", title: "Ferramentas de exemplo", value: "2", description: "Simulações sem integração", icon: "activity", tone: "violet" },
++        ],
++        monthly: ["Mai", "Jun", "Jul", "Ago", "Set", "Out"].map((month, i) => ({ month, total: i < 3 ? 0 : 1 })),
++        risks: [{ label: "Baixo risco (demo)", value: 1, type: "low" }, { label: "Atenção (demo)", value: 1, type: "attention" }, { label: "Urgência (demo)", value: 1, type: "urgent" }],
++        recent: patients.map((p, i) => ({ id: `demo-visit-${i + 1}`, patient: p.name, initials: ["DA", "DI", "DV"][i], gestationalAge: p.gestationalAge, professional: "Equipe demonstrativa", time: ["09:00", "10:00", "11:00"][i], score: [0, 2, 5][i], classification: (["BAIXO_RISCO", "ATENCAO", "URGENCIA"] as const)[i] })),
++        deliveries: patients.map((p, i) => ({ id: `demo-delivery-${i + 1}`, patient: p.name, gestationalAge: p.gestationalAge, dpp: ["20/03/2027", "12/12/2026", "09/01/2027"][i], remainingDays: [147, 49, 77][i] })),
++    },
++    courses: [
++        { id: "demo-course-care", title: "Jornada do cuidado · Demo", description: "Uma apresentação fictícia de como organizar uma trilha de aprendizagem em equipe.", category: "PRE_NATAL", durationMinutes: 35, lessons: 4, progress: 0, status: "NOT_STARTED" },
++        { id: "demo-course-safety", title: "Cultura de segurança · Demo", description: "Conteúdo ilustrativo, sem certificação, matrícula ou recomendação clínica.", category: "SEGURANCA", durationMinutes: 25, lessons: 4, progress: 0, status: "NOT_STARTED" },
++        { id: "demo-course-team", title: "Protocolos em equipe · Demo", description: "Um exemplo de capacitação para explorar a experiência do PAP Saúde.", category: "PROTOCOLOS", durationMinutes: 40, lessons: 4, progress: 0, status: "NOT_STARTED" },
++    ],
++    protocols: [
++        { id: "demo-protocol-care", title: "Fluxo de acolhimento · Demo", description: "Exemplo visual de um protocolo, sem instruções clínicas ou validade assistencial.", uploadDate: "2026-10-01", fileName: "exemplo-demonstrativo" },
++        { id: "demo-protocol-return", title: "Organização do retorno · Demo", description: "Documento fictício para demonstrar a consulta de conteúdos da equipe.", uploadDate: "2026-10-01", fileName: "exemplo-demonstrativo" },
++    ],
++    tools: [
++        { id: "demo-tool-calendar", title: "Calendário gestacional · Demo", description: "Conheça a apresentação de um cálculo por meio de um cenário fixo e fictício.", status: "AVAILABLE", icon: "calendar-days" },
++        { id: "demo-tool-summary", title: "Resumo do acompanhamento · Demo", description: "Explore um resumo ilustrativo. Nenhuma consulta ou integração é executada.", status: "AVAILABLE", icon: "heart-pulse" },
++    ],
++};
++export function demoContent(section: DemoSection): DemoContent {
++    return structuredClone({ ...content, section });
++}
++export function simulateDemoRegistration(patientId: unknown, kind: unknown) {
++    const patient = patients.find(p => p.id === patientId);
++    if (!patient || typeof kind !== "string" || !["PRE_NATAL", "RETORNO"].includes(kind))
++        throw new Error("INVALID_DEMO_INPUT");
++    return { mode: "DEMO", simulated: true, persisted: false, patient: patient.name, message: "Simulação concluída. Nenhum registro foi salvo." };
++}
+diff --git a/src/app/api/vitrine/[section]/route.ts b/src/app/api/vitrine/[section]/route.ts
+new file mode 100644
+index 0000000..fafeed5
+--- /dev/null
++++ b/src/app/api/vitrine/[section]/route.ts
+@@ -0,0 +1,61 @@
++import { NextRequest } from "next/server";
++import { readSessionToken, assertTrustedRequestOrigin } from "@/server/auth/http-auth";
++import { readSecurityBody } from "@/server/auth/security-http";
++import { CommercialAccessError, requireCommercialSession } from "@/server/demo/commercial-access.service";
++import { demoContent, simulateDemoRegistration } from "@/server/demo/fixtures";
++import { isDemoSection } from "@/lib/demo/types";
++import { InvalidRequestOriginError } from "@/server/auth/http-auth.errors";
++import { AccountSecurityError } from "@/server/auth/account-security.service";
++export const runtime = "nodejs";
++export const dynamic = "force-dynamic";
++type Context = {
++    params: Promise<{
++        section: string;
++    }>;
++};
++function json(value: unknown, status = 200) {
++    return Response.json(value, { status, headers: { "Cache-Control": "no-store, max-age=0", "Referrer-Policy": "no-referrer", Vary: "Cookie", "X-Content-Type-Options": "nosniff" } });
++}
++async function context(request: NextRequest, route: Context) {
++    await requireCommercialSession(readSessionToken(request));
++    if (request.nextUrl.search || request.headers.has("x-organization-id") || request.headers.has("x-tenant-id"))
++        throw new Error("INVALID_DEMO_CONTEXT");
++    const { section } = await route.params;
++    if (!isDemoSection(section))
++        throw new Error("INVALID_DEMO_CONTEXT");
++    return section;
++}
++function failure(error: unknown) {
++    if (error instanceof CommercialAccessError)
++        return json({ error: error.message }, error.status);
++    if (error instanceof InvalidRequestOriginError)
++        return json({ error: "REQUEST_REJECTED" }, 403);
++    if (error instanceof AccountSecurityError || (error instanceof Error && error.message.startsWith("INVALID_DEMO_")))
++        return json({ error: "INVALID_DEMO_REQUEST" }, 400);
++    // No database/provider exceptions or request contents reach logs or responses.
++    console.error("DEMO_REQUEST_FAILED");
++    return json({ error: "REQUEST_FAILED" }, 500);
++}
++export async function GET(request: NextRequest, route: Context) {
++    try {
++        return json(demoContent(await context(request, route)));
++    }
++    catch (error) {
++        return failure(error);
++    }
++}
++export async function POST(request: NextRequest, route: Context) {
++    try {
++        assertTrustedRequestOrigin(request);
++        const section = await context(request, route);
++        if (section !== "registro")
++            return json({ error: "METHOD_NOT_ALLOWED" }, 405);
++        const body = await readSecurityBody(request);
++        if (Object.keys(body).some(k => !["patientId", "kind"].includes(k)))
++            throw new Error("INVALID_DEMO_INPUT");
++        return json(simulateDemoRegistration(body.patientId, body.kind));
++    }
++    catch (error) {
++        return failure(error);
++    }
++}
+diff --git a/src/app/(showcase)/vitrine/layout.tsx b/src/app/(showcase)/vitrine/layout.tsx
+new file mode 100644
+index 0000000..f4011dd
+--- /dev/null
++++ b/src/app/(showcase)/vitrine/layout.tsx
+@@ -0,0 +1,12 @@
++import type { Metadata } from "next";
++import { requireCommercialPageSession } from "@/server/demo/commercial-page-session";
++import DashboardShell from "@/components/layout/DashboardShell";
++import "@/components/demo/workspace.css";
++export const metadata: Metadata = { title: "Vitrine demonstrativa · PAP Saúde", robots: { index: false, follow: false }, referrer: "no-referrer" };
++export const dynamic = "force-dynamic";
++export default async function Layout({ children }: {
++    children: React.ReactNode;
++}) {
++    await requireCommercialPageSession();
++    return <DashboardShell demo>{children}</DashboardShell>;
++}
+diff --git a/src/app/(showcase)/vitrine/page.tsx b/src/app/(showcase)/vitrine/page.tsx
+new file mode 100644
+index 0000000..a2e6637
+--- /dev/null
++++ b/src/app/(showcase)/vitrine/page.tsx
+@@ -0,0 +1,13 @@
++import { notFound } from "next/navigation";
++import { requireCommercialPageSession } from "@/server/demo/commercial-page-session";
++import { demoContent } from "@/server/demo/fixtures";
++import ClinicalDashboardView from "@/components/dashboard/ClinicalDashboardView";
++export const dynamic = "force-dynamic";
++export default async function Page({ searchParams }: {
++    searchParams: Promise<Record<string, string | string[] | undefined>>;
++}) {
++    await requireCommercialPageSession();
++    if (Object.keys(await searchParams).length)
++        notFound();
++    return <ClinicalDashboardView data={demoContent("dashboard").dashboard} demo/>;
++}
+diff --git a/src/app/(showcase)/vitrine/[section]/page.tsx b/src/app/(showcase)/vitrine/[section]/page.tsx
+new file mode 100644
+index 0000000..9ecc6a1
+--- /dev/null
++++ b/src/app/(showcase)/vitrine/[section]/page.tsx
+@@ -0,0 +1,20 @@
++import { notFound } from "next/navigation";
++import { requireCommercialPageSession } from "@/server/demo/commercial-page-session";
++import { demoContent } from "@/server/demo/fixtures";
++import { isDemoSection } from "@/lib/demo/types";
++import DemoExplorer from "@/components/demo/DemoExplorer";
++import ClinicalDashboardView from "@/components/dashboard/ClinicalDashboardView";
++export const dynamic = "force-dynamic";
++export default async function Page({ params, searchParams }: {
++    params: Promise<{
++        section: string;
++    }>;
++    searchParams: Promise<Record<string, string | string[] | undefined>>;
++}) {
++    await requireCommercialPageSession();
++    const { section } = await params;
++    if (!isDemoSection(section) || Object.keys(await searchParams).length)
++        notFound();
++    const data = demoContent(section);
++    return section === "dashboard" ? <ClinicalDashboardView data={data.dashboard} demo/> : <DemoExplorer key={section} data={data}/>;
++}
+diff --git a/src/components/commercial/CommercialWorkspace.tsx b/src/components/commercial/CommercialWorkspace.tsx
+new file mode 100644
+index 0000000..2d5f2fc
+--- /dev/null
++++ b/src/components/commercial/CommercialWorkspace.tsx
+@@ -0,0 +1,82 @@
++"use client";
++import Link from "next/link";
++import Image from "next/image";
++import { useRouter } from "next/navigation";
++import { useRef, useState } from "react";
++import { ArrowRight, BookOpen, CircleCheck, Compass, HeartPulse, LogOut, Menu, ShieldCheck, Sparkles } from "lucide-react";
++import NotificationInbox from "@/components/access/NotificationInbox";
++import ThemeToggle from "@/components/demo/ThemeToggle";
++function useCommercialLogout() {
++    const router = useRouter();
++    const [error, setError] = useState("");
++    async function logout() {
++        setError("");
++        try {
++            const r = await fetch("/api/auth/logout", { method: "POST" });
++            if (!r.ok) throw new Error();
++            router.replace("/login"); router.refresh();
++        } catch { setError("Não foi possível sair. Tente novamente."); }
++    }
++    return { logout, error };
++}
++export function CommercialMfaNotice() {
++    const { logout, error } = useCommercialLogout();
++    return <div className="pap-commercial commercial-verification"><main className="workspace-card">
++        <ShieldCheck size={36} aria-hidden="true" />
++        <p className="workspace-eyebrow">Segurança do acesso</p>
++        <h1>Confirme a segurança desta sessão</h1>
++        <p>Para continuar, encerre esta sessão e entre novamente com sua senha e o código do autenticador já cadastrado. Você também pode usar um código de recuperação disponível.</p>
++        <p>Se ainda precisa configurar o autenticador, consulte a segurança da sua conta.</p>
++        <button type="button" className="workspace-primary" onClick={() => void logout()}>Encerrar esta sessão e validar MFA</button>
++        <Link href="/minha-seguranca" prefetch={false} className="workspace-secondary">Segurança da minha conta</Link>
++        {error && <p role="alert">{error}</p>}
++    </main></div>;
++}
++export default function CommercialWorkspace({ name }: {
++    name: string;
++}) {
++    const { logout, error } = useCommercialLogout();
++    const [open, setOpen] = useState(false);
++    const toggle = useRef<HTMLButtonElement>(null);
++    return <div className="pap-commercial" onKeyDown={e => { if (e.key === "Escape" && open) {
++        setOpen(false);
++        toggle.current?.focus();
++    } }}>
++    <a className="workspace-skip" href="#commercial-main">Ir para o conteúdo</a>
++    <aside className="commercial-sidebar">
++      <div className="commercial-brand"><HeartPulse aria-hidden="true"/><span>PAP Saúde<small>Espaço comercial</small></span>
++        <button ref={toggle} type="button" className="commercial-menu" aria-label="Alternar navegação comercial" aria-expanded={open} aria-controls="commercial-navigation" onClick={() => setOpen(!open)}><Menu aria-hidden="true"/></button>
++      </div>
++      <nav id="commercial-navigation" aria-label="Navegação comercial" data-open={open}>
++        <Link href="/comercial" aria-current="page" onClick={() => setOpen(false)}><Compass size={19} aria-hidden="true"/>Visão geral</Link>
++        <Link href="/vitrine" prefetch={false}><Sparkles size={19} aria-hidden="true"/>Vitrine demonstrativa</Link>
++        <a href="#roteiro" onClick={() => setOpen(false)}><BookOpen size={19} aria-hidden="true"/>Roteiro de apresentação</a>
++        <a href="#notificacoes" onClick={() => setOpen(false)}><CircleCheck size={19} aria-hidden="true"/>Minhas notificações</a>
++        <Link href="/minha-seguranca" prefetch={false}><ShieldCheck size={19} aria-hidden="true"/>Minha segurança</Link>
++        <button type="button" onClick={() => void logout()}><LogOut size={19} aria-hidden="true"/>Sair da conta</button>
++      </nav>
++      <p className="commercial-sidebar-note">Conexões que aproximam<br /><strong>tecnologia e cuidado.</strong></p>
++    </aside>
++    <div className="commercial-content">
++      <header className="commercial-topbar"><span>Painel Comercial</span><div><span className="commercial-badge">Perfil autorizado</span><ThemeToggle /></div></header>
++      <main id="commercial-main" tabIndex={-1}>
++        <div className="commercial-welcome"><p className="workspace-eyebrow">Seu espaço de trabalho</p><h1>Olá, <span data-sensitive>{name}</span>.</h1><p>Uma boa conversa começa com uma experiência de cuidado.</p></div>
++        <section className="commercial-hero" aria-labelledby="commercial-hero-title">
++          <div><span className="commercial-badge">Conheça a experiência PAP Saúde</span><h2 id="commercial-hero-title">Mostre o cuidado.<br />Inspire novas conexões.</h2><p>Apresente a jornada clínica em um ambiente demonstrativo, com personagens e conteúdos fictícios. Explore com tranquilidade, sem acessar dados reais.</p>
++            <Link className="workspace-primary" href="/vitrine" prefetch={false}>Abrir vitrine demonstrativa <ArrowRight size={19} aria-hidden="true"/></Link>
++            <small>Demonstração independente do atendimento real.</small>
++          </div>
++          <Image src="/illustrations/pap-login-care.svg" width={560} height={430} alt="" priority className="commercial-art"/>
++        </section>
++        <div className="commercial-grid">
++          <section className="workspace-card" id="roteiro"><p className="workspace-eyebrow">Uma apresentação com propósito</p><h2>Um roteiro para sua próxima conversa</h2><ol className="commercial-steps"><li><strong>Conheça a jornada</strong><span>Abra o dashboard rosa e os exemplos de acompanhamento.</span></li><li><strong>Explore na prática</strong><span>Visite pacientes, registros, protocolos, ferramentas e cursos simulados.</span></li><li><strong>Converse sobre possibilidades</strong><span>Apresente a experiência sem inserir informações pessoais ou clínicas reais.</span></li></ol></section>
++          <section className="workspace-card"><span className="commercial-badge">Em construção</span><h2>Leads e propostas</h2><p>O cadastro e a gestão comercial ainda não estão disponíveis nesta versão. Nenhum indicador ou oportunidade fictícia é apresentado como resultado real.</p><div className="commercial-empty"><BookOpen size={30} aria-hidden="true"/><p>Seu trabalho começa pela apresentação da plataforma.</p></div></section>
++        </div>
++        <section className="workspace-card commercial-account"><ShieldCheck size={28} aria-hidden="true"/><div><h2>Seu perfil comercial está autorizado</h2><p>Este acesso permite apresentar a vitrine. Não libera prontuários, dados privados de UBS ou funções administrativas.</p><Link href="/minha-seguranca" prefetch={false}>Gerenciar a segurança da minha conta</Link></div></section>
++        <section className="workspace-card" id="notificacoes"><NotificationInbox /></section>
++        {error && <p role="alert">{error}</p>}
++        <footer className="workspace-footer">PAP Saúde · Cuidado conectado, com responsabilidade.</footer>
++      </main>
++    </div>
++  </div>;
++}

@@ -10,6 +10,7 @@ import type {
 
 type Props = {
   data: DashboardAttendance[]
+  demo?: boolean
 }
 
 function classificationStyle(
@@ -42,6 +43,7 @@ function classificationStyle(
 
 export default function RecentAttendances({
   data,
+  demo = false,
 }: Props) {
   return (
     <section className="rounded-xl border border-slate-200 bg-white shadow-sm">
@@ -57,7 +59,8 @@ export default function RecentAttendances({
         </div>
 
         <Link
-          href="/atendimentos"
+          href={demo ? "/vitrine/atendimentos" : "/atendimentos"}
+          prefetch={demo ? false : undefined}
           className="inline-flex items-center gap-1 text-xs font-semibold text-pink-600 hover:text-pink-700"
         >
           Ver todos

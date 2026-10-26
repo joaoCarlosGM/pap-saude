@@ -87,7 +87,9 @@
     "test:mission04:c": "bash scripts/test-mission04-c.sh",
     "test:mission04:c:browser": "bash scripts/test-mission04-c.sh --browser",
     "test:mission04:d": "bash scripts/test-mission04-d.sh",
-    "test:mission04:d:browser": "bash scripts/test-mission04-d.sh --browser"
+    "test:mission04:d:browser": "bash scripts/test-mission04-d.sh --browser",
+    "test:mission04:e": "bash scripts/test-mission04-e.sh",
+    "test:mission04:e:browser": "bash scripts/test-mission04-e.sh --browser"
   },
   "dependencies": {
     "@capacitor/android": "^8.5.2",

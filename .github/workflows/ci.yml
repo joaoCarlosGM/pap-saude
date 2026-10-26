@@ -122,6 +122,8 @@ jobs:
 
       - name: Mission 04 transactional email, reset and authenticated delivery webhooks
         run: npm run test:mission04:d:browser
+      - name: Slice E commercial and isolated showcase
+        run: npm run test:mission04:e:browser
 
       - name: PostgreSQL runtime and migrator separation
         run: bash scripts/test-f04-role-separation.sh
@@ -154,6 +156,9 @@ jobs:
 
       - name: Verify runtime web image with least-privilege database role
         run: bash scripts/test-f04-web-image.sh pap-saude:ci pap-saude-migrator:ci
+
+      - name: Verify production showcase fail-closed boundary
+        run: bash scripts/test-mission04-e-image.sh pap-saude:ci
 
       - name: Scan runtime and migrator images for HIGH and CRITICAL vulnerabilities
         run: bash scripts/security/scan-f04-images.sh pap-saude:ci pap-saude-migrator:ci

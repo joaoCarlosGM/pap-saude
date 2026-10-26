@@ -1,0 +1,738 @@
+{
+  "date": "2026-10-24T11:01:53.568508+00:00",
+  "base": "5171026699d375c6eae5bd645f1fca6433eaf3f6",
+  "checks": [
+    {
+      "name": "npm-ci",
+      "command": "npm ci",
+      "result": "PASS",
+      "exitCode": 0,
+      "seconds": 32.26,
+      "startedAt": "2026-10-24T06:11:20.400985+00:00",
+      "nodeTests": [],
+      "nodePass": [],
+      "browserPass": 0,
+      "nodeTestsTotal": 0,
+      "nodePassTotal": 0
+    },
+    {
+      "name": "prisma-generate",
+      "command": "npx prisma generate",
+      "result": "PASS",
+      "exitCode": 0,
+      "seconds": 3.22,
+      "startedAt": "2026-10-24T06:12:57.271960+00:00",
+      "nodeTests": [],
+      "nodePass": [],
+      "browserPass": 0,
+      "nodeTestsTotal": 0,
+      "nodePassTotal": 0
+    },
+    {
+      "name": "b",
+      "command": "npm run test:mission04:b:browser",
+      "result": "PASS",
+      "exitCode": 0,
+      "seconds": 62.99,
+      "startedAt": "2026-10-24T06:13:00.492495+00:00",
+      "nodeTests": [
+        28
+      ],
+      "nodePass": [
+        28
+      ],
+      "browserPass": 5,
+      "nodeTestsTotal": 28,
+      "nodePassTotal": 28
+    },
+    {
+      "name": "d",
+      "command": "npm run test:mission04:d:browser",
+      "result": "PASS",
+      "exitCode": 0,
+      "seconds": 57.59,
+      "startedAt": "2026-10-24T06:16:03.232604+00:00",
+      "nodeTests": [
+        32
+      ],
+      "nodePass": [
+        32
+      ],
+      "browserPass": 8,
+      "nodeTestsTotal": 32,
+      "nodePassTotal": 32
+    },
+    {
+      "name": "first-access",
+      "command": "npm run test:first-access:browser",
+      "result": "PASS",
+      "exitCode": 0,
+      "seconds": 93.21,
+      "startedAt": "2026-10-24T06:17:00.822127+00:00",
+      "nodeTests": [
+        21
+      ],
+      "nodePass": [
+        21
+      ],
+      "browserPass": 15,
+      "nodeTestsTotal": 21,
+      "nodePassTotal": 21
+    },
+    {
+      "name": "auth",
+      "command": "npm run test:auth",
+      "result": "PASS",
+      "exitCode": 0,
+      "seconds": 241.73,
+      "startedAt": "2026-10-24T06:18:34.031075+00:00",
+      "nodeTests": [
+        9,
+        9,
+        11,
+        11,
+        7,
+        7,
+        11,
+        9,
+        2,
+        9,
+        9,
+        10,
+        13,
+        13,
+        11,
+        11,
+        12,
+        13,
+        13,
+        12
+      ],
+      "nodePass": [
+        9,
+        9,
+        11,
+        11,
+        7,
+        7,
+        11,
+        9,
+        2,
+        9,
+        9,
+        10,
+        13,
+        13,
+        11,
+        11,
+        12,
+        13,
+        13,
+        12
+      ],
+      "browserPass": 0,
+      "nodeTestsTotal": 202,
+      "nodePassTotal": 202
+    },
+    {
+      "name": "beta",
+      "command": "npm run test:admin:beta1",
+      "result": "PASS",
+      "exitCode": 0,
+      "seconds": 26.63,
+      "startedAt": "2026-10-24T06:22:35.764110+00:00",
+      "nodeTests": [
+        1,
+        18,
+        8,
+        2
+      ],
+      "nodePass": [
+        1,
+        18,
+        8,
+        2
+      ],
+      "browserPass": 0,
+      "nodeTestsTotal": 29,
+      "nodePassTotal": 29
+    },
+    {
+      "name": "f04",
+      "command": "npm run audit:f04:operations",
+      "result": "PASS",
+      "exitCode": 0,
+      "seconds": 166.81,
+      "startedAt": "2026-10-24T06:23:02.395898+00:00",
+      "nodeTests": [
+        8,
+        10,
+        10,
+        10,
+        6,
+        26,
+        8
+      ],
+      "nodePass": [
+        8,
+        10,
+        10,
+        10,
+        6,
+        26,
+        8
+      ],
+      "browserPass": 0,
+      "nodeTestsTotal": 78,
+      "nodePassTotal": 78
+    },
+    {
+      "name": "f03",
+      "command": "npm run test:f03:smart:force",
+      "result": "PASS",
+      "exitCode": 0,
+      "seconds": 281.03,
+      "startedAt": "2026-10-24T06:25:49.212188+00:00",
+      "nodeTests": [
+        7,
+        10,
+        4,
+        9,
+        7,
+        6,
+        13,
+        6,
+        5,
+        6,
+        5,
+        6,
+        11,
+        4,
+        1,
+        10,
+        7,
+        4,
+        7,
+        7,
+        4,
+        8,
+        8,
+        5,
+        10,
+        6,
+        4,
+        4,
+        4,
+        7,
+        8
+      ],
+      "nodePass": [
+        7,
+        10,
+        4,
+        9,
+        7,
+        6,
+        13,
+        6,
+        5,
+        6,
+        5,
+        6,
+        11,
+        4,
+        1,
+        10,
+        7,
+        4,
+        7,
+        7,
+        4,
+        8,
+        8,
+        5,
+        10,
+        6,
+        4,
+        4,
+        4,
+        7,
+        8
+      ],
+      "browserPass": 0,
+      "nodeTestsTotal": 203,
+      "nodePassTotal": 203
+    },
+    {
+      "name": "c",
+      "command": "npm run test:mission04:c:browser",
+      "result": "PASS",
+      "exitCode": 0,
+      "seconds": 120.17,
+      "startedAt": "2026-10-24T06:36:50.503825+00:00",
+      "nodeTests": [
+        41
+      ],
+      "nodePass": [
+        41
+      ],
+      "browserPass": 8,
+      "nodeTestsTotal": 41,
+      "nodePassTotal": 41
+    },
+    {
+      "name": "ci-guard",
+      "command": "node scripts/security/guard-f04-ci-workflow.mjs",
+      "result": "PASS",
+      "exitCode": 0,
+      "seconds": 0.11,
+      "startedAt": "2026-10-24T10:46:19.650329+00:00",
+      "nodeTests": [],
+      "nodePass": [],
+      "browserPass": 0,
+      "nodeTestsTotal": 0,
+      "nodePassTotal": 0
+    },
+    {
+      "name": "role-separation",
+      "command": "bash scripts/test-f04-role-separation.sh",
+      "result": "PASS",
+      "exitCode": 0,
+      "seconds": 12.68,
+      "startedAt": "2026-10-24T10:46:19.756522+00:00",
+      "nodeTests": [],
+      "nodePass": [],
+      "browserPass": 0,
+      "nodeTestsTotal": 0,
+      "nodePassTotal": 0
+    },
+    {
+      "name": "restore-npm-ci",
+      "command": "npm ci",
+      "result": "PASS",
+      "exitCode": 0,
+      "seconds": 18.75,
+      "startedAt": "2026-10-24T10:57:21.194810+00:00",
+      "nodeTests": [],
+      "nodePass": [],
+      "browserPass": 0,
+      "nodeTestsTotal": 0,
+      "nodePassTotal": 0
+    },
+    {
+      "name": "restore-prisma-generate",
+      "command": "npx prisma generate",
+      "result": "PASS",
+      "exitCode": 0,
+      "seconds": 3.53,
+      "startedAt": "2026-10-24T10:57:39.949377+00:00",
+      "nodeTests": [],
+      "nodePass": [],
+      "browserPass": 0,
+      "nodeTestsTotal": 0,
+      "nodePassTotal": 0
+    },
+    {
+      "name": "restore-typegen",
+      "command": "npx next typegen",
+      "result": "PASS",
+      "exitCode": 0,
+      "seconds": 0.71,
+      "startedAt": "2026-10-24T10:57:43.484463+00:00",
+      "nodeTests": [],
+      "nodePass": [],
+      "browserPass": 0,
+      "nodeTestsTotal": 0,
+      "nodePassTotal": 0
+    },
+    {
+      "name": "e-final",
+      "command": "npm run test:mission04:e:browser",
+      "result": "PASS",
+      "exitCode": 0,
+      "seconds": 122.6,
+      "startedAt": "2026-10-24T10:57:44.198832+00:00",
+      "nodeTests": [
+        8
+      ],
+      "nodePass": [
+        8
+      ],
+      "browserPass": 6,
+      "nodeTestsTotal": 8,
+      "nodePassTotal": 8
+    },
+    {
+      "name": "typescript",
+      "command": "npx tsc --noEmit",
+      "result": "PASS",
+      "exitCode": 0,
+      "seconds": 23.5,
+      "startedAt": "2026-10-24T10:59:46.796688+00:00",
+      "nodeTests": [],
+      "nodePass": [],
+      "browserPass": 0,
+      "nodeTestsTotal": 0,
+      "nodePassTotal": 0
+    },
+    {
+      "name": "lint",
+      "command": "npm run lint",
+      "result": "PASS",
+      "exitCode": 0,
+      "seconds": 22.69,
+      "startedAt": "2026-10-24T11:00:10.295576+00:00",
+      "nodeTests": [],
+      "nodePass": [],
+      "browserPass": 0,
+      "nodeTestsTotal": 0,
+      "nodePassTotal": 0
+    },
+    {
+      "name": "build",
+      "command": "npm run build",
+      "result": "PASS",
+      "exitCode": 0,
+      "seconds": 28.87,
+      "startedAt": "2026-10-24T11:00:32.987656+00:00",
+      "nodeTests": [],
+      "nodePass": [],
+      "browserPass": 0,
+      "nodeTestsTotal": 0,
+      "nodePassTotal": 0
+    },
+    {
+      "name": "diff-check",
+      "command": "git diff --check",
+      "result": "PASS",
+      "exitCode": 0,
+      "seconds": 0.02,
+      "startedAt": "2026-10-24T11:01:01.860980+00:00",
+      "nodeTests": [],
+      "nodePass": [],
+      "browserPass": 0,
+      "nodeTestsTotal": 0,
+      "nodePassTotal": 0
+    }
+  ],
+  "images": [
+    {
+      "name": "web-build",
+      "command": [
+        "docker",
+        "build",
+        "--add-host",
+        "proxy:172.31.3.45",
+        "--build-arg",
+        "HTTP_PROXY",
+        "--build-arg",
+        "HTTPS_PROXY",
+        "--build-arg",
+        "NO_PROXY",
+        "--secret",
+        "id=build_ca,src=/usr/local/share/ca-certificates/environment-proxy-ca.crt",
+        "--target",
+        "runner",
+        "-t",
+        "pap-saude:m04-e",
+        "."
+      ],
+      "exitCode": 0,
+      "result": "PASS",
+      "seconds": 125.05
+    },
+    {
+      "name": "migrator-build",
+      "command": [
+        "docker",
+        "build",
+        "--add-host",
+        "proxy:172.31.3.45",
+        "--build-arg",
+        "HTTP_PROXY",
+        "--build-arg",
+        "HTTPS_PROXY",
+        "--build-arg",
+        "NO_PROXY",
+        "--secret",
+        "id=build_ca,src=/usr/local/share/ca-certificates/environment-proxy-ca.crt",
+        "--target",
+        "migrator",
+        "-t",
+        "pap-saude-migrator:m04-e",
+        "."
+      ],
+      "exitCode": 0,
+      "result": "PASS",
+      "seconds": 0.46
+    },
+    {
+      "name": "migrator-functional",
+      "command": [
+        "bash",
+        "scripts/test-f04-migrator-image.sh",
+        "pap-saude-migrator:m04-e"
+      ],
+      "exitCode": 0,
+      "result": "PASS",
+      "seconds": 171.14
+    },
+    {
+      "name": "web-functional",
+      "command": [
+        "bash",
+        "scripts/test-f04-web-image.sh",
+        "pap-saude:m04-e",
+        "pap-saude-migrator:m04-e"
+      ],
+      "exitCode": 0,
+      "result": "PASS",
+      "seconds": 27.13
+    },
+    {
+      "name": "showcase-production",
+      "command": [
+        "bash",
+        "scripts/test-mission04-e-image.sh",
+        "pap-saude:m04-e"
+      ],
+      "exitCode": 0,
+      "result": "PASS",
+      "seconds": 4.91
+    },
+    {
+      "name": "trivy",
+      "command": [
+        "bash",
+        "scripts/security/scan-f04-images.sh",
+        "pap-saude:m04-e",
+        "pap-saude-migrator:m04-e"
+      ],
+      "exitCode": 0,
+      "result": "PASS",
+      "seconds": 66.78
+    }
+  ],
+  "external": [
+    {
+      "name": "CI remoto E (aguarda aprova\u00e7\u00e3o para versionamento)",
+      "result": "NOT RUN"
+    },
+    {
+      "name": "homologa\u00e7\u00e3o do operador (laborat\u00f3rio intocado)",
+      "result": "NOT RUN"
+    },
+    {
+      "name": "Safari/Firefox/leitor de tela humano",
+      "result": "NOT RUN"
+    },
+    {
+      "name": "envio real de e-mail/DNS/VPS/deploy (n\u00e3o autorizados)",
+      "result": "NOT RUN"
+    },
+    {
+      "name": "Estado oficial de CVE-2026-107891: consulta p\u00fablica indispon\u00edvel",
+      "result": "NOT RUN",
+      "evidence": "scanner-cve-reference.json"
+    }
+  ],
+  "trivyWarning": {
+    "id": "CVE-2026-107891",
+    "message": "Scanner could not obtain vulnerability details; may be rejected, but public state was not verified",
+    "suppressed": false,
+    "exitCodeBothImages": 0
+  },
+  "operationalImageSourceUnchanged": true,
+  "newFilesWhitespace": {
+    "result": "PASS",
+    "command": "git diff --no-index --check -- /dev/null <each new text path>",
+    "note": "no-index exit 1 denotes different files when diagnostics are empty; whitespace errors would produce diagnostics/exit 3",
+    "files": [
+      {
+        "path": "docs/codex/AUDITORIA-MISSAO-04-E.md",
+        "result": "PASS",
+        "gitExitCode": 1
+      },
+      {
+        "path": "docs/codex/RELATORIO-MISSAO-04-SLICE-E.md",
+        "result": "PASS",
+        "gitExitCode": 1
+      },
+      {
+        "path": "docs/evidence/missao-04-e/authorization.diff",
+        "result": "PASS",
+        "gitExitCode": 1
+      },
+      {
+        "path": "docs/evidence/missao-04-e/d-ci.json",
+        "result": "PASS",
+        "gitExitCode": 1
+      },
+      {
+        "path": "docs/evidence/missao-04-e/dependency-audits.json",
+        "result": "PASS",
+        "gitExitCode": 1
+      },
+      {
+        "path": "docs/evidence/missao-04-e/execution.log",
+        "result": "PASS",
+        "gitExitCode": 1
+      },
+      {
+        "path": "docs/evidence/missao-04-e/images.json",
+        "result": "PASS",
+        "gitExitCode": 1
+      },
+      {
+        "path": "docs/evidence/missao-04-e/initial-findings.json",
+        "result": "PASS",
+        "gitExitCode": 1
+      },
+      {
+        "path": "docs/evidence/missao-04-e/performance.json",
+        "result": "PASS",
+        "gitExitCode": 1
+      },
+      {
+        "path": "docs/evidence/missao-04-e/review.json",
+        "result": "PASS",
+        "gitExitCode": 1
+      },
+      {
+        "path": "docs/evidence/missao-04-e/rsc-boundaries.json",
+        "result": "PASS",
+        "gitExitCode": 1
+      },
+      {
+        "path": "docs/evidence/missao-04-e/scanner-cve-reference.json",
+        "result": "PASS",
+        "gitExitCode": 1
+      },
+      {
+        "path": "docs/evidence/missao-04-e/security-review.json",
+        "result": "PASS",
+        "gitExitCode": 1
+      },
+      {
+        "path": "docs/evidence/missao-04-e/validation.json",
+        "result": "PASS",
+        "gitExitCode": 1
+      },
+      {
+        "path": "public/illustrations/pap-demo-learning.svg",
+        "result": "PASS",
+        "gitExitCode": 1
+      },
+      {
+        "path": "scripts/test-mission04-e-image.sh",
+        "result": "PASS",
+        "gitExitCode": 1
+      },
+      {
+        "path": "scripts/test-mission04-e.sh",
+        "result": "PASS",
+        "gitExitCode": 1
+      },
+      {
+        "path": "src/app/(showcase)/vitrine/[section]/page.tsx",
+        "result": "PASS",
+        "gitExitCode": 1
+      },
+      {
+        "path": "src/app/(showcase)/vitrine/layout.tsx",
+        "result": "PASS",
+        "gitExitCode": 1
+      },
+      {
+        "path": "src/app/(showcase)/vitrine/page.tsx",
+        "result": "PASS",
+        "gitExitCode": 1
+      },
+      {
+        "path": "src/app/api/vitrine/[section]/route.ts",
+        "result": "PASS",
+        "gitExitCode": 1
+      },
+      {
+        "path": "src/components/commercial/CommercialWorkspace.tsx",
+        "result": "PASS",
+        "gitExitCode": 1
+      },
+      {
+        "path": "src/components/dashboard/ClinicalDashboardView.tsx",
+        "result": "PASS",
+        "gitExitCode": 1
+      },
+      {
+        "path": "src/components/dashboard/CourseRecommendations.module.css",
+        "result": "PASS",
+        "gitExitCode": 1
+      },
+      {
+        "path": "src/components/dashboard/CourseRecommendations.tsx",
+        "result": "PASS",
+        "gitExitCode": 1
+      },
+      {
+        "path": "src/components/demo/DemoDialog.tsx",
+        "result": "PASS",
+        "gitExitCode": 1
+      },
+      {
+        "path": "src/components/demo/DemoExplorer.tsx",
+        "result": "PASS",
+        "gitExitCode": 1
+      },
+      {
+        "path": "src/components/demo/ThemeToggle.tsx",
+        "result": "PASS",
+        "gitExitCode": 1
+      },
+      {
+        "path": "src/components/demo/workspace.css",
+        "result": "PASS",
+        "gitExitCode": 1
+      },
+      {
+        "path": "src/lib/demo/types.ts",
+        "result": "PASS",
+        "gitExitCode": 1
+      },
+      {
+        "path": "src/server/demo/commercial-access.service.ts",
+        "result": "PASS",
+        "gitExitCode": 1
+      },
+      {
+        "path": "src/server/demo/commercial-page-session.ts",
+        "result": "PASS",
+        "gitExitCode": 1
+      },
+      {
+        "path": "src/server/demo/fixtures.ts",
+        "result": "PASS",
+        "gitExitCode": 1
+      },
+      {
+        "path": "tests/mission04-e/access.test.ts",
+        "result": "PASS",
+        "gitExitCode": 1
+      },
+      {
+        "path": "tests/mission04-e/boundaries.spec.ts",
+        "result": "PASS",
+        "gitExitCode": 1
+      },
+      {
+        "path": "tests/mission04-e/journey.spec.ts",
+        "result": "PASS",
+        "gitExitCode": 1
+      },
+      {
+        "path": "tests/mission04-e/playwright.config.ts",
+        "result": "PASS",
+        "gitExitCode": 1
+      }
+    ]
+  }
+}

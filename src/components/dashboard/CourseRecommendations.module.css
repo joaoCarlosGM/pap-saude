@@ -1,0 +1,6 @@
+.banner { display:flex;align-items:center;justify-content:space-between;gap:24px;border:1px solid var(--ws-line,#e3d5dd);border-radius:22px;padding:28px;margin-top:28px;background:var(--ws-card,#fff);color:var(--ws-ink,#183239) }
+.eyebrow { font-size:12px;line-height:1.6;text-transform:uppercase;letter-spacing:.12em;font-weight:750;color:var(--ws-accent,#064f50);margin:0 0 10px }
+.banner h2 { font-size:23px;font-weight:750;line-height:1.35;margin:10px 0 }
+.description { color:var(--ws-muted,#4d626b);font-size:14px;line-height:1.8;max-width:650px;margin-bottom:18px }
+.banner>img { max-width:220px;width:28%;height:auto }
+@media(max-width:767px) { .banner { padding:22px;gap:8px }.banner>img { display:none } }
