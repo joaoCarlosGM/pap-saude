@@ -1,0 +1,89 @@
+{
+  "environment": "single local Next dev run; diagnostic, not production p75 or SLA",
+  "rows": [
+    {
+      "path": "/comercial",
+      "width": 1440,
+      "colorScheme": "light",
+      "lcpMs": 652,
+      "cls": 0
+    },
+    {
+      "path": "/vitrine",
+      "width": 1440,
+      "colorScheme": "light",
+      "lcpMs": 1456,
+      "cls": 0
+    },
+    {
+      "path": "/comercial",
+      "width": 1440,
+      "colorScheme": "dark",
+      "lcpMs": 300,
+      "cls": 0
+    },
+    {
+      "path": "/vitrine",
+      "width": 1440,
+      "colorScheme": "dark",
+      "lcpMs": 1612,
+      "cls": 0
+    },
+    {
+      "path": "/comercial",
+      "width": 768,
+      "colorScheme": "light",
+      "lcpMs": 212,
+      "cls": 0
+    },
+    {
+      "path": "/vitrine",
+      "width": 768,
+      "colorScheme": "light",
+      "lcpMs": 344,
+      "cls": 0
+    },
+    {
+      "path": "/comercial",
+      "width": 768,
+      "colorScheme": "dark",
+      "lcpMs": 180,
+      "cls": 0
+    },
+    {
+      "path": "/vitrine",
+      "width": 768,
+      "colorScheme": "dark",
+      "lcpMs": 624,
+      "cls": 0
+    },
+    {
+      "path": "/comercial",
+      "width": 320,
+      "colorScheme": "light",
+      "lcpMs": 204,
+      "cls": 0
+    },
+    {
+      "path": "/vitrine",
+      "width": 320,
+      "colorScheme": "light",
+      "lcpMs": 352,
+      "cls": 0
+    },
+    {
+      "path": "/comercial",
+      "width": 320,
+      "colorScheme": "dark",
+      "lcpMs": 196,
+      "cls": 0
+    },
+    {
+      "path": "/vitrine",
+      "width": 320,
+      "colorScheme": "dark",
+      "lcpMs": 332,
+      "cls": 0
+    }
+  ]
+}

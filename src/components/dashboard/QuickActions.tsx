@@ -38,7 +38,7 @@ const actions = [
   },
 ]
 
-export default function QuickActions() {
+export default function QuickActions({ demo = false }: { demo?: boolean }) {
   return (
     <section>
       <div className="mb-3">
@@ -54,7 +54,8 @@ export default function QuickActions() {
           return (
             <Link
               key={action.href}
-              href={action.href}
+              href={demo ? `/vitrine${action.href}` : action.href}
+              prefetch={demo ? false : undefined}
               className="group rounded-xl border border-slate-200 bg-white p-4 shadow-sm transition hover:border-pink-200 hover:shadow-md"
             >
               <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-pink-50 text-pink-500 transition group-hover:bg-pink-100">

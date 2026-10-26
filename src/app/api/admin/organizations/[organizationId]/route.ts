@@ -1,3 +1,4 @@
+import { readSessionToken } from "@/server/auth/http-auth"
 import {
   NextRequest,
   NextResponse,
@@ -70,9 +71,13 @@ export async function PATCH(
         await mutateAdminOrganization(
           session.user.id,
           organizationId,
-          {
+          operation === "ARCHIVE" ? {
             operation,
-          },
+            confirmationName: typeof body.confirmationName === "string" ? body.confirmationName : undefined,
+            password: typeof body.password === "string" ? body.password : undefined,
+            code: typeof body.code === "string" ? body.code : undefined,
+          } : { operation },
+          readSessionToken(request) ?? undefined,
         )
 
       return NextResponse.json(
@@ -166,6 +171,7 @@ export async function PATCH(
               "address",
             ),
         },
+        readSessionToken(request) ?? undefined,
       )
 
     return NextResponse.json(

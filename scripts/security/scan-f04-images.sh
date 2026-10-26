@@ -24,6 +24,7 @@ for IMAGE in "$@"; do
  docker create --name "$CONTAINER" "${EXTRA[@]}" --entrypoint trivy \
   -e HTTP_PROXY -e HTTPS_PROXY "${CERT[@]}" -v "$CACHE:/root/.cache/trivy" "$SCANNER" \
   image --input /tmp/image.tar --db-repository ghcr.io/aquasecurity/trivy-db:2 \
+  --java-db-repository ghcr.io/aquasecurity/trivy-java-db:1 \
   --scanners vuln --severity HIGH,CRITICAL --exit-code 1 --no-progress >/dev/null
  docker cp "$DIR/image.tar" "$CONTAINER:/tmp/image.tar"
  if [[ -n "${NODE_EXTRA_CA_CERTS:-}" ]]; then docker cp "$NODE_EXTRA_CA_CERTS" "$CONTAINER:/tmp/ca.crt"; fi

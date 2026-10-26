@@ -9,6 +9,7 @@ import type {
   EffectiveAccessRole,
 } from "@/lib/admin/types"
 
+import type { Prisma } from "@prisma/client"
 import { db } from "@/server/db/client"
 
 import {
@@ -29,7 +30,6 @@ const ADMIN_ENTRY_PERMISSIONS =
     PERMISSIONS.USER_SECURITY_MANAGE,
     PERMISSIONS.MFA_RESET,
     PERMISSIONS.AUDIT_READ,
-    PERMISSIONS.COMMERCIAL_READ,
     PERMISSIONS.ORGANIZATION_ANALYTICS_READ,
     PERMISSIONS.FEEDBACK_READ,
     PERMISSIONS.RNDS_INTEGRATION_READ,
@@ -60,9 +60,10 @@ function compareOrganizations(
 
 export async function getEffectiveAccessProfile(
   userId: string,
+  client: Prisma.TransactionClient = db,
 ): Promise<EffectiveAccessProfile | null> {
   const user =
-    await db.user.findUnique({
+    await client.user.findUnique({
       where: {
         id: userId,
       },

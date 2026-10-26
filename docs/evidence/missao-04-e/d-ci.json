@@ -1,0 +1,404 @@
+{
+  "conclusion": "success",
+  "headSha": "5171026699d375c6eae5bd645f1fca6433eaf3f6",
+  "jobs": [
+    {
+      "completedAt": "2026-10-24T05:49:36Z",
+      "conclusion": "success",
+      "databaseId": 120790498462,
+      "name": "F04 security, migrations and production builds",
+      "startedAt": "2026-10-24T05:28:54Z",
+      "status": "completed",
+      "steps": [
+        {
+          "conclusion": "success",
+          "name": "Set up job",
+          "number": 1,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Checkout repository",
+          "number": 2,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Setup Node.js",
+          "number": 3,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Install dependencies",
+          "number": 4,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Audit production dependencies",
+          "number": 5,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Audit isolated migrator dependencies",
+          "number": 6,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Start disposable PostgreSQL",
+          "number": 7,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Verify PostgreSQL final-server readiness",
+          "number": 8,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Legacy data preflight and synthetic backup restore",
+          "number": 9,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Generate Prisma client",
+          "number": 10,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Generate Next.js route types",
+          "number": 11,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Verify Prisma fails closed without DATABASE_URL",
+          "number": 12,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Verify CI release guard",
+          "number": 13,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "F04 integrated security and clinical regression gate",
+          "number": 14,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "PAP Admin Beta 1 institutional and adversarial journey",
+          "number": 15,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Isolated local development workflow",
+          "number": 16,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Install isolated browser for first-access regression",
+          "number": 17,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "First-access MFA API, QR, browser and accessibility regression",
+          "number": 18,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Mission 04 delegated IAM, legacy upgrade and clinical page boundaries",
+          "number": 19,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Mission 04 global invitations, authorization queue and notifications",
+          "number": 20,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Mission 04 transactional email, reset and authenticated delivery webhooks",
+          "number": 21,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "PostgreSQL runtime and migrator separation",
+          "number": 22,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Full F03 regression without cached results",
+          "number": 23,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Authentication and MFA regression",
+          "number": 24,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Build Docker web image",
+          "number": 25,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Build Docker migrator image",
+          "number": 26,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Verify isolated migrator image",
+          "number": 27,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Verify migrator migrations and idempotency",
+          "number": 28,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Verify runtime web image with least-privilege database role",
+          "number": 29,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Scan runtime and migrator images for HIGH and CRITICAL vulnerabilities",
+          "number": 30,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Stop disposable PostgreSQL",
+          "number": 31,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Post Setup Node.js",
+          "number": 61,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Post Checkout repository",
+          "number": 62,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Complete job",
+          "number": 63,
+          "status": "completed"
+        }
+      ],
+      "url": "https://github.com/joaoCarlosGM/pap-saude/actions/runs/40066409046/job/120790498462"
+    },
+    {
+      "completedAt": "2026-10-24T05:49:36Z",
+      "conclusion": "skipped",
+      "databaseId": 120794519006,
+      "name": "Deploy to VPS",
+      "startedAt": "2026-10-24T05:49:36Z",
+      "status": "completed",
+      "steps": [],
+      "url": "https://github.com/joaoCarlosGM/pap-saude/actions/runs/40066409046/job/120794519006"
+    },
+    {
+      "completedAt": "2026-10-24T05:49:36Z",
+      "conclusion": "skipped",
+      "databaseId": 120794519036,
+      "name": "Publish Docker images",
+      "startedAt": "2026-10-24T05:49:36Z",
+      "status": "completed",
+      "steps": [],
+      "url": "https://github.com/joaoCarlosGM/pap-saude/actions/runs/40066409046/job/120794519036"
+    }
+  ],
+  "status": "completed",
+  "url": "https://github.com/joaoCarlosGM/pap-saude/actions/runs/40066409046",
+  "dVersioning": {
+    "mainCommit": "ed8b1ca0cdd9fd69882b29d081575ba2bb3ee3d7",
+    "mainPaths": [
+      ".github/workflows/ci.yml",
+      "docs/codex/AUDITORIA-MISSAO-04-D.md",
+      "docs/codex/HOMOLOGACAO-EMAILS-SLICE-D.md",
+      "docs/codex/RELATORIO-MISSAO-04-SLICE-D.md",
+      "docs/evidence/missao-04-d/cleanup.json",
+      "docs/evidence/missao-04-d/dependency-audits.json",
+      "docs/evidence/missao-04-d/email-1440-dark.png",
+      "docs/evidence/missao-04-d/email-1440-light.png",
+      "docs/evidence/missao-04-d/email-320-dark.png",
+      "docs/evidence/missao-04-d/email-320-light.png",
+      "docs/evidence/missao-04-d/email-768-dark.png",
+      "docs/evidence/missao-04-d/email-768-light.png",
+      "docs/evidence/missao-04-d/execution.log",
+      "docs/evidence/missao-04-d/images.json",
+      "docs/evidence/missao-04-d/legacy-upgrade.json",
+      "docs/evidence/missao-04-d/pr5.json",
+      "docs/evidence/missao-04-d/regressao-c-fila-1440-light.png",
+      "docs/evidence/missao-04-d/regressao-c-fila-320-dark.png",
+      "docs/evidence/missao-04-d/regressao-c-fila-768-light.png",
+      "docs/evidence/missao-04-d/regressao-c-performance.json",
+      "docs/evidence/missao-04-d/revisao-final/cleanup.json",
+      "docs/evidence/missao-04-d/revisao-final/dependency-audits.json",
+      "docs/evidence/missao-04-d/revisao-final/diff.txt",
+      "docs/evidence/missao-04-d/revisao-final/execution.log",
+      "docs/evidence/missao-04-d/revisao-final/images.json",
+      "docs/evidence/missao-04-d/revisao-final/integrity.json",
+      "docs/evidence/missao-04-d/revisao-final/pr5.json",
+      "docs/evidence/missao-04-d/revisao-final/validation.json",
+      "docs/evidence/missao-04-d/validation.json",
+      "package.json",
+      "prisma/migrations/20261023060000_mission04_transactional_email/migration.sql",
+      "prisma/schema.prisma",
+      "scripts/security/scan-f04-images.sh",
+      "scripts/test-mission04-d.sh",
+      "src/app/(auth)/convite/page.tsx",
+      "src/app/api/auth/password/forgot/route.ts",
+      "src/app/api/email/resend/webhook/route.ts",
+      "src/app/api/invitations/accept/route.ts",
+      "src/components/admin/AccessInvitationsClient.tsx",
+      "src/components/admin/BetaDashboardClient.tsx",
+      "src/components/admin/BetaInvitationsClient.tsx",
+      "src/components/auth/InvitationActivation.tsx",
+      "src/components/auth/PasswordRecoveryClient.tsx",
+      "src/lib/email-delivery.ts",
+      "src/server/access-invitations/access-invitation.service.ts",
+      "src/server/admin/admin-organizations.service.ts",
+      "src/server/auth/password-recovery-http.ts",
+      "src/server/auth/password-security.service.ts",
+      "src/server/email/delivery-projection.ts",
+      "src/server/email/email-config.ts",
+      "src/server/email/email.service.ts",
+      "src/server/email/local-demo-mail.ts",
+      "src/server/email/organization-activation-email.service.ts",
+      "src/server/email/password-reset-email.service.ts",
+      "src/server/email/resend-webhook.service.ts",
+      "src/server/email/templates.ts",
+      "src/server/invitations/invitation.service.ts",
+      "tests/admin-beta/email.test.ts",
+      "tests/admin-beta/journey.integration.test.ts",
+      "tests/auth/f04-access-trust.integration.test.ts",
+      "tests/mission04-c/legacy-upgrade.test.ts",
+      "tests/mission04-d/email.test.ts",
+      "tests/mission04-d/legacy-upgrade.test.ts",
+      "tests/mission04-d/mail.spec.ts",
+      "tests/mission04-d/playwright.config.ts",
+      "tests/mission04-d/recovery.spec.ts"
+    ],
+    "finalCommit": "5171026699d375c6eae5bd645f1fca6433eaf3f6",
+    "workflow": "https://github.com/joaoCarlosGM/pap-saude/actions/runs/40066409046",
+    "followupCommits": [
+      {
+        "sha": "8b8b28f4bd35a56b3e018e690aaa701293ccf3de",
+        "fix": "smoke assertion migrated to fragment invitation link"
+      },
+      {
+        "sha": "ebe1536b9b5a0cdc4e070153aea987d8891b50ac",
+        "fix": "sanitized WCAG diagnostics"
+      },
+      {
+        "sha": "5171026699d375c6eae5bd645f1fca6433eaf3f6",
+        "fix": "header theme contrast during transition and hover; no relaxed accessibility rule"
+      }
+    ],
+    "pr": {
+      "baseRefName": "develop",
+      "headRefName": "feature/ux-iam-convites-vitrine-email",
+      "headRefOid": "5171026699d375c6eae5bd645f1fca6433eaf3f6",
+      "isDraft": true,
+      "state": "OPEN",
+      "url": "https://github.com/joaoCarlosGM/pap-saude/pull/5"
+    }
+  },
+  "dependencyAuditEvidence": [
+    {
+      "step": "Audit production dependencies",
+      "evidence": "2026-10-24T05:29:28.9191552Z fast-uri  3.0.0 - 3.1.8"
+    },
+    {
+      "step": "Audit production dependencies",
+      "evidence": "2026-10-24T05:29:28.9192089Z Severity: moderate"
+    },
+    {
+      "step": "Audit production dependencies",
+      "evidence": "2026-10-24T05:29:28.9193406Z fast-uri vulnerable to URI scheme spoofing via percent-encoded scheme decoding - https://github.com/advisories/GHSA-w74x-v6f9-j3xg"
+    },
+    {
+      "step": "Audit production dependencies",
+      "evidence": "2026-10-24T05:29:28.9195780Z fast-uri vulnerable to improper path equivalence in relative reference normalization - https://github.com/advisories/GHSA-xhq7-xmqj-769h"
+    },
+    {
+      "step": "Audit production dependencies",
+      "evidence": "2026-10-24T05:29:28.9197784Z fast-uri vulnerable to host confusion via unchecked WHATWG host canonicalization - https://github.com/advisories/GHSA-wjr9-j795-jxcr"
+    },
+    {
+      "step": "Audit production dependencies",
+      "evidence": "2026-10-24T05:29:28.9199997Z fast-uri vulnerable to scheme injection via an unescaped first-segment colon in suffix references - https://github.com/advisories/GHSA-333x-w4r6-6crp"
+    },
+    {
+      "step": "Audit production dependencies",
+      "evidence": "2026-10-24T05:29:28.9201907Z node_modules/fast-uri"
+    },
+    {
+      "step": "Audit production dependencies",
+      "evidence": "2026-10-24T05:29:28.9202401Z 1 moderate severity vulnerability"
+    },
+    {
+      "step": "Audit isolated migrator dependencies",
+      "evidence": "2026-10-24T05:29:29.3486156Z fast-uri  3.0.0 - 3.1.8"
+    },
+    {
+      "step": "Audit isolated migrator dependencies",
+      "evidence": "2026-10-24T05:29:29.3486645Z Severity: moderate"
+    },
+    {
+      "step": "Audit isolated migrator dependencies",
+      "evidence": "2026-10-24T05:29:29.3487913Z fast-uri vulnerable to URI scheme spoofing via percent-encoded scheme decoding - https://github.com/advisories/GHSA-w74x-v6f9-j3xg"
+    },
+    {
+      "step": "Audit isolated migrator dependencies",
+      "evidence": "2026-10-24T05:29:29.3489925Z fast-uri vulnerable to improper path equivalence in relative reference normalization - https://github.com/advisories/GHSA-xhq7-xmqj-769h"
+    },
+    {
+      "step": "Audit isolated migrator dependencies",
+      "evidence": "2026-10-24T05:29:29.3492041Z fast-uri vulnerable to host confusion via unchecked WHATWG host canonicalization - https://github.com/advisories/GHSA-wjr9-j795-jxcr"
+    },
+    {
+      "step": "Audit isolated migrator dependencies",
+      "evidence": "2026-10-24T05:29:29.3494137Z fast-uri vulnerable to scheme injection via an unescaped first-segment colon in suffix references - https://github.com/advisories/GHSA-333x-w4r6-6crp"
+    },
+    {
+      "step": "Audit isolated migrator dependencies",
+      "evidence": "2026-10-24T05:29:29.3497147Z node_modules/fast-uri"
+    },
+    {
+      "step": "Audit isolated migrator dependencies",
+      "evidence": "2026-10-24T05:29:29.3497931Z 1 moderate severity vulnerability"
+    }
+  ]
+}

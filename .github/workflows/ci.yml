@@ -51,7 +51,7 @@ jobs:
 
       - name: Start disposable PostgreSQL
         run: |
-          docker run --rm -d --name pap_saude_db --label pap.disposable=f0410 \
+          docker run --rm -d --name pap_saude_db --label pap.disposable=f0410 --label pap.mission=ci-f0410 \
             -e POSTGRES_USER=pap_user \
             -e POSTGRES_PASSWORD=pap_password \
             -e POSTGRES_DB=pap_saude \
@@ -105,6 +105,26 @@ jobs:
       - name: PAP Admin Beta 1 institutional and adversarial journey
         run: npm run test:admin:beta1
 
+      - name: Isolated local development workflow
+        run: npm run test:local-dev
+
+      - name: Install isolated browser for first-access regression
+        run: npx playwright install --with-deps chromium
+
+      - name: First-access MFA API, QR, browser and accessibility regression
+        run: npm run test:first-access:browser
+
+      - name: Mission 04 delegated IAM, legacy upgrade and clinical page boundaries
+        run: npm run test:mission04:b:browser
+
+      - name: Mission 04 global invitations, authorization queue and notifications
+        run: npm run test:mission04:c:browser
+
+      - name: Mission 04 transactional email, reset and authenticated delivery webhooks
+        run: npm run test:mission04:d:browser
+      - name: Slice E commercial and isolated showcase
+        run: npm run test:mission04:e:browser
+
       - name: PostgreSQL runtime and migrator separation
         run: bash scripts/test-f04-role-separation.sh
 
@@ -136,6 +156,9 @@ jobs:
 
       - name: Verify runtime web image with least-privilege database role
         run: bash scripts/test-f04-web-image.sh pap-saude:ci pap-saude-migrator:ci
+
+      - name: Verify production showcase fail-closed boundary
+        run: bash scripts/test-mission04-e-image.sh pap-saude:ci
 
       - name: Scan runtime and migrator images for HIGH and CRITICAL vulnerabilities
         run: bash scripts/security/scan-f04-images.sh pap-saude:ci pap-saude-migrator:ci

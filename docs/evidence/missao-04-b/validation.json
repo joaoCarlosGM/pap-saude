@@ -1,0 +1,218 @@
+{
+  "date": "2026-10-22",
+  "timezone": "America/Fortaleza",
+  "branch": "feature/ux-iam-convites-vitrine-email",
+  "baseCommit": "efdbbad14f508139b12abd1a4867c4f97ad1488e",
+  "sliceBCommitted": false,
+  "stagedFiles": 0,
+  "pr": {
+    "url": "https://github.com/joaoCarlosGM/pap-saude/pull/5",
+    "draft": true
+  },
+  "a11RemoteCi": {
+    "url": "https://github.com/joaoCarlosGM/pap-saude/actions/runs/39713829048",
+    "status": "SUCCESS"
+  },
+  "sliceBRemoteCi": {
+    "status": "NOT RUN",
+    "reason": "Operator approval required before commit/push"
+  },
+  "checks": {
+    "sliceB": {
+      "status": "PASS",
+      "items": 28,
+      "logSha256": "8529b780c52281436ce8ee84476d83f3de653bfd2470588d46e9802fde95b056",
+      "browserTests": 5
+    },
+    "f04": {
+      "status": "PASS",
+      "items": 78,
+      "logSha256": "a3a1781ce7f28cf639e0a60e866c0e26e47d6ae27851131eab753f614a1ae532"
+    },
+    "beta1": {
+      "status": "PASS",
+      "items": 29,
+      "logSha256": "ac74b43f0ea502b92ba947b37c4e127d9a79b021296ec09cee4925114afb32bc"
+    },
+    "authMfa": {
+      "status": "PASS",
+      "items": 202,
+      "logSha256": "a556b968d0b4fb20b8d03473a82dbea85dc47a5743495ba9016c0e6f7ba42905"
+    },
+    "local": {
+      "status": "PASS",
+      "items": 5,
+      "logSha256": "f5682a0ef4ad6460bfa6e891ac7038af4b8149d35ddb8f82ed635ad17f409160",
+      "execution": "Historical, not rerun after the directory projection fix; no local:init/admin/reset in this stage"
+    },
+    "firstAccess": {
+      "status": "PASS",
+      "items": 21,
+      "logSha256": "70d16e1a2b951739667ba7701799a3b8283868189a3fd0077d54759b6537d233",
+      "browserTests": 15
+    },
+    "f03": {
+      "status": "PASS",
+      "modules": {
+        "clinical-api-ui": "PASS",
+        "patient": "PASS",
+        "pregnancy": "PASS",
+        "encounter": "PASS",
+        "vital-signs": "PASS",
+        "obstetric-data": "PASS",
+        "allergies-flags": "PASS",
+        "meows": "PASS",
+        "clinical-governance": "PASS"
+      },
+      "cached": false
+    },
+    "images": {
+      "status": "PASS",
+      "runtime": "non-root, least-privilege DB, denied login persisted",
+      "migrator": "legacy preflight, restore, idempotency, failure gate",
+      "high": 0,
+      "critical": 0,
+      "execution": "Rebuilt and tested after privacy fix"
+    },
+    "typescriptLintBuild": {
+      "status": "PASS",
+      "node": "22.23.3",
+      "logSha256": "a3a1781ce7f28cf639e0a60e866c0e26e47d6ae27851131eab753f614a1ae532",
+      "includedIn": "fresh audit:f04:operations final-review gate"
+    },
+    "ciGuard": {
+      "status": "PASS",
+      "items": 2
+    },
+    "managerOrganizationalPrivacy": {
+      "status": "PASS",
+      "reason": "Explicit directory select; private fields/counters absent for Manager; canary tested at PAP/municipality/UBS and API/HTML/RSC",
+      "nodeTests": 1,
+      "browserTests": 1,
+      "independentProbeTests": 1
+    },
+    "finalReviewGlobalDenials": {
+      "status": "PASS",
+      "tests": 1,
+      "endpoints": 8
+    }
+  },
+  "npmAudit": {
+    "production": {
+      "info": 0,
+      "low": 0,
+      "moderate": 0,
+      "high": 0,
+      "critical": 0,
+      "total": 0
+    },
+    "migrator": {
+      "info": 0,
+      "low": 0,
+      "moderate": 0,
+      "high": 0,
+      "critical": 0,
+      "total": 0
+    },
+    "all": {
+      "info": 0,
+      "low": 0,
+      "moderate": 0,
+      "high": 9,
+      "critical": 0,
+      "total": 9
+    }
+  },
+  "dependencyChanges": false,
+  "images": [
+    {
+      "tag": "pap-saude:m04-b-audit",
+      "id": "sha256:59f447ad15a863a813beb4282091f21da512c2edeb6f548e937caeb15ef90b2f",
+      "user": "nextjs"
+    },
+    {
+      "tag": "pap-saude-migrator:m04-b-audit",
+      "id": "sha256:a67cfb42a3a3a0be42440e29baee4942e2216ab306effbaf242d6dac3fcb4adc",
+      "user": "node"
+    }
+  ],
+  "sourceSha256": "07b23b3a930060524449adbf85ca1f800a9445deea57553d69715ef79084228f",
+  "sourceFileSha256": {
+    ".github/workflows/ci.yml": "2333104f91558051787237223a301a4f904dfe605292bff66a5156820d71f0b0",
+    "package.json": "4f4b82ebe3b9804036d7ac9cf031024aae275113ff4f34f3dd38510eb2398ce5",
+    "prisma/migrations/20261022040000_mission04_delegated_governance/migration.sql": "2e8ca2a183b1dfaf301cfa086e4a0cea063767bd4ff0171338d12f6904fe52b6",
+    "prisma/schema.prisma": "569dfd49221d25bfb7c947fc115d3477f8e4c4a50c2379fed900f5d5aa32cee5",
+    "scripts/test-mission04-b.sh": "120eccb29b2dc4cff04baf8d3473a5b301f1a93d0f181684efccf05f9962fbf0",
+    "src/app/(admin)/admin/layout.tsx": "cf16563515eb90d9eccded2bb4e32c91ed5783d1d46d77f8820ee06cb5b6ada9",
+    "src/app/(admin)/admin/organizacoes/page.tsx": "19cf64935d92a14b56a2c5a6831cbd4d062cc4e59cd3c428c0ab70b591a348f1",
+    "src/app/(admin)/admin/page.tsx": "799437e1508f731109e47dcbda4c6e32ac152eecf1d0d22a50e66d4efc96550b",
+    "src/app/(dashboard)/atendimentos/page.tsx": "94070aefb994fda83a2697319c8c39959253a46d6b8832daf800f2a855444d46",
+    "src/app/(dashboard)/casos/page.tsx": "7bf9a5eac7391726cf47abab29234d2f1ffd9dbfadc6fb6317b2559bbba41dc3",
+    "src/app/(dashboard)/chat/page.tsx": "25df9fc30b310b4d8c9aa87791a8b39f24691aaa531379b19ef61d5a0a083ca8",
+    "src/app/(dashboard)/configuracoes/page.tsx": "026273eebad91446ef5aa2f7e635ae369c46fd0660fc565391fbab29ae1610df",
+    "src/app/(dashboard)/cursos/page.tsx": "00682ad0236b412dec9c0a38ad8fb6c1555339354c49524d26435a237a6e7c1b",
+    "src/app/(dashboard)/dashboard/page.tsx": "a4b8dab5cb35d4db979ac74fedd567fa7eb0368774679038f85a05ce5d27b534",
+    "src/app/(dashboard)/ferramentas/page.tsx": "4a50d9c7caaf89ff1ce5b3c8a414d0fa79955e01abbf6fa89f3d3cf782726002",
+    "src/app/(dashboard)/layout.tsx": "0136856c819a1813c0011d86330486c503da9318ecba0833e7794e184b66c1fc",
+    "src/app/(dashboard)/pacientes/[id]/page.tsx": "690359feb0573f725bf394f9d27f0bd4187d5266fe2031ad9861a0669b7362b6",
+    "src/app/(dashboard)/pacientes/page.tsx": "dc5caeea2328796ffc607e6e9e8ac4250248a7da73c1939184fd447b609f18ce",
+    "src/app/(dashboard)/protocolos/page.tsx": "fa860e70b502174895d215f4545d42b82a1d5e9cbf675ef92b8e49517f4c08ac",
+    "src/app/(dashboard)/registro/page.tsx": "1c7020a4de794b8ffd1a807ec9266759b38266dc4a4e03c56bff8d34b57eb4ee",
+    "src/app/api/admin/beta/requests/route.ts": "f9f148f0b7252d27e9bab40fe6a19c3200893a0ad253419a6b9c721835e8419f",
+    "src/app/api/admin/organizations/[organizationId]/route.ts": "8c181d0f802d286f72e3dab1cafd946d685c7cbc51179ed60ece034e03020eb3",
+    "src/app/api/admin/organizations/route.ts": "40479de3f3629d1c2e2999fe820819d66afd6e36408f412cc24df4587263b267",
+    "src/app/api/admin/role-assignments/[assignmentId]/route.ts": "2ed55ce4564e843d29a1db32ebff6a3635f2a342b52f604606bf166006c2a2aa",
+    "src/app/api/admin/role-assignments/route.ts": "905538725ec035748afd4080e76ba06cda21b79d20339ac53897837a757f7abd",
+    "src/components/admin/AccessAdminClient.tsx": "d58a06a007eb1a63b33d247559295106ee2abaab658626eb8d171ebe757fe521",
+    "src/components/admin/AdminShell.tsx": "098b1c7eb6750610a0d964d00d74555fc070a5d5870b1e8aaff11cf54469fa86",
+    "src/components/admin/AdminSidebar.tsx": "bd51b142b4d6b6c8c9a91fca3958c2377698e34d621717e6a56eb161e5cba905",
+    "src/components/admin/AdminTopbar.tsx": "3d08a16577afcfd850a728716aa7ed1c9e93df31aad26db1b66f21a2390efefa",
+    "src/components/admin/BetaInvitationsClient.tsx": "db66f44d01c013ef8e6ded5ccc7d59ed438f078139c3b8a3cfc5b2b1889d36d6",
+    "src/components/admin/BetaRequestsClient.tsx": "ee03b7c5297659ebac5f725450c635399fcd88cc256a09be2a610ece131b4441",
+    "src/components/admin/BetaWidgets.tsx": "43dcfc702627fa39d8b54efc28fbefcd65e069650fbcdba7ac1beeee3bc2a6b8",
+    "src/components/admin/OrganizationsAdminClient.tsx": "30b23c107a165e6340eb1e42114cc86be98bb49cb789bfac44549fec9c2c7472",
+    "src/components/admin/admin-theme.css": "7da47af4b3809c3faaaca39803a85665c0439c15bd6d8b95862c5b9a926e23ce",
+    "src/components/security/FirstAccessWizard.tsx": "1f6d488017b21ab1057aa0369ed8eb75acc5d3245fafa1def96823f12b91b0d0",
+    "src/components/security/security-client.ts": "198ed31c8c7c961a18ac94a42eca6145df7028b47253b2d7996c1049ab6a00cb",
+    "src/lib/auth/access-destination.ts": "de9ae00fceaef35415396253dbeb8834dd0e407dfaf54943241d69de295f6896",
+    "src/server/admin-beta/invitations.service.ts": "eca44f876868d7f3e4ae08325b741dee23233247988147f9a219f4063fd85b87",
+    "src/server/admin-beta/policy.ts": "abd2b9bed0c1d05cf3b7b687b719e98a77eb81e6e19384a6c60e8a3052844a1b",
+    "src/server/admin-beta/requests.service.ts": "15c102add42b3c737a5683e75c6cd8c4ec924f565fa72803900c4b558b02e3c8",
+    "src/server/admin/admin-access.service.ts": "a3b5c1d7962aa4c47b20f130339f6003663c8df9879538ee0ac0c5c39ed89e92",
+    "src/server/admin/admin-http.ts": "1dbd5a5deaa6d369e16d1c47479bca7db653be15497e919d6b583ddc36124844",
+    "src/server/admin/admin-organizations.service.ts": "dc0c7af0260044b0ccd991f350a60a87e84d0499d699ed6cb0f566e5f875b36d",
+    "src/server/admin/admin-roles.service.ts": "a605177a8d5a19a19386d73bea3cea8a5df738ac85b5361c5a4902767969470a",
+    "src/server/admin/admin-session.service.ts": "0d65c8fecf00b7adc2b8f7662229a2b5d8f503d680951596aa648c3d1245e0cc",
+    "src/server/admin/institutional-invitation-policy.ts": "1dcb9f1acbe512380f904344811adfbe00781d8fb970d7ab7f1b087eb42543ee",
+    "src/server/audit/admin-audit-policy.ts": "c81f07bdb0fa3bb07a9cab1794d59ec1d0131ddd7cfeee93810479019221f19f",
+    "src/server/auth/session.service.ts": "446a944fd176cefb324b4161c726693de0bd8602cc5215f8f0ad423b0f5e5d4a",
+    "src/server/clinical/clinical-page-session.ts": "31ecc2b7e5b8b026fa7f4bf4c6ba88254058beaf481fa91fc9492c908e297e75",
+    "src/server/iam/authorization.service.ts": "85d3d07451dbd8f3dd4398dca3a34f4f67b69d813c5edc4ee2bc5e978d2862e8",
+    "src/server/iam/effective-access-profile.service.ts": "c234ae34794daf542fb0d04434cb58d6e0025933efee0de5de12188c27098004",
+    "src/server/iam/permissions.ts": "27471c83343db7e911da49a6c2ec918afee2643ae54bdf683610239d70d50d0f",
+    "src/server/iam/role-assignment.service.ts": "3af13b49034374f783d44876cebf2e55fbea9ae5e655929d3c188a9ef77a76eb",
+    "src/server/iam/system-role-catalog.ts": "ec33b60949105da3bcb767b496842afbea9daf3ed36c4fa774f921617cbb4aa5",
+    "src/server/invitations/invitation.service.ts": "67c42cae57a9b9461db27a350460a7efc0b69225ecfeb169c88d1b8cdde356c3",
+    "src/server/organizations/discovery.service.ts": "a98d79158356e8d5a2977cc3de7c71a24929836faf3f8ba980958447029b6d82",
+    "tests/admin-beta/journey.integration.test.ts": "a03529e735d6897aabbf3e10c5a85eb6149377b55bd20f4a0eb9734e7cc26306",
+    "tests/admin/admin-mfa.integration.test.ts": "708901c6b3fa5092f7d3f54cbfec961cde5828de018274e03922821b70fc99da",
+    "tests/admin/f04-audit-idor.integration.test.ts": "c248e0281df1cd2f67aa5c33a74f149cc5340f6b17ab39bd24131d229ec7d191",
+    "tests/admin/role-adversarial.integration.test.ts": "2b0a51b6c9ecd7d448cbc78cb96bb1b80d2063d4466e2337a62e25b3ece3e2fd",
+    "tests/admin/role-governance.integration.test.ts": "3ba0e7f67f187d40cb6c8d945ab4b4d9c79345175788d3c2e2aa1a40fed9fa58",
+    "tests/helpers/verified-admin-session.ts": "397caa04ce81e882f534d081d748d90086d53175642b79ee33fad73545dff8b3",
+    "tests/local/provision.integration.test.ts": "2de336802f3caa062e6684297d719238b7de86093c55523475ea03e2e13e6e54",
+    "tests/mission04-b/fixtures.ts": "b77f39c11244698d314af4b8b02dc0a9629bada760ff416fc52af6a755abef0f",
+    "tests/mission04-b/governance.spec.ts": "b479c16077a2b49f081bf6cca4a8babdb734642c1b14d252bdd87188b75a492e",
+    "tests/mission04-b/governance.test.ts": "11c3ad48318eb4c546b53833401efd62dd8cb2e0d2959721adc08a94ec406f42",
+    "tests/mission04-b/legacy-upgrade.test.ts": "17991c42a1a8b112b8c1670631f4920823635374b4ea54d8a869edd47be846f8",
+    "tests/mission04-b/playwright.config.ts": "3a146e1a5c213576acaa20c8e41d7e08fb5c8e798c40649eddbff378c0fdc28e"
+  },
+  "resolvedFailures": [
+    "Legacy local smoke called review without a verified session and assumed automatic activation; updated to real enrollment/MFA and explicit Admin activation.",
+    "Axe loading-text contrast and keyboard focus on the mobile table fixed and rechecked."
+  ],
+  "decision": "Privacy blocker fixed and locally tested; human audit approval and remote Slice B CI pending; NO-GO production",
+  "finalReviewEvidence": "final-review.json",
+  "previousSourceSha256": "61e3ed29c782324650e459bf74762d2d3a426d166edd96e94599d40a90e2265b",
+  "auditComplement": "../../codex/AUDITORIA-FINAL-MISSAO-04-B.md"
+}

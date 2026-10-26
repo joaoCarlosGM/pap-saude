@@ -108,7 +108,7 @@ export default function AdminShell({
     useState(false)
 
   return (
-    <div className="flex min-h-screen bg-[#09282c]">
+    <div className="pap-admin flex min-h-screen bg-[#09282c]">
       <AdminSidebar
         open={
           sidebarOpen

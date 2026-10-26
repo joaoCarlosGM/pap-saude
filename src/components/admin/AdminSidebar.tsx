@@ -63,7 +63,7 @@ const navigation: NavigationItem[] = [
     label: "Perfis e acessos",
     href: "/admin/acessos",
     icon: ShieldCheck,
-    requiredAny: ["role.read"],
+    requiredAny: ["role.read", "role.assign_commercial"],
   },
 
   {
@@ -118,13 +118,19 @@ const navigation: NavigationItem[] = [
     label: "Solicitações",
     href: "/admin/solicitacoes",
     icon: Building2,
-    requiredAny: ["organization.manage"],
+    requiredAny: ["organization.request.review"],
   },
   {
     label: "Convites",
     href: "/admin/convites",
     icon: Users,
-    requiredAny: ["user.invite"],
+    requiredAny: ["user.invite", "institution.invite"],
+  },
+  {
+    label: "Convites e autorizações",
+    href: "/admin/convites-globais",
+    icon: Users,
+    requiredAny: ["institution.invite"],
   },
 ];
 
@@ -172,10 +178,6 @@ export default function AdminSidebar({
   }, [open, onClose]);
   const visible = navigation.filter(
     (item) =>
-      (item.href !== "/admin/solicitacoes" ||
-        profile.roles.some(
-          (r) => r.key === "PAP_ADMIN" && r.scope === "GLOBAL",
-        )) &&
       (!item.requiredAny ||
         item.requiredAny.some((p) => profile.permissions.includes(p))) &&
       item.label
@@ -192,6 +194,7 @@ export default function AdminSidebar({
           "/admin/organizacoes",
           "/admin/usuarios",
           "/admin/convites",
+          "/admin/convites-globais",
           "/admin/acessos",
         ].includes(i.href),
       ),

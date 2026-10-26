@@ -4,12 +4,12 @@ import {
   useCallback,
   useEffect,
   useMemo,
+  useRef,
   useState,
 } from "react"
 
 import type {
   GuidedTourStep,
-  OnboardingProgress,
 } from "@/lib/onboarding/types"
 
 type TargetRect = {
@@ -34,6 +34,8 @@ export default function GuidedTourEngine({
   steps,
   permissions,
 }: GuidedTourEngineProps) {
+  const dialog = useRef<HTMLDivElement>(null);
+  const opener = useRef<HTMLElement | null>(null);
   const [
     open,
     setOpen,
@@ -126,107 +128,8 @@ export default function GuidedTourEngine({
       ],
     )
 
-  useEffect(
-    () => {
-      if (
-        visibleSteps.length ===
-        0
-      ) {
-        return
-      }
-
-      const controller =
-        new AbortController()
-
-      void fetch(
-        `/api/onboarding/${encodeURIComponent(tourKey)}?version=${tourVersion}`,
-        {
-          cache:
-            "no-store",
-
-          signal:
-            controller.signal,
-        },
-      )
-        .then(
-          async (
-            response,
-          ) => {
-            if (
-              !response.ok
-            ) {
-              throw new Error()
-            }
-
-            return response.json() as Promise<{
-              progress:
-                OnboardingProgress | null
-            }>
-          },
-        )
-        .then(
-          (
-            data,
-          ) => {
-            const progress =
-              data.progress
-
-            if (
-              !progress
-            ) {
-              setCurrentStep(
-                0,
-              )
-              setOpen(
-                true,
-              )
-
-              void persist(
-                "STARTED",
-                0,
-              )
-
-              return
-            }
-
-            if (
-              progress.status !==
-              "STARTED"
-            ) {
-              return
-            }
-
-            const resumedStep =
-              Math.min(
-                progress.currentStep,
-                visibleSteps.length -
-                  1,
-              )
-
-            setCurrentStep(
-              resumedStep,
-            )
-
-            setOpen(
-              true,
-            )
-          },
-        )
-        .catch(
-          () => {},
-        )
-
-      return () => {
-        controller.abort()
-      }
-    },
-    [
-      persist,
-      tourKey,
-      tourVersion,
-      visibleSteps.length,
-    ],
-  )
+  // Help is opened only by pap-tour:restart. Visiting or reloading Admin
+  // does not read/write tutorial progress or open an automatic overlay.
 
   useEffect(
     () => {
@@ -246,6 +149,7 @@ export default function GuidedTourEngine({
           return
         }
 
+        opener.current = document.activeElement instanceof HTMLElement ? document.activeElement : null;
         setCurrentStep(
           0,
         )
@@ -277,6 +181,27 @@ export default function GuidedTourEngine({
       tourKey,
     ],
   )
+
+  useEffect(() => {
+    if(!open) return;
+    dialog.current?.querySelector<HTMLButtonElement>("button")?.focus();
+    function keydown(event: KeyboardEvent) {
+      if(event.key === "Escape") {
+        event.preventDefault();
+        setOpen(false);
+        void persist("SKIPPED", currentStep);
+      }
+      if(event.key === "Tab") {
+        const controls = dialog.current?.querySelectorAll<HTMLButtonElement>("button:not(:disabled)");
+        if(!controls?.length) return;
+        const first=controls[0], last=controls[controls.length-1];
+        if(event.shiftKey && document.activeElement===first) { event.preventDefault(); last.focus(); }
+        else if(!event.shiftKey && document.activeElement===last) { event.preventDefault(); first.focus(); }
+      }
+    }
+    document.addEventListener("keydown",keydown);
+    return () => { document.removeEventListener("keydown",keydown); opener.current?.focus(); };
+  }, [open, currentStep, persist]);
 
   useEffect(
     () => {
@@ -320,6 +245,7 @@ export default function GuidedTourEngine({
                 const rect =
                   target.getBoundingClientRect()
 
+                if(rect.width === 0 || rect.height === 0) { setTargetRect(null); return; }
                 setTargetRect({
                   top:
                     rect.top,
@@ -461,24 +387,16 @@ export default function GuidedTourEngine({
         )
       : 80
 
-  const tooltipLeft =
-    targetRect
-      ? Math.min(
-          window.innerWidth -
-            360,
-          Math.max(
-            16,
-            targetRect.left,
-          ),
-        )
-      : 16
+  const tooltipLeft = targetRect
+    ? Math.max(16, Math.min(window.innerWidth - Math.min(384,window.innerWidth-32) - 16, targetRect.left))
+    : 16
 
   return (
     <div className="fixed inset-0 z-[100] pointer-events-none">
       {targetRect && (
         <div
           aria-hidden="true"
-          className="fixed rounded-xl ring-2 ring-pink-400"
+          className="fixed rounded-xl ring-2 ring-[#64b8a6]"
           style={{
             top:
               targetRect.top -
@@ -503,6 +421,7 @@ export default function GuidedTourEngine({
       )}
 
       <div
+        ref={dialog}
         role="dialog"
         aria-modal="true"
         aria-label={
@@ -517,7 +436,7 @@ export default function GuidedTourEngine({
         }}
       >
         <div className="flex items-center justify-between gap-4">
-          <span className="text-xs font-semibold uppercase tracking-[0.16em] text-pink-500">
+          <span className="text-xs font-semibold uppercase tracking-[0.16em] text-[#064f50]">
             {currentStep + 1}
             {" / "}
             {

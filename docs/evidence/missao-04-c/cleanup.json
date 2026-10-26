@@ -1,0 +1,22 @@
+{
+  "correction": "C-AUDIT-01",
+  "containerId": "292738dfbc0180be8def0da4c928eef6ee0875865f5c88a8b628aa4751e4071e",
+  "ownerLabels": {
+    "pap.correction": "c-audit-01",
+    "pap.disposable": "f0410",
+    "pap.mission": "mission04-c"
+  },
+  "removed": true,
+  "manualResourcesAccessed": false,
+  "checkedAtUtc": "2026-10-23T12:36:50.882576+00:00",
+  "previousSliceC": {
+    "containerId": "d72759e3742496c4bb4c4b9175bc16cf594356c5ed32916be99041876447760d",
+    "ownerLabels": {
+      "pap.disposable": "f0410",
+      "pap.mission": "mission04-c"
+    },
+    "removed": true,
+    "manualResourcesAccessed": false,
+    "checkedAtUtc": "2026-10-23T11:36:05.805816+00:00"
+  }
+}

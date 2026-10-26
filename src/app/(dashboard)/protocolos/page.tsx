@@ -1,8 +1,10 @@
+import { requireClinicalPageSession } from "@/server/clinical/clinical-page-session";
 import ProtocolList from "@/components/protocolos/ProtocolList"
 
 import { mockProtocolos } from "@/lib/mock-protocolos"
 
-export default function ProtocolosPage() {
+export default async function ProtocolosPage() {
+  await requireClinicalPageSession();
   return (
     <div
       className="

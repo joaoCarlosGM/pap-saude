@@ -1,0 +1,929 @@
+[
+  {
+    "path": "/dashboard",
+    "variant": "HTML",
+    "status": 307,
+    "destination": "/comercial",
+    "outcome": "AUTHORIZATION_REDIRECT",
+    "demoPatientExposed": false,
+    "role": "COMMERCIAL"
+  },
+  {
+    "path": "/dashboard",
+    "variant": "RSC",
+    "status": 200,
+    "destination": "/comercial",
+    "outcome": "AUTHORIZATION_REDIRECT",
+    "demoPatientExposed": false,
+    "role": "COMMERCIAL"
+  },
+  {
+    "path": "/dashboard",
+    "variant": "RSC_PREFETCH",
+    "status": 200,
+    "destination": null,
+    "outcome": "ROUTE_METADATA_ONLY",
+    "demoPatientExposed": false,
+    "role": "COMMERCIAL"
+  },
+  {
+    "path": "/pacientes",
+    "variant": "HTML",
+    "status": 307,
+    "destination": "/comercial",
+    "outcome": "AUTHORIZATION_REDIRECT",
+    "demoPatientExposed": false,
+    "role": "COMMERCIAL"
+  },
+  {
+    "path": "/pacientes",
+    "variant": "RSC",
+    "status": 200,
+    "destination": "/comercial",
+    "outcome": "AUTHORIZATION_REDIRECT",
+    "demoPatientExposed": false,
+    "role": "COMMERCIAL"
+  },
+  {
+    "path": "/pacientes",
+    "variant": "RSC_PREFETCH",
+    "status": 200,
+    "destination": null,
+    "outcome": "ROUTE_METADATA_ONLY",
+    "demoPatientExposed": false,
+    "role": "COMMERCIAL"
+  },
+  {
+    "path": "/registro",
+    "variant": "HTML",
+    "status": 307,
+    "destination": "/comercial",
+    "outcome": "AUTHORIZATION_REDIRECT",
+    "demoPatientExposed": false,
+    "role": "COMMERCIAL"
+  },
+  {
+    "path": "/registro",
+    "variant": "RSC",
+    "status": 200,
+    "destination": "/comercial",
+    "outcome": "AUTHORIZATION_REDIRECT",
+    "demoPatientExposed": false,
+    "role": "COMMERCIAL"
+  },
+  {
+    "path": "/registro",
+    "variant": "RSC_PREFETCH",
+    "status": 200,
+    "destination": null,
+    "outcome": "ROUTE_METADATA_ONLY",
+    "demoPatientExposed": false,
+    "role": "COMMERCIAL"
+  },
+  {
+    "path": "/atendimentos",
+    "variant": "HTML",
+    "status": 307,
+    "destination": "/comercial",
+    "outcome": "AUTHORIZATION_REDIRECT",
+    "demoPatientExposed": false,
+    "role": "COMMERCIAL"
+  },
+  {
+    "path": "/atendimentos",
+    "variant": "RSC",
+    "status": 200,
+    "destination": "/comercial",
+    "outcome": "AUTHORIZATION_REDIRECT",
+    "demoPatientExposed": false,
+    "role": "COMMERCIAL"
+  },
+  {
+    "path": "/atendimentos",
+    "variant": "RSC_PREFETCH",
+    "status": 200,
+    "destination": null,
+    "outcome": "ROUTE_METADATA_ONLY",
+    "demoPatientExposed": false,
+    "role": "COMMERCIAL"
+  },
+  {
+    "path": "/admin",
+    "variant": "HTML",
+    "status": 307,
+    "destination": "/comercial",
+    "outcome": "AUTHORIZATION_REDIRECT",
+    "demoPatientExposed": false,
+    "role": "COMMERCIAL"
+  },
+  {
+    "path": "/admin",
+    "variant": "RSC",
+    "status": 200,
+    "destination": "/comercial",
+    "outcome": "AUTHORIZATION_REDIRECT",
+    "demoPatientExposed": false,
+    "role": "COMMERCIAL"
+  },
+  {
+    "path": "/admin",
+    "variant": "RSC_PREFETCH",
+    "status": 200,
+    "destination": null,
+    "outcome": "ROUTE_METADATA_ONLY",
+    "demoPatientExposed": false,
+    "role": "COMMERCIAL"
+  },
+  {
+    "path": "/dashboard",
+    "variant": "HTML",
+    "status": 307,
+    "destination": "/admin",
+    "outcome": "AUTHORIZATION_REDIRECT",
+    "demoPatientExposed": false,
+    "role": "PAP_ADMIN"
+  },
+  {
+    "path": "/dashboard",
+    "variant": "RSC",
+    "status": 200,
+    "destination": "/admin",
+    "outcome": "AUTHORIZATION_REDIRECT",
+    "demoPatientExposed": false,
+    "role": "PAP_ADMIN"
+  },
+  {
+    "path": "/dashboard",
+    "variant": "RSC_PREFETCH",
+    "status": 200,
+    "destination": null,
+    "outcome": "ROUTE_METADATA_ONLY",
+    "demoPatientExposed": false,
+    "role": "PAP_ADMIN"
+  },
+  {
+    "path": "/pacientes",
+    "variant": "HTML",
+    "status": 307,
+    "destination": "/admin",
+    "outcome": "AUTHORIZATION_REDIRECT",
+    "demoPatientExposed": false,
+    "role": "PAP_ADMIN"
+  },
+  {
+    "path": "/pacientes",
+    "variant": "RSC",
+    "status": 200,
+    "destination": "/admin",
+    "outcome": "AUTHORIZATION_REDIRECT",
+    "demoPatientExposed": false,
+    "role": "PAP_ADMIN"
+  },
+  {
+    "path": "/pacientes",
+    "variant": "RSC_PREFETCH",
+    "status": 200,
+    "destination": null,
+    "outcome": "ROUTE_METADATA_ONLY",
+    "demoPatientExposed": false,
+    "role": "PAP_ADMIN"
+  },
+  {
+    "path": "/registro",
+    "variant": "HTML",
+    "status": 307,
+    "destination": "/admin",
+    "outcome": "AUTHORIZATION_REDIRECT",
+    "demoPatientExposed": false,
+    "role": "PAP_ADMIN"
+  },
+  {
+    "path": "/registro",
+    "variant": "RSC",
+    "status": 200,
+    "destination": "/admin",
+    "outcome": "AUTHORIZATION_REDIRECT",
+    "demoPatientExposed": false,
+    "role": "PAP_ADMIN"
+  },
+  {
+    "path": "/registro",
+    "variant": "RSC_PREFETCH",
+    "status": 200,
+    "destination": null,
+    "outcome": "ROUTE_METADATA_ONLY",
+    "demoPatientExposed": false,
+    "role": "PAP_ADMIN"
+  },
+  {
+    "path": "/atendimentos",
+    "variant": "HTML",
+    "status": 307,
+    "destination": "/admin",
+    "outcome": "AUTHORIZATION_REDIRECT",
+    "demoPatientExposed": false,
+    "role": "PAP_ADMIN"
+  },
+  {
+    "path": "/atendimentos",
+    "variant": "RSC",
+    "status": 200,
+    "destination": "/admin",
+    "outcome": "AUTHORIZATION_REDIRECT",
+    "demoPatientExposed": false,
+    "role": "PAP_ADMIN"
+  },
+  {
+    "path": "/atendimentos",
+    "variant": "RSC_PREFETCH",
+    "status": 200,
+    "destination": null,
+    "outcome": "ROUTE_METADATA_ONLY",
+    "demoPatientExposed": false,
+    "role": "PAP_ADMIN"
+  },
+  {
+    "path": "/dashboard",
+    "variant": "HTML",
+    "status": 307,
+    "destination": "/admin",
+    "outcome": "AUTHORIZATION_REDIRECT",
+    "demoPatientExposed": false,
+    "role": "PAP_MANAGER"
+  },
+  {
+    "path": "/dashboard",
+    "variant": "RSC",
+    "status": 200,
+    "destination": "/admin",
+    "outcome": "AUTHORIZATION_REDIRECT",
+    "demoPatientExposed": false,
+    "role": "PAP_MANAGER"
+  },
+  {
+    "path": "/dashboard",
+    "variant": "RSC_PREFETCH",
+    "status": 200,
+    "destination": null,
+    "outcome": "ROUTE_METADATA_ONLY",
+    "demoPatientExposed": false,
+    "role": "PAP_MANAGER"
+  },
+  {
+    "path": "/pacientes",
+    "variant": "HTML",
+    "status": 307,
+    "destination": "/admin",
+    "outcome": "AUTHORIZATION_REDIRECT",
+    "demoPatientExposed": false,
+    "role": "PAP_MANAGER"
+  },
+  {
+    "path": "/pacientes",
+    "variant": "RSC",
+    "status": 200,
+    "destination": "/admin",
+    "outcome": "AUTHORIZATION_REDIRECT",
+    "demoPatientExposed": false,
+    "role": "PAP_MANAGER"
+  },
+  {
+    "path": "/pacientes",
+    "variant": "RSC_PREFETCH",
+    "status": 200,
+    "destination": null,
+    "outcome": "ROUTE_METADATA_ONLY",
+    "demoPatientExposed": false,
+    "role": "PAP_MANAGER"
+  },
+  {
+    "path": "/registro",
+    "variant": "HTML",
+    "status": 307,
+    "destination": "/admin",
+    "outcome": "AUTHORIZATION_REDIRECT",
+    "demoPatientExposed": false,
+    "role": "PAP_MANAGER"
+  },
+  {
+    "path": "/registro",
+    "variant": "RSC",
+    "status": 200,
+    "destination": "/admin",
+    "outcome": "AUTHORIZATION_REDIRECT",
+    "demoPatientExposed": false,
+    "role": "PAP_MANAGER"
+  },
+  {
+    "path": "/registro",
+    "variant": "RSC_PREFETCH",
+    "status": 200,
+    "destination": null,
+    "outcome": "ROUTE_METADATA_ONLY",
+    "demoPatientExposed": false,
+    "role": "PAP_MANAGER"
+  },
+  {
+    "path": "/atendimentos",
+    "variant": "HTML",
+    "status": 307,
+    "destination": "/admin",
+    "outcome": "AUTHORIZATION_REDIRECT",
+    "demoPatientExposed": false,
+    "role": "PAP_MANAGER"
+  },
+  {
+    "path": "/atendimentos",
+    "variant": "RSC",
+    "status": 200,
+    "destination": "/admin",
+    "outcome": "AUTHORIZATION_REDIRECT",
+    "demoPatientExposed": false,
+    "role": "PAP_MANAGER"
+  },
+  {
+    "path": "/atendimentos",
+    "variant": "RSC_PREFETCH",
+    "status": 200,
+    "destination": null,
+    "outcome": "ROUTE_METADATA_ONLY",
+    "demoPatientExposed": false,
+    "role": "PAP_MANAGER"
+  },
+  {
+    "path": "/dashboard",
+    "variant": "HTML",
+    "status": 307,
+    "destination": "/login",
+    "outcome": "AUTHORIZATION_REDIRECT",
+    "demoPatientExposed": false,
+    "role": "MEMBERSHIP_WITHOUT_ROLE"
+  },
+  {
+    "path": "/dashboard",
+    "variant": "RSC",
+    "status": 200,
+    "destination": "/login",
+    "outcome": "AUTHORIZATION_REDIRECT",
+    "demoPatientExposed": false,
+    "role": "MEMBERSHIP_WITHOUT_ROLE"
+  },
+  {
+    "path": "/dashboard",
+    "variant": "RSC_PREFETCH",
+    "status": 200,
+    "destination": null,
+    "outcome": "ROUTE_METADATA_ONLY",
+    "demoPatientExposed": false,
+    "role": "MEMBERSHIP_WITHOUT_ROLE"
+  },
+  {
+    "path": "/pacientes",
+    "variant": "HTML",
+    "status": 307,
+    "destination": "/login",
+    "outcome": "AUTHORIZATION_REDIRECT",
+    "demoPatientExposed": false,
+    "role": "MEMBERSHIP_WITHOUT_ROLE"
+  },
+  {
+    "path": "/pacientes",
+    "variant": "RSC",
+    "status": 200,
+    "destination": "/login",
+    "outcome": "AUTHORIZATION_REDIRECT",
+    "demoPatientExposed": false,
+    "role": "MEMBERSHIP_WITHOUT_ROLE"
+  },
+  {
+    "path": "/pacientes",
+    "variant": "RSC_PREFETCH",
+    "status": 200,
+    "destination": null,
+    "outcome": "ROUTE_METADATA_ONLY",
+    "demoPatientExposed": false,
+    "role": "MEMBERSHIP_WITHOUT_ROLE"
+  },
+  {
+    "path": "/registro",
+    "variant": "HTML",
+    "status": 307,
+    "destination": "/login",
+    "outcome": "AUTHORIZATION_REDIRECT",
+    "demoPatientExposed": false,
+    "role": "MEMBERSHIP_WITHOUT_ROLE"
+  },
+  {
+    "path": "/registro",
+    "variant": "RSC",
+    "status": 200,
+    "destination": "/login",
+    "outcome": "AUTHORIZATION_REDIRECT",
+    "demoPatientExposed": false,
+    "role": "MEMBERSHIP_WITHOUT_ROLE"
+  },
+  {
+    "path": "/registro",
+    "variant": "RSC_PREFETCH",
+    "status": 200,
+    "destination": null,
+    "outcome": "ROUTE_METADATA_ONLY",
+    "demoPatientExposed": false,
+    "role": "MEMBERSHIP_WITHOUT_ROLE"
+  },
+  {
+    "path": "/atendimentos",
+    "variant": "HTML",
+    "status": 307,
+    "destination": "/login",
+    "outcome": "AUTHORIZATION_REDIRECT",
+    "demoPatientExposed": false,
+    "role": "MEMBERSHIP_WITHOUT_ROLE"
+  },
+  {
+    "path": "/atendimentos",
+    "variant": "RSC",
+    "status": 200,
+    "destination": "/login",
+    "outcome": "AUTHORIZATION_REDIRECT",
+    "demoPatientExposed": false,
+    "role": "MEMBERSHIP_WITHOUT_ROLE"
+  },
+  {
+    "path": "/atendimentos",
+    "variant": "RSC_PREFETCH",
+    "status": 200,
+    "destination": null,
+    "outcome": "ROUTE_METADATA_ONLY",
+    "demoPatientExposed": false,
+    "role": "MEMBERSHIP_WITHOUT_ROLE"
+  },
+  {
+    "path": "/dashboard",
+    "variant": "HTML",
+    "status": 307,
+    "destination": "/login",
+    "outcome": "AUTHORIZATION_REDIRECT",
+    "demoPatientExposed": false,
+    "role": "ANONYMOUS"
+  },
+  {
+    "path": "/dashboard",
+    "variant": "RSC",
+    "status": 200,
+    "destination": "/login",
+    "outcome": "AUTHORIZATION_REDIRECT",
+    "demoPatientExposed": false,
+    "role": "ANONYMOUS"
+  },
+  {
+    "path": "/dashboard",
+    "variant": "RSC_PREFETCH",
+    "status": 200,
+    "destination": null,
+    "outcome": "ROUTE_METADATA_ONLY",
+    "demoPatientExposed": false,
+    "role": "ANONYMOUS"
+  },
+  {
+    "path": "/pacientes",
+    "variant": "HTML",
+    "status": 307,
+    "destination": "/login",
+    "outcome": "AUTHORIZATION_REDIRECT",
+    "demoPatientExposed": false,
+    "role": "ANONYMOUS"
+  },
+  {
+    "path": "/pacientes",
+    "variant": "RSC",
+    "status": 200,
+    "destination": "/login",
+    "outcome": "AUTHORIZATION_REDIRECT",
+    "demoPatientExposed": false,
+    "role": "ANONYMOUS"
+  },
+  {
+    "path": "/pacientes",
+    "variant": "RSC_PREFETCH",
+    "status": 200,
+    "destination": null,
+    "outcome": "ROUTE_METADATA_ONLY",
+    "demoPatientExposed": false,
+    "role": "ANONYMOUS"
+  },
+  {
+    "path": "/registro",
+    "variant": "HTML",
+    "status": 307,
+    "destination": "/login",
+    "outcome": "AUTHORIZATION_REDIRECT",
+    "demoPatientExposed": false,
+    "role": "ANONYMOUS"
+  },
+  {
+    "path": "/registro",
+    "variant": "RSC",
+    "status": 200,
+    "destination": "/login",
+    "outcome": "AUTHORIZATION_REDIRECT",
+    "demoPatientExposed": false,
+    "role": "ANONYMOUS"
+  },
+  {
+    "path": "/registro",
+    "variant": "RSC_PREFETCH",
+    "status": 200,
+    "destination": null,
+    "outcome": "ROUTE_METADATA_ONLY",
+    "demoPatientExposed": false,
+    "role": "ANONYMOUS"
+  },
+  {
+    "path": "/atendimentos",
+    "variant": "HTML",
+    "status": 307,
+    "destination": "/login",
+    "outcome": "AUTHORIZATION_REDIRECT",
+    "demoPatientExposed": false,
+    "role": "ANONYMOUS"
+  },
+  {
+    "path": "/atendimentos",
+    "variant": "RSC",
+    "status": 200,
+    "destination": "/login",
+    "outcome": "AUTHORIZATION_REDIRECT",
+    "demoPatientExposed": false,
+    "role": "ANONYMOUS"
+  },
+  {
+    "path": "/atendimentos",
+    "variant": "RSC_PREFETCH",
+    "status": 200,
+    "destination": null,
+    "outcome": "ROUTE_METADATA_ONLY",
+    "demoPatientExposed": false,
+    "role": "ANONYMOUS"
+  },
+  {
+    "path": "/comercial",
+    "variant": "HTML",
+    "status": 307,
+    "destination": "/login",
+    "outcome": "AUTHORIZATION_REDIRECT",
+    "demoPatientExposed": false
+  },
+  {
+    "path": "/comercial",
+    "variant": "RSC",
+    "status": 200,
+    "destination": "/login",
+    "outcome": "AUTHORIZATION_REDIRECT",
+    "demoPatientExposed": false
+  },
+  {
+    "path": "/comercial",
+    "variant": "RSC_PREFETCH",
+    "status": 200,
+    "destination": null,
+    "outcome": "ROUTE_METADATA_ONLY",
+    "demoPatientExposed": false
+  },
+  {
+    "path": "/vitrine",
+    "variant": "HTML",
+    "status": 307,
+    "destination": "/login",
+    "outcome": "AUTHORIZATION_REDIRECT",
+    "demoPatientExposed": false
+  },
+  {
+    "path": "/vitrine",
+    "variant": "RSC",
+    "status": 200,
+    "destination": "/login",
+    "outcome": "AUTHORIZATION_REDIRECT",
+    "demoPatientExposed": false
+  },
+  {
+    "path": "/vitrine",
+    "variant": "RSC_PREFETCH",
+    "status": 200,
+    "destination": null,
+    "outcome": "ROUTE_METADATA_ONLY",
+    "demoPatientExposed": false
+  },
+  {
+    "path": "/vitrine/pacientes",
+    "variant": "HTML",
+    "status": 307,
+    "destination": "/login",
+    "outcome": "AUTHORIZATION_REDIRECT",
+    "demoPatientExposed": false
+  },
+  {
+    "path": "/vitrine/pacientes",
+    "variant": "RSC",
+    "status": 200,
+    "destination": "/login",
+    "outcome": "AUTHORIZATION_REDIRECT",
+    "demoPatientExposed": false
+  },
+  {
+    "path": "/vitrine/pacientes",
+    "variant": "RSC_PREFETCH",
+    "status": 200,
+    "destination": null,
+    "outcome": "ROUTE_METADATA_ONLY",
+    "demoPatientExposed": false
+  },
+  {
+    "path": "/comercial",
+    "variant": "HTML",
+    "status": 200,
+    "destination": "MFA_NOTICE",
+    "outcome": "MFA_NOTICE",
+    "demoPatientExposed": false
+  },
+  {
+    "path": "/comercial",
+    "variant": "RSC",
+    "status": 200,
+    "destination": "MFA_NOTICE",
+    "outcome": "MFA_NOTICE",
+    "demoPatientExposed": false
+  },
+  {
+    "path": "/comercial",
+    "variant": "RSC_PREFETCH",
+    "status": 200,
+    "destination": null,
+    "outcome": "ROUTE_METADATA_ONLY",
+    "demoPatientExposed": false
+  },
+  {
+    "path": "/vitrine",
+    "variant": "HTML",
+    "status": 307,
+    "destination": "/comercial",
+    "outcome": "AUTHORIZATION_REDIRECT",
+    "demoPatientExposed": false
+  },
+  {
+    "path": "/vitrine",
+    "variant": "RSC",
+    "status": 200,
+    "destination": "/comercial",
+    "outcome": "AUTHORIZATION_REDIRECT",
+    "demoPatientExposed": false
+  },
+  {
+    "path": "/vitrine",
+    "variant": "RSC_PREFETCH",
+    "status": 200,
+    "destination": null,
+    "outcome": "ROUTE_METADATA_ONLY",
+    "demoPatientExposed": false
+  },
+  {
+    "path": "/vitrine/pacientes",
+    "variant": "HTML",
+    "status": 307,
+    "destination": "/comercial",
+    "outcome": "AUTHORIZATION_REDIRECT",
+    "demoPatientExposed": false
+  },
+  {
+    "path": "/vitrine/pacientes",
+    "variant": "RSC",
+    "status": 200,
+    "destination": "/comercial",
+    "outcome": "AUTHORIZATION_REDIRECT",
+    "demoPatientExposed": false
+  },
+  {
+    "path": "/vitrine/pacientes",
+    "variant": "RSC_PREFETCH",
+    "status": 200,
+    "destination": null,
+    "outcome": "ROUTE_METADATA_ONLY",
+    "demoPatientExposed": false
+  },
+  {
+    "path": "/comercial",
+    "variant": "HTML",
+    "status": 307,
+    "destination": "/login",
+    "outcome": "AUTHORIZATION_REDIRECT",
+    "demoPatientExposed": false
+  },
+  {
+    "path": "/comercial",
+    "variant": "RSC",
+    "status": 200,
+    "destination": "/login",
+    "outcome": "AUTHORIZATION_REDIRECT",
+    "demoPatientExposed": false
+  },
+  {
+    "path": "/comercial",
+    "variant": "RSC_PREFETCH",
+    "status": 200,
+    "destination": null,
+    "outcome": "ROUTE_METADATA_ONLY",
+    "demoPatientExposed": false
+  },
+  {
+    "path": "/vitrine",
+    "variant": "HTML",
+    "status": 307,
+    "destination": "/login",
+    "outcome": "AUTHORIZATION_REDIRECT",
+    "demoPatientExposed": false
+  },
+  {
+    "path": "/vitrine",
+    "variant": "RSC",
+    "status": 200,
+    "destination": "/login",
+    "outcome": "AUTHORIZATION_REDIRECT",
+    "demoPatientExposed": false
+  },
+  {
+    "path": "/vitrine",
+    "variant": "RSC_PREFETCH",
+    "status": 200,
+    "destination": null,
+    "outcome": "ROUTE_METADATA_ONLY",
+    "demoPatientExposed": false
+  },
+  {
+    "path": "/vitrine/pacientes",
+    "variant": "HTML",
+    "status": 307,
+    "destination": "/login",
+    "outcome": "AUTHORIZATION_REDIRECT",
+    "demoPatientExposed": false
+  },
+  {
+    "path": "/vitrine/pacientes",
+    "variant": "RSC",
+    "status": 200,
+    "destination": "/login",
+    "outcome": "AUTHORIZATION_REDIRECT",
+    "demoPatientExposed": false
+  },
+  {
+    "path": "/vitrine/pacientes",
+    "variant": "RSC_PREFETCH",
+    "status": 200,
+    "destination": null,
+    "outcome": "ROUTE_METADATA_ONLY",
+    "demoPatientExposed": false
+  },
+  {
+    "path": "/comercial",
+    "variant": "HTML",
+    "status": 307,
+    "destination": "/login",
+    "outcome": "AUTHORIZATION_REDIRECT",
+    "demoPatientExposed": false
+  },
+  {
+    "path": "/comercial",
+    "variant": "RSC",
+    "status": 200,
+    "destination": "/login",
+    "outcome": "AUTHORIZATION_REDIRECT",
+    "demoPatientExposed": false
+  },
+  {
+    "path": "/comercial",
+    "variant": "RSC_PREFETCH",
+    "status": 200,
+    "destination": null,
+    "outcome": "ROUTE_METADATA_ONLY",
+    "demoPatientExposed": false
+  },
+  {
+    "path": "/vitrine",
+    "variant": "HTML",
+    "status": 307,
+    "destination": "/login",
+    "outcome": "AUTHORIZATION_REDIRECT",
+    "demoPatientExposed": false
+  },
+  {
+    "path": "/vitrine",
+    "variant": "RSC",
+    "status": 200,
+    "destination": "/login",
+    "outcome": "AUTHORIZATION_REDIRECT",
+    "demoPatientExposed": false
+  },
+  {
+    "path": "/vitrine",
+    "variant": "RSC_PREFETCH",
+    "status": 200,
+    "destination": null,
+    "outcome": "ROUTE_METADATA_ONLY",
+    "demoPatientExposed": false
+  },
+  {
+    "path": "/vitrine/pacientes",
+    "variant": "HTML",
+    "status": 307,
+    "destination": "/login",
+    "outcome": "AUTHORIZATION_REDIRECT",
+    "demoPatientExposed": false
+  },
+  {
+    "path": "/vitrine/pacientes",
+    "variant": "RSC",
+    "status": 200,
+    "destination": "/login",
+    "outcome": "AUTHORIZATION_REDIRECT",
+    "demoPatientExposed": false
+  },
+  {
+    "path": "/vitrine/pacientes",
+    "variant": "RSC_PREFETCH",
+    "status": 200,
+    "destination": null,
+    "outcome": "ROUTE_METADATA_ONLY",
+    "demoPatientExposed": false
+  },
+  {
+    "path": "/comercial",
+    "variant": "HTML",
+    "status": 307,
+    "destination": "/login",
+    "outcome": "AUTHORIZATION_REDIRECT",
+    "demoPatientExposed": false
+  },
+  {
+    "path": "/comercial",
+    "variant": "RSC",
+    "status": 200,
+    "destination": "/login",
+    "outcome": "AUTHORIZATION_REDIRECT",
+    "demoPatientExposed": false
+  },
+  {
+    "path": "/comercial",
+    "variant": "RSC_PREFETCH",
+    "status": 200,
+    "destination": null,
+    "outcome": "ROUTE_METADATA_ONLY",
+    "demoPatientExposed": false
+  },
+  {
+    "path": "/vitrine",
+    "variant": "HTML",
+    "status": 307,
+    "destination": "/login",
+    "outcome": "AUTHORIZATION_REDIRECT",
+    "demoPatientExposed": false
+  },
+  {
+    "path": "/vitrine",
+    "variant": "RSC",
+    "status": 200,
+    "destination": "/login",
+    "outcome": "AUTHORIZATION_REDIRECT",
+    "demoPatientExposed": false
+  },
+  {
+    "path": "/vitrine",
+    "variant": "RSC_PREFETCH",
+    "status": 200,
+    "destination": null,
+    "outcome": "ROUTE_METADATA_ONLY",
+    "demoPatientExposed": false
+  },
+  {
+    "path": "/vitrine/pacientes",
+    "variant": "HTML",
+    "status": 307,
+    "destination": "/login",
+    "outcome": "AUTHORIZATION_REDIRECT",
+    "demoPatientExposed": false
+  },
+  {
+    "path": "/vitrine/pacientes",
+    "variant": "RSC",
+    "status": 200,
+    "destination": "/login",
+    "outcome": "AUTHORIZATION_REDIRECT",
+    "demoPatientExposed": false
+  },
+  {
+    "path": "/vitrine/pacientes",
+    "variant": "RSC_PREFETCH",
+    "status": 200,
+    "destination": null,
+    "outcome": "ROUTE_METADATA_ONLY",
+    "demoPatientExposed": false
+  }
+]

@@ -5,6 +5,7 @@ import {
 
 export const SYSTEM_ROLE_KEYS = {
   PAP_ADMIN: "PAP_ADMIN",
+  PAP_MANAGER: "PAP_MANAGER",
   MUNICIPAL_ADMIN: "MUNICIPAL_ADMIN",
   HEALTH_UNIT_ADMIN: "HEALTH_UNIT_ADMIN",
   PROFESSIONAL: "PROFESSIONAL",
@@ -32,6 +33,12 @@ export const SYSTEM_ROLES: readonly SystemRoleDefinition[] = [
     permissions: [
       PERMISSIONS.ORGANIZATION_READ,
       PERMISSIONS.ORGANIZATION_MANAGE,
+      PERMISSIONS.ORGANIZATION_ACTIVATE,
+      PERMISSIONS.ORGANIZATION_DEACTIVATE,
+      PERMISSIONS.ORGANIZATION_DELETE,
+      PERMISSIONS.ORGANIZATION_REQUEST_REVIEW,
+      PERMISSIONS.INSTITUTION_INVITE,
+      PERMISSIONS.ROLE_ASSIGN_COMMERCIAL,
       PERMISSIONS.MEMBERSHIP_READ,
       PERMISSIONS.MEMBERSHIP_MANAGE,
       PERMISSIONS.USER_READ,
@@ -54,6 +61,18 @@ export const SYSTEM_ROLES: readonly SystemRoleDefinition[] = [
     ],
   },
 
+  {
+    key: SYSTEM_ROLE_KEYS.PAP_MANAGER,
+    name: "Gerente PAP",
+    description: "Institutional review and delegated commercial authorization; no clinical or organization lifecycle access.",
+    scope: "GLOBAL",
+    permissions: [
+      PERMISSIONS.ORGANIZATION_READ,
+      PERMISSIONS.ORGANIZATION_REQUEST_REVIEW,
+      PERMISSIONS.INSTITUTION_INVITE,
+      PERMISSIONS.ROLE_ASSIGN_COMMERCIAL,
+    ],
+  },
   {
     key: SYSTEM_ROLE_KEYS.MUNICIPAL_ADMIN,
     name: "Municipal Administrator",
@@ -139,7 +158,6 @@ export const SYSTEM_ROLES: readonly SystemRoleDefinition[] = [
       "Global PAP commercial role without clinical access.",
     scope: "GLOBAL",
     permissions: [
-      PERMISSIONS.ORGANIZATION_READ,
       PERMISSIONS.COMMERCIAL_READ,
       PERMISSIONS.COMMERCIAL_MANAGE,
     ],

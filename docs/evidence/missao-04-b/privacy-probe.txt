@@ -1,0 +1,110 @@
+SNAPSHOT HISTÓRICO ANTES DA CORREÇÃO. Resultado atual e nova saída na AUDITORIA-FINAL-MISSAO-04-B.md.
+
+EVIDÊNCIA DE AUDITORIA — não é teste registrado no CI. Resultado esperado para aprovação: 2 PASS. Resultado observado: 1 PASS / 1 FAIL.
+
+Salvar os blocos nos caminhos indicados. Executar somente em PostgreSQL descartável próprio com as duas labels documentadas no relatório; nenhuma adoção de laboratório existente.
+
+### .test-audit/m04-b-final-review/privacy-probe.ts
+import assert from "node:assert/strict";
+import { after, test } from "node:test";
+import { execFileSync } from "node:child_process";
+import { db } from "../../src/server/db/client";
+import { bootstrapSystemIam } from "../../src/server/iam/bootstrap.service";
+import { actor, request } from "../../tests/mission04-b/fixtures";
+import { GET } from "../../src/app/api/admin/organizations/route";
+after(() => db.$disconnect());
+test("PAP_MANAGER organization.read must not disclose private settings", async () => {
+  assert.equal(new URL(process.env.DATABASE_URL!).pathname, "/pap_m04_b_final_review");
+  assert.equal(execFileSync("docker", ["inspect", "--format", '{{ index .Config.Labels "pap.mission" }}', "pap_saude_db"], {encoding:"utf8"}).trim(), "m04-b-final-audit");
+  await bootstrapSystemIam();
+  const manager = await actor("PAP_MANAGER");
+  await db.organization.update({where:{id:manager.unit.id}, data:{settings:{privateAuditCanary:"synthetic-only"}}});
+  const response = await GET(request("/api/admin/organizations", manager.token));
+  assert.equal(response.status,200);
+  const body = await response.json();
+  const organization = body.organizations.find((row: {id:string}) => row.id === manager.unit.id);
+  assert.ok(organization);
+  console.log(JSON.stringify({httpStatus:response.status,settingsReturned:Object.hasOwn(organization,"settings"),privateCanaryVisible:organization.settings?.privateAuditCanary === "synthetic-only",clinicalCountsReturned:Object.hasOwn(organization._count,"patientLinks") || Object.hasOwn(organization._count,"encounters"),returnedScalarFields:Object.keys(organization).filter(k=>!k.startsWith("_")&& k!=="parent").sort()}));
+  assert.equal(Object.hasOwn(organization,"settings"),false,"Private organizational settings must be absent for PAP_MANAGER");
+});
+test("PAP_MANAGER cannot use organization.read for undelegated global endpoints", async () => {
+  assert.equal(new URL(process.env.DATABASE_URL!).pathname, "/pap_m04_b_final_review");
+  const manager = await actor("PAP_MANAGER");
+  for (const path of ["audit","users","beta/users","security","beta/metrics","operations/metrics","operations/monitoring","operations/integrations"]) {
+    const handler = await import(`../../src/app/api/admin/${path}/route`);
+    const response = await handler.GET(request(`/api/admin/${path}`,manager.token));
+    console.log(JSON.stringify({endpoint:`/api/admin/${path}`,httpStatus:response.status}));
+    if (path === "users") {
+      assert.equal(response.status,200);
+      const body = await response.json();
+      console.log(JSON.stringify({endpoint:"/api/admin/users",emptyResult:Array.isArray(body.users) && body.users.length === 0}));
+      assert.deepEqual(body.users,[]);
+    } else assert.equal(response.status,403,path);
+  }
+});
+
+### .test-audit/m04-b-final-review/run-privacy-probe.sh
+#!/usr/bin/env bash
+set -euo pipefail
+[[ "$(docker inspect --format '{{ index .Config.Labels "pap.mission" }}' pap_saude_db)" == m04-b-final-audit ]]
+docker exec pap_saude_db psql -X -U pap_user -d postgres -v ON_ERROR_STOP=1 -c 'CREATE DATABASE pap_m04_b_final_review' >/dev/null
+trap 'docker exec pap_saude_db psql -X -U pap_user -d postgres -v ON_ERROR_STOP=1 -c "DROP DATABASE pap_m04_b_final_review WITH (FORCE)" >/dev/null' EXIT
+export DATABASE_URL='postgresql://pap_user:pap_password@127.0.0.1:5432/pap_m04_b_final_review?schema=public'
+export AUTH_ALLOWED_ORIGINS=http://127.0.0.1:3110 PAP_PUBLIC_URL=http://127.0.0.1:3110 PAP_EMAIL_PROVIDER=disabled RESEND_API_KEY='' PAP_EMAIL_FROM=''
+export MFA_SECRET_ENCRYPTION_KEY="$(node -e 'process.stdout.write(require("node:crypto").randomBytes(32).toString("base64url"))')" MFA_SECRET_ENCRYPTION_KEY_ID=final-review-synthetic
+npx prisma migrate deploy >/tmp/m04-b-final-review-probe-migrations.log 2>&1
+npx tsx --test .test-audit/m04-b-final-review/privacy-probe.ts
+
+### Comando efetivamente executado (Node 22.23.3)
+npm_config_cache=/tmp/pap-m04-npm npm exec --yes --package=node@22.23.3 -- bash -c 'bash .test-audit/m04-b-final-review/run-privacy-probe.sh > /tmp/m04-b-final-review-privacy.log 2>&1'
+
+### Saída completa da sonda final (exit 1)
+TAP version 13
+# {"httpStatus":200,"settingsReturned":true,"privateCanaryVisible":true,"clinicalCountsReturned":false,"returnedScalarFields":["address","city","cnes","cnpj","code","createdAt","id","isActive","name","parentId","settings","state","status","type","updatedAt"]}
+# Subtest: PAP_MANAGER organization.read must not disclose private settings
+not ok 1 - PAP_MANAGER organization.read must not disclose private settings
+  ---
+  duration_ms: 3016.591049
+  type: 'test'
+  location: '/workspace/pap-saude/.test-audit/m04-b-final-review/privacy-probe.ts:9:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Private organizational settings must be absent for PAP_MANAGER
+
+    true !== false
+
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: false
+  actual: true
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (/workspace/pap-saude/.test-audit/m04-b-final-review/privacy-probe.ts:21:10)
+    process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+  ...
+# {"endpoint":"/api/admin/audit","httpStatus":403}
+# {"endpoint":"/api/admin/users","httpStatus":200}
+# {"endpoint":"/api/admin/users","emptyResult":true}
+# {"endpoint":"/api/admin/beta/users","httpStatus":403}
+# {"endpoint":"/api/admin/security","httpStatus":403}
+# {"endpoint":"/api/admin/beta/metrics","httpStatus":403}
+# {"endpoint":"/api/admin/operations/metrics","httpStatus":403}
+# {"endpoint":"/api/admin/operations/monitoring","httpStatus":403}
+# {"endpoint":"/api/admin/operations/integrations","httpStatus":403}
+# Subtest: PAP_MANAGER cannot use organization.read for undelegated global endpoints
+ok 2 - PAP_MANAGER cannot use organization.read for undelegated global endpoints
+  ---
+  duration_ms: 1858.683694
+  type: 'test'
+  ...
+1..2
+# tests 2
+# suites 0
+# pass 1
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 5630.965411

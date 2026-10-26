@@ -34,6 +34,8 @@ export interface StartTotpEnrollmentInput {
   userId: string;
   label?: string | null;
   now?: Date;
+  initialOnly?: boolean;
+  replacePending?: boolean;
 }
 
 export interface TotpEnrollment {
@@ -48,6 +50,7 @@ export interface ConfirmTotpEnrollmentInput {
   factorId: string;
   code: string;
   now?: Date;
+  initialOnly?: boolean;
 }
 
 export interface ConfirmedTotpEnrollment {
@@ -149,6 +152,15 @@ export async function startTotpEnrollment(
   const factor =
     await db.$transaction(
       async (tx) => {
+        // Serialize self-enrollment and activation across tabs using the same
+        // user row lock. Only the ordinary updatedAt timestamp is touched.
+        await tx.user.update({ where: { id: input.userId }, data: { updatedAt: now } });
+        if (input.initialOnly && await tx.mfaFactor.count({ where: { userId: input.userId, status: "ACTIVE" } })) {
+          throw new Error("MFA_ALREADY_ENABLED");
+        }
+        if (input.initialOnly && !input.replacePending && await tx.mfaFactor.count({ where: { userId: input.userId, status: "PENDING" } })) {
+          throw new Error("MFA_PENDING_EXISTS");
+        }
         await tx.mfaFactor.updateMany({
           where: {
             userId: user.id,
@@ -282,6 +294,12 @@ export async function confirmTotpEnrollment(
   const activated =
     await db.$transaction(
       async (tx) => {
+        // Serialize self-enrollment and activation across tabs using the same
+        // user row lock. Only the ordinary updatedAt timestamp is touched.
+        await tx.user.update({ where: { id: input.userId }, data: { updatedAt: now } });
+        if (input.initialOnly && await tx.mfaFactor.count({ where: { userId: input.userId, status: "ACTIVE" } })) {
+          throw new Error("MFA_ALREADY_ENABLED");
+        }
         /*
          * PostgreSQL's partial unique index permits one ACTIVE
          * TOTP per user. Revoke the old factor first, then

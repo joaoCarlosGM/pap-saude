@@ -1,0 +1,294 @@
+$ git status --short
+ M .github/workflows/ci.yml
+ M package.json
+ M prisma/schema.prisma
+ M src/app/(admin)/admin/layout.tsx
+ M src/app/(admin)/admin/organizacoes/page.tsx
+ M src/app/(admin)/admin/page.tsx
+ M src/app/(dashboard)/atendimentos/page.tsx
+ M src/app/(dashboard)/casos/page.tsx
+ M src/app/(dashboard)/chat/page.tsx
+ M src/app/(dashboard)/configuracoes/page.tsx
+ M src/app/(dashboard)/cursos/page.tsx
+ M src/app/(dashboard)/dashboard/page.tsx
+ M src/app/(dashboard)/ferramentas/page.tsx
+ M src/app/(dashboard)/layout.tsx
+ M src/app/(dashboard)/pacientes/[id]/page.tsx
+ M src/app/(dashboard)/pacientes/page.tsx
+ M src/app/(dashboard)/protocolos/page.tsx
+ M src/app/(dashboard)/registro/page.tsx
+ M src/app/api/admin/beta/requests/route.ts
+ M src/app/api/admin/organizations/[organizationId]/route.ts
+ M src/app/api/admin/organizations/route.ts
+ M src/app/api/admin/role-assignments/[assignmentId]/route.ts
+ M src/app/api/admin/role-assignments/route.ts
+ M src/components/admin/AccessAdminClient.tsx
+ M src/components/admin/AdminShell.tsx
+ M src/components/admin/AdminSidebar.tsx
+ M src/components/admin/AdminTopbar.tsx
+ M src/components/admin/BetaInvitationsClient.tsx
+ M src/components/admin/BetaRequestsClient.tsx
+ M src/components/admin/BetaWidgets.tsx
+ M src/components/admin/OrganizationsAdminClient.tsx
+ M src/components/security/FirstAccessWizard.tsx
+ M src/components/security/security-client.ts
+ M src/server/admin-beta/invitations.service.ts
+ M src/server/admin-beta/policy.ts
+ M src/server/admin-beta/requests.service.ts
+ M src/server/admin/admin-access.service.ts
+ M src/server/admin/admin-http.ts
+ M src/server/admin/admin-organizations.service.ts
+ M src/server/admin/admin-roles.service.ts
+ M src/server/audit/admin-audit-policy.ts
+ M src/server/auth/session.service.ts
+ M src/server/iam/authorization.service.ts
+ M src/server/iam/effective-access-profile.service.ts
+ M src/server/iam/permissions.ts
+ M src/server/iam/role-assignment.service.ts
+ M src/server/iam/system-role-catalog.ts
+ M src/server/invitations/invitation.service.ts
+ M src/server/organizations/discovery.service.ts
+ M tests/admin-beta/journey.integration.test.ts
+ M tests/admin/admin-mfa.integration.test.ts
+ M tests/admin/f04-audit-idor.integration.test.ts
+ M tests/admin/role-adversarial.integration.test.ts
+ M tests/admin/role-governance.integration.test.ts
+ M tests/local/provision.integration.test.ts
+?? docs/codex/AUDITORIA-FINAL-MISSAO-04-B.md
+?? docs/codex/RELATORIO-MISSAO-04-SLICE-B.md
+?? docs/evidence/missao-04-b/
+?? prisma/migrations/20261022040000_mission04_delegated_governance/
+?? scripts/test-mission04-b.sh
+?? src/components/admin/admin-theme.css
+?? src/lib/auth/
+?? src/server/admin/admin-session.service.ts
+?? src/server/admin/institutional-invitation-policy.ts
+?? src/server/clinical/clinical-page-session.ts
+?? tests/helpers/verified-admin-session.ts
+?? tests/mission04-b/
+
+$ git diff --stat
+ .github/workflows/ci.yml                           |   3 +
+ package.json                                       |   4 +-
+ prisma/schema.prisma                               |   2 +
+ src/app/(admin)/admin/layout.tsx                   |   4 +-
+ src/app/(admin)/admin/organizacoes/page.tsx        |  13 +-
+ src/app/(admin)/admin/page.tsx                     |  10 +-
+ src/app/(dashboard)/atendimentos/page.tsx          |   4 +-
+ src/app/(dashboard)/casos/page.tsx                 |   4 +-
+ src/app/(dashboard)/chat/page.tsx                  |   4 +-
+ src/app/(dashboard)/configuracoes/page.tsx         |  50 ++-
+ src/app/(dashboard)/cursos/page.tsx                |  46 +-
+ src/app/(dashboard)/dashboard/page.tsx             | 204 ++++-----
+ src/app/(dashboard)/ferramentas/page.tsx           |   4 +-
+ src/app/(dashboard)/layout.tsx                     |  18 +-
+ src/app/(dashboard)/pacientes/[id]/page.tsx        |   2 +
+ src/app/(dashboard)/pacientes/page.tsx             |   4 +-
+ src/app/(dashboard)/protocolos/page.tsx            |   4 +-
+ src/app/(dashboard)/registro/page.tsx              |   4 +-
+ src/app/api/admin/beta/requests/route.ts           |   3 +-
+ .../admin/organizations/[organizationId]/route.ts  |  10 +-
+ src/app/api/admin/organizations/route.ts           |   2 +
+ .../admin/role-assignments/[assignmentId]/route.ts |   2 +
+ src/app/api/admin/role-assignments/route.ts        |   2 +
+ src/components/admin/AccessAdminClient.tsx         |  69 +--
+ src/components/admin/AdminShell.tsx                |   2 +-
+ src/components/admin/AdminSidebar.tsx              |  10 +-
+ src/components/admin/AdminTopbar.tsx               |   2 +-
+ src/components/admin/BetaInvitationsClient.tsx     |   6 +-
+ src/components/admin/BetaRequestsClient.tsx        |  91 +++-
+ src/components/admin/BetaWidgets.tsx               |   2 +-
+ src/components/admin/OrganizationsAdminClient.tsx  |  90 ++--
+ src/components/security/FirstAccessWizard.tsx      |  11 +-
+ src/components/security/security-client.ts         |  12 +-
+ src/server/admin-beta/invitations.service.ts       |  16 +-
+ src/server/admin-beta/policy.ts                    |   8 +-
+ src/server/admin-beta/requests.service.ts          |  69 ++-
+ src/server/admin/admin-access.service.ts           |  12 +-
+ src/server/admin/admin-http.ts                     |  48 +-
+ src/server/admin/admin-organizations.service.ts    | 247 +++++++++--
+ src/server/admin/admin-roles.service.ts            | 493 ++++++++++-----------
+ src/server/audit/admin-audit-policy.ts             |   1 +
+ src/server/auth/session.service.ts                 |   7 +-
+ src/server/iam/authorization.service.ts            |  13 +-
+ src/server/iam/effective-access-profile.service.ts |   5 +-
+ src/server/iam/permissions.ts                      |   6 +
+ src/server/iam/role-assignment.service.ts          |   1 +
+ src/server/iam/system-role-catalog.ts              |  20 +-
+ src/server/invitations/invitation.service.ts       |  33 +-
+ src/server/organizations/discovery.service.ts      |   4 +-
+ tests/admin-beta/journey.integration.test.ts       |  15 +-
+ tests/admin/admin-mfa.integration.test.ts          |   4 +-
+ tests/admin/f04-audit-idor.integration.test.ts     |   7 +-
+ tests/admin/role-adversarial.integration.test.ts   |  12 +-
+ tests/admin/role-governance.integration.test.ts    |  12 +-
+ tests/local/provision.integration.test.ts          |  56 ++-
+ 55 files changed, 1058 insertions(+), 729 deletions(-)
+
+$ git diff --check
+[exit 0; nenhuma saída]
+
+MODIFICADOS
+.github/workflows/ci.yml
+package.json
+prisma/schema.prisma
+src/app/(admin)/admin/layout.tsx
+src/app/(admin)/admin/organizacoes/page.tsx
+src/app/(admin)/admin/page.tsx
+src/app/(dashboard)/atendimentos/page.tsx
+src/app/(dashboard)/casos/page.tsx
+src/app/(dashboard)/chat/page.tsx
+src/app/(dashboard)/configuracoes/page.tsx
+src/app/(dashboard)/cursos/page.tsx
+src/app/(dashboard)/dashboard/page.tsx
+src/app/(dashboard)/ferramentas/page.tsx
+src/app/(dashboard)/layout.tsx
+src/app/(dashboard)/pacientes/[id]/page.tsx
+src/app/(dashboard)/pacientes/page.tsx
+src/app/(dashboard)/protocolos/page.tsx
+src/app/(dashboard)/registro/page.tsx
+src/app/api/admin/beta/requests/route.ts
+src/app/api/admin/organizations/[organizationId]/route.ts
+src/app/api/admin/organizations/route.ts
+src/app/api/admin/role-assignments/[assignmentId]/route.ts
+src/app/api/admin/role-assignments/route.ts
+src/components/admin/AccessAdminClient.tsx
+src/components/admin/AdminShell.tsx
+src/components/admin/AdminSidebar.tsx
+src/components/admin/AdminTopbar.tsx
+src/components/admin/BetaInvitationsClient.tsx
+src/components/admin/BetaRequestsClient.tsx
+src/components/admin/BetaWidgets.tsx
+src/components/admin/OrganizationsAdminClient.tsx
+src/components/security/FirstAccessWizard.tsx
+src/components/security/security-client.ts
+src/server/admin-beta/invitations.service.ts
+src/server/admin-beta/policy.ts
+src/server/admin-beta/requests.service.ts
+src/server/admin/admin-access.service.ts
+src/server/admin/admin-http.ts
+src/server/admin/admin-organizations.service.ts
+src/server/admin/admin-roles.service.ts
+src/server/audit/admin-audit-policy.ts
+src/server/auth/session.service.ts
+src/server/iam/authorization.service.ts
+src/server/iam/effective-access-profile.service.ts
+src/server/iam/permissions.ts
+src/server/iam/role-assignment.service.ts
+src/server/iam/system-role-catalog.ts
+src/server/invitations/invitation.service.ts
+src/server/organizations/discovery.service.ts
+tests/admin-beta/journey.integration.test.ts
+tests/admin/admin-mfa.integration.test.ts
+tests/admin/f04-audit-idor.integration.test.ts
+tests/admin/role-adversarial.integration.test.ts
+tests/admin/role-governance.integration.test.ts
+tests/local/provision.integration.test.ts
+
+ADICIONADOS/UNTRACKED
+docs/codex/AUDITORIA-FINAL-MISSAO-04-B.md
+docs/codex/RELATORIO-MISSAO-04-SLICE-B.md
+docs/evidence/missao-04-b/critical-review.md
+docs/evidence/missao-04-b/final-review-git.txt
+docs/evidence/missao-04-b/final-review.json
+docs/evidence/missao-04-b/manager-dark.png
+docs/evidence/missao-04-b/manager-desktop.png
+docs/evidence/missao-04-b/manager-mobile.png
+docs/evidence/missao-04-b/npm-audit-complete.json
+docs/evidence/missao-04-b/privacy-probe.txt
+docs/evidence/missao-04-b/validation.json
+prisma/migrations/20261022040000_mission04_delegated_governance/migration.sql
+scripts/test-mission04-b.sh
+src/components/admin/admin-theme.css
+src/lib/auth/access-destination.ts
+src/server/admin/admin-session.service.ts
+src/server/admin/institutional-invitation-policy.ts
+src/server/clinical/clinical-page-session.ts
+tests/helpers/verified-admin-session.ts
+tests/mission04-b/fixtures.ts
+tests/mission04-b/governance.spec.ts
+tests/mission04-b/governance.test.ts
+tests/mission04-b/legacy-upgrade.test.ts
+tests/mission04-b/playwright.config.ts
+
+STAGING SELETIVO DE REFERÊNCIA — NÃO EXECUTADO; depende de aprovação
+git add -- \
+  .github/workflows/ci.yml \
+  docs/codex/AUDITORIA-FINAL-MISSAO-04-B.md \
+  docs/codex/RELATORIO-MISSAO-04-SLICE-B.md \
+  docs/evidence/missao-04-b/critical-review.md \
+  docs/evidence/missao-04-b/final-review-git.txt \
+  docs/evidence/missao-04-b/final-review.json \
+  docs/evidence/missao-04-b/manager-dark.png \
+  docs/evidence/missao-04-b/manager-desktop.png \
+  docs/evidence/missao-04-b/manager-mobile.png \
+  docs/evidence/missao-04-b/npm-audit-complete.json \
+  docs/evidence/missao-04-b/privacy-probe.txt \
+  docs/evidence/missao-04-b/validation.json \
+  package.json \
+  prisma/migrations/20261022040000_mission04_delegated_governance/migration.sql \
+  prisma/schema.prisma \
+  scripts/test-mission04-b.sh \
+  'src/app/(admin)/admin/layout.tsx' \
+  'src/app/(admin)/admin/organizacoes/page.tsx' \
+  'src/app/(admin)/admin/page.tsx' \
+  'src/app/(dashboard)/atendimentos/page.tsx' \
+  'src/app/(dashboard)/casos/page.tsx' \
+  'src/app/(dashboard)/chat/page.tsx' \
+  'src/app/(dashboard)/configuracoes/page.tsx' \
+  'src/app/(dashboard)/cursos/page.tsx' \
+  'src/app/(dashboard)/dashboard/page.tsx' \
+  'src/app/(dashboard)/ferramentas/page.tsx' \
+  'src/app/(dashboard)/layout.tsx' \
+  'src/app/(dashboard)/pacientes/[id]/page.tsx' \
+  'src/app/(dashboard)/pacientes/page.tsx' \
+  'src/app/(dashboard)/protocolos/page.tsx' \
+  'src/app/(dashboard)/registro/page.tsx' \
+  src/app/api/admin/beta/requests/route.ts \
+  'src/app/api/admin/organizations/[organizationId]/route.ts' \
+  src/app/api/admin/organizations/route.ts \
+  'src/app/api/admin/role-assignments/[assignmentId]/route.ts' \
+  src/app/api/admin/role-assignments/route.ts \
+  src/components/admin/AccessAdminClient.tsx \
+  src/components/admin/AdminShell.tsx \
+  src/components/admin/AdminSidebar.tsx \
+  src/components/admin/AdminTopbar.tsx \
+  src/components/admin/BetaInvitationsClient.tsx \
+  src/components/admin/BetaRequestsClient.tsx \
+  src/components/admin/BetaWidgets.tsx \
+  src/components/admin/OrganizationsAdminClient.tsx \
+  src/components/admin/admin-theme.css \
+  src/components/security/FirstAccessWizard.tsx \
+  src/components/security/security-client.ts \
+  src/lib/auth/access-destination.ts \
+  src/server/admin-beta/invitations.service.ts \
+  src/server/admin-beta/policy.ts \
+  src/server/admin-beta/requests.service.ts \
+  src/server/admin/admin-access.service.ts \
+  src/server/admin/admin-http.ts \
+  src/server/admin/admin-organizations.service.ts \
+  src/server/admin/admin-roles.service.ts \
+  src/server/admin/admin-session.service.ts \
+  src/server/admin/institutional-invitation-policy.ts \
+  src/server/audit/admin-audit-policy.ts \
+  src/server/auth/session.service.ts \
+  src/server/clinical/clinical-page-session.ts \
+  src/server/iam/authorization.service.ts \
+  src/server/iam/effective-access-profile.service.ts \
+  src/server/iam/permissions.ts \
+  src/server/iam/role-assignment.service.ts \
+  src/server/iam/system-role-catalog.ts \
+  src/server/invitations/invitation.service.ts \
+  src/server/organizations/discovery.service.ts \
+  tests/admin-beta/journey.integration.test.ts \
+  tests/admin/admin-mfa.integration.test.ts \
+  tests/admin/f04-audit-idor.integration.test.ts \
+  tests/admin/role-adversarial.integration.test.ts \
+  tests/admin/role-governance.integration.test.ts \
+  tests/helpers/verified-admin-session.ts \
+  tests/local/provision.integration.test.ts \
+  tests/mission04-b/fixtures.ts \
+  tests/mission04-b/governance.spec.ts \
+  tests/mission04-b/governance.test.ts \
+  tests/mission04-b/legacy-upgrade.test.ts \
+  tests/mission04-b/playwright.config.ts

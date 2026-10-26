@@ -1,20 +1,13 @@
-// Never include reset tokens in logs, telemetry or HTTP responses.
-export async function sendPasswordResetEmail(to:string,token:string):Promise<void>{
-  const apiKey=process.env.RESEND_API_KEY?.trim();
-  const from=process.env.PAP_EMAIL_FROM?.trim();
-  const configured=process.env.PAP_PUBLIC_URL?.trim();
-  if(process.env.PAP_EMAIL_PROVIDER?.toLowerCase()!=="resend" || !apiKey || !from || !configured) throw new Error("MAIL_NOT_CONFIGURED");
-  const base=new URL(configured);
-  if(base.protocol!=="https:" && process.env.NODE_ENV==="production") throw new Error("UNSAFE_PUBLIC_URL");
-  if(!["https:","http:"].includes(base.protocol)) throw new Error("INVALID_PUBLIC_URL");
-  const url=new URL("/redefinir-senha",base);
-  // Fragment not sent by browsers in HTTP request, Referer, or proxy access logs.
-  url.hash=`token=${encodeURIComponent(token)}`;
-  const response=await fetch("https://api.resend.com/emails",{
-    method:"POST",
-    headers:{Authorization:`Bearer ${apiKey}`,"Content-Type":"application/json"},
-    body:JSON.stringify({from,to:[to],subject:"Redefinição de senha - PAP Saúde",
-      text:`Foi solicitada uma redefinição de senha da sua conta PAP Saúde. Se foi você, acesse este link temporário (30 minutos): ${url.toString()} . Caso contrário, ignore esta mensagem.`}),
-  });
-  if(!response.ok) throw new Error("MAIL_DELIVERY_FAILED");
+import { createHash } from "node:crypto";
+import { invitationBaseUrl, requireTransactionalMail, sendPlatformEmail } from "./email.service";
+import { transactionalTemplate } from "./templates";
+// Fragment is never sent in HTTP requests, Referer or access logs.
+export async function sendPasswordResetEmail(to: string, token: string, metadata?: { id: string; expiresAt: Date; createdAt: Date }): Promise<void> {
+  requireTransactionalMail();
+  const url = new URL("/redefinir-senha", invitationBaseUrl());
+  url.hash = `token=${encodeURIComponent(token)}`;
+  const tokenDigest = createHash("sha256").update(token).digest("hex");
+  await sendPlatformEmail({ to, ...transactionalTemplate({ kind: "PASSWORD_RESET", url: url.toString(), expiresAt: metadata?.expiresAt || new Date(Date.now() + 30 * 60_000) }),
+    messageId: `password-reset/${metadata?.id || tokenDigest}`, eventTime: metadata?.createdAt.toISOString(),
+    reference: metadata ? { kind: "PASSWORD_RESET", id: metadata.id } : undefined });
 }

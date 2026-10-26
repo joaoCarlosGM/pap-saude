@@ -1,5 +1,6 @@
 import {
   SessionRevocationReason,
+  type Prisma,
   type Session,
   type User,
 } from "@prisma/client";
@@ -40,6 +41,7 @@ export interface ValidatedSession {
 export interface ValidateSessionOptions {
   now?: Date;
   updateLastSeen?: boolean;
+  client?: Prisma.TransactionClient;
 }
 
 function addSeconds(date: Date, seconds: number): Date {
@@ -84,8 +86,9 @@ export async function validateSession(
   }
 
   const now = options.now ?? new Date();
+  const client = options.client ?? db;
 
-  const result = await db.session.findUnique({
+  const result = await client.session.findUnique({
     where: {
       tokenHash: hashSessionToken(token),
     },
@@ -116,7 +119,7 @@ export async function validateSession(
     options.updateLastSeen !== false &&
     shouldUpdateLastSeen(result.lastSeenAt, now)
   ) {
-    session = await db.session.update({
+    session = await client.session.update({
       where: {
         id: result.id,
       },

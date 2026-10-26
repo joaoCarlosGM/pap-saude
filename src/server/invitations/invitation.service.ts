@@ -1,3 +1,5 @@
+import { requireInstitutionalInvitationAccess, requireInstitutionalInvitationTarget } from "@/server/admin/institutional-invitation-policy"
+import { requirePapReviewer } from "@/server/admin-beta/policy"
 import {
   createHash,
   randomBytes,
@@ -24,15 +26,6 @@ import {
 import {
   normalizeEmail,
 } from "@/server/auth/password-authentication.service"
-
-import {
-  PERMISSIONS,
-} from "@/server/iam/permissions"
-
-
-import {
-  requireAdminOrganizationAccess,
-} from "@/server/admin/admin-access.service"
 
 import {
   INVITATION_TOKEN_BYTES,
@@ -101,20 +94,9 @@ async function createInvitation(
     roleKey: "PROFESSIONAL" | "HEALTH_UNIT_ADMIN"
   },
 ) {
-  await requireAdminOrganizationAccess(
-    input.invitedByUserId,
-    PERMISSIONS.USER_INVITE,
-    input.organizationId,
-  )
-
-  await requireAdminOrganizationAccess(
-    input.invitedByUserId,
-    PERMISSIONS.MEMBERSHIP_MANAGE,
-    input.organizationId,
-  )
+  await requireInstitutionalInvitationAccess(input.invitedByUserId, input.organizationId)
 
   if (input.roleKey === "HEALTH_UNIT_ADMIN") {
-    const { requirePapReviewer } = await import("@/server/admin-beta/policy");
     await requirePapReviewer(input.invitedByUserId);
     const approved = await db.organizationCandidate.findFirst({ where: { convertedOrganizationId: input.organizationId, status: "APPROVED", consentedAt: { not: null } } });
     if (!approved || approved.contactEmail !== input.email.trim().toLowerCase()) throw new InvitationPayloadError();
@@ -160,6 +142,8 @@ async function createInvitation(
     throw new InvitationPayloadError()
   }
 
+  await requireInstitutionalInvitationTarget(input.invitedByUserId, email)
+
   const displayName =
     normalizeDisplayName(
       input.displayName,
@@ -193,6 +177,8 @@ async function createInvitation(
       async (
         tx,
       ) => {
+        await requireInstitutionalInvitationAccess(input.invitedByUserId, organization.id, tx);
+        await requireInstitutionalInvitationTarget(input.invitedByUserId, email, tx);
         // Serialize invite/accept/revoke and bootstrap per organization.
         await tx.organization.update({where:{id:organization.id},data:{updatedAt:new Date()}});
 
@@ -366,11 +352,13 @@ async function createInvitation(
 
         invitationUrl,
         invitationId: invitation.id,
+        roleKey: invitation.roleKey,
+        expiresAt: invitation.expiresAt,
       })
 
     await db.$transaction(async tx => {
-      await tx.userInvitation.update({where:{id:invitation.id},data:{deliveryStatus:delivery.mode === "RESEND" ? "SENT" : "DEVELOPMENT",providerMessageId:delivery.mode === "RESEND" ? delivery.providerMessageId : null,deliveryAttemptedAt:new Date()}});
-      await writeAdminAudit({actorUserId:input.invitedByUserId,organizationId:organization.id,action:"INVITATION_DELIVERY",resourceType:"INVITATION",resourceId:invitation.id,reason:delivery.mode === "RESEND" ? "PROVIDER_ACCEPTED" : "DEVELOPMENT_ONLY"},tx);
+      await tx.userInvitation.updateMany({where:{id:invitation.id,deliveryStatus:{in:["SENDING","NOT_ATTEMPTED"]}},data:{deliveryStatus:delivery.status,providerMessageId:delivery.mode === "RESEND" ? delivery.providerMessageId : null,deliveryAttemptedAt:new Date()}});
+      await writeAdminAudit({actorUserId:input.invitedByUserId,organizationId:organization.id,action:"INVITATION_DELIVERY",resourceType:"INVITATION",resourceId:invitation.id,reason:delivery.status},tx);
     });
     return {
       invitation: {
@@ -399,7 +387,7 @@ async function createInvitation(
       delivery,
 
       developmentUrl:
-        delivery.mode ===
+        process.env.NODE_ENV !== "production" && delivery.mode ===
         "DEVELOPMENT"
           ? invitationUrl
           : undefined,
@@ -588,6 +576,13 @@ export async function acceptInvitation(
     async (
       tx,
     ) => {
+      // Revalidate authority and target at acceptance: identities/roles can change
+      // while a bearer invitation is pending. Never consume a now-invalid grant.
+      if (!existing.invitedByUserId) throw new InvalidInvitationError();
+      try {
+        await requireInstitutionalInvitationAccess(existing.invitedByUserId, existing.organizationId, tx);
+        await requireInstitutionalInvitationTarget(existing.invitedByUserId, existing.email, tx);
+      } catch { throw new InvalidInvitationError(); }
       await tx.organization.update({where:{id:existing.organizationId},data:{updatedAt:new Date()}});
       const currentUser = await tx.user.findUnique({where:{id:existing.user!.id}});
       const currentOrg = await tx.organization.findUnique({where:{id:existing.organizationId}});

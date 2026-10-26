@@ -1,0 +1,108 @@
+{
+  "results": [
+    {
+      "name": "web-build",
+      "command": [
+        "docker",
+        "build",
+        "--add-host",
+        "proxy:172.31.3.45",
+        "--build-arg",
+        "HTTP_PROXY",
+        "--build-arg",
+        "HTTPS_PROXY",
+        "--build-arg",
+        "NO_PROXY",
+        "--secret",
+        "id=build_ca,src=/usr/local/share/ca-certificates/environment-proxy-ca.crt",
+        "--target",
+        "runner",
+        "-t",
+        "pap-saude:m04-d-review",
+        "."
+      ],
+      "exitCode": 0,
+      "result": "PASS",
+      "seconds": 90.79
+    },
+    {
+      "name": "web-functional",
+      "command": [
+        "bash",
+        "scripts/test-f04-web-image.sh",
+        "pap-saude:m04-d-review",
+        "pap-saude-migrator:m04-d"
+      ],
+      "exitCode": 0,
+      "result": "PASS",
+      "seconds": 36.57
+    },
+    {
+      "name": "trivy",
+      "command": [
+        "bash",
+        "scripts/security/scan-f04-images.sh",
+        "pap-saude:m04-d-review",
+        "pap-saude-migrator:m04-d"
+      ],
+      "exitCode": 0,
+      "result": "PASS",
+      "seconds": 72.78
+    }
+  ],
+  "images": [
+    {
+      "Id": "sha256:fdc5af91e4d72db40e6391e5ebf3e18421b3ecde97ecb60ff7e077fe83dcc8cf",
+      "RepoTags": [
+        "pap-saude:m04-d-review"
+      ],
+      "Created": "2026-10-23T22:00:46.194321965Z",
+      "user": "nextjs"
+    },
+    {
+      "Id": "sha256:3b55e9742c9b3d34542fd6b52799a2b119780563249514824af4ef1f539e6f86",
+      "RepoTags": [
+        "pap-saude-migrator:m04-d"
+      ],
+      "Created": "2026-10-23T15:15:15.458867156Z",
+      "user": "node"
+    }
+  ],
+  "ownBuilderCacheCleanup": [
+    {
+      "ID": "iu8d4981p7g8a746n7ckh27fx",
+      "Parents": "",
+      "Created at": "2026-10-23 21:59:48.06384239 +0000 UTC",
+      "Mutable": "false",
+      "Reclaimable": "true",
+      "Shared": "false",
+      "Size": "11.16MB",
+      "Description": "[builder 2/3] COPY . .",
+      "Usage count": "1",
+      "Last used": "3 seconds ago",
+      "Type": "regular"
+    },
+    {
+      "ID": "7km4i4t377m2gq876a9y7vsuc",
+      "Parents": "",
+      "Created at": "2026-10-23 22:00:01.227048074 +0000 UTC",
+      "Mutable": "true",
+      "Reclaimable": "true",
+      "Shared": "false",
+      "Size": "186.9MB",
+      "Description": "mount / from exec /bin/sh -c if [ -f /run/secrets/build_ca ]; then export NODE_EXTRA_CA_CERTS=/run/secrets/build_ca; fi;     if [ -f /run/secrets/build_ca ]; then cat /run/secrets/build_ca >> /etc/ssl/cert.pem; fi;     npx prisma generate && npm run build",
+      "Usage count": "1",
+      "Last used": "3 seconds ago",
+      "Type": "regular"
+    }
+  ],
+  "migratorRebuilt": false,
+  "migratorIdentityUnchanged": true,
+  "migratorExercisedByCurrentWebFunctionalGate": true,
+  "oldDisposableDWebRemoved": {
+    "tag": "pap-saude:m04-d-final",
+    "id": "sha256:7493a9c2d211143d4792cd4a17449895326c5a1feb96cc5eba9c9de175c9adc8",
+    "proof": "Exact prior D evidence images.json; no dependent containers; no force, volumes or global prune",
+    "freeBytesAfter": 4150366208
+  }
+}

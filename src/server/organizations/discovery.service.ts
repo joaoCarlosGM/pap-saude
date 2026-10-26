@@ -473,6 +473,8 @@ const allowedTransitions:
       OrganizationCandidateStatus.CLOSED,
     ],
 
+    READY_FOR_ACTIVATION: [],
+    CHANGES_REQUESTED: [],
     APPROVED: [],
     REJECTED: [],
     DUPLICATE: [],
@@ -491,7 +493,7 @@ export async function transitionOrganizationCandidate(
       },
     });
 
-  if (!candidate) {
+  if (!candidate || candidate.consentedAt) {
     throw new OrganizationCandidateUnavailableError();
   }
 

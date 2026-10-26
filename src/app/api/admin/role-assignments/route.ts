@@ -1,3 +1,4 @@
+import { readSessionToken } from "@/server/auth/http-auth"
 import {
   NextRequest,
   NextResponse,
@@ -69,6 +70,7 @@ export async function POST(
       await createAdminRoleAssignment({
         actorUserId:
           session.user.id,
+        actorSessionToken: readSessionToken(request) ?? undefined,
 
         targetUserId:
           body.userId,

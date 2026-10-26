@@ -1,3 +1,4 @@
+import { requireClinicalPageSession } from "@/server/clinical/clinical-page-session";
 import ClinicalPatientDetail from "@/components/clinical/ClinicalPatientDetail";
 
 type Props = {
@@ -7,6 +8,7 @@ type Props = {
 };
 
 export default async function PatientPage({ params }: Props) {
+  await requireClinicalPageSession();
   const { id } = await params;
 
   return (

@@ -1,0 +1,11 @@
+{
+  "result": "PASS",
+  "exactLegacySnapshotsPreserved": true,
+  "backupRestored": true,
+  "rollForwardAfterRestore": true,
+  "migrateDeployIdempotent": true,
+  "originalVerifiedSessionValid": true,
+  "existingPasswordTotpLoginValid": true,
+  "legacyInstitutionalInvitationAccepted": true,
+  "automaticNewGrants": 0
+}

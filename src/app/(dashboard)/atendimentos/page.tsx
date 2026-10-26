@@ -1,6 +1,8 @@
+import { requireClinicalPageSession } from "@/server/clinical/clinical-page-session";
 import ClinicalEncounterList from "@/components/clinical/ClinicalEncounterList";
 
-export default function AtendimentosPage() {
+export default async function AtendimentosPage() {
+  await requireClinicalPageSession();
   return (
     <div className="mx-auto w-full max-w-[1600px] space-y-4 sm:space-y-6">
       <header>

@@ -13,6 +13,7 @@ import type { Protocol } from "@/types/protocolo"
 type ProtocolCardProps = {
   protocol: Protocol
   onPreview: (protocol: Protocol) => void
+  demo?: boolean
 }
 
 function formatDate(date: string) {
@@ -24,6 +25,7 @@ function formatDate(date: string) {
 export default function ProtocolCard({
   protocol,
   onPreview,
+  demo = false,
 }: ProtocolCardProps) {
   function handleDownload() {
     if (protocol.fileUrl) {
@@ -142,6 +144,8 @@ export default function ProtocolCard({
           variant="ghost"
           size="sm"
           onClick={handleDownload}
+          disabled={demo}
+          aria-label={demo ? "Download indisponível na demonstração" : undefined}
           className="text-slate-600"
         >
           <Download size={15} />

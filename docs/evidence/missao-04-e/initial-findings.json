@@ -1,0 +1,39 @@
+{
+  "findings": [
+    {
+      "result": "FAIL then corrected",
+      "area": "initial expiration fixture",
+      "evidence": "DB check session_expiration_after_creation rejected invalid test timestamp; fixture now backdates creation before expiration; real guard remains unchanged"
+    },
+    {
+      "result": "FAIL then corrected",
+      "area": "first visual browser run",
+      "evidence": "waiting on decode for below-fold lazy image exceeded test timeout; now waits only started image loads, without raising timeout or disabling axe"
+    },
+    {
+      "result": "FAIL then corrected",
+      "area": "initial legacy boundary test context",
+      "evidence": "restricted DB role cannot execute existing organizational IAM resolution (500); restricted positive DEMO proof retained, normal legacy deny test separated under own disposable URL"
+    },
+    {
+      "result": "FAIL then corrected",
+      "area": "clinical request shape",
+      "evidence": "missing tenant header produced 400; now valid synthetic tenant context is supplied and 403 required"
+    },
+    {
+      "result": "FAIL then corrected",
+      "area": "post npm-ci setup",
+      "evidence": "2 test files could not load Prisma client; npx prisma generate before regression, matching CI; no product code workaround"
+    },
+    {
+      "result": "CORRECTED / PASS",
+      "area": "MFA navigation loop identified by code review",
+      "evidence": "Commercial primary session with active factor now receives only a reauthentication notice. E2E performs real recovery-code login; no wizard, no factor rotation, other verified session preserved."
+    },
+    {
+      "result": "FAIL then corrected / PASS",
+      "area": "RSC test protocol assumptions",
+      "evidence": "Follow same-path _rsc normalization. Full navigation requires actual authorization redirect (including streamed NEXT_REDIRECT); prefetch must match a closed metadata-only transport tree. 108 sanitized receipts include five nonclinical identities. No Next validation setting disabled."
+    }
+  ]
+}

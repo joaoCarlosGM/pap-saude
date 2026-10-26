@@ -40,7 +40,7 @@ export default function AdminTopbar({
           type="button"
           aria-label="Abrir menu"
           onClick={onMenuClick}
-          className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg transition hover:bg-slate-100 md:hidden"
+          className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg hover:bg-slate-100 dark:hover:bg-[#28484b] md:hidden"
         >
           <Menu size={21} strokeWidth={1.8} />
         </button>
@@ -53,6 +53,7 @@ export default function AdminTopbar({
       </div>
 
       <div className="flex shrink-0 items-center gap-1 sm:gap-2">
+        <a href="/notificacoes" className="rounded-lg px-2 py-3 text-sm underline" aria-label="Minhas notificações">Notificações</a>
         <button
           type="button"
           aria-label="Ajuda"
@@ -66,7 +67,7 @@ export default function AdminTopbar({
               }),
             )
           }
-          className="flex h-9 items-center gap-2 rounded-lg px-2 text-sm transition hover:bg-slate-100 sm:px-3"
+          className="flex h-9 items-center gap-2 rounded-lg px-2 text-sm hover:bg-slate-100 dark:hover:bg-[#28484b] sm:px-3"
         >
           <HelpCircle size={17} strokeWidth={1.8} />
 
@@ -76,9 +77,9 @@ export default function AdminTopbar({
         <a
           href="/admin/minha-seguranca"
           aria-label="Minha segurança e perfil"
-          className="ml-1 flex items-center gap-2 rounded-lg px-1.5 py-1.5 transition hover:bg-slate-100 sm:ml-2 sm:px-2"
+          className="ml-1 flex items-center gap-2 rounded-lg px-1.5 py-1.5 hover:bg-slate-100 dark:hover:bg-[#28484b] sm:ml-2 sm:px-2"
         >
-          <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-pink-500 text-white text-xs font-semibold">
+          <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#064f50] text-white text-xs font-semibold">
             {initials(profile.user.displayName)}
           </span>
 
