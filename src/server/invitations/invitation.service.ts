@@ -1,5 +1,6 @@
 import { requireInstitutionalInvitationAccess, requireInstitutionalInvitationTarget } from "@/server/admin/institutional-invitation-policy"
-import { requirePapReviewer } from "@/server/admin-beta/policy"
+import { requirePapReviewer, serializable } from "@/server/admin-beta/policy"
+import { requireAdminActor } from "@/server/admin/admin-session.service"
 import {
   createHash,
   randomBytes,
@@ -87,6 +88,7 @@ function normalizeDisplayName(
 async function createInvitation(
   input: {
     invitedByUserId: string
+    actorSessionToken?: string
     organizationId: string
     email: string
     displayName: string
@@ -94,6 +96,7 @@ async function createInvitation(
     roleKey: "PROFESSIONAL" | "HEALTH_UNIT_ADMIN"
   },
 ) {
+  await requireAdminActor(input.invitedByUserId, input.actorSessionToken)
   await requireInstitutionalInvitationAccess(input.invitedByUserId, input.organizationId)
 
   if (input.roleKey === "HEALTH_UNIT_ADMIN") {
@@ -173,10 +176,11 @@ async function createInvitation(
     )
 
   const invitation =
-    await db.$transaction(
+    await serializable(
       async (
         tx,
       ) => {
+        await requireAdminActor(input.invitedByUserId, input.actorSessionToken, tx);
         await requireInstitutionalInvitationAccess(input.invitedByUserId, organization.id, tx);
         await requireInstitutionalInvitationTarget(input.invitedByUserId, email, tx);
         // Serialize invite/accept/revoke and bootstrap per organization.
@@ -184,6 +188,11 @@ async function createInvitation(
 
         const currentOrg = await tx.organization.findUnique({where:{id:organization.id}});
         if (!currentOrg?.isActive || currentOrg.status !== "ACTIVE") throw new InvitationPayloadError();
+        if (input.roleKey === "HEALTH_UNIT_ADMIN") {
+          await requirePapReviewer(input.invitedByUserId, tx);
+          const approved = await tx.organizationCandidate.findFirst({ where: { convertedOrganizationId: organization.id, status: "APPROVED", consentedAt: { not: null }, contactEmail: email } });
+          if (!approved) throw new InvitationPayloadError();
+        }
         if (input.roleKey === "HEALTH_UNIT_ADMIN" && await tx.roleAssignment.findFirst({where:{organizationId:organization.id,role:{key:"HEALTH_UNIT_ADMIN"}}})) throw new InvitationConflictError();
         let user =
           await tx.user.findUnique({
@@ -729,9 +738,9 @@ export async function acceptInvitation(
   )
 }
 
-export function createProfessionalInvitation(input: {invitedByUserId:string;organizationId:string;email:string;displayName:string;now?:Date}) {
+export function createProfessionalInvitation(input: {invitedByUserId:string;actorSessionToken?:string;organizationId:string;email:string;displayName:string;now?:Date}) {
   return createInvitation({...input,roleKey:"PROFESSIONAL"});
 }
-export function createHealthUnitAdminInvitation(input: {invitedByUserId:string;organizationId:string;email:string;displayName:string;now?:Date}) {
+export function createHealthUnitAdminInvitation(input: {invitedByUserId:string;actorSessionToken?:string;organizationId:string;email:string;displayName:string;now?:Date}) {
   return createInvitation({...input,roleKey:"HEALTH_UNIT_ADMIN"});
 }

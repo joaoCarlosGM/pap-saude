@@ -1,3 +1,4 @@
+import { globalGovernanceSummary } from "./governance-metrics.service";
 import { Prisma } from "@prisma/client";
 import { db } from "@/server/db/client";
 import { listAccessibleOrganizationIds } from "@/server/admin/admin-access.service";
@@ -20,6 +21,7 @@ export async function betaMetrics(
   start: Date,
   end: Date,
   organizationId?: string,
+  actorSessionToken?: string,
 ) {
   const scope = await listAccessibleOrganizationIds(
     userId,
@@ -192,6 +194,7 @@ export async function betaMetrics(
     reason: "AGGREGATED_ONLY",
   });
   return {
+    governanceSummary: await globalGovernanceSummary(userId, actorSessionToken, start, end, organizationId),
     periodStart: start,
     periodEnd: end,
     timezone: "UTC",

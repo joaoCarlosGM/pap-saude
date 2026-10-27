@@ -1,3 +1,4 @@
+import { verifiedSessionToken } from "../helpers/verified-admin-session";
 import { test, expect, type Page } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 import * as OTPAuth from "otpauth";
@@ -84,6 +85,7 @@ for (const role of ["PAP_ADMIN", "HEALTH_UNIT_ADMIN", "PROFESSIONAL"] as const)
           : createProfessionalInvitation
       )({
         invitedByUserId: root.user.id,
+        actorSessionToken: await verifiedSessionToken(root.user.id),
         organizationId: root.unit.id,
         email: inviteEmail,
         displayName: "Pessoa convidada sintética",

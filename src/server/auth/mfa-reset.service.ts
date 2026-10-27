@@ -3,6 +3,7 @@ import {
   MfaFactorStatus,
   MfaFactorType,
   SessionRevocationReason,
+  type Prisma,
 } from "@prisma/client";
 
 import { db } from "@/server/db/client";
@@ -65,12 +66,14 @@ function normalizeOptionalText(
 
 export async function resetMfaForUser(
   input: ResetMfaInput,
+  client?: Prisma.TransactionClient,
 ): Promise<ResetMfaResult> {
+  const database = client ?? db;
   const now =
     input.now ?? new Date();
 
   const user =
-    await db.user.findUnique({
+    await database.user.findUnique({
       where: {
         id:
           input.userId,
@@ -96,7 +99,7 @@ export async function resetMfaForUser(
 
   if (actorUserId !== null) {
     const actorExists =
-      await db.user.findUnique({
+      await database.user.findUnique({
         where: {
           id:
             actorUserId,
@@ -117,8 +120,7 @@ export async function resetMfaForUser(
       512,
     );
 
-  return db.$transaction(
-    async tx => {
+  const reset = async (tx: Prisma.TransactionClient) => {
       const factors =
         await tx.mfaFactor.updateMany({
           where: {
@@ -255,6 +257,6 @@ export async function resetMfaForUser(
         occurredAt:
           now,
       };
-    },
-  );
+    };
+  return client ? reset(client) : db.$transaction(reset);
 }

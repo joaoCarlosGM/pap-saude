@@ -869,6 +869,7 @@ test("pending invitation cannot grant clinical access after target is appointed 
   const email = `${randomUUID()}@synthetic.invalid`;
   const invitation = await createProfessionalInvitation({
     invitedByUserId: manager.user.id,
+    actorSessionToken: manager.token,
     organizationId: pendingId,
     email,
     displayName: "Pending delegated target",
@@ -1042,6 +1043,7 @@ test("revoked delegated inviter cannot authorize acceptance of an outstanding in
   const inviter = await actor("PAP_MANAGER");
   const created = await createProfessionalInvitation({
     invitedByUserId: inviter.user.id,
+    actorSessionToken: inviter.token,
     organizationId: pendingId,
     email: `${randomUUID()}@synthetic.invalid`,
     displayName: "Pending after revocation",

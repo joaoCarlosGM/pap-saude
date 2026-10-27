@@ -5,6 +5,7 @@ import {
 
 import {
   assertTrustedRequestOrigin,
+  readSessionToken,
 } from "@/server/auth/http-auth"
 
 import {
@@ -59,6 +60,7 @@ export async function POST(
 
     const result =
       await createProfessionalInvitation({
+        actorSessionToken: readSessionToken(request) ?? undefined,
         invitedByUserId:
           session.user.id,
 

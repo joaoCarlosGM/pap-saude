@@ -171,6 +171,7 @@ test("production disallows disabled/local capture and never returns an invitatio
       outgoing = String(options.body); return Response.json({ id: randomUUID() });
     });
     const created = await createProfessionalInvitation({ invitedByUserId: admin.user.id,
+    actorSessionToken: admin.token,
       email: address(), displayName: "Pessoa sintética produção", organizationId: admin.unit.id });
     assert.equal(created.developmentUrl, undefined);
     const payload = JSON.parse(outgoing), token = bearer(payload);
@@ -338,6 +339,7 @@ test("forgot password still requires trusted CSRF origin and cannot leak an acco
 });
 test("institutional bearer inspection accepts POST without query, never grants access, and preserves old token validity", async () => {
   const created = await createProfessionalInvitation({ invitedByUserId: admin.user.id,
+    actorSessionToken: admin.token,
     email: address(), displayName: "Pessoa D", organizationId: admin.unit.id });
   assert.ok((await db.userInvitation.findUniqueOrThrow({ where: { id: created.invitation.id } })).deliveryAttemptedAt);
   const token = bearer((await messages(created.invitation.email))[0]);

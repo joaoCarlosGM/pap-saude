@@ -26,7 +26,12 @@ export async function listOperationsMetrics(input: {
   for (const child of children) directIds.add(child.id);
   for (const child of allUnits) directIds.add(child.id);
   if (!directIds.size) return { ...scope, periodStart: input.start, periodEnd: input.end, rows: [] };
-  const where = { organizationId: { in: [...directIds] }, occurredAt: { gte: input.start, lt: input.end } };
+  const where = {
+    organizationId: { in: [...directIds] },
+    occurredAt: { gte: input.start, lt: input.end },
+    // The actor cohort must use the same product-event allowlist as totals.
+    eventKey: { in: Object.values(PRODUCT_ACTIVITY_EVENTS) },
+  };
   const [usage, actors] = await Promise.all([
     db.productActivityEvent.groupBy({ by: ["organizationId", "eventKey"], where,
       _count: { _all: true } }),

@@ -5,6 +5,7 @@ import {
 
 import {
   assertTrustedRequestOrigin,
+  readSessionToken,
 } from "@/server/auth/http-auth"
 
 import {
@@ -103,6 +104,7 @@ export async function POST(
 
       const result =
         await revokeAdminUserSession({
+          actorSessionToken: readSessionToken(request) ?? undefined,
           actorUserId:
             session.user.id,
 
@@ -133,6 +135,7 @@ export async function POST(
     ) {
       const result =
         await revokeAdminUserSessions({
+          actorSessionToken: readSessionToken(request) ?? undefined,
           actorUserId:
             session.user.id,
 
@@ -171,6 +174,7 @@ export async function POST(
 
       const result =
         await resetAdminUserMfa({
+          actorSessionToken: readSessionToken(request) ?? undefined,
           actorUserId:
             session.user.id,
 

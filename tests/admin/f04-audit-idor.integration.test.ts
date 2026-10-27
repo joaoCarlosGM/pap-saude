@@ -87,7 +87,7 @@ test("C/H: rejected organization updates never produce success events", async ()
 test("D: invitation records no token or email in audit data", async () => {
   const actor = await admin();
   const { unitA } = await tree();
-  const result = await createProfessionalInvitation({ invitedByUserId: actor.id, organizationId: unitA.id, email: "professional@example.test", displayName: "Professional" });
+  const result = await createProfessionalInvitation({ invitedByUserId: actor.id, actorSessionToken: await verifiedSessionToken(actor.id), organizationId: unitA.id, email: "professional@example.test", displayName: "Professional" });
   const event = await db.auditEvent.findFirstOrThrow({ where: { resourceId: result.invitation.id, action: "INVITATION_CREATED" } });
   assert.equal(event.organizationId, unitA.id);
   assert.equal(JSON.stringify(event).includes("professional@example.test"), false);

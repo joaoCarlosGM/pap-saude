@@ -1,3 +1,4 @@
+import { verifiedSessionToken } from "../helpers/verified-admin-session";
 import * as OTPAuth from "otpauth";
 import { authenticateLogin } from "../../src/server/auth/login.service";
 import { completeMfaLoginWithRecoveryCode } from "../../src/server/auth/mfa-login.service";
@@ -176,6 +177,7 @@ test("operator-selected admin has hashed password, global role and real enrollme
   );
   const invitation = await createHealthUnitAdminInvitation({
     invitedByUserId: admin.id,
+    actorSessionToken: verified.sessionToken,
     organizationId: approved.organizationId!,
     email: candidate.contactEmail!,
     displayName: candidate.contactName!,
@@ -189,6 +191,7 @@ test("operator-selected admin has hashed password, global role and real enrollme
   assert.equal(activated.roleKey, "HEALTH_UNIT_ADMIN");
   const professional = await createProfessionalInvitation({
     invitedByUserId: activated.userId,
+    actorSessionToken: await verifiedSessionToken(activated.userId),
     organizationId: approved.organizationId!,
     email: "professional@synthetic.invalid",
     displayName: "Synthetic Professional",

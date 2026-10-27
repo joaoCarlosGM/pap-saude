@@ -1,5 +1,5 @@
 import { NextRequest } from "next/server";
-import { assertTrustedRequestOrigin } from "@/server/auth/http-auth";
+import { assertTrustedRequestOrigin, readSessionToken } from "@/server/auth/http-auth";
 import { readAdminJson } from "@/server/admin/admin-http";
 import {
   listBetaInvitations,
@@ -40,7 +40,7 @@ export async function POST(request: NextRequest) {
     const session = await requireBetaSession(request);
     await betaRateLimit("invites", session.user.id, 30);
     return betaJson(
-      await mutateBetaInvitation(session.user.id, await readAdminJson(request)),
+      await mutateBetaInvitation(session.user.id, await readAdminJson(request), readSessionToken(request) ?? undefined),
       201,
     );
   } catch (error) {

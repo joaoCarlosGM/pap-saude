@@ -1,10 +1,13 @@
 "use client";
 
+import GovernanceSummaryCards from "./GovernanceSummaryCards";
+import type { GovernanceSummary } from "@/lib/admin/governance-metrics";
 import { emailDeliveryLabel } from "@/lib/email-delivery";
 import { Suspense, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { BetaTitle, DataState, useBetaData } from "./BetaWidgets";
 type Metrics = {
+  governanceSummary: GovernanceSummary | null;
   periodStart: string;
   periodEnd: string;
   generatedAt: string;
@@ -53,6 +56,7 @@ function MetricArea({ query }: { query: string }) {
       <DataState {...result} />
       {m && (
         <>
+          {m.governanceSummary && !result.error && !result.loading && <GovernanceSummaryCards summary={m.governanceSummary} />}
           <p className="text-xs text-slate-500">
             {result.error || result.loading
               ? "Dados anteriores — aguardando atualização. "

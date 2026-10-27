@@ -424,6 +424,7 @@ test("pending C identity cannot bypass authorization through old role APIs or in
   const address = `${randomUUID()}@synthetic.invalid`;
   const legacy = await createProfessionalInvitation({
     invitedByUserId: admin.user.id,
+    actorSessionToken: admin.token,
     organizationId: admin.unit.id,
     email: address,
     displayName: "Pessoa sintética",
@@ -469,6 +470,7 @@ test("pending C identity cannot bypass authorization through old role APIs or in
   await assert.rejects(
     createProfessionalInvitation({
       invitedByUserId: admin.user.id,
+    actorSessionToken: admin.token,
       organizationId: admin.unit.id,
       email: i.email,
       displayName: "Pessoa sintética",

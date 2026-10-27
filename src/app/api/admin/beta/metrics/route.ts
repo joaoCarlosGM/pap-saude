@@ -1,3 +1,4 @@
+import { readSessionToken } from "@/server/auth/http-auth";
 import { NextRequest, NextResponse } from "next/server";
 import { betaMetrics, csvCell } from "@/server/admin-beta/metrics.service";
 import {
@@ -33,6 +34,7 @@ export async function GET(request: NextRequest) {
       start,
       end,
       query.organizationId,
+      readSessionToken(request) ?? undefined,
     );
     if (format === "csv")
       return new NextResponse(
