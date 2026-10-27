@@ -9,6 +9,7 @@ on:
       - feature/foundation-04-admin-core
       - codex/f04-10-release-hardening
       - codex/pap-admin-beta1
+      - codex/p0-remediation-review-20261026
   pull_request:
     branches:
       - develop
@@ -133,6 +134,14 @@ jobs:
 
       - name: Authentication and MFA regression
         run: npm run test:auth
+
+      - name: P0 MFA, clinical integrity and Admin F regressions
+        run: |
+          bash scripts/test-release-mfa-limit.sh
+          bash scripts/test-p0-provenance.sh
+          bash scripts/test-p0-registration.sh --browser
+          bash scripts/test-release-admin.sh --browser
+          bash scripts/test-p0-clinical-runtime.sh
 
       - name: Build Docker web image
         run: docker build --target runner -t pap-saude:ci .
