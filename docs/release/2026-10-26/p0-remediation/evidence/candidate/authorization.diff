@@ -1,0 +1,846 @@
+diff --git a/scripts/db/f04-role-separation.sql b/scripts/db/f04-role-separation.sql
+index c77ff3d..46ad8e1 100644
+--- a/scripts/db/f04-role-separation.sql
++++ b/scripts/db/f04-role-separation.sql
+@@ -38,0 +39,18 @@ GRANT SELECT, INSERT ON public.audit_events TO :"runtime_role";
++-- Clinical snapshots live in a separate append-only ledger, never the admin log.
++DO $clinical_ledger$
++BEGIN
++ IF to_regclass('public.clinical_provenance_events') IS NOT NULL THEN
++  EXECUTE format('REVOKE ALL ON public.clinical_provenance_events FROM %I', current_setting('pap.runtime_role'));
++  EXECUTE format('GRANT SELECT, INSERT ON public.clinical_provenance_events TO %I', current_setting('pap.runtime_role'));
++ END IF;
++END $clinical_ledger$;
++-- Registration may complete a pending claim, but cannot rewrite its identity
++-- or remove a terminal idempotency/cancellation barrier.
++DO $registration_operations$
++BEGIN
++ IF to_regclass('public.clinical_registration_operations') IS NOT NULL THEN
++  EXECUTE format('REVOKE ALL ON public.clinical_registration_operations FROM %I', current_setting('pap.runtime_role'));
++  EXECUTE format('GRANT SELECT, INSERT ON public.clinical_registration_operations TO %I', current_setting('pap.runtime_role'));
++  EXECUTE format('GRANT UPDATE ("status", "patientId", "pregnancyId", "encounterId", "evaluationId", "completedAt") ON public.clinical_registration_operations TO %I', current_setting('pap.runtime_role'));
++ END IF;
++END $registration_operations$;
+diff --git a/src/server/admin-beta/invitations.service.ts b/src/server/admin-beta/invitations.service.ts
+index d4a7fb2..7a3dbdc 100644
+--- a/src/server/admin-beta/invitations.service.ts
++++ b/src/server/admin-beta/invitations.service.ts
+@@ -0,0 +1 @@
++import { requireAdminActor } from "@/server/admin/admin-session.service";
+@@ -8 +9 @@ import {
+-import { invalid, uuid } from "./policy";
++import { invalid, uuid, serializable } from "./policy";
+@@ -44,0 +46 @@ export async function mutateBetaInvitation(
++  actorSessionToken?: string,
+@@ -45,0 +48 @@ export async function mutateBetaInvitation(
++  await requireAdminActor(userId, actorSessionToken);
+@@ -54,0 +58 @@ export async function mutateBetaInvitation(
++      actorSessionToken,
+@@ -75,0 +80 @@ export async function mutateBetaInvitation(
++        actorSessionToken,
+@@ -81 +86,8 @@ export async function mutateBetaInvitation(
+-    return db.$transaction(async (tx) => {
++    return serializable(async (tx) => {
++      await requireAdminActor(userId, actorSessionToken, tx);
++      await requireInstitutionalInvitationAccess(userId, organizationId, tx);
++      const current = await tx.userInvitation.findFirst({
++        where: { id: invitation.id, organizationId },
++      });
++      if (!current || current.status === "ACCEPTED") invalid();
++      await requireInstitutionalInvitationTarget(userId, current.email, tx);
+@@ -113,0 +126 @@ export async function mutateBetaInvitation(
++    actorSessionToken,
+diff --git a/src/server/admin/admin-security.service.ts b/src/server/admin/admin-security.service.ts
+index 01b2178..297b5d4 100644
+--- a/src/server/admin/admin-security.service.ts
++++ b/src/server/admin/admin-security.service.ts
+@@ -0,0 +1,3 @@
++import type { Prisma } from "@prisma/client"
++import { serializable } from "@/server/admin-beta/policy"
++import { requireAdminActor } from "./admin-session.service"
+@@ -30,0 +34 @@ async function requireSecurityTarget(
++  client: Prisma.TransactionClient = db,
+@@ -33 +37 @@ async function requireSecurityTarget(
+-    await db.user.findUnique({
++    await client.user.findUnique({
+@@ -215,8 +219,5 @@ export async function listAdminSecurityPosture(
+-export async function revokeAdminUserSession(
+-  input: {
+-    actorUserId: string
+-    actorSessionId?: string | null
+-    targetUserId: string
+-    targetSessionId: string
+-    now?: Date
+-  },
++/** Authorization and the security mutation share one retryable snapshot. */
++async function securityMutation<T>(
++  input: { actorUserId: string; actorSessionToken?: string; targetUserId: string },
++  permission: typeof PERMISSIONS.USER_SECURITY_MANAGE | typeof PERMISSIONS.MFA_RESET,
++  action: (tx: Prisma.TransactionClient, actorSessionId: string) => Promise<T>,
+@@ -224,11 +225,7 @@ export async function revokeAdminUserSession(
+-  await requirePermission({
+-    userId:
+-      input.actorUserId,
+-
+-    permission:
+-      PERMISSIONS.USER_SECURITY_MANAGE,
+-  })
+-
+-  await requireSecurityTarget(
+-    input.targetUserId,
+-  )
++  return serializable(async tx => {
++    const actor = await requireAdminActor(input.actorUserId, input.actorSessionToken, tx);
++    await requirePermission({ userId: input.actorUserId, permission }, tx);
++    await requireSecurityTarget(input.targetUserId, tx);
++    return action(tx, actor.session.id);
++  });
++}
+@@ -236,2 +233,10 @@ export async function revokeAdminUserSession(
+-  const now = input.now ?? new Date()
+-  await db.$transaction(async tx => {
++export async function revokeAdminUserSession(input: {
++  actorUserId: string;
++  actorSessionToken?: string;
++  actorSessionId?: string | null;
++  targetUserId: string;
++  targetSessionId: string;
++  now?: Date;
++}) {
++  const now = input.now ?? new Date();
++  await securityMutation(input, PERMISSIONS.USER_SECURITY_MANAGE, async (tx, actorSessionId) => {
+@@ -239,17 +244,11 @@ export async function revokeAdminUserSession(
+-      where:{id:input.targetSessionId,userId:input.targetUserId,revokedAt:null},
+-      data:{revokedAt:now,revocationReason:SessionRevocationReason.ADMIN_REVOKED},
+-    })
+-    if(changed.count!==1) throw new AdminSecuritySessionNotFoundError()
+-    await tx.auditEvent.create({data:{
+-      actorUserId:input.actorUserId,action:"SESSION_REVOKED",resourceType:"USER_SESSION",
+-      resourceId:input.targetSessionId,outcome:AuditOutcome.SUCCESS,
+-      sessionId:input.actorSessionId??null,metadata:{targetUserId:input.targetUserId},occurredAt:now,
+-    }})
+-  })
+-
+-  return {
+-    revoked:
+-      true,
+-    sessionId:
+-      input.targetSessionId,
+-  }
++      where: { id: input.targetSessionId, userId: input.targetUserId, revokedAt: null },
++      data: { revokedAt: now, revocationReason: SessionRevocationReason.ADMIN_REVOKED },
++    });
++    if (changed.count !== 1) throw new AdminSecuritySessionNotFoundError();
++    await tx.auditEvent.create({ data: {
++      actorUserId: input.actorUserId, action: "SESSION_REVOKED", resourceType: "USER_SESSION",
++      resourceId: input.targetSessionId, outcome: AuditOutcome.SUCCESS,
++      sessionId: actorSessionId, metadata: { targetUserId: input.targetUserId }, occurredAt: now,
++    } });
++  });
++  return { revoked: true, sessionId: input.targetSessionId };
+@@ -258,39 +257,21 @@ export async function revokeAdminUserSession(
+-export async function revokeAdminUserSessions(
+-  input: {
+-    actorUserId: string
+-    actorSessionId?: string | null
+-    targetUserId: string
+-    now?: Date
+-  },
+-) {
+-  await requirePermission({
+-    userId:
+-      input.actorUserId,
+-
+-    permission:
+-      PERMISSIONS.USER_SECURITY_MANAGE,
+-  })
+-
+-  await requireSecurityTarget(
+-    input.targetUserId,
+-  )
+-
+-  const now =
+-    input.now ??
+-    new Date()
+-
+-  const count = await db.$transaction(async tx => {
+-    const changed=await tx.session.updateMany({where:{userId:input.targetUserId,revokedAt:null},
+-      data:{revokedAt:now,revocationReason:SessionRevocationReason.ADMIN_REVOKED}})
+-    await tx.auditEvent.create({data:{
+-      actorUserId:input.actorUserId,action:"USER_SESSIONS_REVOKED",resourceType:"USER",
+-      resourceId:input.targetUserId,outcome:AuditOutcome.SUCCESS,
+-      sessionId:input.actorSessionId??null,metadata:{revokedSessions:changed.count},occurredAt:now,
+-    }})
+-    return changed.count
+-  })
+-
+-  return {
+-    revokedSessions:
+-      count,
+-  }
++export async function revokeAdminUserSessions(input: {
++  actorUserId: string;
++  actorSessionToken?: string;
++  actorSessionId?: string | null;
++  targetUserId: string;
++  now?: Date;
++}) {
++  const now = input.now ?? new Date();
++  const count = await securityMutation(input, PERMISSIONS.USER_SECURITY_MANAGE, async (tx, actorSessionId) => {
++    const changed = await tx.session.updateMany({
++      where: { userId: input.targetUserId, revokedAt: null },
++      data: { revokedAt: now, revocationReason: SessionRevocationReason.ADMIN_REVOKED },
++    });
++    await tx.auditEvent.create({ data: {
++      actorUserId: input.actorUserId, action: "USER_SESSIONS_REVOKED", resourceType: "USER",
++      resourceId: input.targetUserId, outcome: AuditOutcome.SUCCESS,
++      sessionId: actorSessionId, metadata: { revokedSessions: changed.count }, occurredAt: now,
++    } });
++    return changed.count;
++  });
++  return { revokedSessions: count };
+@@ -299,37 +280,12 @@ export async function revokeAdminUserSessions(
+-export async function resetAdminUserMfa(
+-  input: {
+-    actorUserId: string
+-    actorSessionId?: string | null
+-    targetUserId: string
+-    reason?: string | null
+-    now?: Date
+-  },
+-) {
+-  await requirePermission({
+-    userId:
+-      input.actorUserId,
+-
+-    permission:
+-      PERMISSIONS.MFA_RESET,
+-  })
+-
+-  await requireSecurityTarget(
+-    input.targetUserId,
+-  )
+-
+-  return resetMfaForUser({
+-    userId:
+-      input.targetUserId,
+-
+-    actorUserId:
+-      input.actorUserId,
+-
+-    reason:
+-      input.reason,
+-
+-    sessionId:
+-      input.actorSessionId,
+-
+-    now:
+-      input.now,
+-  })
++export async function resetAdminUserMfa(input: {
++  actorUserId: string;
++  actorSessionToken?: string;
++  actorSessionId?: string | null;
++  targetUserId: string;
++  reason?: string | null;
++  now?: Date;
++}) {
++  return securityMutation(input, PERMISSIONS.MFA_RESET, (tx, actorSessionId) => resetMfaForUser({
++    userId: input.targetUserId, actorUserId: input.actorUserId,
++    reason: input.reason, sessionId: actorSessionId, now: input.now,
++  }, tx));
+diff --git a/src/server/auth/http-auth.ts b/src/server/auth/http-auth.ts
+index 398c5d7..f51c2d5 100644
+--- a/src/server/auth/http-auth.ts
++++ b/src/server/auth/http-auth.ts
+@@ -154,0 +155,27 @@ export function getRequestUserAgent(
++/** Limit actual streamed bytes even when Content-Length is missing or forged. */
++async function readBoundedJson(request: Request, maximumBytes: number): Promise<unknown> {
++  try {
++    if (!request.body) throw new InvalidLoginPayloadError();
++    const reader = request.body.getReader();
++    const chunks: Uint8Array[] = [];
++    let received = 0;
++    try {
++      while (true) {
++        const { done, value } = await reader.read();
++        if (done) break;
++        received += value.byteLength;
++        if (received > maximumBytes) {
++          await reader.cancel().catch(() => undefined);
++          throw new InvalidLoginPayloadError();
++        }
++        chunks.push(value);
++      }
++    } finally {
++      reader.releaseLock();
++    }
++    return JSON.parse(Buffer.concat(chunks.map(chunk => Buffer.from(chunk))).toString("utf8"));
++  } catch {
++    throw new InvalidLoginPayloadError();
++  }
++}
++
+@@ -188 +215 @@ export async function readLoginPayload(
+-    body = await request.json();
++    body = await readBoundedJson(request, MAX_LOGIN_BODY_BYTES);
+@@ -281,4 +308 @@ export async function readMfaCodePayload(
+-  const raw=await request.text();
+-  if(Buffer.byteLength(raw,"utf8")>4096) throw new InvalidLoginPayloadError();
+-  let body:unknown;
+-  try {body=JSON.parse(raw);}catch{throw new InvalidLoginPayloadError();}
++  const body = await readBoundedJson(request, 4096);
+diff --git a/src/server/auth/mfa-attempt-limit.service.ts b/src/server/auth/mfa-attempt-limit.service.ts
+new file mode 100644
+index 0000000..ce4f5cf
+--- /dev/null
++++ b/src/server/auth/mfa-attempt-limit.service.ts
+@@ -0,0 +1,65 @@
++import { AuditOutcome } from "@prisma/client";
++import { db } from "@/server/db/client";
++import { sha256 } from "@/server/security/crypto";
++import {
++  ConsumedMfaChallengeError,
++  ExpiredMfaChallengeError,
++  InvalidMfaChallengeError,
++  MfaLoginThrottledError,
++} from "./mfa.errors";
++
++const WINDOW_MS = 15 * 60_000;
++export const MFA_LOGIN_ATTEMPT_LIMITS = {
++  challenge: 5,
++  identity: 20,
++  origin: 100,
++} as const;
++
++/** Reserve an attempt BEFORE checking TOTP/recovery. Atomic shared counters bound
++ * concurrent workers; a new challenge or source IP cannot reset identity limits.
++ * Challenge limits span its entire lifetime, including a time-window boundary.
++ * Only domain-separated hashes and counts are stored, never codes, IPs or tokens.
++ */
++export async function reserveMfaLoginAttempt(
++  challenge: { id: string; userId: string; ipHash: string | null },
++  origin: string | undefined,
++  now: Date,
++): Promise<void> {
++  const window = Math.floor(now.getTime() / WINDOW_MS);
++  const originHash = sha256(`mfa-origin:v1\0${origin?.trim() || challenge.ipHash || "trusted-internal-service"}`);
++  const identityHash = sha256(`mfa-identity:v1\0${challenge.userId}`);
++  const allowed = await db.$transaction(async tx => {
++    const current = await tx.mfaChallenge.findUnique({
++      where: { id: challenge.id },
++      include: { user: { select: { isActive: true } } },
++    });
++    if (!current || current.userId !== challenge.userId || current.revokedAt || !current.user.isActive)
++      throw new InvalidMfaChallengeError();
++    if (current.consumedAt) throw new ConsumedMfaChallengeError();
++    if (current.expiresAt <= now) throw new ExpiredMfaChallengeError();
++    // All workers acquire shared buckets in the same order.
++    const buckets = [
++      { scope: "ORIGIN", key: sha256(`mfa-limit-origin:v1:${window}:${originHash}`), limit: MFA_LOGIN_ATTEMPT_LIMITS.origin, expiresAt: new Date((window + 2) * WINDOW_MS) },
++      { scope: "IDENTITY", key: sha256(`mfa-limit-identity:v1:${window}:${identityHash}`), limit: MFA_LOGIN_ATTEMPT_LIMITS.identity, expiresAt: new Date((window + 2) * WINDOW_MS) },
++      { scope: "CHALLENGE", key: sha256(`mfa-limit-challenge:v1:${challenge.id}`), limit: MFA_LOGIN_ATTEMPT_LIMITS.challenge, expiresAt: current.expiresAt },
++    ];
++    for (const bucket of buckets) {
++      const row = await tx.betaAbuseBucket.upsert({
++        where: { key: bucket.key },
++        create: { key: bucket.key, count: 1, expiresAt: bucket.expiresAt },
++        update: { count: { increment: 1 } },
++      });
++      if (row.count > bucket.limit) {
++        await tx.auditEvent.create({ data: {
++          action: "MFA_LOGIN_THROTTLED", resourceType: "AUTHENTICATION", resourceId: identityHash,
++          outcome: AuditOutcome.FAILURE, ipHash: originHash, occurredAt: now,
++          metadata: { scope: bucket.scope },
++        } });
++        // Commit counters/audit even when denied. Throwing here would roll them back.
++        return false;
++      }
++    }
++    return true;
++  });
++  if (!allowed) throw new MfaLoginThrottledError();
++}
+diff --git a/src/server/auth/mfa-login.service.ts b/src/server/auth/mfa-login.service.ts
+index 3884a75..1d2381c 100644
+--- a/src/server/auth/mfa-login.service.ts
++++ b/src/server/auth/mfa-login.service.ts
+@@ -0,0 +1 @@
++import { reserveMfaLoginAttempt } from "./mfa-attempt-limit.service";
+@@ -23,0 +25 @@ export interface CompleteMfaLoginInput {
++  origin?: string;
+@@ -39,0 +42,2 @@ export async function completeMfaLogin(
++  await reserveMfaLoginAttempt(challenge, input.origin, now);
++
+@@ -108,0 +113 @@ export interface CompleteMfaLoginWithRecoveryCodeInput {
++  origin?: string;
+@@ -128,0 +134,2 @@ export async function completeMfaLoginWithRecoveryCode(
++  await reserveMfaLoginAttempt(challenge, input.origin, now);
++
+diff --git a/src/server/auth/mfa-reset.service.ts b/src/server/auth/mfa-reset.service.ts
+index 59be192..84f5ad2 100644
+--- a/src/server/auth/mfa-reset.service.ts
++++ b/src/server/auth/mfa-reset.service.ts
+@@ -5,0 +6 @@ import {
++  type Prisma,
+@@ -67,0 +69 @@ export async function resetMfaForUser(
++  client?: Prisma.TransactionClient,
+@@ -68,0 +71 @@ export async function resetMfaForUser(
++  const database = client ?? db;
+@@ -73 +76 @@ export async function resetMfaForUser(
+-    await db.user.findUnique({
++    await database.user.findUnique({
+@@ -99 +102 @@ export async function resetMfaForUser(
+-      await db.user.findUnique({
++      await database.user.findUnique({
+@@ -120,2 +123 @@ export async function resetMfaForUser(
+-  return db.$transaction(
+-    async tx => {
++  const reset = async (tx: Prisma.TransactionClient) => {
+@@ -258,2 +260,2 @@ export async function resetMfaForUser(
+-    },
+-  );
++    };
++  return client ? reset(client) : db.$transaction(reset);
+diff --git a/src/server/auth/mfa.errors.ts b/src/server/auth/mfa.errors.ts
+index 8589fc6..84073a1 100644
+--- a/src/server/auth/mfa.errors.ts
++++ b/src/server/auth/mfa.errors.ts
+@@ -79,0 +80,7 @@ export class MfaResetTargetUnavailableError extends MfaError {
++
++export class MfaLoginThrottledError extends MfaError {
++  constructor() {
++    super("MFA login temporarily unavailable");
++    this.name = "MfaLoginThrottledError";
++  }
++}
+diff --git a/src/server/clinical-registration/registration.service.ts b/src/server/clinical-registration/registration.service.ts
+new file mode 100644
+index 0000000..b05db5a
+--- /dev/null
++++ b/src/server/clinical-registration/registration.service.ts
+@@ -0,0 +1,192 @@
++import { createHash, createHmac } from "node:crypto";
++import { AuditOutcome, Prisma, type ClinicalRegistrationOperation } from "@prisma/client";
++import { db } from "../db/client";
++import { validateSession } from "../auth/session.service";
++import { InvalidSessionError, ExpiredSessionError, RevokedSessionError, InactiveSessionUserError } from "../auth/session.errors";
++import { requirePermission } from "../iam/authorization.service";
++import { AccessDeniedError } from "../iam/authorization.errors";
++import { PERMISSIONS } from "../iam/permissions";
++import { createPatient, findPatientByCpf } from "../patients/patient.service";
++import { PatientCpfConflictError } from "../patients/patient.errors";
++import { hasActivePatientOrganizationLink, linkPatientToOrganization } from "../patients/patient-organization.service";
++import { createPregnancy, getActivePregnancyForPatient } from "../pregnancies/pregnancy.service";
++import { ActivePregnancyConflictError } from "../pregnancies/pregnancy.errors";
++import { createEncounter, startEncounter, completeEncounter } from "../encounters/encounter.service";
++import { createVitalSigns } from "../vital-signs/vital-signs.service";
++import { createObstetricData } from "../obstetric-data/obstetric-data.service";
++import { persistEncounterMeowsEvaluation } from "../meows/meows.service";
++import { RegistrationInputError, validateRegistrationPayload } from "./registration.validation";
++
++export class RegistrationOperationError extends Error {
++  constructor(readonly code: string, readonly status: 400 | 401 | 403 | 409 | 503) { super(code); }
++}
++export type RegistrationStage = "AUTHORIZED" | "CLAIMED" | "PATIENT" | "PREGNANCY" | "ENCOUNTER" | "STARTED" | "VITALS" | "OBSTETRICS" | "EVALUATED" | "COMPLETED" | "FINALIZED";
++export type RegistrationIdentity = { sessionToken: string; organizationId: string; operationKey: string };
++type Actor = { userId: string; sessionId: string; organizationId: string };
++const permissions = [PERMISSIONS.PATIENT_READ, PERMISSIONS.PATIENT_CREATE, PERMISSIONS.PREGNANCY_READ, PERMISSIONS.PREGNANCY_CREATE, PERMISSIONS.ENCOUNTER_READ, PERMISSIONS.ENCOUNTER_CREATE, PERMISSIONS.ENCOUNTER_UPDATE, PERMISSIONS.VITAL_SIGNS_CREATE, PERMISSIONS.OBSTETRIC_DATA_CREATE, PERMISSIONS.MEOWS_READ, PERMISSIONS.MEOWS_EVALUATE] as const;
++
++function identity(input: RegistrationIdentity) {
++  if (!/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(input.operationKey)) throw new RegistrationInputError();
++  if (!input.organizationId.trim() || input.organizationId.length > 128 || /[\x00-\x1f,]/.test(input.organizationId)) throw new RegistrationInputError();
++  const operationKey = input.operationKey.toLowerCase();
++  return { operationKey, keyHash: createHash("sha256").update("pap:clinical-registration:key:v1:").update(operationKey).digest("hex") };
++}
++async function authorize(input: RegistrationIdentity, tx: Prisma.TransactionClient): Promise<Actor> {
++  let actor;
++  try {
++    actor = await validateSession(input.sessionToken, { client: tx, updateLastSeen: false });
++  } catch (error) {
++    if (error instanceof InvalidSessionError || error instanceof ExpiredSessionError || error instanceof RevokedSessionError || error instanceof InactiveSessionUserError) {
++      throw new RegistrationOperationError("AUTHENTICATION_REQUIRED", 401);
++    }
++    throw error;
++  }
++  for (const permission of permissions) await requirePermission({ userId: actor.user.id, organizationId: input.organizationId, permission }, tx);
++  // Professional enrollment remains optional. Once enrolled, a primary session
++  // cannot substitute for the real second-factor login, including old sessions.
++  const factor = await tx.mfaFactor.findFirst({ where: { userId: actor.user.id, type: "TOTP", status: "ACTIVE" }, orderBy: { enabledAt: "desc" }, select: { enabledAt: true } });
++  if (factor) {
++    const verified = actor.session.mfaVerifiedAt;
++    if (!verified || !factor.enabledAt || verified < factor.enabledAt || verified < actor.session.createdAt || verified > new Date()) throw new RegistrationOperationError("MFA_REQUIRED", 403);
++  }
++  return { userId: actor.user.id, sessionId: actor.session.id, organizationId: input.organizationId };
++}
++function selector(actor: Actor, keyHash: string) {
++  return { actorUserId_organizationId_keyHash: { actorUserId: actor.userId, organizationId: actor.organizationId, keyHash } };
++}
++async function completedResult(row: ClinicalRegistrationOperation, actor: Actor, tx: Prisma.TransactionClient) {
++  if (row.status !== "COMPLETED" || !row.patientId || !row.encounterId || !row.evaluationId) throw new RegistrationOperationError("REGISTRATION_UNAVAILABLE", 503);
++  if (!await hasActivePatientOrganizationLink(row.patientId, actor.organizationId, tx)) throw new AccessDeniedError();
++  const [patient, encounter, meows] = await Promise.all([
++    tx.patient.findUnique({ where: { id: row.patientId }, select: { isActive: true } }),
++    tx.encounter.findUnique({ where: { id: row.encounterId }, select: { organizationId: true, patientId: true, pregnancyId: true, status: true } }),
++    tx.clinicalEvaluation.findUnique({ where: { id: row.evaluationId } }),
++  ]);
++  if (!patient?.isActive || encounter?.organizationId !== actor.organizationId || encounter.patientId !== row.patientId || encounter.pregnancyId !== row.pregnancyId || encounter.status !== "COMPLETED" || !meows || meows.encounterId !== row.encounterId || meows.patientId !== row.patientId) throw new AccessDeniedError();
++  return { patientId: row.patientId, pregnancyId: row.pregnancyId, encounterId: row.encounterId, meows };
++}
++function retryable(error: unknown) {
++  return (error instanceof Prisma.PrismaClientKnownRequestError && ["P2034", "P2002"].includes(error.code)) || error instanceof PatientCpfConflictError || error instanceof ActivePregnancyConflictError;
++}
++function classification(error: unknown) {
++  if (error instanceof AccessDeniedError) return "ACCESS_DENIED";
++  if (error instanceof RegistrationOperationError) return error.code;
++  if (error instanceof RegistrationInputError) return "REGISTRATION_INVALID_INPUT";
++  return "REGISTRATION_UNAVAILABLE";
++}
++
++/** Trusted dependency injection only; no HTTP payload or environment enables hooks. */
++export function createClinicalRegistrationService(options: { afterStage?: (stage: RegistrationStage) => Promise<void>; transactionTimeoutMs?: number } = {}) {
++  async function transaction<T>(action: (tx: Prisma.TransactionClient) => Promise<T>) {
++    for (let attempt = 0; ; attempt++) {
++      try {
++        return await db.$transaction(action, { isolationLevel: Prisma.TransactionIsolationLevel.Serializable, maxWait: 5_000, timeout: options.transactionTimeoutMs ?? 15_000 });
++      } catch (error) {
++        if (!retryable(error) || attempt >= 4) throw error;
++        await new Promise(resolve => setTimeout(resolve, 10 * (attempt + 1)));
++      }
++    }
++  }
++  async function auditFailure(actor: Actor | undefined, stage: RegistrationStage | "VALIDATION", error: unknown) {
++    if (!actor) return;
++    try {
++      await db.auditEvent.create({ data: {
++        actorUserId: actor.userId, sessionId: actor.sessionId, organizationId: actor.organizationId,
++        action: "CLINICAL_REGISTRATION_FAILED", resourceType: "CLINICAL_REGISTRATION_OPERATION",
++        outcome: AuditOutcome.FAILURE,
++        // A connection failure during COMMIT can leave the caller uncertain.
++        // Never describe a failed response as proof of database rollback.
++        reason: classification(error), metadata: { version: 1, stage, writeOutcome: "UNCONFIRMED", retrySameKey: true },
++      } });
++    } catch {
++      throw new RegistrationOperationError("REGISTRATION_AUDIT_UNAVAILABLE", 503);
++    }
++  }
++  async function submit(input: RegistrationIdentity & { payload: unknown }) {
++    const key = identity(input);
++    const payload = validateRegistrationPayload(input.payload);
++    // Generated timestamps never enter the fingerprint. HMAC avoids persisting
++    // a dictionary-checkable unsalted digest of names or dates of birth.
++    const fingerprint = createHmac("sha256", key.operationKey).update("pap:clinical-registration:payload:v1:").update(JSON.stringify(payload)).digest("hex");
++    let failureActor: Actor | undefined;
++    let stage: RegistrationStage | "VALIDATION" = "VALIDATION";
++    try {
++      return await transaction(async tx => {
++        const actor = await authorize(input, tx);
++        failureActor = actor;
++        const observe = async (next: RegistrationStage) => { stage = next; await options.afterStage?.(next); };
++        await observe("AUTHORIZED");
++        const existing = await tx.clinicalRegistrationOperation.findUnique({ where: selector(actor, key.keyHash) });
++        if (existing) {
++          if (existing.status === "CANCELLED") throw new RegistrationOperationError("REGISTRATION_OPERATION_CANCELLED", 409);
++          if (existing.requestFingerprint !== fingerprint) throw new RegistrationOperationError("REGISTRATION_OPERATION_PAYLOAD_CONFLICT", 409);
++          return { status: "COMPLETED" as const, replayed: true, registration: await completedResult(existing, actor, tx) };
++        }
++        const operation = await tx.clinicalRegistrationOperation.create({ data: { actorUserId: actor.userId, organizationId: actor.organizationId, keyHash: key.keyHash, requestFingerprint: fingerprint } });
++        await observe("CLAIMED");
++        let patient = payload.patient.cpf ? await findPatientByCpf(payload.patient.cpf, tx) : null;
++        if (patient) {
++          // A CPF is never permission to attach a foreign tenant's chart.
++          if (!await hasActivePatientOrganizationLink(patient.id, actor.organizationId, tx)) throw new RegistrationOperationError("REGISTRATION_PATIENT_REQUIRES_REVIEW", 409);
++          if (!patient.isActive) throw new AccessDeniedError();
++        } else {
++          patient = await createPatient(payload.patient, tx);
++          await linkPatientToOrganization({ patientId: patient.id, organizationId: actor.organizationId, isPrimary: true }, tx);
++        }
++        await observe("PATIENT");
++        let pregnancy = await getActivePregnancyForPatient(patient.id, tx);
++        if (!pregnancy && (payload.pregnancy.firstPrenatal || payload.pregnancy.lastMenstrualDate)) {
++          pregnancy = await createPregnancy({ patientId: patient.id, lastMenstrualDate: payload.pregnancy.lastMenstrualDate, firstPrenatalAt: payload.pregnancy.firstPrenatal ? new Date() : null }, tx);
++        }
++        await observe("PREGNANCY");
++        const encounter = await createEncounter({ patientId: patient.id, pregnancyId: pregnancy?.id ?? null, organizationId: actor.organizationId, chiefComplaint: payload.chiefComplaint }, tx);
++        await observe("ENCOUNTER");
++        await startEncounter(encounter.id, tx);
++        await observe("STARTED");
++        const actorContext = { actorUserId: actor.userId, sessionId: actor.sessionId, organizationId: actor.organizationId, reason: "Cadastro clínico inicial" };
++        const vitals = { ...payload.vitalSigns, encounterId: encounter.id, actorContext };
++        await createVitalSigns(vitals, tx);
++        await observe("VITALS");
++        const obstetric = { ...payload.obstetricData, encounterId: encounter.id, actorContext };
++        await createObstetricData(obstetric, tx);
++        await observe("OBSTETRICS");
++        const meows = await persistEncounterMeowsEvaluation(encounter.id, payload.obstetricData.notes, tx);
++        await observe("EVALUATED");
++        await completeEncounter(encounter.id, actor.userId, tx);
++        await observe("COMPLETED");
++        const completed = await tx.clinicalRegistrationOperation.update({ where: { id: operation.id }, data: { status: "COMPLETED", patientId: patient.id, pregnancyId: pregnancy?.id ?? null, encounterId: encounter.id, evaluationId: meows.id, completedAt: new Date() } });
++        await tx.auditEvent.create({ data: { actorUserId: actor.userId, sessionId: actor.sessionId, organizationId: actor.organizationId, patientId: patient.id, action: "CLINICAL_REGISTRATION_COMPLETED", resourceType: "CLINICAL_REGISTRATION_OPERATION", resourceId: operation.id, outcome: AuditOutcome.SUCCESS, metadata: { version: 1 } } });
++        await observe("FINALIZED");
++        return { status: "COMPLETED" as const, replayed: false, registration: await completedResult(completed, actor, tx) };
++      });
++    } catch (error) {
++      await auditFailure(failureActor, stage, error);
++      throw error;
++    }
++  }
++  async function status(input: RegistrationIdentity) {
++    const key = identity(input);
++    return transaction(async tx => {
++      const actor = await authorize(input, tx);
++      const row = await tx.clinicalRegistrationOperation.findUnique({ where: selector(actor, key.keyHash) });
++      if (!row) return { status: "NOT_FOUND" as const };
++      if (row.status === "CANCELLED") return { status: "CANCELLED" as const };
++      return { status: "COMPLETED" as const, replayed: true, registration: await completedResult(row, actor, tx) };
++    });
++  }
++  async function cancel(input: RegistrationIdentity) {
++    const key = identity(input);
++    return transaction(async tx => {
++      const actor = await authorize(input, tx);
++      const existing = await tx.clinicalRegistrationOperation.findUnique({ where: selector(actor, key.keyHash) });
++      if (existing?.status === "COMPLETED") return { status: "COMPLETED" as const, replayed: true, registration: await completedResult(existing, actor, tx) };
++      if (existing?.status === "CANCELLED") return { status: "CANCELLED" as const };
++      if (existing) throw new RegistrationOperationError("REGISTRATION_UNAVAILABLE", 503);
++      const operation = await tx.clinicalRegistrationOperation.create({ data: { actorUserId: actor.userId, organizationId: actor.organizationId, keyHash: key.keyHash, status: "CANCELLED", completedAt: new Date() } });
++      await tx.auditEvent.create({ data: { actorUserId: actor.userId, sessionId: actor.sessionId, organizationId: actor.organizationId, action: "CLINICAL_REGISTRATION_CANCELLED", resourceType: "CLINICAL_REGISTRATION_OPERATION", resourceId: operation.id, outcome: AuditOutcome.SUCCESS, metadata: { version: 1 } } });
++      return { status: "CANCELLED" as const };
++    });
++  }
++  return { submit, status, cancel };
++}
++export const clinicalRegistrationService = createClinicalRegistrationService();
+diff --git a/src/server/clinical-revision/clinical-provenance.service.ts b/src/server/clinical-revision/clinical-provenance.service.ts
+new file mode 100644
+index 0000000..cec1a68
+--- /dev/null
++++ b/src/server/clinical-revision/clinical-provenance.service.ts
+@@ -0,0 +1,139 @@
++import { createHash } from "node:crypto";
++import { AuditOutcome, Prisma, type ClinicalProvenanceEvent } from "@prisma/client";
++import { AccessDeniedError } from "../iam/authorization.errors";
++import { requirePermission } from "../iam/authorization.service";
++import { PERMISSIONS } from "../iam/permissions";
++import type { ClinicalRevisionResourceType } from "./clinical-revision.types";
++
++export type ClinicalMeasurementActorContext = {
++  actorUserId: string;
++  organizationId: string;
++  sessionId?: string;
++  requestId?: string;
++  reason?: string;
++};
++
++/** Only server-loaded rows enter this serializer; Date/Decimal become JSON. */
++export function clinicalSnapshot(value: unknown): Prisma.InputJsonValue {
++  return JSON.parse(JSON.stringify(value)) as Prisma.InputJsonValue;
++}
++function canonical(value: unknown): unknown {
++  if (Array.isArray(value)) return value.map(canonical);
++  if (value && typeof value === "object") return Object.fromEntries(
++    Object.entries(value).sort(([a], [b]) => a.localeCompare(b)).map(([key, item]) => [key, canonical(item)]),
++  );
++  return value;
++}
++export function clinicalSnapshotHash(value: unknown): string {
++  return createHash("sha256").update(JSON.stringify(canonical(value))).digest("hex");
++}
++
++/** Snapshot and tenant identity are resolved together, never from request JSON. */
++export async function loadClinicalSnapshot(tx: Prisma.TransactionClient, type: ClinicalRevisionResourceType, id: string) {
++  if (typeof id !== "string" || !id) throw new AccessDeniedError();
++  let row: unknown;
++  let patientId: string | undefined;
++  let organizationId: string | null = null;
++  let encounterId: string | null = null;
++  switch (type) {
++    case "PATIENT": {
++      const item = await tx.patient.findUnique({ where: { id } }); row = item; patientId = item?.id; break;
++    }
++    case "PREGNANCY": {
++      const item = await tx.pregnancy.findUnique({ where: { id } }); row = item; patientId = item?.patientId; break;
++    }
++    case "ENCOUNTER": {
++      const item = await tx.encounter.findUnique({ where: { id } }); row = item; patientId = item?.patientId;
++      organizationId = item?.organizationId ?? null; encounterId = item?.id ?? null; break;
++    }
++    case "VITAL_SIGNS":
++    case "OBSTETRIC_DATA": {
++      const item = type === "VITAL_SIGNS"
++        ? await tx.vitalSigns.findUnique({ where: { id }, include: { encounter: true } })
++        : await tx.obstetricData.findUnique({ where: { id }, include: { encounter: true } });
++      if (item) {
++        const { encounter, ...measurement } = item;
++        row = measurement; patientId = encounter.patientId;
++        organizationId = encounter.organizationId; encounterId = encounter.id;
++      }
++      break;
++    }
++    case "ALLERGY": {
++      const item = await tx.allergy.findUnique({ where: { id } }); row = item; patientId = item?.patientId; break;
++    }
++    case "CLINICAL_FLAG": {
++      const item = await tx.clinicalFlag.findUnique({ where: { id } }); row = item; patientId = item?.patientId; break;
++    }
++    case "MEOWS_EVALUATION": {
++      const item = await tx.clinicalEvaluation.findUnique({ where: { id }, include: { encounter: true } });
++      if (item?.encounter) {
++        const { encounter, ...evaluation } = item; row = evaluation; patientId = item.patientId;
++        organizationId = encounter?.organizationId ?? null; encounterId = encounter?.id ?? null;
++      }
++      break;
++    }
++    default: throw new AccessDeniedError();
++  }
++  if (!row || !patientId) throw new AccessDeniedError();
++  return { snapshot: clinicalSnapshot(row), patientId, organizationId, encounterId };
++}
++
++export async function requireClinicalProvenanceScope(
++  tx: Prisma.TransactionClient,
++  actor: ClinicalMeasurementActorContext | undefined,
++  patientId: string,
++  permission: typeof PERMISSIONS.CLINICAL_REVISION_CREATE | typeof PERMISSIONS.CLINICAL_REVISION_READ | typeof PERMISSIONS.VITAL_SIGNS_CREATE | typeof PERMISSIONS.VITAL_SIGNS_UPDATE | typeof PERMISSIONS.OBSTETRIC_DATA_CREATE | typeof PERMISSIONS.OBSTETRIC_DATA_UPDATE,
++) {
++  if (!actor?.actorUserId || !actor.organizationId) throw new AccessDeniedError();
++  await requirePermission({ userId: actor.actorUserId, organizationId: actor.organizationId, permission }, tx);
++  const linked = await tx.patientOrganization.findUnique({ where: {
++    patientId_organizationId: { patientId, organizationId: actor.organizationId },
++  }, select: { unlinkedAt: true } });
++  if (!linked || linked.unlinkedAt) throw new AccessDeniedError();
++  if (actor.sessionId) {
++    const session = await tx.session.findUnique({ where: { id: actor.sessionId }, select: { userId: true, revokedAt: true, expiresAt: true } });
++    if (!session || session.userId !== actor.actorUserId || session.revokedAt || session.expiresAt <= new Date()) throw new AccessDeniedError();
++  }
++}
++
++/** Admin audit receives opaque references only. PHI stays in the private ledger. */
++export async function recordProvenanceReference(tx: Prisma.TransactionClient, event: ClinicalProvenanceEvent) {
++  const opaqueId = (value: string | null) => value && /^[a-f0-9]{8}-[a-f0-9]{4}-[1-8][a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}$/i.test(value) ? value : undefined;
++  await tx.auditEvent.create({ data: {
++    actorUserId: event.actorUserId, organizationId: event.organizationId,
++    action: event.kind === "REVISION_PROPOSAL" ? "CLINICAL_REVISION_PROPOSED" : "CLINICAL_MEASUREMENT_RECORDED",
++    resourceType: "CLINICAL_PROVENANCE", resourceId: event.id,
++    outcome: AuditOutcome.SUCCESS, sessionId: event.sessionId, requestId: opaqueId(event.requestId),
++    correlationId: opaqueId(event.correlationId), metadata: { kind: event.kind, status: event.status },
++    occurredAt: event.occurredAt,
++  } });
++}
++
++/** Call in the SAME transaction as a measurement mutation; never after commit. */
++export async function recordClinicalMeasurementProvenance(tx: Prisma.TransactionClient, input: {
++  actorContext: ClinicalMeasurementActorContext;
++  resourceType: "VITAL_SIGNS" | "OBSTETRIC_DATA";
++  resourceId: string;
++  before: unknown | null;
++}) {
++  const resource = await loadClinicalSnapshot(tx, input.resourceType, input.resourceId);
++  if (resource.organizationId !== input.actorContext?.organizationId) throw new AccessDeniedError();
++  const created = input.before === null;
++  const permission = input.resourceType === "VITAL_SIGNS"
++    ? created ? PERMISSIONS.VITAL_SIGNS_CREATE : PERMISSIONS.VITAL_SIGNS_UPDATE
++    : created ? PERMISSIONS.OBSTETRIC_DATA_CREATE : PERMISSIONS.OBSTETRIC_DATA_UPDATE;
++  await requireClinicalProvenanceScope(tx, input.actorContext, resource.patientId, permission);
++  const before = input.before === null ? Prisma.JsonNull : clinicalSnapshot(input.before);
++  const reason = input.actorContext.reason?.trim() || (created ? "Registro clínico inicial" : "Atualização clínica durante atendimento");
++  if (reason.length < 3 || reason.length > 1000) throw new AccessDeniedError();
++  const event = await tx.clinicalProvenanceEvent.create({ data: {
++    actorUserId: input.actorContext.actorUserId, organizationId: input.actorContext.organizationId,
++    patientId: resource.patientId, encounterId: resource.encounterId,
++    resourceType: input.resourceType, resourceId: input.resourceId,
++    kind: created ? "MEASUREMENT_CREATED" : "MEASUREMENT_UPDATED", status: "APPLIED",
++    reason, before, after: resource.snapshot, sourceSnapshotHash: clinicalSnapshotHash(resource.snapshot),
++    sessionId: input.actorContext.sessionId, requestId: input.actorContext.requestId,
++  } });
++  await recordProvenanceReference(tx, event);
++  return event;
++}
+diff --git a/src/server/http/clinical-api.ts b/src/server/http/clinical-api.ts
+index 8176cd6..0c98531 100644
+--- a/src/server/http/clinical-api.ts
++++ b/src/server/http/clinical-api.ts
+@@ -0,0 +1 @@
++import { randomUUID } from "node:crypto";
+@@ -702,4 +703,5 @@ async function vitalSignsResource(
+-    const vitalSigns = await createVitalSigns({
+-      ...body,
+-      encounterId,
+-    });
++    const input = {
++      ...body, encounterId,
++      actorContext: { actorUserId: auth.user.id, organizationId, sessionId: auth.session.id, requestId: randomUUID() },
++    };
++    const vitalSigns = await createVitalSigns(input);
+@@ -731 +733,5 @@ async function vitalSignsResource(
+-    const vitalSigns = await updateVitalSigns(encounterId, body);
++    const input = {
++      ...body,
++      actorContext: { actorUserId: auth.user.id, organizationId, sessionId: auth.session.id, requestId: randomUUID() },
++    };
++    const vitalSigns = await updateVitalSigns(encounterId, input);
+@@ -788,4 +794,5 @@ async function obstetricResource(
+-    const obstetricData = await createObstetricData({
+-      ...body,
+-      encounterId,
+-    });
++    const input = {
++      ...body, encounterId,
++      actorContext: { actorUserId: auth.user.id, organizationId, sessionId: auth.session.id, requestId: randomUUID() },
++    };
++    const obstetricData = await createObstetricData(input);
+@@ -817 +824,5 @@ async function obstetricResource(
+-    const obstetricData = await updateObstetricData(encounterId, body);
++    const input = {
++      ...body,
++      actorContext: { actorUserId: auth.user.id, organizationId, sessionId: auth.session.id, requestId: randomUUID() },
++    };
++    const obstetricData = await updateObstetricData(encounterId, input);
+@@ -1136,0 +1148,2 @@ async function patientRevisions(
++    actorUserId: auth.user.id,
++    sessionId: auth.session.id,
+@@ -1164 +1177,3 @@ async function revisionsCollection(request: NextRequest, method: string) {
+-    before: Parameters<typeof recordClinicalRevision>[0]["before"];
++    before?: Parameters<typeof recordClinicalRevision>[0]["before"];
++
++    expectedSnapshotHash?: string;
+@@ -1198 +1213 @@ async function revisionsCollection(request: NextRequest, method: string) {
+-    after: body.after,
++    expectedSnapshotHash: body.expectedSnapshotHash,
+@@ -1200 +1215 @@ async function revisionsCollection(request: NextRequest, method: string) {
+-    requestId: body.requestId,
++    after: body.after,
+@@ -1202 +1217,2 @@ async function revisionsCollection(request: NextRequest, method: string) {
+-    correlationId: body.correlationId,
++    // Correlation supplied in an arbitrary clinical body is not trusted metadata.
++    requestId: randomUUID(),
+diff --git a/src/server/invitations/invitation.service.ts b/src/server/invitations/invitation.service.ts
+index fedaaea..8b9b88e 100644
+--- a/src/server/invitations/invitation.service.ts
++++ b/src/server/invitations/invitation.service.ts
+@@ -2 +2,2 @@ import { requireInstitutionalInvitationAccess, requireInstitutionalInvitationTar
+-import { requirePapReviewer } from "@/server/admin-beta/policy"
++import { requirePapReviewer, serializable } from "@/server/admin-beta/policy"
++import { requireAdminActor } from "@/server/admin/admin-session.service"
+@@ -89,0 +91 @@ async function createInvitation(
++    actorSessionToken?: string
+@@ -96,0 +99 @@ async function createInvitation(
++  await requireAdminActor(input.invitedByUserId, input.actorSessionToken)
+@@ -176 +179 @@ async function createInvitation(
+-    await db.$transaction(
++    await serializable(
+@@ -179,0 +183 @@ async function createInvitation(
++        await requireAdminActor(input.invitedByUserId, input.actorSessionToken, tx);
+@@ -186,0 +191,5 @@ async function createInvitation(
++        if (input.roleKey === "HEALTH_UNIT_ADMIN") {
++          await requirePapReviewer(input.invitedByUserId, tx);
++          const approved = await tx.organizationCandidate.findFirst({ where: { convertedOrganizationId: organization.id, status: "APPROVED", consentedAt: { not: null }, contactEmail: email } });
++          if (!approved) throw new InvitationPayloadError();
++        }
+@@ -732 +741 @@ export async function acceptInvitation(
+-export function createProfessionalInvitation(input: {invitedByUserId:string;organizationId:string;email:string;displayName:string;now?:Date}) {
++export function createProfessionalInvitation(input: {invitedByUserId:string;actorSessionToken?:string;organizationId:string;email:string;displayName:string;now?:Date}) {
+@@ -735 +744 @@ export function createProfessionalInvitation(input: {invitedByUserId:string;orga
+-export function createHealthUnitAdminInvitation(input: {invitedByUserId:string;organizationId:string;email:string;displayName:string;now?:Date}) {
++export function createHealthUnitAdminInvitation(input: {invitedByUserId:string;actorSessionToken?:string;organizationId:string;email:string;displayName:string;now?:Date}) {

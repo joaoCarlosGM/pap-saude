@@ -1,0 +1,788 @@
+{
+  "generatedAt": "2026-10-26T23:51:35.927534-03:00",
+  "branch": "codex/p0-remediation-review-20261026",
+  "headIsBaseNotP0Commit": "f5dd8fe0ae1d8058680a82a6bea70648b82bc767",
+  "contentFingerprint": "458fe1af0c0907bb6abf57d81248268fe15194475dae630150f8edbbfebad983",
+  "sourceCount": 111,
+  "scope": "Local uncommitted candidate; no staging, commit, push, merge or deploy",
+  "initial": [
+    {
+      "gate": "diff-check",
+      "exitCode": 0,
+      "result": "PASS",
+      "log": ".test-audit/p0-composition/diff-check.log"
+    },
+    {
+      "gate": "prisma-validate",
+      "exitCode": 0,
+      "result": "PASS",
+      "log": ".test-audit/p0-composition/prisma-validate.log"
+    },
+    {
+      "gate": "prisma-generate",
+      "exitCode": 0,
+      "result": "PASS",
+      "log": ".test-audit/p0-composition/prisma-generate.log"
+    },
+    {
+      "gate": "typescript",
+      "exitCode": 0,
+      "result": "PASS",
+      "log": ".test-audit/p0-composition/typescript.log"
+    },
+    {
+      "gate": "lint",
+      "exitCode": 0,
+      "result": "PASS",
+      "log": ".test-audit/p0-composition/lint.log"
+    },
+    {
+      "gate": "composition-pure-tests",
+      "exitCode": 0,
+      "result": "PASS",
+      "log": ".test-audit/p0-composition/composition-pure-tests.log"
+    }
+  ],
+  "gates": [
+    {
+      "gate": "acl-apply",
+      "result": "PASS",
+      "exitCode": 0,
+      "fingerprint": "fbcaf5d76855b97ddc0d35da074415dd51d04021e867a23e640d165f94c7465d",
+      "seconds": 0.15,
+      "nodeTests": 0,
+      "nodePass": 0,
+      "nodeFail": 0,
+      "browserPass": 0,
+      "log": ".test-audit/p0-composition/acl-apply.log"
+    },
+    {
+      "gate": "acl-idempotent",
+      "result": "PASS",
+      "exitCode": 0,
+      "fingerprint": "fbcaf5d76855b97ddc0d35da074415dd51d04021e867a23e640d165f94c7465d",
+      "seconds": 0.12,
+      "nodeTests": 0,
+      "nodePass": 0,
+      "nodeFail": 0,
+      "browserPass": 0,
+      "log": ".test-audit/p0-composition/acl-idempotent.log"
+    },
+    {
+      "gate": "registration-runtime-acl",
+      "result": "PASS",
+      "exitCode": 0,
+      "fingerprint": "fbcaf5d76855b97ddc0d35da074415dd51d04021e867a23e640d165f94c7465d",
+      "seconds": 0.11,
+      "nodeTests": 0,
+      "nodePass": 0,
+      "nodeFail": 0,
+      "browserPass": 0,
+      "log": ".test-audit/p0-composition/registration-runtime-acl.log"
+    },
+    {
+      "gate": "clinical-concurrency26",
+      "result": "PASS",
+      "exitCode": 0,
+      "fingerprint": "fbcaf5d76855b97ddc0d35da074415dd51d04021e867a23e640d165f94c7465d",
+      "seconds": 7.5,
+      "nodeTests": 26,
+      "nodePass": 26,
+      "nodeFail": 0,
+      "browserPass": 0,
+      "log": ".test-audit/p0-composition/clinical-concurrency26.log"
+    },
+    {
+      "gate": "mfa10",
+      "result": "PASS",
+      "exitCode": 0,
+      "fingerprint": "fbcaf5d76855b97ddc0d35da074415dd51d04021e867a23e640d165f94c7465d",
+      "seconds": 14.49,
+      "nodeTests": 10,
+      "nodePass": 10,
+      "nodeFail": 0,
+      "browserPass": 0,
+      "log": ".test-audit/p0-composition/mfa10.log"
+    },
+    {
+      "gate": "auth-full",
+      "result": "PASS",
+      "exitCode": 0,
+      "fingerprint": "fbcaf5d76855b97ddc0d35da074415dd51d04021e867a23e640d165f94c7465d",
+      "seconds": 248.66,
+      "nodeTests": 202,
+      "nodePass": 202,
+      "nodeFail": 0,
+      "browserPass": 0,
+      "log": ".test-audit/p0-composition/auth-full.log"
+    },
+    {
+      "gate": "registration-node-browser-upgrade",
+      "result": "PASS",
+      "exitCode": 0,
+      "fingerprint": "fbcaf5d76855b97ddc0d35da074415dd51d04021e867a23e640d165f94c7465d",
+      "seconds": 76.9,
+      "nodeTests": 68,
+      "nodePass": 68,
+      "nodeFail": 0,
+      "browserPass": 4,
+      "log": ".test-audit/p0-composition/registration-node-browser-upgrade.log"
+    },
+    {
+      "gate": "provenance13",
+      "result": "PASS",
+      "exitCode": 0,
+      "fingerprint": "fbcaf5d76855b97ddc0d35da074415dd51d04021e867a23e640d165f94c7465d",
+      "seconds": 16.22,
+      "nodeTests": 13,
+      "nodePass": 13,
+      "nodeFail": 0,
+      "browserPass": 0,
+      "log": ".test-audit/p0-composition/provenance13.log"
+    },
+    {
+      "gate": "f03-patient",
+      "result": "PASS",
+      "exitCode": 0,
+      "fingerprint": "fbcaf5d76855b97ddc0d35da074415dd51d04021e867a23e640d165f94c7465d",
+      "seconds": 52.99,
+      "nodeTests": 37,
+      "nodePass": 37,
+      "nodeFail": 0,
+      "browserPass": 0,
+      "log": ".test-audit/p0-composition/f03-patient.log"
+    },
+    {
+      "gate": "f03-pregnancy",
+      "result": "PASS",
+      "exitCode": 0,
+      "fingerprint": "fbcaf5d76855b97ddc0d35da074415dd51d04021e867a23e640d165f94c7465d",
+      "seconds": 47.25,
+      "nodeTests": 41,
+      "nodePass": 41,
+      "nodeFail": 0,
+      "browserPass": 0,
+      "log": ".test-audit/p0-composition/f03-pregnancy.log"
+    },
+    {
+      "gate": "f03-encounter",
+      "result": "PASS",
+      "exitCode": 0,
+      "fingerprint": "fbcaf5d76855b97ddc0d35da074415dd51d04021e867a23e640d165f94c7465d",
+      "seconds": 40.1,
+      "nodeTests": 22,
+      "nodePass": 22,
+      "nodeFail": 0,
+      "browserPass": 0,
+      "log": ".test-audit/p0-composition/f03-encounter.log"
+    },
+    {
+      "gate": "f03-vital-signs",
+      "result": "PASS",
+      "exitCode": 0,
+      "fingerprint": "fbcaf5d76855b97ddc0d35da074415dd51d04021e867a23e640d165f94c7465d",
+      "seconds": 30.75,
+      "nodeTests": 21,
+      "nodePass": 21,
+      "nodeFail": 0,
+      "browserPass": 0,
+      "log": ".test-audit/p0-composition/f03-vital-signs.log"
+    },
+    {
+      "gate": "f03-obstetric-data",
+      "result": "PASS",
+      "exitCode": 0,
+      "fingerprint": "fbcaf5d76855b97ddc0d35da074415dd51d04021e867a23e640d165f94c7465d",
+      "seconds": 31.83,
+      "nodeTests": 18,
+      "nodePass": 18,
+      "nodeFail": 0,
+      "browserPass": 0,
+      "log": ".test-audit/p0-composition/f03-obstetric-data.log"
+    },
+    {
+      "gate": "f03-allergies-flags",
+      "result": "PASS",
+      "exitCode": 0,
+      "fingerprint": "fbcaf5d76855b97ddc0d35da074415dd51d04021e867a23e640d165f94c7465d",
+      "seconds": 29.19,
+      "nodeTests": 21,
+      "nodePass": 21,
+      "nodeFail": 0,
+      "browserPass": 0,
+      "log": ".test-audit/p0-composition/f03-allergies-flags.log"
+    },
+    {
+      "gate": "f03-meows-engine",
+      "result": "PASS",
+      "exitCode": 0,
+      "fingerprint": "fbcaf5d76855b97ddc0d35da074415dd51d04021e867a23e640d165f94c7465d",
+      "seconds": 30.48,
+      "nodeTests": 24,
+      "nodePass": 24,
+      "nodeFail": 0,
+      "browserPass": 0,
+      "log": ".test-audit/p0-composition/f03-meows-engine.log"
+    },
+    {
+      "gate": "f03-clinical-governance",
+      "result": "PASS",
+      "exitCode": 0,
+      "fingerprint": "fbcaf5d76855b97ddc0d35da074415dd51d04021e867a23e640d165f94c7465d",
+      "seconds": 17.27,
+      "nodeTests": 11,
+      "nodePass": 11,
+      "nodeFail": 0,
+      "browserPass": 0,
+      "log": ".test-audit/p0-composition/f03-clinical-governance.log"
+    },
+    {
+      "gate": "f03-clinical-api-ui",
+      "result": "PASS",
+      "exitCode": 0,
+      "fingerprint": "fbcaf5d76855b97ddc0d35da074415dd51d04021e867a23e640d165f94c7465d",
+      "seconds": 17.43,
+      "nodeTests": 8,
+      "nodePass": 8,
+      "nodeFail": 0,
+      "browserPass": 0,
+      "log": ".test-audit/p0-composition/f03-clinical-api-ui.log"
+    },
+    {
+      "gate": "f04-admin-core",
+      "result": "PASS",
+      "exitCode": 0,
+      "fingerprint": "fbcaf5d76855b97ddc0d35da074415dd51d04021e867a23e640d165f94c7465d",
+      "seconds": 23.55,
+      "nodeTests": 26,
+      "nodePass": 26,
+      "nodeFail": 0,
+      "browserPass": 0,
+      "log": ".test-audit/p0-composition/f04-admin-core.log"
+    },
+    {
+      "gate": "f04-role-governance",
+      "result": "PASS",
+      "exitCode": 0,
+      "fingerprint": "fbcaf5d76855b97ddc0d35da074415dd51d04021e867a23e640d165f94c7465d",
+      "seconds": 18.02,
+      "nodeTests": 6,
+      "nodePass": 6,
+      "nodeFail": 0,
+      "browserPass": 0,
+      "log": ".test-audit/p0-composition/f04-role-governance.log"
+    },
+    {
+      "gate": "f04-role-adversarial",
+      "result": "PASS",
+      "exitCode": 0,
+      "fingerprint": "fbcaf5d76855b97ddc0d35da074415dd51d04021e867a23e640d165f94c7465d",
+      "seconds": 17.87,
+      "nodeTests": 10,
+      "nodePass": 10,
+      "nodeFail": 0,
+      "browserPass": 0,
+      "log": ".test-audit/p0-composition/f04-role-adversarial.log"
+    },
+    {
+      "gate": "f04-access-trust",
+      "result": "PASS",
+      "exitCode": 0,
+      "fingerprint": "fbcaf5d76855b97ddc0d35da074415dd51d04021e867a23e640d165f94c7465d",
+      "seconds": 9.78,
+      "nodeTests": 10,
+      "nodePass": 10,
+      "nodeFail": 0,
+      "browserPass": 0,
+      "log": ".test-audit/p0-composition/f04-access-trust.log"
+    },
+    {
+      "gate": "f04-audit-idor",
+      "result": "PASS",
+      "exitCode": 0,
+      "fingerprint": "fbcaf5d76855b97ddc0d35da074415dd51d04021e867a23e640d165f94c7465d",
+      "seconds": 6.91,
+      "nodeTests": 10,
+      "nodePass": 10,
+      "nodeFail": 0,
+      "browserPass": 0,
+      "log": ".test-audit/p0-composition/f04-audit-idor.log"
+    },
+    {
+      "gate": "f04-operations",
+      "result": "PASS",
+      "exitCode": 0,
+      "fingerprint": "fbcaf5d76855b97ddc0d35da074415dd51d04021e867a23e640d165f94c7465d",
+      "seconds": 6.97,
+      "nodeTests": 8,
+      "nodePass": 8,
+      "nodeFail": 0,
+      "browserPass": 0,
+      "log": ".test-audit/p0-composition/f04-operations.log"
+    },
+    {
+      "gate": "f04-db-invariants",
+      "result": "PASS",
+      "exitCode": 0,
+      "fingerprint": "fbcaf5d76855b97ddc0d35da074415dd51d04021e867a23e640d165f94c7465d",
+      "seconds": 3.84,
+      "nodeTests": 0,
+      "nodePass": 0,
+      "nodeFail": 0,
+      "browserPass": 0,
+      "log": ".test-audit/p0-composition/f04-db-invariants.log"
+    },
+    {
+      "gate": "beta-admin-mfa",
+      "result": "PASS",
+      "exitCode": 0,
+      "fingerprint": "fbcaf5d76855b97ddc0d35da074415dd51d04021e867a23e640d165f94c7465d",
+      "seconds": 44.02,
+      "nodeTests": 29,
+      "nodePass": 29,
+      "nodeFail": 0,
+      "browserPass": 0,
+      "log": ".test-audit/p0-composition/beta-admin-mfa.log"
+    },
+    {
+      "gate": "admin-f-node-browser",
+      "result": "PASS",
+      "exitCode": 0,
+      "fingerprint": "fbcaf5d76855b97ddc0d35da074415dd51d04021e867a23e640d165f94c7465d",
+      "seconds": 60.47,
+      "nodeTests": 49,
+      "nodePass": 49,
+      "nodeFail": 0,
+      "browserPass": 4,
+      "log": ".test-audit/p0-composition/admin-f-node-browser.log",
+      "reusedNodePass": 49,
+      "nodeReuseEvidence": ".test-audit/p0-composition/admin-node-reuse.json"
+    },
+    {
+      "gate": "mission04-b-browser",
+      "result": "PASS",
+      "exitCode": 0,
+      "fingerprint": "fbcaf5d76855b97ddc0d35da074415dd51d04021e867a23e640d165f94c7465d",
+      "seconds": 79.34,
+      "nodeTests": 28,
+      "nodePass": 28,
+      "nodeFail": 0,
+      "browserPass": 5,
+      "log": ".test-audit/p0-composition/mission04-b-browser.log",
+      "reusedNodePass": 27,
+      "nodeReuseEvidence": ".test-audit/p0-composition/mission04-b-node-reuse.json"
+    },
+    {
+      "gate": "mission04-c-browser",
+      "result": "PASS",
+      "exitCode": 0,
+      "fingerprint": "ad28fc0a800d5500e2fa48bce6efa8d8f0c6735764f3c3caee849bbea71e16d9",
+      "nodeTests": 41,
+      "nodePass": 41,
+      "nodeFail": 0,
+      "browserPass": 8,
+      "seconds": 139.28,
+      "log": ".test-audit/p0-composition/mission04-c-browser.log"
+    },
+    {
+      "gate": "mission04-d-browser",
+      "result": "PASS",
+      "exitCode": 0,
+      "fingerprint": "ad28fc0a800d5500e2fa48bce6efa8d8f0c6735764f3c3caee849bbea71e16d9",
+      "nodeTests": 32,
+      "nodePass": 32,
+      "nodeFail": 0,
+      "browserPass": 8,
+      "seconds": 58.68,
+      "log": ".test-audit/p0-composition/mission04-d-browser.log"
+    },
+    {
+      "gate": "mission04-e-browser",
+      "result": "PASS",
+      "exitCode": 0,
+      "fingerprint": "ad28fc0a800d5500e2fa48bce6efa8d8f0c6735764f3c3caee849bbea71e16d9",
+      "nodeTests": 8,
+      "nodePass": 8,
+      "nodeFail": 0,
+      "browserPass": 6,
+      "seconds": 119.26,
+      "log": ".test-audit/p0-composition/mission04-e-browser.log"
+    },
+    {
+      "gate": "first-access-browser",
+      "result": "PASS",
+      "exitCode": 0,
+      "fingerprint": "ad28fc0a800d5500e2fa48bce6efa8d8f0c6735764f3c3caee849bbea71e16d9",
+      "nodeTests": 21,
+      "nodePass": 21,
+      "nodeFail": 0,
+      "browserPass": 15,
+      "seconds": 114.07,
+      "log": ".test-audit/p0-composition/first-access-browser.log"
+    }
+  ],
+  "additional": [
+    {
+      "gate": "CI runtime harness",
+      "result": "PASS",
+      "nodeTests": 39,
+      "components": [
+        26,
+        1,
+        12
+      ],
+      "log": ".test-audit/p0-composition/p0-runtime-harness.log"
+    },
+    {
+      "gate": "full lint",
+      "result": "PASS",
+      "log": ".test-audit/p0-composition/lint-full-final.log"
+    },
+    {
+      "gate": "production build final",
+      "result": "PASS",
+      "log": ".test-audit/p0-composition/build.log"
+    },
+    {
+      "gate": "typescript-final",
+      "result": "PASS",
+      "exitCode": 0,
+      "log": ".test-audit/p0-composition/typescript-final.log"
+    },
+    {
+      "gate": "runtime-test-lint-final",
+      "result": "PASS",
+      "exitCode": 0,
+      "log": ".test-audit/p0-composition/runtime-test-lint-final.log"
+    },
+    {
+      "gate": "new-harness-syntax",
+      "result": "PASS",
+      "exitCode": 0,
+      "log": ".test-audit/p0-composition/new-harness-syntax.log"
+    },
+    {
+      "gate": "f04-role-separation",
+      "result": "PASS",
+      "exitCode": 0,
+      "browserPass": 0,
+      "log": ".test-audit/p0-composition/f04-role-separation.log"
+    },
+    {
+      "gate": "mfa-block-ui-browser",
+      "result": "PASS",
+      "exitCode": 0,
+      "browserPass": 2,
+      "log": ".test-audit/p0-composition/mfa-block-ui-browser.log"
+    },
+    {
+      "gate": "legacy upgrade + synthetic preflight/backup/restore",
+      "result": "PASS",
+      "nodeTests": 2,
+      "log": ".test-audit/p0-composition/security-db-routed.log"
+    }
+  ],
+  "audits": [
+    {
+      "gate": "audit-production",
+      "result": "PASS",
+      "exitCode": 0,
+      "counts": {
+        "info": 0,
+        "low": 0,
+        "moderate": 1,
+        "high": 0,
+        "critical": 0,
+        "total": 1
+      },
+      "risks": [
+        {
+          "package": "fast-uri",
+          "severity": "moderate",
+          "range": "3.0.0 - 3.1.8",
+          "direct": false,
+          "via": [
+            {
+              "title": "fast-uri vulnerable to URI scheme spoofing via percent-encoded scheme decoding",
+              "url": "https://github.com/advisories/GHSA-w74x-v6f9-j3xg",
+              "range": ">=3.0.0 <3.1.9"
+            },
+            {
+              "title": "fast-uri vulnerable to improper path equivalence in relative reference normalization",
+              "url": "https://github.com/advisories/GHSA-xhq7-xmqj-769h",
+              "range": ">=3.0.0 <3.1.9"
+            },
+            {
+              "title": "fast-uri vulnerable to host confusion via unchecked WHATWG host canonicalization",
+              "url": "https://github.com/advisories/GHSA-wjr9-j795-jxcr",
+              "range": ">=3.1.3 <3.1.9"
+            },
+            {
+              "title": "fast-uri vulnerable to scheme injection via an unescaped first-segment colon in suffix references",
+              "url": "https://github.com/advisories/GHSA-333x-w4r6-6crp",
+              "range": ">=3.0.0 <3.1.9"
+            }
+          ],
+          "effects": [],
+          "nodes": [
+            "node_modules/fast-uri"
+          ],
+          "fixAvailable": true
+        }
+      ],
+      "seconds": 1.02,
+      "log": ".test-audit/p0-composition/audit-production.json"
+    },
+    {
+      "gate": "audit-all",
+      "result": "FAIL",
+      "exitCode": 1,
+      "counts": {
+        "info": 0,
+        "low": 0,
+        "moderate": 2,
+        "high": 3,
+        "critical": 0,
+        "total": 5
+      },
+      "risks": [
+        {
+          "package": "body-parser",
+          "severity": "high",
+          "range": "2.0.0 - 2.3.0",
+          "direct": false,
+          "via": [
+            {
+              "title": "body-parser vulnerable to Denial of Service via trailing bytes after a compressed request body",
+              "url": "https://github.com/advisories/GHSA-27r3-jxmh-p828",
+              "range": ">=2.0.0 <2.4.0"
+            }
+          ],
+          "effects": [],
+          "nodes": [
+            "node_modules/body-parser"
+          ],
+          "fixAvailable": true
+        },
+        {
+          "package": "fast-uri",
+          "severity": "moderate",
+          "range": "3.0.0 - 3.1.8",
+          "direct": false,
+          "via": [
+            {
+              "title": "fast-uri vulnerable to URI scheme spoofing via percent-encoded scheme decoding",
+              "url": "https://github.com/advisories/GHSA-w74x-v6f9-j3xg",
+              "range": ">=3.0.0 <3.1.9"
+            },
+            {
+              "title": "fast-uri vulnerable to improper path equivalence in relative reference normalization",
+              "url": "https://github.com/advisories/GHSA-xhq7-xmqj-769h",
+              "range": ">=3.0.0 <3.1.9"
+            },
+            {
+              "title": "fast-uri vulnerable to host confusion via unchecked WHATWG host canonicalization",
+              "url": "https://github.com/advisories/GHSA-wjr9-j795-jxcr",
+              "range": ">=3.1.3 <3.1.9"
+            },
+            {
+              "title": "fast-uri vulnerable to scheme injection via an unescaped first-segment colon in suffix references",
+              "url": "https://github.com/advisories/GHSA-333x-w4r6-6crp",
+              "range": ">=3.0.0 <3.1.9"
+            }
+          ],
+          "effects": [],
+          "nodes": [
+            "node_modules/fast-uri"
+          ],
+          "fixAvailable": true
+        },
+        {
+          "package": "ip-address",
+          "severity": "moderate",
+          "range": "<=10.7.3",
+          "direct": false,
+          "via": [
+            {
+              "title": "ip-address: Address6 matches a zone identifier in quadratic time ahead of its length limit, allowing a single long string to stall the process",
+              "url": "https://github.com/advisories/GHSA-rxp7-6hxx-x8q5",
+              "range": "<=10.7.3"
+            }
+          ],
+          "effects": [],
+          "nodes": [
+            "node_modules/ip-address"
+          ],
+          "fixAvailable": true
+        },
+        {
+          "package": "undici",
+          "severity": "high",
+          "range": "7.0.0 - 7.30.0",
+          "direct": false,
+          "via": [
+            {
+              "title": "undici vulnerable to Denial of Service via unbounded memory in the EventSource parser",
+              "url": "https://github.com/advisories/GHSA-4qv8-2p9j-2685",
+              "range": ">=7.0.0 <7.30.1"
+            },
+            {
+              "title": "undici vulnerable to Subresource Integrity bypass via non-lowercase algorithm tokens",
+              "url": "https://github.com/advisories/GHSA-f72v-6w45-q472",
+              "range": ">=7.15.0 <7.30.1"
+            },
+            {
+              "title": "undici vulnerable to Denial of Service via unhandled error on excessive content-encodings",
+              "url": "https://github.com/advisories/GHSA-xjj6-f33q-929c",
+              "range": ">=7.18.0 <7.30.1"
+            }
+          ],
+          "effects": [],
+          "nodes": [
+            "node_modules/undici"
+          ],
+          "fixAvailable": true
+        },
+        {
+          "package": "zod",
+          "severity": "high",
+          "range": "<4.6.6",
+          "direct": false,
+          "via": [
+            {
+              "title": "Zod can exhaust memory while validating oversized constrained collections",
+              "url": "https://github.com/advisories/GHSA-mrhx-c7xc-m3w5",
+              "range": "<4.6.6"
+            }
+          ],
+          "effects": [],
+          "nodes": [
+            "node_modules/zod"
+          ],
+          "fixAvailable": true
+        }
+      ],
+      "seconds": 1.83,
+      "log": ".test-audit/p0-composition/audit-all.json"
+    },
+    {
+      "gate": "audit-migrator",
+      "result": "PASS",
+      "exitCode": 0,
+      "counts": {
+        "info": 0,
+        "low": 0,
+        "moderate": 1,
+        "high": 0,
+        "critical": 0,
+        "total": 1
+      },
+      "risks": [
+        {
+          "package": "fast-uri",
+          "severity": "moderate",
+          "range": "3.0.0 - 3.1.8",
+          "direct": false,
+          "via": [
+            {
+              "title": "fast-uri vulnerable to URI scheme spoofing via percent-encoded scheme decoding",
+              "url": "https://github.com/advisories/GHSA-w74x-v6f9-j3xg",
+              "range": ">=3.0.0 <3.1.9"
+            },
+            {
+              "title": "fast-uri vulnerable to improper path equivalence in relative reference normalization",
+              "url": "https://github.com/advisories/GHSA-xhq7-xmqj-769h",
+              "range": ">=3.0.0 <3.1.9"
+            },
+            {
+              "title": "fast-uri vulnerable to host confusion via unchecked WHATWG host canonicalization",
+              "url": "https://github.com/advisories/GHSA-wjr9-j795-jxcr",
+              "range": ">=3.1.3 <3.1.9"
+            },
+            {
+              "title": "fast-uri vulnerable to scheme injection via an unescaped first-segment colon in suffix references",
+              "url": "https://github.com/advisories/GHSA-333x-w4r6-6crp",
+              "range": ">=3.0.0 <3.1.9"
+            }
+          ],
+          "effects": [],
+          "nodes": [
+            "node_modules/fast-uri"
+          ],
+          "fixAvailable": true
+        }
+      ],
+      "seconds": 0.62,
+      "log": ".test-audit/p0-composition/audit-migrator.json"
+    }
+  ],
+  "dockerBuilds": [
+    {
+      "gate": "docker-build-runner",
+      "result": "PASS",
+      "exitCode": 0,
+      "image": "pap-saude:p0-validation-f5dd8fe",
+      "seconds": 83.64
+    },
+    {
+      "gate": "docker-build-migrator",
+      "result": "PASS",
+      "exitCode": 0,
+      "image": "pap-saude-migrator:p0-validation-f5dd8fe",
+      "seconds": 10.59
+    }
+  ],
+  "dockerFunctional": [
+    {
+      "gate": "docker-migrator-functional",
+      "result": "PASS",
+      "exitCode": 0,
+      "seconds": 167.18,
+      "log": ".test-audit/p0-composition/docker-migrator-functional.log"
+    },
+    {
+      "gate": "docker-web-runtime-functional",
+      "result": "PASS",
+      "exitCode": 0,
+      "seconds": 26.53,
+      "log": ".test-audit/p0-composition/docker-web-runtime-functional.log"
+    }
+  ],
+  "trivy": {
+    "web": {
+      "result": "PASS",
+      "exitCode": 0,
+      "scanner": "aquasec/trivy:0.76.0@sha256:2416d1f74045b57274df1a340eee6b510cacd73c66a6ccb8da092b117eb7d222",
+      "imageArchive": "/tmp/pap-p0-review-artifact-archives/web.tar.gz",
+      "scope": "same image, scanner, severity and Java/OS/Node analysis; reuse downloaded vulnerability DB and split temporary storage across filesystems",
+      "seconds": 52.78,
+      "log": ".test-audit/p0-composition/trivy-web-final.log"
+    },
+    "migrator": {
+      "result": "PASS",
+      "highCritical": 0,
+      "log": ".test-audit/p0-composition/trivy-high-critical.log"
+    }
+  },
+  "remoteCI": {
+    "result": "NOT RUN",
+    "reason": "Versioning/push not authorized; HEAD is E baseline, not a P0 commit"
+  },
+  "manualLabAccessed": false,
+  "versioningApproval": "PENDING",
+  "productionDecision": "NO-GO",
+  "ciTriggerAmendment": {
+    "scope": "one push-filter line for authorized P0 branch only; no functional application change",
+    "previousContentFingerprint": "ad28fc0a800d5500e2fa48bce6efa8d8f0c6735764f3c3caee849bbea71e16d9",
+    "previousWorkflowSha256": "213f1f5daa54a76a510b25a53b8a33a363b2eddca829c3e6b3a1fc471677b497",
+    "workflowSha256": "3fdadd8d07b2b8e5dd8b64a7f43bdde68ed3a4c07fe116fbddf94b9ac5ff78fd",
+    "localFunctionalEvidenceReused": true,
+    "reason": "all application/schema/dependency/test content unchanged; only workflow event routing amended",
+    "targetedWorkflowTests": {
+      "result": "PASS",
+      "tests": 2,
+      "failed": 0,
+      "completeLocalSuitesRepeated": false
+    }
+  }
+}

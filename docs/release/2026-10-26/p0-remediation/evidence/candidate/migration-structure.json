@@ -1,0 +1,9 @@
+{
+  "historicalFilesIdentical": 33,
+  "forwardOnlyAdditions": [
+    "prisma/migrations/20261026193000_p0_clinical_provenance/migration.sql",
+    "prisma/migrations/20261026194000_p0_clinical_registration_operation/migration.sql"
+  ],
+  "totalMigrations": 34,
+  "fingerprint": "fbcaf5d76855b97ddc0d35da074415dd51d04021e867a23e640d165f94c7465d"
+}

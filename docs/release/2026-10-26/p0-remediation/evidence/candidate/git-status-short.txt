@@ -1,0 +1,158 @@
+ M .github/workflows/ci.yml
+ M prisma/schema.prisma
+ M scripts/db/f04-role-separation.sql
+ M scripts/test-f03-meows-engine.sh
+ M scripts/test-f03-obstetric-data.sh
+ M scripts/test-f03-vital-signs.sh
+ M scripts/testing/allow-audit-test-cleanup.sh
+ M src/app/api/admin/beta/invitations/route.ts
+ M src/app/api/admin/beta/metrics/route.ts
+ M src/app/api/admin/invitations/route.ts
+ M src/app/api/admin/security/route.ts
+ M src/app/api/auth/mfa/verify/route.ts
+ M src/components/admin/BetaDashboardClient.tsx
+ M src/components/auth/LoginSecurity.tsx
+ M src/components/registro/RegistrationWizard.tsx
+ M src/lib/clinical-api/registration.ts
+ M src/server/admin-beta/invitations.service.ts
+ M src/server/admin-beta/metrics.service.ts
+ M src/server/admin/admin-security.service.ts
+ M src/server/admin/operations-metrics.service.ts
+ M src/server/auth/http-auth.ts
+ M src/server/auth/mfa-login.service.ts
+ M src/server/auth/mfa-reset.service.ts
+ M src/server/auth/mfa.errors.ts
+ M src/server/clinical-revision/clinical-revision.errors.ts
+ M src/server/clinical-revision/clinical-revision.service.ts
+ M src/server/clinical-revision/clinical-revision.types.ts
+ M src/server/clinical-revision/clinical-revision.validation.ts
+ M src/server/encounters/encounter-consistency.ts
+ M src/server/encounters/encounter-organization.service.ts
+ M src/server/encounters/encounter.service.ts
+ M src/server/http/clinical-api-response.ts
+ M src/server/http/clinical-api.ts
+ M src/server/invitations/invitation.service.ts
+ M src/server/meows/meows.service.ts
+ M src/server/obstetric-data/obstetric-data-consistency.ts
+ M src/server/obstetric-data/obstetric-data.service.ts
+ M src/server/obstetric-data/obstetric-data.types.ts
+ M src/server/patients/patient-organization.service.ts
+ M src/server/patients/patient.service.ts
+ M src/server/pregnancies/pregnancy.service.ts
+ M src/server/vital-signs/vital-signs-consistency.ts
+ M src/server/vital-signs/vital-signs.service.ts
+ M src/server/vital-signs/vital-signs.types.ts
+ M tests/admin/f04-audit-idor.integration.test.ts
+ M tests/clinical/allergies-clinical-flags-access.integration.test.ts
+ M tests/clinical/allergies-clinical-flags-lifecycle.integration.test.ts
+ M tests/clinical/clinical-api-ui.integration.test.ts
+ M tests/clinical/clinical-governance.integration.test.ts
+ M tests/clinical/encounter-access.integration.test.ts
+ M tests/clinical/encounter-integration.integration.test.ts
+ M tests/clinical/encounter-lifecycle.integration.test.ts
+ M tests/clinical/meows-access.integration.test.ts
+ M tests/clinical/meows-lifecycle.integration.test.ts
+ M tests/clinical/obstetric-data-access.integration.test.ts
+ M tests/clinical/obstetric-data-lifecycle.integration.test.ts
+ M tests/clinical/patient-access.integration.test.ts
+ M tests/clinical/patient-deduplication.integration.test.ts
+ M tests/clinical/patient-organization.integration.test.ts
+ M tests/clinical/patient-registry.integration.test.ts
+ M tests/clinical/pregnancy-access.integration.test.ts
+ M tests/clinical/pregnancy-integration.integration.test.ts
+ M tests/clinical/pregnancy-lifecycle.integration.test.ts
+ M tests/clinical/vital-signs-access.integration.test.ts
+ M tests/clinical/vital-signs-lifecycle.integration.test.ts
+ M tests/first-access/browser.spec.ts
+ M tests/local/provision.integration.test.ts
+ M tests/mission04-b/governance.test.ts
+ M tests/mission04-c/invitations.test.ts
+ M tests/mission04-d/email.test.ts
+?? docs/release/2026-10-26/p0-remediation/00-existing-patches.md
+?? docs/release/2026-10-26/p0-remediation/01-p0-matrix.md
+?? docs/release/2026-10-26/p0-remediation/02-mfa-security.md
+?? docs/release/2026-10-26/p0-remediation/03-clinical-integrity.md
+?? docs/release/2026-10-26/p0-remediation/04-atomic-registration.md
+?? docs/release/2026-10-26/p0-remediation/05-review-provenance.md
+?? docs/release/2026-10-26/p0-remediation/06-slice-f.md
+?? docs/release/2026-10-26/p0-remediation/07-integrated-validation.md
+?? docs/release/2026-10-26/p0-remediation/08-go-no-go.md
+?? docs/release/2026-10-26/p0-remediation/09-meows-operational-state.md
+?? docs/release/2026-10-26/p0-remediation/10-controlled-composition.md
+?? docs/release/2026-10-26/p0-remediation/COMPATIBILIDADE-ECONOMICA.md
+?? docs/release/2026-10-26/p0-remediation/STATUS-ATUAL.md
+?? docs/release/2026-10-26/p0-remediation/evidence/candidate/01-mfa-staging.sh
+?? docs/release/2026-10-26/p0-remediation/evidence/candidate/02-clinical-integrity-provenance-staging.sh
+?? docs/release/2026-10-26/p0-remediation/evidence/candidate/03-registration-staging.sh
+?? docs/release/2026-10-26/p0-remediation/evidence/candidate/04-admin-f-staging.sh
+?? docs/release/2026-10-26/p0-remediation/evidence/candidate/05-ci-p0-staging.sh
+?? docs/release/2026-10-26/p0-remediation/evidence/candidate/06-docs-staging.sh
+?? docs/release/2026-10-26/p0-remediation/evidence/candidate/all-git-paths.json
+?? docs/release/2026-10-26/p0-remediation/evidence/candidate/authorization.diff
+?? docs/release/2026-10-26/p0-remediation/evidence/candidate/dependency-risk.json
+?? docs/release/2026-10-26/p0-remediation/evidence/candidate/executed-commands.txt
+?? docs/release/2026-10-26/p0-remediation/evidence/candidate/git-diff-check.txt
+?? docs/release/2026-10-26/p0-remediation/evidence/candidate/git-diff-stat.txt
+?? docs/release/2026-10-26/p0-remediation/evidence/candidate/git-status-short.txt
+?? docs/release/2026-10-26/p0-remediation/evidence/candidate/image-archives.json
+?? docs/release/2026-10-26/p0-remediation/evidence/candidate/migration-structure.json
+?? docs/release/2026-10-26/p0-remediation/evidence/candidate/migrations.diff
+?? docs/release/2026-10-26/p0-remediation/evidence/candidate/resource-restoration.json
+?? docs/release/2026-10-26/p0-remediation/evidence/candidate/secret-review.json
+?? docs/release/2026-10-26/p0-remediation/evidence/candidate/source-manifest.json
+?? docs/release/2026-10-26/p0-remediation/evidence/candidate/staging-groups.json
+?? docs/release/2026-10-26/p0-remediation/evidence/candidate/validation.json
+?? docs/release/2026-10-26/p0-remediation/evidence/composition.json
+?? docs/release/2026-10-26/p0-remediation/evidence/economic-compatibility.json
+?? docs/release/2026-10-26/p0-remediation/evidence/economic-helper-resolution.json
+?? docs/release/2026-10-26/p0-remediation/evidence/economic-mfa-check-fingerprint.json
+?? docs/release/2026-10-26/p0-remediation/evidence/meows-tests.log
+?? docs/release/2026-10-26/p0-remediation/evidence/patches/README.md
+?? docs/release/2026-10-26/p0-remediation/evidence/patches/admin-f.patch
+?? docs/release/2026-10-26/p0-remediation/evidence/patches/clinical-concurrency.patch
+?? docs/release/2026-10-26/p0-remediation/evidence/patches/clinical-provenance.patch
+?? docs/release/2026-10-26/p0-remediation/evidence/patches/clinical-registration.patch
+?? docs/release/2026-10-26/p0-remediation/evidence/patches/mfa.patch
+?? docs/release/2026-10-26/p0-remediation/evidence/preserved-patch-hashes.json
+?? docs/release/2026-10-26/p0-remediation/evidence/worktrees-initial.json
+?? prisma/migrations/20261026193000_p0_clinical_provenance/migration.sql
+?? prisma/migrations/20261026194000_p0_clinical_registration_operation/migration.sql
+?? scripts/test-p0-auth-isolated.sh
+?? scripts/test-p0-clinical-runtime.sh
+?? scripts/test-p0-provenance.sh
+?? scripts/test-p0-registration.sh
+?? scripts/test-release-admin.sh
+?? scripts/test-release-mfa-limit.sh
+?? src/app/api/clinical/registrations/route.ts
+?? src/components/admin/GovernanceSummaryCards.tsx
+?? src/lib/admin/governance-metrics.ts
+?? src/lib/clinical-api/registration-preflight.ts
+?? src/server/admin-beta/governance-metrics.service.ts
+?? src/server/auth/mfa-attempt-limit.service.ts
+?? src/server/clinical-registration/registration.service.ts
+?? src/server/clinical-registration/registration.validation.ts
+?? src/server/clinical-revision/clinical-provenance.service.ts
+?? src/server/encounters/clinical-write-transaction.ts
+?? tests/helpers/attributed-obstetric-data.ts
+?? tests/helpers/attributed-vital-signs.ts
+?? tests/helpers/clinical-fixture-actor.ts
+?? tests/p0-remediation/clinical-finalization-race.integration.test.ts
+?? tests/p0-remediation/clinical-registration-client.test.ts
+?? tests/p0-remediation/clinical-registration.integration.test.ts
+?? tests/p0-remediation/registration-runtime-acl.sql
+?? tests/p0-remediation/registration-runtime.integration.test.ts
+?? tests/p0-remediation/registration-upgrade-probe.ts
+?? tests/p0-remediation/registration.playwright.config.ts
+?? tests/p0-remediation/registration.spec.ts
+?? tests/release/admin-invitation-authority.integration.test.ts
+?? tests/release/auth-body-budget.test.ts
+?? tests/release/clinical-error-privacy.test.ts
+?? tests/release/governance-metrics.integration.test.ts
+?? tests/release/governance-readonly-child.ts
+?? tests/release/governance.playwright.config.ts
+?? tests/release/governance.spec.ts
+?? tests/release/mfa-attempt-limit.integration.test.ts
+?? tests/release/mfa-block-ui.playwright.config.ts
+?? tests/release/mfa-block-ui.spec.ts
+?? tests/release/p0-meows-operational-state.test.ts
+?? tests/release/p0-provenance.integration.test.ts

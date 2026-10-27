@@ -1,0 +1,300 @@
+diff --git a/prisma/migrations/20261026193000_p0_clinical_provenance/migration.sql b/prisma/migrations/20261026193000_p0_clinical_provenance/migration.sql
+new file mode 100644
+index 0000000..4a6028f
+--- /dev/null
++++ b/prisma/migrations/20261026193000_p0_clinical_provenance/migration.sql
+@@ -0,0 +1,46 @@
++-- Forward-only private clinical provenance; no legacy snapshots/authors invented.
++BEGIN;
++CREATE TYPE "ClinicalProvenanceKind" AS ENUM ('REVISION_PROPOSAL', 'MEASUREMENT_CREATED', 'MEASUREMENT_UPDATED');
++CREATE TYPE "ClinicalProvenanceStatus" AS ENUM ('PROPOSED_NOT_APPLIED', 'APPLIED');
++CREATE TABLE "clinical_provenance_events" (
++  "id" TEXT NOT NULL,
++  "actorUserId" TEXT NOT NULL,
++  "organizationId" TEXT NOT NULL,
++  "patientId" TEXT NOT NULL,
++  "encounterId" TEXT,
++  "resourceType" TEXT NOT NULL,
++  "resourceId" TEXT NOT NULL,
++  "kind" "ClinicalProvenanceKind" NOT NULL,
++  "status" "ClinicalProvenanceStatus" NOT NULL,
++  "reason" TEXT NOT NULL,
++  "before" JSONB NOT NULL,
++  "after" JSONB NOT NULL,
++  "proposedAfter" JSONB,
++  "sourceSnapshotHash" TEXT NOT NULL,
++  "sessionId" TEXT,
++  "requestId" TEXT,
++  "correlationId" TEXT,
++  "occurredAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
++  CONSTRAINT "clinical_provenance_events_pkey" PRIMARY KEY ("id"),
++  CONSTRAINT "clinical_provenance_actor_fkey" FOREIGN KEY ("actorUserId") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE,
++  CONSTRAINT "clinical_provenance_organization_fkey" FOREIGN KEY ("organizationId") REFERENCES "organizations"("id") ON DELETE RESTRICT ON UPDATE CASCADE,
++  CONSTRAINT "clinical_provenance_patient_fkey" FOREIGN KEY ("patientId") REFERENCES "patients"("id") ON DELETE RESTRICT ON UPDATE CASCADE,
++  CONSTRAINT "clinical_provenance_encounter_fkey" FOREIGN KEY ("encounterId") REFERENCES "encounters"("id") ON DELETE RESTRICT ON UPDATE CASCADE,
++  CONSTRAINT "clinical_provenance_status_consistency" CHECK (
++    ("kind" = 'REVISION_PROPOSAL' AND "status" = 'PROPOSED_NOT_APPLIED' AND "proposedAfter" IS NOT NULL AND "before" = "after")
++    OR ("kind" IN ('MEASUREMENT_CREATED', 'MEASUREMENT_UPDATED') AND "status" = 'APPLIED' AND "proposedAfter" IS NULL)
++  ),
++  CONSTRAINT "clinical_provenance_hash_format" CHECK ("sourceSnapshotHash" ~ '^[a-f0-9]{64}$'),
++  CONSTRAINT "clinical_provenance_reason_present" CHECK (length(trim("reason")) BETWEEN 3 AND 1000)
++);
++CREATE INDEX "clinical_provenance_patient_scope_time_idx" ON "clinical_provenance_events"("patientId", "organizationId", "occurredAt");
++CREATE INDEX "clinical_provenance_resource_time_idx" ON "clinical_provenance_events"("resourceType", "resourceId", "occurredAt");
++CREATE INDEX "clinical_provenance_actor_time_idx" ON "clinical_provenance_events"("actorUserId", "occurredAt");
++CREATE FUNCTION "p0_reject_clinical_provenance_mutation"() RETURNS trigger LANGUAGE plpgsql AS $ledger$
++BEGIN
++ RAISE EXCEPTION 'clinical_provenance_events is append-only: % forbidden', TG_OP USING ERRCODE='23514';
++END
++$ledger$;
++CREATE TRIGGER "p0_clinical_provenance_immutable_row" BEFORE UPDATE OR DELETE ON "clinical_provenance_events" FOR EACH ROW EXECUTE FUNCTION "p0_reject_clinical_provenance_mutation"();
++CREATE TRIGGER "p0_clinical_provenance_immutable_truncate" BEFORE TRUNCATE ON "clinical_provenance_events" FOR EACH STATEMENT EXECUTE FUNCTION "p0_reject_clinical_provenance_mutation"();
++COMMIT;
+diff --git a/prisma/migrations/20261026194000_p0_clinical_registration_operation/migration.sql b/prisma/migrations/20261026194000_p0_clinical_registration_operation/migration.sql
+new file mode 100644
+index 0000000..b1f1a59
+--- /dev/null
++++ b/prisma/migrations/20261026194000_p0_clinical_registration_operation/migration.sql
+@@ -0,0 +1,142 @@
++-- CreateEnum
++CREATE TYPE "ClinicalRegistrationOperationStatus" AS ENUM ('PENDING', 'COMPLETED', 'CANCELLED');
++
++-- CreateTable
++CREATE TABLE "clinical_registration_operations" (
++    "id" TEXT NOT NULL,
++    "actorUserId" TEXT NOT NULL,
++    "organizationId" TEXT NOT NULL,
++    "keyHash" TEXT NOT NULL,
++    "requestFingerprint" TEXT,
++    "status" "ClinicalRegistrationOperationStatus" NOT NULL DEFAULT 'PENDING',
++    "patientId" TEXT,
++    "pregnancyId" TEXT,
++    "encounterId" TEXT,
++    "evaluationId" TEXT,
++    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
++    "completedAt" TIMESTAMP(3),
++
++    CONSTRAINT "clinical_registration_operations_pkey" PRIMARY KEY ("id")
++);
++
++-- CreateIndex
++CREATE UNIQUE INDEX "clinical_registration_operations_encounterId_key" ON "clinical_registration_operations"("encounterId");
++
++-- CreateIndex
++CREATE UNIQUE INDEX "clinical_registration_operations_evaluationId_key" ON "clinical_registration_operations"("evaluationId");
++
++-- CreateIndex
++CREATE INDEX "clinical_registration_operations_organizationId_createdAt_idx" ON "clinical_registration_operations"("organizationId", "createdAt");
++
++-- CreateIndex
++CREATE INDEX "clinical_registration_operations_patientId_idx" ON "clinical_registration_operations"("patientId");
++
++-- CreateIndex
++CREATE INDEX "clinical_registration_operations_pregnancyId_idx" ON "clinical_registration_operations"("pregnancyId");
++
++-- CreateIndex
++CREATE UNIQUE INDEX "clinical_registration_operations_actorUserId_organizationId_key" ON "clinical_registration_operations"("actorUserId", "organizationId", "keyHash");
++
++-- AddForeignKey
++ALTER TABLE "clinical_registration_operations" ADD CONSTRAINT "clinical_registration_operations_actorUserId_fkey" FOREIGN KEY ("actorUserId") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
++
++-- AddForeignKey
++ALTER TABLE "clinical_registration_operations" ADD CONSTRAINT "clinical_registration_operations_organizationId_fkey" FOREIGN KEY ("organizationId") REFERENCES "organizations"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
++
++-- AddForeignKey
++ALTER TABLE "clinical_registration_operations" ADD CONSTRAINT "clinical_registration_operations_patientId_fkey" FOREIGN KEY ("patientId") REFERENCES "patients"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
++
++-- AddForeignKey
++ALTER TABLE "clinical_registration_operations" ADD CONSTRAINT "clinical_registration_operations_pregnancyId_fkey" FOREIGN KEY ("pregnancyId") REFERENCES "pregnancies"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
++
++-- AddForeignKey
++ALTER TABLE "clinical_registration_operations" ADD CONSTRAINT "clinical_registration_operations_encounterId_fkey" FOREIGN KEY ("encounterId") REFERENCES "encounters"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
++
++-- AddForeignKey
++ALTER TABLE "clinical_registration_operations" ADD CONSTRAINT "clinical_registration_operations_evaluationId_fkey" FOREIGN KEY ("evaluationId") REFERENCES "clinical_evaluations"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
++
++-- Only terminal operations may survive COMMIT; neither a timeout nor a crash
++-- can leave a publicly observable PENDING claim or a partial clinical graph.
++ALTER TABLE "clinical_registration_operations"
++ADD CONSTRAINT "clinical_registration_operation_hash_shape"
++CHECK (
++  "keyHash" ~ '^[0-9a-f]{64}$'
++  AND ("requestFingerprint" IS NULL OR "requestFingerprint" ~ '^[0-9a-f]{64}$')
++),
++ADD CONSTRAINT "clinical_registration_operation_state_shape"
++CHECK (
++  ("status" = 'PENDING' AND "requestFingerprint" IS NOT NULL
++    AND "patientId" IS NULL AND "pregnancyId" IS NULL
++    AND "encounterId" IS NULL AND "evaluationId" IS NULL AND "completedAt" IS NULL)
++  OR
++  ("status" = 'COMPLETED' AND "requestFingerprint" IS NOT NULL
++    AND "patientId" IS NOT NULL AND "encounterId" IS NOT NULL
++    AND "evaluationId" IS NOT NULL AND "completedAt" IS NOT NULL)
++  OR
++  ("status" = 'CANCELLED' AND "requestFingerprint" IS NULL
++    AND "patientId" IS NULL AND "pregnancyId" IS NULL
++    AND "encounterId" IS NULL AND "evaluationId" IS NULL AND "completedAt" IS NOT NULL)
++);
++
++CREATE FUNCTION "p0_registration_terminal_at_commit"() RETURNS trigger
++LANGUAGE plpgsql AS $$
++DECLARE persisted "clinical_registration_operations"%ROWTYPE;
++BEGIN
++  SELECT * INTO persisted FROM "clinical_registration_operations" WHERE "id" = NEW."id";
++  IF NOT FOUND THEN
++    RETURN NULL;
++  END IF;
++  IF persisted."status" = 'PENDING' THEN
++    RAISE EXCEPTION USING ERRCODE = '23514', MESSAGE = 'REGISTRATION_OPERATION_MUST_BE_TERMINAL';
++  END IF;
++  IF persisted."status" = 'COMPLETED' AND NOT EXISTS (
++    SELECT 1 FROM "encounters" e
++    JOIN "clinical_evaluations" v ON v."id" = persisted."evaluationId"
++    WHERE e."id" = persisted."encounterId"
++      AND e."organizationId" = persisted."organizationId"
++      AND e."patientId" = persisted."patientId"
++      AND e."pregnancyId" IS NOT DISTINCT FROM persisted."pregnancyId"
++      AND e."status" = 'COMPLETED'
++      AND v."encounterId" = e."id" AND v."patientId" = e."patientId"
++  ) THEN
++    RAISE EXCEPTION USING ERRCODE = '23514', MESSAGE = 'REGISTRATION_OPERATION_RESULT_MISMATCH';
++  END IF;
++  RETURN NULL;
++END;
++$$;
++
++CREATE CONSTRAINT TRIGGER "p0_registration_terminal_at_commit"
++AFTER INSERT OR UPDATE ON "clinical_registration_operations"
++DEFERRABLE INITIALLY DEFERRED
++FOR EACH ROW EXECUTE FUNCTION "p0_registration_terminal_at_commit"();
++
++-- A cancelled key is a durable barrier against a late/retried POST. A completed
++-- key is immutable so a retry cannot lose the identity of its committed graph.
++CREATE FUNCTION "p0_registration_operation_immutable"() RETURNS trigger
++LANGUAGE plpgsql AS $$
++BEGIN
++  IF TG_OP IN ('DELETE', 'TRUNCATE') THEN
++    RAISE EXCEPTION USING ERRCODE = '23514', MESSAGE = 'REGISTRATION_OPERATION_IMMUTABLE';
++  END IF;
++  IF OLD."status" <> 'PENDING'
++    OR NEW."status" = 'PENDING'
++    OR NEW."id" IS DISTINCT FROM OLD."id"
++    OR NEW."actorUserId" IS DISTINCT FROM OLD."actorUserId"
++    OR NEW."organizationId" IS DISTINCT FROM OLD."organizationId"
++    OR NEW."keyHash" IS DISTINCT FROM OLD."keyHash"
++    OR NEW."requestFingerprint" IS DISTINCT FROM OLD."requestFingerprint"
++    OR NEW."createdAt" IS DISTINCT FROM OLD."createdAt"
++  THEN
++    RAISE EXCEPTION USING ERRCODE = '23514', MESSAGE = 'REGISTRATION_OPERATION_IMMUTABLE';
++  END IF;
++  RETURN NEW;
++END;
++$$;
++
++CREATE TRIGGER "p0_registration_operation_immutable"
++BEFORE UPDATE OR DELETE ON "clinical_registration_operations"
++FOR EACH ROW EXECUTE FUNCTION "p0_registration_operation_immutable"();
++
++CREATE TRIGGER "p0_registration_operation_no_truncate"
++BEFORE TRUNCATE ON "clinical_registration_operations"
++FOR EACH STATEMENT EXECUTE FUNCTION "p0_registration_operation_immutable"();
+diff --git a/prisma/schema.prisma b/prisma/schema.prisma
+index 63a9432..ba9f72f 100644
+--- a/prisma/schema.prisma
++++ b/prisma/schema.prisma
+@@ -217,0 +218,11 @@ enum OrganizationHealthAlertStatus {
++enum ClinicalProvenanceKind {
++  REVISION_PROPOSAL
++  MEASUREMENT_CREATED
++  MEASUREMENT_UPDATED
++}
++
++enum ClinicalProvenanceStatus {
++  PROPOSED_NOT_APPLIED
++  APPLIED
++}
++
+@@ -251,0 +263,2 @@ model User {
++  clinicalProvenanceEvents ClinicalProvenanceEvent[] @relation("ClinicalProvenanceActor")
++  clinicalRegistrations ClinicalRegistrationOperation[] @relation("ClinicalRegistrationActor")
+@@ -291,0 +305,2 @@ model Organization {
++  clinicalProvenanceEvents ClinicalProvenanceEvent[]
++  clinicalRegistrations ClinicalRegistrationOperation[] @relation("ClinicalRegistrationOrganization")
+@@ -553,0 +569,2 @@ model Patient {
++  clinicalProvenanceEvents ClinicalProvenanceEvent[]
++  registrationOperations ClinicalRegistrationOperation[] @relation("ClinicalRegistrationPatient")
+@@ -594,0 +612 @@ model Pregnancy {
++  registrationOperations ClinicalRegistrationOperation[] @relation("ClinicalRegistrationPregnancy")
+@@ -624,0 +643,2 @@ model Encounter {
++  clinicalProvenanceEvents ClinicalProvenanceEvent[]
++  registrationOperation ClinicalRegistrationOperation? @relation("ClinicalRegistrationEncounter")
+@@ -735,0 +756 @@ model ClinicalEvaluation {
++  registrationOperation ClinicalRegistrationOperation? @relation("ClinicalRegistrationEvaluation")
+@@ -1193,0 +1215,67 @@ model OrganizationActivationNotice {
++
++/// Private clinical ledger; legacy records are not backfilled with invented authors.
++model ClinicalProvenanceEvent {
++  id                 String                   @id @default(uuid())
++  actorUserId        String
++  organizationId     String
++  patientId          String
++  encounterId        String?
++  resourceType       String
++  resourceId         String
++  kind               ClinicalProvenanceKind
++  status             ClinicalProvenanceStatus
++  reason             String
++  before             Json
++  after              Json
++  proposedAfter      Json?
++  sourceSnapshotHash String
++  sessionId          String?
++  requestId          String?
++  correlationId      String?
++  occurredAt         DateTime                 @default(now())
++
++  actor        User         @relation("ClinicalProvenanceActor", fields: [actorUserId], references: [id], onDelete: Restrict, map: "clinical_provenance_actor_fkey")
++  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Restrict, map: "clinical_provenance_organization_fkey")
++  patient      Patient      @relation(fields: [patientId], references: [id], onDelete: Restrict, map: "clinical_provenance_patient_fkey")
++  encounter    Encounter?   @relation(fields: [encounterId], references: [id], onDelete: Restrict, map: "clinical_provenance_encounter_fkey")
++
++  @@index([patientId, organizationId, occurredAt], map: "clinical_provenance_patient_scope_time_idx")
++  @@index([resourceType, resourceId, occurredAt], map: "clinical_provenance_resource_time_idx")
++  @@index([actorUserId, occurredAt], map: "clinical_provenance_actor_time_idx")
++  @@map("clinical_provenance_events")
++}
++
++// PENDING is transaction-local only: a deferred trigger forbids committing it.
++enum ClinicalRegistrationOperationStatus {
++  PENDING
++  COMPLETED
++  CANCELLED
++}
++
++model ClinicalRegistrationOperation {
++  id                 String @id @default(uuid())
++  actorUserId        String
++  organizationId     String
++  keyHash            String
++  requestFingerprint String?
++  status             ClinicalRegistrationOperationStatus @default(PENDING)
++  patientId          String?
++  pregnancyId        String?
++  encounterId        String? @unique
++  evaluationId       String? @unique
++  createdAt          DateTime @default(now())
++  completedAt        DateTime?
++
++  actor        User @relation("ClinicalRegistrationActor", fields: [actorUserId], references: [id], onDelete: Restrict)
++  organization Organization @relation("ClinicalRegistrationOrganization", fields: [organizationId], references: [id], onDelete: Restrict)
++  patient      Patient? @relation("ClinicalRegistrationPatient", fields: [patientId], references: [id], onDelete: Restrict)
++  pregnancy    Pregnancy? @relation("ClinicalRegistrationPregnancy", fields: [pregnancyId], references: [id], onDelete: Restrict)
++  encounter    Encounter? @relation("ClinicalRegistrationEncounter", fields: [encounterId], references: [id], onDelete: Restrict)
++  evaluation   ClinicalEvaluation? @relation("ClinicalRegistrationEvaluation", fields: [evaluationId], references: [id], onDelete: Restrict)
++
++  @@unique([actorUserId, organizationId, keyHash])
++  @@index([organizationId, createdAt])
++  @@index([patientId])
++  @@index([pregnancyId])
++  @@map("clinical_registration_operations")
++}

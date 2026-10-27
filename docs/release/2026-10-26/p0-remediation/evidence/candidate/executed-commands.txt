@@ -1,0 +1,22 @@
+Commands executed (complete logs under .test-audit/p0-composition/):
+git diff --check
+node_modules/.bin/prisma validate
+node_modules/.bin/prisma generate
+node_modules/.bin/tsc --noEmit
+node_modules/.bin/eslint <exact modified TypeScript paths from composition.json>
+npm run lint
+python3 .test-audit/p0-composition/run.py initial
+python3 .test-audit/p0-composition/run.py full
+python3 .test-audit/p0-composition/native-browser-gates.py
+python3 .test-audit/p0-composition/last-gates.py
+npm run build (existing physical mirror, all application/test sources verified identical)
+npm audit --omit=dev --audit-level=high --json
+npm audit --include=dev --audit-level=high --json
+npm audit --prefix docker/migrator --include=dev --audit-level=high --json
+python3 .test-audit/p0-composition/docker.py
+bash scripts/test-f04-migrator-image.sh pap-saude-migrator:p0-validation-f5dd8fe
+bash scripts/test-f04-web-image.sh pap-saude:p0-validation-f5dd8fe pap-saude-migrator:p0-validation-f5dd8fe
+bash scripts/security/scan-f04-images.sh pap-saude:p0-validation-f5dd8fe pap-saude-migrator:p0-validation-f5dd8fe
+python3 .test-audit/p0-composition/scan-web-split-storage.py (web-only retry, same pinned scanner/severity/Java analysis)
+Local adapters redirect only owned Docker targets, DSNs and import roots; no assertion removed. Native C/D/E/first-access used their original endpoint and guards.
+No host npm ci/install; existing dependencies reused. Dockerfile npm ci ran only as required for image builds. Prisma client generated once locally; redundant same-schema generation omitted in wrappers.

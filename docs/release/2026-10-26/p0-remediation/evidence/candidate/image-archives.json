@@ -1,0 +1,26 @@
+[
+  {
+    "type": "image",
+    "tag": "pap-saude:p0-validation-f5dd8fe",
+    "imageId": "sha256:4af360c3b74cf4f068af3adb058e99c1d8cc4acce8059e9a53f918fce99a362d",
+    "archive": "/tmp/pap-p0-review-artifact-archives/web.tar.gz",
+    "sha256": "bd1474f55e2cd688fa8851d1ccf4030c4a9dcd52cbaaf2caff9c3e9b30deb59d"
+  },
+  {
+    "type": "image",
+    "tag": "pap-saude-migrator:p0-validation-f5dd8fe",
+    "imageId": "sha256:c58cfa4ff1d548a8cadf82b754fd119efcb85202c705e584f4aa79f21e61d002",
+    "archive": "/tmp/pap-p0-review-artifact-archives/migrator.tar.gz",
+    "sha256": "e0d862a9ed60076aa44d0c861c8b7b6a949603e431184a9392009e2dcd5bfca2"
+  },
+  {
+    "type": "unused physical build mirror",
+    "source": "/tmp/p0-mfa-default-build",
+    "archive": "/tmp/pap-p0-review-artifact-archives/mfa-physical-build-mirror.tar.gz",
+    "sha256": "672d7a82002225c6c480e95b6121dc8be7d43acabb45b0db3ac33c5710b622e3",
+    "worktreeDependenciesUnchanged": "/tmp/p0-deps/mfa/node_modules"
+  },
+  {
+    "restored": "/workspace/pap-saude/node_modules"
+  }
+]

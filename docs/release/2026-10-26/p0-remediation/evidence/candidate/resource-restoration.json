@@ -1,0 +1,11 @@
+{
+  "restored": [
+    "/workspace/p0-remediation/admin-f/.next",
+    "/workspace/p0-remediation/clinical-registration/.next",
+    "/workspace/pap-saude/.next",
+    "/tmp/p0-mfa-default-build"
+  ],
+  "originalMainDependenciesRestored": true,
+  "archiveSha256": "672d7a82002225c6c480e95b6121dc8be7d43acabb45b0db3ac33c5710b622e3",
+  "manualLabAccessed": false
+}
