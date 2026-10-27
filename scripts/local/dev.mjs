@@ -5,6 +5,7 @@ import {
   writeFileSync,
   existsSync,
   readdirSync,
+  lstatSync,
 } from "node:fs";
 import { resolve } from "node:path";
 import { spawnSync, spawn } from "node:child_process";
@@ -15,13 +16,22 @@ import {
   assertLocalContainer,
   assertLocalUrl,
   assertDockerEndpoint,
-  LOCAL_DB,
-  LOCAL_CONTAINER,
-  LOCAL_VOLUME,
+  localLabProfile,
+  parseLocalArguments,
+  assertSeparateCheckout,
+  assertLocalVolume,
 } from "./policy.mjs";
 const root = resolve(import.meta.dirname, "../..");
-const privateDir = resolve(root, ".local/pap-admin"),
-  configFile = resolve(privateDir, "config.json");
+let profile = localLabProfile(), commandArgs = [];
+let privateDir, configFile;
+function privatePaths() {
+  assertSeparateCheckout(profile.name, path => existsSync(resolve(root, path)));
+  for (const path of [resolve(root, ".local"), privateDir, configFile, resolve(privateDir, "postgres.env"), resolve(privateDir, "mail")]) {
+    try {
+      if (lstatSync(path).isSymbolicLink()) throw new Error("LOCAL_PRIVATE_PATH_SYMLINK");
+    } catch (error) { if (error.code !== "ENOENT") throw error; }
+  }
+}
 function run(exe, args, options = {}) {
   const r = spawnSync(exe, args, { cwd: root, encoding: "utf8", ...options });
   if (r.error || r.status !== 0)
@@ -47,15 +57,13 @@ function inspectOwned(type, name) {
   if (result.status !== 0) return false;
   const object = JSON.parse(result.stdout)[0],
     labels = type === "container" ? object.Config.Labels : object.Labels;
-  if (labels?.["pap.local"] !== "admin-beta1")
+  if (labels?.["pap.local"] !== profile.name)
     throw new Error(
       "Nome ocupado por recurso não pertencente a este ambiente; operação recusada.",
     );
   return object;
 }
-function config() {
-  if (process.env.NODE_ENV === "production")
-    throw new Error("Não execute este launcher em production.");
+function assertNoEnvFiles() {
   for (const file of [
     ".env",
     ".env.local",
@@ -68,8 +76,15 @@ function config() {
       throw new Error(
         `Checkout contém ${file}; use clone/worktree limpo. Arquivo não será alterado.`,
       );
+}
+function config() {
+  if (process.env.NODE_ENV === "production")
+    throw new Error("Não execute este launcher em production.");
+  assertNoEnvFiles();
   const c = JSON.parse(readFileSync(configFile, "utf8"));
-  assertLocalUrl(c.databaseUrl);
+  assertLocalUrl(c.databaseUrl, profile.name);
+  if (profile.name === "p0-acceptance" && c.profile !== profile.name)
+    throw new Error("LOCAL_PROFILE_CONFIG_REQUIRED");
   if (process.env.DATABASE_URL && process.env.DATABASE_URL !== c.databaseUrl)
     throw new Error(
       "DATABASE_URL ambiente diverge do destino local fixo; remova-a antes de continuar.",
@@ -82,25 +97,30 @@ function environment(c) {
     NODE_ENV: "development",
     DATABASE_URL: c.databaseUrl,
     MFA_SECRET_ENCRYPTION_KEY: c.mfaKey,
-    MFA_SECRET_ENCRYPTION_KEY_ID: "local-admin-beta1",
+    MFA_SECRET_ENCRYPTION_KEY_ID: profile.keyId,
     PAP_LOCAL_DEMO: "1",
+    PAP_LOCAL_PROFILE: profile.name,
+    PAP_LOCAL_DEMO_TEST: "0",
+    PAP_FIRST_ACCESS_E2E: "",
+    PAP_LOCAL_MAIL_TEST_DIR: "",
+    PAP_EMAIL_EXTERNAL_ENABLED: "0",
+    RESEND_WEBHOOK_SECRET: "",
     PAP_EMAIL_PROVIDER: "local-demo",
     RESEND_API_KEY: "",
     PAP_EMAIL_FROM: "",
-    PAP_PUBLIC_URL: "http://127.0.0.1:3100",
-    AUTH_ALLOWED_ORIGINS: "http://127.0.0.1:3100",
+    PAP_PUBLIC_URL: `http://127.0.0.1:${profile.appPort}`,
+    AUTH_ALLOWED_ORIGINS: `http://127.0.0.1:${profile.appPort}`,
     AUTH_TRUSTED_CLIENT_IP_HEADER: "",
-    PAP_EMAIL_ALLOWED_HOSTS: "127.0.0.1:3100",
+    PAP_EMAIL_ALLOWED_HOSTS: `127.0.0.1:${profile.appPort}`,
   };
 }
 async function verify(c) {
   dockerGuard();
-  const object = inspectOwned("container", LOCAL_CONTAINER);
+  const object = inspectOwned("container", profile.container);
   if (!object || !object.State.Running)
     throw new Error("Inicie o PostgreSQL local com local:start.");
-  assertLocalContainer(object);
-  if (!inspectOwned("volume", LOCAL_VOLUME))
-    throw new Error("Local volume missing");
+  assertLocalContainer(object, profile.name);
+  assertLocalVolume(inspectOwned("volume", profile.volume), profile.name);
   const client = new pg.Client({ connectionString: c.databaseUrl });
   await client.connect();
   try {
@@ -108,8 +128,8 @@ async function verify(c) {
       "SELECT current_database() AS name, shobj_description(oid,'pg_database') AS marker FROM pg_database WHERE datname=current_database()",
     );
     if (
-      rows[0]?.name !== LOCAL_DB ||
-      rows[0]?.marker !== "pap-local-admin-beta1"
+      rows[0]?.name !== profile.database ||
+      rows[0]?.marker !== profile.marker
     )
       throw new Error("LOCAL_DATABASE_MARKER_REQUIRED");
   } finally {
@@ -141,7 +161,12 @@ async function question(label, secret = false) {
   }
 }
 async function main() {
-  const command = process.argv[2];
+  ({ profile, commandArgs } = parseLocalArguments(process.argv.slice(2)));
+  privateDir = resolve(root, profile.privateDir);
+  configFile = resolve(privateDir, "config.json");
+  privatePaths();
+  assertNoEnvFiles();
+  const command = commandArgs[0];
   if (command === "init") {
     if (existsSync(configFile)) {
       config();
@@ -158,7 +183,8 @@ async function main() {
       configFile,
       JSON.stringify(
         {
-          databaseUrl: `postgresql://pap_local:${password}@127.0.0.1:15432/${LOCAL_DB}?schema=public`,
+          databaseUrl: `postgresql://${profile.user}:${password}@127.0.0.1:${profile.dbPort}/${profile.database}?schema=public`,
+          ...(profile.name === "p0-acceptance" ? { profile: profile.name } : {}),
           mfaKey: randomBytes(32).toString("base64url"),
         },
         null,
@@ -177,14 +203,13 @@ async function main() {
   if (command === "start") {
     dockerGuard();
     // Validate both existing resources before creating or starting anything.
-    const container = inspectOwned("container", LOCAL_CONTAINER);
-    if (container) assertLocalContainer(container);
-    const volume = inspectOwned("volume", LOCAL_VOLUME);
-    if (volume && (volume.Driver !== "local" || Object.keys(volume.Options || {}).length))
-      throw new Error("LOCAL_PLAIN_VOLUME_REQUIRED");
+    const container = inspectOwned("container", profile.container);
+    if (container) assertLocalContainer(container, profile.name);
+    const volume = inspectOwned("volume", profile.volume);
+    if (volume) assertLocalVolume(volume, profile.name);
     if (container && !volume) throw new Error("LOCAL_VOLUME_MISSING");
     const consumers = docker([
-      "ps", "-aq", "--no-trunc", "--filter", `volume=${LOCAL_VOLUME}`,
+      "ps", "-aq", "--no-trunc", "--filter", `volume=${profile.volume}`,
     ]).split("\n").filter(Boolean);
     if (consumers.some((id) => id !== container?.Id))
       throw new Error("LOCAL_VOLUME_HAS_OTHER_CONSUMERS");
@@ -193,15 +218,15 @@ async function main() {
         "volume",
         "create",
         "--label",
-        "pap.local=admin-beta1",
-        LOCAL_VOLUME,
+        `pap.local=${profile.name}`,
+        profile.volume,
       ]);
     // Only an owned, genuinely empty volume may receive the initial DB marker.
     // Inspect read-only, without PostgreSQL's entrypoint or network access. A
     // failed inspection aborts rather than treating an unreadable volume as empty.
     const contents = docker([
       "run", "--rm", "--network", "none", "--read-only",
-      "--entrypoint", "sh", "-v", `${LOCAL_VOLUME}:/data:ro`,
+      "--entrypoint", "sh", "-v", `${profile.volume}:/data:ro`,
       "postgres:16-alpine", "-ec",
       'entries=$(ls -A /data); if [ -z "$entries" ]; then echo empty; elif [ -f /data/PG_VERSION ]; then echo initialized; else echo populated; fi',
     ]);
@@ -209,43 +234,43 @@ async function main() {
     if (!wasEmpty && contents !== "initialized")
       throw new Error("LOCAL_VOLUME_INSPECTION_FAILED");
     if (!container) {
-      const u = assertLocalUrl(c.databaseUrl);
+      const u = assertLocalUrl(c.databaseUrl, profile.name);
       const envFile = resolve(privateDir, "postgres.env");
       writeFileSync(
         envFile,
-        `POSTGRES_USER=pap_local\nPOSTGRES_PASSWORD=${u.password}\nPOSTGRES_DB=${LOCAL_DB}\n`,
+        `POSTGRES_USER=${profile.user}\nPOSTGRES_PASSWORD=${u.password}\nPOSTGRES_DB=${profile.database}\n`,
         { mode: 0o600 },
       );
       docker([
         "run",
         "-d",
         "--name",
-        LOCAL_CONTAINER,
+        profile.container,
         "--label",
-        "pap.local=admin-beta1",
+        `pap.local=${profile.name}`,
         "--env-file",
         envFile,
         "-p",
-        "127.0.0.1:15432:5432",
+        `127.0.0.1:${profile.dbPort}:5432`,
         "-v",
-        `${LOCAL_VOLUME}:/var/lib/postgresql/data`,
+        `${profile.volume}:/var/lib/postgresql/data`,
         "postgres:16-alpine",
       ]);
-    } else docker(["start", LOCAL_CONTAINER]);
+    } else docker(["start", profile.container]);
     let ready = false;
     for (let attempt = 0; attempt < 60; attempt++) {
       const probe = spawnSync(
         "docker",
         [
           "exec",
-          LOCAL_CONTAINER,
+          profile.container,
           "pg_isready",
           "-h",
           "127.0.0.1",
           "-U",
-          "pap_local",
+          profile.user,
           "-d",
-          LOCAL_DB,
+          profile.database,
         ],
         { stdio: "ignore" },
       );
@@ -257,35 +282,39 @@ async function main() {
     }
     if (!ready) throw new Error("PostgreSQL local não ficou pronto.");
     // The only SQL allowed before marker verification, inside our labelled local container.
-    const started = inspectOwned("container", LOCAL_CONTAINER);
-    assertLocalContainer(started);
+    const started = inspectOwned("container", profile.container);
+    assertLocalContainer(started, profile.name);
     if (wasEmpty)
       docker(
         [
           "exec",
           "-i",
-          LOCAL_CONTAINER,
+          profile.container,
           "psql",
           "-X",
           "-U",
-          "pap_local",
+          profile.user,
           "-d",
-          LOCAL_DB,
+          profile.database,
           "-v",
           "ON_ERROR_STOP=1",
         ],
         {
-          input: `COMMENT ON DATABASE ${LOCAL_DB} IS 'pap-local-admin-beta1';\n`,
+          input: `COMMENT ON DATABASE ${profile.database} IS '${profile.marker}';\n`,
         },
       );
     await verify(c);
-    console.log("PostgreSQL isolado pronto em 127.0.0.1:15432.");
+    console.log(`PostgreSQL isolado pronto em 127.0.0.1:${profile.dbPort}.`);
     return;
   }
   if (command === "stop") {
     dockerGuard();
-    if (inspectOwned("container", LOCAL_CONTAINER))
-      docker(["stop", LOCAL_CONTAINER]);
+    const object = inspectOwned("container", profile.container);
+    if (object) {
+      assertLocalContainer(object, profile.name);
+      assertLocalVolume(inspectOwned("volume", profile.volume), profile.name);
+      docker(["stop", profile.container]);
+    }
     console.log("Parado; volume e dados locais preservados.");
     return;
   }
@@ -296,7 +325,7 @@ async function main() {
           .filter((f) => f.endsWith(".json"))
           .sort()
       : [];
-    if (!process.argv[3]) {
+    if (!commandArgs[1]) {
       files.forEach((f, i) => {
         const m = JSON.parse(readFileSync(resolve(dir, f), "utf8"));
         console.log(`${i + 1}. ${m.to} — ${m.subject}`);
@@ -304,7 +333,7 @@ async function main() {
       if (!files.length) console.log("Nenhum e-mail local.");
       return;
     }
-    const index = Number(process.argv[3]) - 1;
+    const index = Number(commandArgs[1]) - 1;
     if (!Number.isInteger(index) || index < 0 || index >= files.length)
       throw new Error("Número de mensagem inválido.");
     const message = JSON.parse(
@@ -336,6 +365,8 @@ async function main() {
     return;
   }
   if (command === "admin") {
+    if (profile.name === "p0-acceptance")
+      console.log("Perfil P0: use e-mail distinto do laboratório anterior e preserve a entrada TOTP antiga.");
     const email = await question("E-mail do primeiro PAP_ADMIN local: "),
       displayName = await question("Nome: "),
       password = await question("Senha (mínimo 12 caracteres, oculta): ", true),
@@ -353,6 +384,8 @@ async function main() {
     return;
   }
   if (command === "dev") {
+    if (profile.name === "p0-acceptance")
+      console.log("Abra 127.0.0.1:3200 somente em perfil de navegador separado; cookies não são isolados por porta.");
     const child = spawn(
       process.execPath,
       [
@@ -361,7 +394,7 @@ async function main() {
         "--hostname",
         "127.0.0.1",
         "--port",
-        "3100",
+        profile.appPort,
       ],
       { cwd: root, env, stdio: "inherit" },
     );
@@ -374,7 +407,7 @@ async function main() {
 }
 main().catch(() => {
   console.error(
-    "Operação local recusada/falhou. Confira daemon local, arquivos .env, porta 15432, marker e instruções em docs/admin/local-development.md. Nenhuma credencial será exibida.",
+    "Operação local recusada/falhou. Confira daemon local, arquivos .env, perfil, porta e marker e instruções em docs/admin/local-development.md. Nenhuma credencial será exibida.",
   );
   process.exitCode = 1;
 });

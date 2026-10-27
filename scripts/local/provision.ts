@@ -1,3 +1,4 @@
+import { assertLabDatabaseUrl, localLabProfile } from "../../src/lib/local-lab-profiles.mjs";
 import { db } from "../../src/server/db/client";
 import { bootstrapSystemIam } from "../../src/server/iam/bootstrap.service";
 import { assignSystemRole } from "../../src/server/iam/role-assignment.service";
@@ -8,23 +9,16 @@ import {
 import { writeAdminAudit } from "../../src/server/audit/admin-audit-writer.service";
 
 export async function assertLocalDatabase() {
-  const u = new URL(process.env.DATABASE_URL || "");
-  if (
-    process.env.NODE_ENV !== "development" ||
-    process.env.PAP_LOCAL_DEMO !== "1" ||
-    u.protocol !== "postgresql:" ||
-    u.hostname !== "127.0.0.1" ||
-    u.port !== "15432" ||
-    u.pathname !== "/pap_admin_beta1_local" ||
-    u.search !== "?schema=public"
-  )
+  const profile = localLabProfile(process.env.PAP_LOCAL_PROFILE || "admin-beta1");
+  if (process.env.NODE_ENV !== "development" || process.env.PAP_LOCAL_DEMO !== "1")
     throw new Error("LOCAL_DATABASE_ONLY");
+  assertLabDatabaseUrl(process.env.DATABASE_URL || "", profile.name);
   const rows = await db.$queryRaw<
     Array<{ name: string; marker: string }>
   >`SELECT current_database() AS name, shobj_description(oid,'pg_database') AS marker FROM pg_database WHERE datname=current_database()`;
   if (
-    rows[0]?.name !== "pap_admin_beta1_local" ||
-    rows[0]?.marker !== "pap-local-admin-beta1"
+    rows[0]?.name !== profile.database ||
+    rows[0]?.marker !== profile.marker
   )
     throw new Error("LOCAL_DATABASE_MARKER_REQUIRED");
 }

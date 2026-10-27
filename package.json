@@ -72,6 +72,7 @@
     "audit:f04:operations": "bash scripts/audit-f04-operations.sh",
     "test:f04:db-integrity": "bash scripts/test-f04-db-invariants.sh",
     "test:admin:beta1": "bash scripts/test-admin-beta1.sh",
+    "local:p0": "node scripts/local/dev.mjs --profile=p0-acceptance",
     "local:init": "node scripts/local/dev.mjs init",
     "local:start": "node scripts/local/dev.mjs start",
     "local:migrate": "node scripts/local/dev.mjs migrate",

@@ -1,3 +1,4 @@
+import { LOCAL_LAB_PROFILES, operatorMailProfile } from "@/lib/local-lab-profiles.mjs";
 import { lstat, mkdir, readFile, writeFile } from "node:fs/promises";
 import { createHash, randomUUID } from "node:crypto";
 import { resolve } from "node:path";
@@ -19,10 +20,7 @@ export async function captureLocalDemoMail(message: {
     db.hostname === "127.0.0.1" && db.port === "5432" &&
     ["/pap_saude_m04_c_test", "/pap_saude_m04_d_test"].includes(db.pathname) && db.search === "?schema=public" &&
     process.env.PAP_PUBLIC_URL === "http://127.0.0.1:3110";
-  const operatorLab = !testDir && process.env.PAP_LOCAL_DEMO_TEST !== "1" &&
-    process.env.PAP_PUBLIC_URL === "http://127.0.0.1:3100" &&
-    db.hostname === "127.0.0.1" && db.port === "15432" &&
-    db.pathname === "/pap_admin_beta1_local" && db.search === "?schema=public";
+  const operatorLab = operatorMailProfile(process.env);
   if (
     process.env.NODE_ENV !== "development" ||
     process.env.PAP_LOCAL_DEMO !== "1" ||
@@ -31,7 +29,19 @@ export async function captureLocalDemoMail(message: {
     !(isolatedTest || operatorLab)
   )
     throw new Error("LOCAL_DEMO_MAIL_DISABLED");
-  const dir = isolatedTest ? testDir! : resolve(process.cwd(), ".local/pap-admin/mail");
+  if (operatorLab) {
+    for (const p of Object.values(LOCAL_LAB_PROFILES)) {
+      if (p.name !== operatorLab.name) {
+        try { await lstat(resolve(process.cwd(), p.privateDir)); throw new Error("LOCAL_DEMO_PROFILE_CONFLICT"); }
+        catch (error) { if ((error as NodeJS.ErrnoException).code !== "ENOENT") throw error; }
+      }
+    }
+    for (const parent of [".local", operatorLab.privateDir]) {
+      try { if ((await lstat(resolve(process.cwd(), parent))).isSymbolicLink()) throw new Error("LOCAL_DEMO_MAIL_DISABLED"); }
+      catch (error) { if ((error as NodeJS.ErrnoException).code !== "ENOENT") throw error; }
+    }
+  }
+  const dir = isolatedTest ? testDir! : resolve(process.cwd(), operatorLab!.privateDir, "mail");
   await mkdir(dir, { recursive: true, mode: 0o700 });
   const directory = await lstat(dir);
   if (!directory.isDirectory() || directory.isSymbolicLink() ||
