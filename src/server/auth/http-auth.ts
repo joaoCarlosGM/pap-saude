@@ -152,6 +152,33 @@ export function getRequestUserAgent(
   return userAgent.slice(0, 512);
 }
 
+/** Limit actual streamed bytes even when Content-Length is missing or forged. */
+async function readBoundedJson(request: Request, maximumBytes: number): Promise<unknown> {
+  try {
+    if (!request.body) throw new InvalidLoginPayloadError();
+    const reader = request.body.getReader();
+    const chunks: Uint8Array[] = [];
+    let received = 0;
+    try {
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        received += value.byteLength;
+        if (received > maximumBytes) {
+          await reader.cancel().catch(() => undefined);
+          throw new InvalidLoginPayloadError();
+        }
+        chunks.push(value);
+      }
+    } finally {
+      reader.releaseLock();
+    }
+    return JSON.parse(Buffer.concat(chunks.map(chunk => Buffer.from(chunk))).toString("utf8"));
+  } catch {
+    throw new InvalidLoginPayloadError();
+  }
+}
+
 export async function readLoginPayload(
   request: Request,
 ): Promise<LoginHttpPayload> {
@@ -185,7 +212,7 @@ export async function readLoginPayload(
   let body: unknown;
 
   try {
-    body = await request.json();
+    body = await readBoundedJson(request, MAX_LOGIN_BODY_BYTES);
   } catch {
     throw new InvalidLoginPayloadError();
   }
@@ -278,10 +305,7 @@ export async function readMfaCodePayload(
   if(!contentType.toLowerCase().startsWith("application/json")) throw new InvalidLoginPayloadError();
   const length=request.headers.get("content-length");
   if(length && (!Number.isFinite(Number(length)) || Number(length)>4096 || Number(length)<0)) throw new InvalidLoginPayloadError();
-  const raw=await request.text();
-  if(Buffer.byteLength(raw,"utf8")>4096) throw new InvalidLoginPayloadError();
-  let body:unknown;
-  try {body=JSON.parse(raw);}catch{throw new InvalidLoginPayloadError();}
+  const body = await readBoundedJson(request, 4096);
   if(!body || typeof body!=="object" || Array.isArray(body)) throw new InvalidLoginPayloadError();
   const value=body as Record<string,unknown>;
   const code=value.code;

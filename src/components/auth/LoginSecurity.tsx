@@ -16,6 +16,7 @@ export default function LoginSecurity({
   const router = useRouter();
   const lock = useRef(false);
   const [busy, setBusy] = useState(false);
+  const [mfaTemporarilyBlocked, setMfaTemporarilyBlocked] = useState(false);
   const [email, setEmail] = useState(""),
     [password, setPassword] = useState(""),
     [newPassword, setNewPassword] = useState(""),
@@ -23,7 +24,7 @@ export default function LoginSecurity({
     [mode, setMode] = useState<"LOGIN" | "MFA" | "CHANGE">(initialMode),
     [error, setError] = useState("");
   const submit = async () => {
-    if (lock.current) return;
+    if (lock.current || mfaTemporarilyBlocked) return;
     lock.current = true;
     setBusy(true);
     try {
@@ -52,6 +53,14 @@ export default function LoginSecurity({
       });
       const result = await response.json();
       if (!response.ok) {
+        if (mode === "MFA" && result.error === "MFA_TEMPORARILY_UNAVAILABLE") {
+          setCode("");
+          setMfaTemporarilyBlocked(true);
+          setError(
+            "Muitas tentativas de verificação. Por segurança, esta verificação foi encerrada. Aguarde até 15 minutos antes de reiniciar o login. Não é necessário recadastrar seu MFA.",
+          );
+          return;
+        }
         if (result.error === "PASSWORD_CHANGE_REQUIRED") {
           setMode("CHANGE");
           return;
@@ -173,8 +182,10 @@ export default function LoginSecurity({
             />
           </label>
         )}
-        <button type="submit" disabled={busy || !ready} className="ob-primary">
-          {mode === "LOGIN"
+        <button type="submit" disabled={busy || !ready || mfaTemporarilyBlocked} className="ob-primary">
+          {mfaTemporarilyBlocked
+            ? "Verificação temporariamente bloqueada"
+            : mode === "LOGIN"
             ? "Entrar"
             : mode === "MFA"
               ? "Confirmar MFA"
@@ -193,11 +204,15 @@ export default function LoginSecurity({
             disabled={busy}
             onClick={() => {
               setMode("LOGIN");
+              setPassword("");
               setCode("");
-              setError("");
+              setMfaTemporarilyBlocked(false);
+              setError(mfaTemporarilyBlocked
+                ? "Aguarde até 15 minutos antes de tentar novamente. Depois, entre com sua senha e um código atual do autenticador ou um código de recuperação ainda não utilizado."
+                : "");
             }}
           >
-            Reiniciar login
+            {mfaTemporarilyBlocked ? "Voltar ao login" : "Reiniciar login"}
           </button>
         )}
       </form>

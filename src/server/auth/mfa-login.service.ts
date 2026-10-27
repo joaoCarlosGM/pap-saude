@@ -1,3 +1,4 @@
+import { reserveMfaLoginAttempt } from "./mfa-attempt-limit.service";
 import {
   createSession,
 } from "./session.service";
@@ -21,6 +22,7 @@ import {
 
 export interface CompleteMfaLoginInput {
   challengeToken: string;
+  origin?: string;
   code: string;
   now?: Date;
 }
@@ -36,6 +38,8 @@ export async function completeMfaLogin(
       input.challengeToken,
       now,
     );
+
+  await reserveMfaLoginAttempt(challenge, input.origin, now);
 
   await verifyActiveTotp(
     challenge.userId,
@@ -106,6 +110,7 @@ export async function completeMfaLogin(
 
 export interface CompleteMfaLoginWithRecoveryCodeInput {
   challengeToken: string;
+  origin?: string;
   recoveryCode: string;
   now?: Date;
 }
@@ -126,6 +131,8 @@ export async function completeMfaLoginWithRecoveryCode(
    * Recovery credentials are consumed atomically using
    * usedAt IS NULL + revokedAt IS NULL.
    */
+  await reserveMfaLoginAttempt(challenge, input.origin, now);
+
   await consumeRecoveryCode(
     challenge.userId,
     input.recoveryCode,

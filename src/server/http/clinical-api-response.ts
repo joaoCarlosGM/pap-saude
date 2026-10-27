@@ -98,7 +98,9 @@ export function clinicalErrorResponse(error: unknown) {
   const status = statusForError(error);
 
   if (status === 500) {
-    console.error("clinical-api", error);
+    // ORM exceptions may include clinical input, SQL parameters or credentials.
+    // Emit only a fixed event code; never serialize the exception or request.
+    console.error("CLINICAL_API_INTERNAL_ERROR");
 
     return clinicalJson(
       {

@@ -77,3 +77,10 @@ export class MfaResetTargetUnavailableError extends MfaError {
     this.name = "MfaResetTargetUnavailableError";
   }
 }
+
+export class MfaLoginThrottledError extends MfaError {
+  constructor() {
+    super("MFA login temporarily unavailable");
+    this.name = "MfaLoginThrottledError";
+  }
+}

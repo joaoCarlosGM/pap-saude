@@ -13,6 +13,7 @@ import {
   ConsumedMfaChallengeError,
   ExpiredMfaChallengeError,
   InvalidMfaChallengeError,
+  MfaLoginThrottledError,
   InvalidTotpCodeError,
   InvalidRecoveryCodeError,
   MfaFactorUnavailableError,
@@ -82,7 +83,7 @@ export async function POST(
      * Force production proxy configuration to be present,
      * matching the primary login endpoint's trust model.
      */
-    resolveTrustedClientOrigin(
+    const origin = resolveTrustedClientOrigin(
       request,
     );
 
@@ -108,8 +109,8 @@ export async function POST(
 
     const result =
       await (payload.recovery ? completeMfaLoginWithRecoveryCode({
-        challengeToken,recoveryCode:payload.code,
-      }) : completeMfaLogin({challengeToken,code:payload.code}));
+        challengeToken,recoveryCode:payload.code,origin,
+      }) : completeMfaLogin({challengeToken,code:payload.code,origin}));
 
     const response =
       json(
@@ -140,6 +141,13 @@ export async function POST(
 
     return response;
   } catch (error) {
+    if (error instanceof MfaLoginThrottledError) {
+      const response = json({ error: "MFA_TEMPORARILY_UNAVAILABLE" }, 429);
+      response.headers.set("Retry-After", "900");
+      clearChallenge(response);
+      return response;
+    }
+
     if (
       error instanceof
         InvalidRequestOriginError ||
