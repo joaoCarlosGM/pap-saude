@@ -33,9 +33,10 @@ export class MeowsVitalSignsNotFoundError
 
 export async function evaluateEncounterMeows(
   encounterId: string,
+  client: Prisma.TransactionClient = db,
 ) {
   const encounter =
-    await db.encounter.findUnique({
+    await client.encounter.findUnique({
       where: {
         id:
           encounterId,
@@ -115,6 +116,7 @@ export async function persistEncounterMeowsEvaluation(
   encounterId: string,
   clinicalNotes?:
     string | null,
+  client: Prisma.TransactionClient = db,
 ) {
   const {
     encounter,
@@ -122,9 +124,10 @@ export async function persistEncounterMeowsEvaluation(
   } =
     await evaluateEncounterMeows(
       encounterId,
+      client,
     );
 
-  return db.clinicalEvaluation.create({
+  return client.clinicalEvaluation.create({
     data: {
       patientId:
         encounter.patientId,

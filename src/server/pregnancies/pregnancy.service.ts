@@ -40,9 +40,10 @@ const ACTIVE_SLOT =
 
 async function requirePatient(
   patientId: string,
+  client: Prisma.TransactionClient = db,
 ) {
   const patient =
-    await db.patient.findUnique({
+    await client.patient.findUnique({
       where: {
         id: patientId,
       },
@@ -61,10 +62,12 @@ async function requirePatient(
 
 async function requireActivePatient(
   patientId: string,
+  client: Prisma.TransactionClient = db,
 ) {
   const patient =
     await requirePatient(
       patientId,
+      client,
     );
 
   if (!patient.isActive) {
@@ -129,13 +132,15 @@ function mapPregnancyConflict(
 
 export async function createPregnancy(
   input: CreatePregnancyInput,
+  client: Prisma.TransactionClient = db,
 ) {
   await requireActivePatient(
     input.patientId,
+    client,
   );
 
   const existingActive =
-    await db.pregnancy.findFirst({
+    await client.pregnancy.findFirst({
       where: {
         patientId:
           input.patientId,
@@ -183,7 +188,7 @@ export async function createPregnancy(
   });
 
   try {
-    return await db.pregnancy.create({
+    return await client.pregnancy.create({
       data: {
         patientId:
           input.patientId,
@@ -215,12 +220,14 @@ export async function getPregnancyById(
 
 export async function getActivePregnancyForPatient(
   patientId: string,
+  client: Prisma.TransactionClient = db,
 ) {
   await requirePatient(
     patientId,
+    client,
   );
 
-  return db.pregnancy.findFirst({
+  return client.pregnancy.findFirst({
     where: {
       patientId,
       status:

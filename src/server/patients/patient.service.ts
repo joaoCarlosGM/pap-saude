@@ -79,9 +79,10 @@ function mapPatientUniqueConflict(
 
 async function requirePatient(
   patientId: string,
+  client: Prisma.TransactionClient = db,
 ) {
   const patient =
-    await db.patient.findUnique({
+    await client.patient.findUnique({
       where: {
         id: patientId,
       },
@@ -97,13 +98,14 @@ async function requirePatient(
 async function assertCpfAvailable(
   cpf: string | null,
   excludePatientId?: string,
+  client: Prisma.TransactionClient = db,
 ): Promise<void> {
   if (!cpf) {
     return;
   }
 
   const existing =
-    await db.patient.findUnique({
+    await client.patient.findUnique({
       where: {
         cpf,
       },
@@ -123,13 +125,14 @@ async function assertCpfAvailable(
 async function assertCnsAvailable(
   cns: string | null,
   excludePatientId?: string,
+  client: Prisma.TransactionClient = db,
 ): Promise<void> {
   if (!cns) {
     return;
   }
 
   const existing =
-    await db.patient.findUnique({
+    await client.patient.findUnique({
       where: {
         cns,
       },
@@ -148,6 +151,7 @@ async function assertCnsAvailable(
 
 export async function createPatient(
   input: CreatePatientInput,
+  client: Prisma.TransactionClient = db,
 ) {
   const fullName =
     normalizePatientName(
@@ -175,12 +179,12 @@ export async function createPatient(
     );
 
   await Promise.all([
-    assertCpfAvailable(cpf),
-    assertCnsAvailable(cns),
+    assertCpfAvailable(cpf, undefined, client),
+    assertCnsAvailable(cns, undefined, client),
   ]);
 
   try {
-    return await db.patient.create({
+    return await client.patient.create({
       data: {
         fullName,
         socialName:
@@ -231,6 +235,7 @@ export async function getPatientById(
 
 export async function findPatientByCpf(
   cpfInput: string,
+  client: Prisma.TransactionClient = db,
 ) {
   const cpf =
     normalizePatientCpf(
@@ -241,7 +246,7 @@ export async function findPatientByCpf(
     return null;
   }
 
-  return db.patient.findUnique({
+  return client.patient.findUnique({
     where: {
       cpf,
     },

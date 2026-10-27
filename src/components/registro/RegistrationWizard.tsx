@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 import { Card, CardContent } from "@/components/ui/Card";
 
@@ -15,7 +15,7 @@ import type { RegistrationData } from "@/types/registration";
 
 import type { MeowsEvaluation } from "@/lib/clinical-api";
 
-import { submitClinicalRegistration } from "@/lib/clinical-api";
+import { submitClinicalRegistration, resumeClinicalRegistration, restartClinicalRegistration } from "@/lib/clinical-api";
 
 const initialRegistration: RegistrationData = {
   cpf: "",
@@ -59,6 +59,30 @@ export default function RegistrationWizard() {
   const [savedEvaluation, setSavedEvaluation] =
     useState<MeowsEvaluation | null>(null);
 
+  const [operationNotice, setOperationNotice] = useState<string | null>(null);
+  const [checking, setChecking] = useState(true);
+
+  const checkOperation = useCallback(async () => {
+    setChecking(true);
+    try {
+      const state = await resumeClinicalRegistration();
+      if (state?.status === "COMPLETED") {
+        setSavedEvaluation(state.registration.meows);
+        setCurrentStep(5);
+        setOperationNotice("O registro anterior foi confirmado. Confira o resultado antes de iniciar outro registro.");
+      } else if (state?.status === "NOT_FOUND") {
+        setOperationNotice("Há uma operação anterior sem confirmação. Consulte novamente, repita com os mesmos dados ou escolha Novo Registro para cancelá-la com segurança. Nenhum dado da paciente foi armazenado no navegador.");
+      }
+    } catch (error) {
+      setOperationNotice(error instanceof Error ? error.message : "Não foi possível consultar a operação anterior.");
+    } finally { setChecking(false); }
+  }, []);
+
+  useEffect(() => {
+    const scheduled = window.setTimeout(() => { void checkOperation(); }, 0);
+    return () => window.clearTimeout(scheduled);
+  }, [checkOperation]);
+
   const nextStep = () => {
     setCurrentStep((step) => Math.min(step + 1, 5));
   };
@@ -67,11 +91,25 @@ export default function RegistrationWizard() {
     setCurrentStep((step) => Math.max(step - 1, 1));
   };
 
-  const restart = () => {
-    setRegistration(initialRegistration);
-    setCurrentStep(1);
-    setSaveError(null);
-    setSavedEvaluation(null);
+  const restart = async () => {
+    if (saving || checking) return;
+    setSaving(true);
+    try {
+      const state = await restartClinicalRegistration(Boolean(savedEvaluation));
+      if (state?.status === "COMPLETED" && !savedEvaluation) {
+        setSavedEvaluation(state.registration.meows);
+        setCurrentStep(5);
+        setOperationNotice("O registro anterior já foi confirmado. Confira o resultado; escolha Novo Registro novamente somente para iniciar outro atendimento.");
+        return;
+      }
+      setRegistration(initialRegistration);
+      setCurrentStep(1);
+      setSaveError(null);
+      setSavedEvaluation(null);
+      setOperationNotice(null);
+    } catch (error) {
+      setOperationNotice(error instanceof Error ? error.message : "Não foi possível cancelar a operação anterior. Sua identificação foi preservada.");
+    } finally { setSaving(false); }
   };
 
   const updateRegistration = (data: Partial<RegistrationData>) => {
@@ -82,7 +120,7 @@ export default function RegistrationWizard() {
   };
 
   const saveRegistration = async () => {
-    if (saving || savedEvaluation) {
+    if (saving || checking || savedEvaluation) {
       return;
     }
 
@@ -107,6 +145,14 @@ export default function RegistrationWizard() {
   return (
     <Card className="mx-auto w-full max-w-5xl">
       <CardContent className="p-4 sm:p-6 lg:p-8">
+        {operationNotice && <section aria-label="Recuperação do registro" className="mb-5 rounded-xl border border-amber-300 bg-amber-50 p-4 text-sm text-amber-950">
+          <p role="status">{operationNotice}</p>
+          <div className="mt-3 flex flex-wrap gap-3">
+            <button type="button" disabled={saving || checking} onClick={() => void checkOperation()} className="rounded border px-3 py-2">Consultar estado</button>
+            <button type="button" disabled={saving || checking} onClick={() => void restart()} className="rounded border px-3 py-2">Novo Registro</button>
+          </div>
+        </section>}
+        {checking && <p role="status">Consultando a operação anterior…</p>}
         <Stepper currentStep={currentStep} />
 
         {currentStep === 1 && (
@@ -147,9 +193,9 @@ export default function RegistrationWizard() {
         {currentStep === 5 && (
           <ResultStep
             data={registration}
-            onRestart={restart}
+            onRestart={() => void restart()}
             onSave={saveRegistration}
-            saving={saving}
+            saving={saving || checking}
             saveError={saveError}
             savedEvaluation={savedEvaluation}
           />
