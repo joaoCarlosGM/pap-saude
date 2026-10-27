@@ -1,8 +1,10 @@
+import type { ClinicalMeasurementActorContext } from "../clinical-revision/clinical-provenance.service";
 import {
   EdemaGrade,
 } from "@prisma/client";
 
 export type CreateObstetricDataInput = {
+  actorContext: ClinicalMeasurementActorContext;
   encounterId: string;
 
   uterineHeightCm?:
@@ -34,6 +36,7 @@ export type CreateObstetricDataInput = {
 };
 
 export type UpdateObstetricDataInput = {
+  actorContext: ClinicalMeasurementActorContext;
   uterineHeightCm?:
     number | null;
 

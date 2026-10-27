@@ -72,6 +72,7 @@ Promise<void> {
 
 async function clearFixtures():
 Promise<void> {
+  await db.clinicalProvenanceEvent.deleteMany();
   await db.clinicalEvaluation.deleteMany();
   await db.vitalSigns.deleteMany();
   await db.obstetricData.deleteMany();

@@ -31,3 +31,10 @@ export class ClinicalRevisionActorNotFoundError
       "ClinicalRevisionActorNotFoundError";
   }
 }
+
+export class ClinicalRevisionConflictError extends Error {
+  constructor(message = "Clinical record changed; refresh before proposing a revision.") {
+    super(message);
+    this.name = "ClinicalRevisionConflictError";
+  }
+}

@@ -215,6 +215,17 @@ enum OrganizationHealthAlertStatus {
   RESOLVED
 }
 
+enum ClinicalProvenanceKind {
+  REVISION_PROPOSAL
+  MEASUREMENT_CREATED
+  MEASUREMENT_UPDATED
+}
+
+enum ClinicalProvenanceStatus {
+  PROPOSED_NOT_APPLIED
+  APPLIED
+}
+
 model User {
   id          String   @id @default(uuid())
   email       String   @unique
@@ -249,6 +260,8 @@ model User {
   resolvedFeedback  ProductFeedback[] @relation("ProductFeedbackResolver")
 
   @@map("users")
+  clinicalProvenanceEvents ClinicalProvenanceEvent[] @relation("ClinicalProvenanceActor")
+  clinicalRegistrations ClinicalRegistrationOperation[] @relation("ClinicalRegistrationActor")
 }
 
 model Organization {
@@ -289,6 +302,8 @@ model Organization {
   @@index([city, state])
   @@index([name])
   @@map("organizations")
+  clinicalProvenanceEvents ClinicalProvenanceEvent[]
+  clinicalRegistrations ClinicalRegistrationOperation[] @relation("ClinicalRegistrationOrganization")
 }
 
 model Membership {
@@ -551,6 +566,8 @@ model Patient {
   @@index([birthDate])
   @@index([isActive])
   @@map("patients")
+  clinicalProvenanceEvents ClinicalProvenanceEvent[]
+  registrationOperations ClinicalRegistrationOperation[] @relation("ClinicalRegistrationPatient")
 }
 
 model PatientOrganization {
@@ -592,6 +609,7 @@ model Pregnancy {
   @@index([patientId, status])
   @@index([status])
   @@map("pregnancies")
+  registrationOperations ClinicalRegistrationOperation[] @relation("ClinicalRegistrationPregnancy")
 }
 
 model Encounter {
@@ -622,6 +640,8 @@ model Encounter {
   @@index([pregnancyId, occurredAt])
   @@index([status])
   @@map("encounters")
+  clinicalProvenanceEvents ClinicalProvenanceEvent[]
+  registrationOperation ClinicalRegistrationOperation? @relation("ClinicalRegistrationEncounter")
 }
 
 model VitalSigns {
@@ -733,6 +753,7 @@ model ClinicalEvaluation {
   @@index([encounterId, evaluatedAt])
   @@index([status, evaluatedAt])
   @@map("clinical_evaluations")
+  registrationOperation ClinicalRegistrationOperation? @relation("ClinicalRegistrationEvaluation")
 }
 
 model OrganizationHealthAlert {
@@ -1190,4 +1211,71 @@ model OrganizationActivationNotice {
   @@unique([organizationId, userId, activatedAt], map: "activation_notice_recipient_event_key")
   @@index([organizationId, emailStatus])
   @@map("organization_activation_notices")
+}
+
+/// Private clinical ledger; legacy records are not backfilled with invented authors.
+model ClinicalProvenanceEvent {
+  id                 String                   @id @default(uuid())
+  actorUserId        String
+  organizationId     String
+  patientId          String
+  encounterId        String?
+  resourceType       String
+  resourceId         String
+  kind               ClinicalProvenanceKind
+  status             ClinicalProvenanceStatus
+  reason             String
+  before             Json
+  after              Json
+  proposedAfter      Json?
+  sourceSnapshotHash String
+  sessionId          String?
+  requestId          String?
+  correlationId      String?
+  occurredAt         DateTime                 @default(now())
+
+  actor        User         @relation("ClinicalProvenanceActor", fields: [actorUserId], references: [id], onDelete: Restrict, map: "clinical_provenance_actor_fkey")
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Restrict, map: "clinical_provenance_organization_fkey")
+  patient      Patient      @relation(fields: [patientId], references: [id], onDelete: Restrict, map: "clinical_provenance_patient_fkey")
+  encounter    Encounter?   @relation(fields: [encounterId], references: [id], onDelete: Restrict, map: "clinical_provenance_encounter_fkey")
+
+  @@index([patientId, organizationId, occurredAt], map: "clinical_provenance_patient_scope_time_idx")
+  @@index([resourceType, resourceId, occurredAt], map: "clinical_provenance_resource_time_idx")
+  @@index([actorUserId, occurredAt], map: "clinical_provenance_actor_time_idx")
+  @@map("clinical_provenance_events")
+}
+
+// PENDING is transaction-local only: a deferred trigger forbids committing it.
+enum ClinicalRegistrationOperationStatus {
+  PENDING
+  COMPLETED
+  CANCELLED
+}
+
+model ClinicalRegistrationOperation {
+  id                 String @id @default(uuid())
+  actorUserId        String
+  organizationId     String
+  keyHash            String
+  requestFingerprint String?
+  status             ClinicalRegistrationOperationStatus @default(PENDING)
+  patientId          String?
+  pregnancyId        String?
+  encounterId        String? @unique
+  evaluationId       String? @unique
+  createdAt          DateTime @default(now())
+  completedAt        DateTime?
+
+  actor        User @relation("ClinicalRegistrationActor", fields: [actorUserId], references: [id], onDelete: Restrict)
+  organization Organization @relation("ClinicalRegistrationOrganization", fields: [organizationId], references: [id], onDelete: Restrict)
+  patient      Patient? @relation("ClinicalRegistrationPatient", fields: [patientId], references: [id], onDelete: Restrict)
+  pregnancy    Pregnancy? @relation("ClinicalRegistrationPregnancy", fields: [pregnancyId], references: [id], onDelete: Restrict)
+  encounter    Encounter? @relation("ClinicalRegistrationEncounter", fields: [encounterId], references: [id], onDelete: Restrict)
+  evaluation   ClinicalEvaluation? @relation("ClinicalRegistrationEvaluation", fields: [evaluationId], references: [id], onDelete: Restrict)
+
+  @@unique([actorUserId, organizationId, keyHash])
+  @@index([organizationId, createdAt])
+  @@index([patientId])
+  @@index([pregnancyId])
+  @@map("clinical_registration_operations")
 }

@@ -1,3 +1,8 @@
+import { AccessDeniedError } from "../iam/authorization.errors";
+import { PERMISSIONS } from "../iam/permissions";
+import { requireClinicalProvenanceScope, recordClinicalMeasurementProvenance } from "../clinical-revision/clinical-provenance.service";
+import type { Prisma } from "@prisma/client";
+import { inClinicalWriteTransaction, lockEditableEncounter } from "../encounters/clinical-write-transaction";
 import {
   ConsciousnessState,
   ProteinuriaResult,
@@ -35,9 +40,10 @@ import {
 
 async function requireVitalSigns(
   encounterId: string,
+  client: Prisma.TransactionClient = db,
 ) {
   const vitalSigns =
-    await db.vitalSigns.findUnique({
+    await client.vitalSigns.findUnique({
       where: {
         encounterId,
       },
@@ -50,20 +56,33 @@ async function requireVitalSigns(
   return vitalSigns;
 }
 
-export async function createVitalSigns(
+export function createVitalSigns(
   input: CreateVitalSignsInput,
+  client?: Prisma.TransactionClient,
 ) {
+  return inClinicalWriteTransaction(tx => createVitalSignsInTransaction(input, tx), client);
+}
+
+async function createVitalSignsInTransaction(
+  input: CreateVitalSignsInput,
+  client: Prisma.TransactionClient,
+) {
+  await lockEditableEncounter(client, input.encounterId);
   const encounter =
     await requireVitalSignsEncounter(
       input.encounterId,
+      client,
     );
 
   assertEncounterAllowsVitalSigns(
     encounter.status,
   );
 
+  await requireClinicalProvenanceScope(client, input.actorContext, encounter.patientId, PERMISSIONS.VITAL_SIGNS_CREATE);
+  if (input.actorContext.organizationId !== encounter.organizationId) throw new AccessDeniedError();
+
   const existing =
-    await db.vitalSigns.findUnique({
+    await client.vitalSigns.findUnique({
       where: {
         encounterId:
           input.encounterId,
@@ -87,7 +106,7 @@ export async function createVitalSigns(
     recordedAt,
   );
 
-  return db.vitalSigns.create({
+  const result = await client.vitalSigns.create({
     data: {
       encounterId:
         input.encounterId,
@@ -146,6 +165,8 @@ export async function createVitalSigns(
       recordedAt,
     },
   });
+  await recordClinicalMeasurementProvenance(client, { actorContext: input.actorContext, resourceType: "VITAL_SIGNS", resourceId: result.id, before: null });
+  return result;
 }
 
 export async function getVitalSignsByEncounter(
@@ -156,23 +177,38 @@ export async function getVitalSignsByEncounter(
   );
 }
 
-export async function updateVitalSigns(
+export function updateVitalSigns(
   encounterId: string,
   input: UpdateVitalSignsInput,
+  client?: Prisma.TransactionClient,
 ) {
+  return inClinicalWriteTransaction(tx => updateVitalSignsInTransaction(encounterId, input, tx), client);
+}
+
+async function updateVitalSignsInTransaction(
+  encounterId: string,
+  input: UpdateVitalSignsInput,
+  client: Prisma.TransactionClient,
+) {
+  await lockEditableEncounter(client, encounterId);
   const current =
     await requireVitalSigns(
       encounterId,
+      client,
     );
 
   const encounter =
     await requireVitalSignsEncounter(
       encounterId,
+      client,
     );
 
   assertEncounterAllowsVitalSigns(
     encounter.status,
   );
+
+  await requireClinicalProvenanceScope(client, input.actorContext, encounter.patientId, PERMISSIONS.VITAL_SIGNS_UPDATE);
+  if (input.actorContext.organizationId !== encounter.organizationId) throw new AccessDeniedError();
 
   const recordedAt =
     input.recordedAt !== undefined
@@ -186,7 +222,7 @@ export async function updateVitalSigns(
     recordedAt,
   );
 
-  return db.vitalSigns.update({
+  const result = await client.vitalSigns.update({
     where: {
       encounterId,
     },
@@ -294,4 +330,6 @@ export async function updateVitalSigns(
         : {}),
     },
   });
+  await recordClinicalMeasurementProvenance(client, { actorContext: input.actorContext, resourceType: "VITAL_SIGNS", resourceId: result.id, before: current });
+  return result;
 }

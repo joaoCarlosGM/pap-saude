@@ -43,7 +43,7 @@ import {
   createObstetricData,
   getObstetricDataByEncounter,
   updateObstetricData,
-} from "../../src/server/obstetric-data/obstetric-data.service";
+} from "../helpers/attributed-obstetric-data";
 
 const EXPECTED_DATABASE =
   "pap_saude_f03_obstetric_data_test";
@@ -65,6 +65,7 @@ Promise<void> {
 
 async function clearFixtures():
 Promise<void> {
+  await db.clinicalProvenanceEvent.deleteMany();
   await db.clinicalEvaluation.deleteMany();
   await db.vitalSigns.deleteMany();
   await db.obstetricData.deleteMany();
@@ -73,6 +74,8 @@ Promise<void> {
   await db.allergy.deleteMany();
   await db.pregnancy.deleteMany();
   await db.patient.deleteMany();
+  await db.roleAssignment.deleteMany({ where: { user: { email: { endsWith: "@p0-fixture.synthetic.invalid" } } } });
+  await db.membership.deleteMany({ where: { user: { email: { endsWith: "@p0-fixture.synthetic.invalid" } } } });
   await db.organization.deleteMany();
 }
 

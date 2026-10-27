@@ -49,6 +49,9 @@ fi
 
 printf 'database=%s\n' "$CURRENT_DB"
 
+bash scripts/testing/allow-audit-test-cleanup.sh "$DB_CONTAINER" "$DB_USER" "$DB_NAME"
+
+
 printf '\n==> vital signs validation\n'
 
 npx tsx --test \

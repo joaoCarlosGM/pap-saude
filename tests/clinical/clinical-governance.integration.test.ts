@@ -52,7 +52,7 @@ import {
 
 import {
   createVitalSigns,
-} from "../../src/server/vital-signs/vital-signs.service";
+} from "../helpers/attributed-vital-signs";
 
 import {
   listClinicalRevisionHistory,
@@ -87,6 +87,7 @@ Promise<void> {
 async function clearFixtures():
 Promise<void> {
   await db.auditEvent.deleteMany();
+  await db.clinicalProvenanceEvent.deleteMany();
   await db.clinicalEvaluation.deleteMany();
   await db.clinicalFlag.deleteMany();
   await db.vitalSigns.deleteMany();
@@ -312,7 +313,7 @@ test(
 );
 
 test(
-  "clinical revision records immutable before and after snapshots",
+  "clinical revision records authoritative immutable snapshots as an explicit unapplied proposal",
   async () => {
     const user =
       await createUser(
@@ -380,16 +381,24 @@ test(
 
     assert.equal(
       revision.action,
-      "CLINICAL_REVISION",
+      "CLINICAL_REVISION_PROPOSED",
     );
 
     assert.equal(
       revision.patientId,
       patient.id,
     );
+    assert.equal(revision.status, "PROPOSED_NOT_APPLIED");
+    assert.equal(revision.applied, false);
+    assert.equal((revision.before as Record<string, unknown>).chiefComplaint, encounter.chiefComplaint);
+    assert.deepEqual(revision.before, revision.after);
+    assert.deepEqual(revision.proposedAfter, { chiefComplaint: "B" });
+    assert.equal((await db.encounter.findUniqueOrThrow({ where: { id: encounter.id } })).chiefComplaint, encounter.chiefComplaint);
+
 
     const history =
       await listClinicalRevisionHistory({
+        actorUserId: user.id,
         patientId:
           patient.id,
 

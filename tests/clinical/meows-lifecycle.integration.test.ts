@@ -32,7 +32,7 @@ import {
 
 import {
   createVitalSigns,
-} from "../../src/server/vital-signs/vital-signs.service";
+} from "../helpers/attributed-vital-signs";
 
 import {
   MeowsVitalSignsNotFoundError,
@@ -61,6 +61,7 @@ Promise<void> {
 
 async function clearFixtures():
 Promise<void> {
+  await db.clinicalProvenanceEvent.deleteMany();
   await db.clinicalEvaluation.deleteMany();
   await db.clinicalFlag.deleteMany();
   await db.vitalSigns.deleteMany();
@@ -70,6 +71,8 @@ Promise<void> {
   await db.allergy.deleteMany();
   await db.pregnancy.deleteMany();
   await db.patient.deleteMany();
+  await db.roleAssignment.deleteMany({ where: { user: { email: { endsWith: "@p0-fixture.synthetic.invalid" } } } });
+  await db.membership.deleteMany({ where: { user: { email: { endsWith: "@p0-fixture.synthetic.invalid" } } } });
   await db.organization.deleteMany();
 }
 

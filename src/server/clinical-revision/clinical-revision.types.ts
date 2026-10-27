@@ -28,8 +28,11 @@ export type RecordClinicalRevisionInput = {
 
   reason: string;
 
-  before:
+  /** Deprecated compatibility claim; ignored and never authoritative. */
+  before?:
     Prisma.InputJsonValue;
+
+  expectedSnapshotHash?: string;
 
   after:
     Prisma.InputJsonValue;
@@ -43,6 +46,8 @@ export type RecordClinicalRevisionInput = {
 };
 
 export type ListClinicalRevisionInput = {
+  actorUserId?: string;
+  sessionId?: string | null;
   patientId: string;
   organizationId: string;
   resourceType?:

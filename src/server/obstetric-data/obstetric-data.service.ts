@@ -1,3 +1,8 @@
+import { AccessDeniedError } from "../iam/authorization.errors";
+import { PERMISSIONS } from "../iam/permissions";
+import { requireClinicalProvenanceScope, recordClinicalMeasurementProvenance } from "../clinical-revision/clinical-provenance.service";
+import type { Prisma } from "@prisma/client";
+import { inClinicalWriteTransaction, lockEditableEncounter } from "../encounters/clinical-write-transaction";
 import {
   EdemaGrade,
 } from "@prisma/client";
@@ -34,9 +39,10 @@ import {
 
 async function requireObstetricData(
   encounterId: string,
+  client: Prisma.TransactionClient = db,
 ) {
   const data =
-    await db.obstetricData.findUnique({
+    await client.obstetricData.findUnique({
       where: {
         encounterId,
       },
@@ -49,20 +55,33 @@ async function requireObstetricData(
   return data;
 }
 
-export async function createObstetricData(
+export function createObstetricData(
   input: CreateObstetricDataInput,
+  client?: Prisma.TransactionClient,
 ) {
+  return inClinicalWriteTransaction(tx => createObstetricDataInTransaction(input, tx), client);
+}
+
+async function createObstetricDataInTransaction(
+  input: CreateObstetricDataInput,
+  client: Prisma.TransactionClient,
+) {
+  await lockEditableEncounter(client, input.encounterId);
   const encounter =
     await requireObstetricEncounter(
       input.encounterId,
+      client,
     );
 
   assertEncounterAllowsObstetricData(
     encounter.status,
   );
 
+  await requireClinicalProvenanceScope(client, input.actorContext, encounter.patientId, PERMISSIONS.OBSTETRIC_DATA_CREATE);
+  if (input.actorContext.organizationId !== encounter.organizationId) throw new AccessDeniedError();
+
   const existing =
-    await db.obstetricData.findUnique({
+    await client.obstetricData.findUnique({
       where: {
         encounterId:
           input.encounterId,
@@ -86,7 +105,7 @@ export async function createObstetricData(
     recordedAt,
   );
 
-  return db.obstetricData.create({
+  const result = await client.obstetricData.create({
     data: {
       encounterId:
         input.encounterId,
@@ -138,6 +157,8 @@ export async function createObstetricData(
       recordedAt,
     },
   });
+  await recordClinicalMeasurementProvenance(client, { actorContext: input.actorContext, resourceType: "OBSTETRIC_DATA", resourceId: result.id, before: null });
+  return result;
 }
 
 export async function getObstetricDataByEncounter(
@@ -148,23 +169,38 @@ export async function getObstetricDataByEncounter(
   );
 }
 
-export async function updateObstetricData(
+export function updateObstetricData(
   encounterId: string,
   input: UpdateObstetricDataInput,
+  client?: Prisma.TransactionClient,
 ) {
+  return inClinicalWriteTransaction(tx => updateObstetricDataInTransaction(encounterId, input, tx), client);
+}
+
+async function updateObstetricDataInTransaction(
+  encounterId: string,
+  input: UpdateObstetricDataInput,
+  client: Prisma.TransactionClient,
+) {
+  await lockEditableEncounter(client, encounterId);
   const current =
     await requireObstetricData(
       encounterId,
+      client,
     );
 
   const encounter =
     await requireObstetricEncounter(
       encounterId,
+      client,
     );
 
   assertEncounterAllowsObstetricData(
     encounter.status,
   );
+
+  await requireClinicalProvenanceScope(client, input.actorContext, encounter.patientId, PERMISSIONS.OBSTETRIC_DATA_UPDATE);
+  if (input.actorContext.organizationId !== encounter.organizationId) throw new AccessDeniedError();
 
   const recordedAt =
     input.recordedAt !== undefined
@@ -178,7 +214,7 @@ export async function updateObstetricData(
     recordedAt,
   );
 
-  return db.obstetricData.update({
+  const result = await client.obstetricData.update({
     where: {
       encounterId,
     },
@@ -273,4 +309,6 @@ export async function updateObstetricData(
         : {}),
     },
   });
+  await recordClinicalMeasurementProvenance(client, { actorContext: input.actorContext, resourceType: "OBSTETRIC_DATA", resourceId: result.id, before: current });
+  return result;
 }

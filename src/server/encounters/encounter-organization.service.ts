@@ -1,3 +1,4 @@
+import type { Prisma } from "@prisma/client";
 import {
   OrganizationStatus,
   OrganizationType,
@@ -20,13 +21,14 @@ import {
 export async function requireEncounterOrganizationContext(
   patientId: string,
   organizationId: string,
+  client: Prisma.TransactionClient = db,
 ) {
   const [
     patient,
     organization,
   ] =
     await Promise.all([
-      db.patient.findUnique({
+      client.patient.findUnique({
         where: {
           id: patientId,
         },
@@ -35,7 +37,7 @@ export async function requireEncounterOrganizationContext(
           isActive: true,
         },
       }),
-      db.organization.findUnique({
+      client.organization.findUnique({
         where: {
           id: organizationId,
         },
@@ -70,6 +72,7 @@ export async function requireEncounterOrganizationContext(
     await hasActivePatientOrganizationLink(
       patientId,
       organizationId,
+      client,
     );
 
   if (!linked) {

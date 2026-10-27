@@ -1,3 +1,5 @@
+import type { Prisma } from "@prisma/client";
+import { inClinicalWriteTransaction, lockEditableEncounter } from "./clinical-write-transaction";
 import {
   EncounterStatus,
 } from "@prisma/client";
@@ -36,9 +38,10 @@ import {
 
 async function requireEncounter(
   encounterId: string,
+  client: Prisma.TransactionClient = db,
 ) {
   const encounter =
-    await db.encounter.findUnique({
+    await client.encounter.findUnique({
       where: {
         id: encounterId,
       },
@@ -64,8 +67,16 @@ function assertEncounterEditable(
   }
 }
 
-export async function createEncounter(
+export function createEncounter(
   input: CreateEncounterInput,
+  client?: Prisma.TransactionClient,
+) {
+  return inClinicalWriteTransaction(tx => createEncounterInTransaction(input, tx), client);
+}
+
+async function createEncounterInTransaction(
+  input: CreateEncounterInput,
+  client: Prisma.TransactionClient,
 ) {
   const occurredAt =
     normalizeEncounterDate(
@@ -80,15 +91,17 @@ export async function createEncounter(
   await requireEncounterOrganizationContext(
     input.patientId,
     input.organizationId,
+    client,
   );
 
   await validateEncounterPregnancy(
     input.patientId,
     input.pregnancyId ?? null,
     occurredAt,
+    client,
   );
 
-  return db.encounter.create({
+  return client.encounter.create({
     data: {
       patientId:
         input.patientId,
@@ -107,19 +120,32 @@ export async function createEncounter(
 
 export async function getEncounterById(
   encounterId: string,
+  client: Prisma.TransactionClient = db,
 ) {
   return requireEncounter(
     encounterId,
+    client,
   );
 }
 
-export async function updateEncounter(
+export function updateEncounter(
   encounterId: string,
   input: UpdateEncounterInput,
+  client?: Prisma.TransactionClient,
 ) {
+  return inClinicalWriteTransaction(tx => updateEncounterInTransaction(encounterId, input, tx), client);
+}
+
+async function updateEncounterInTransaction(
+  encounterId: string,
+  input: UpdateEncounterInput,
+  client: Prisma.TransactionClient,
+) {
+  await lockEditableEncounter(client, encounterId);
   const encounter =
     await requireEncounter(
       encounterId,
+      client,
     );
 
   assertEncounterEditable(
@@ -157,9 +183,10 @@ export async function updateEncounter(
     encounter.patientId,
     nextPregnancyId,
     nextOccurredAt,
+    client,
   );
 
-  return db.encounter.update({
+  return client.encounter.update({
     where: {
       id: encounterId,
     },
@@ -191,12 +218,22 @@ export async function updateEncounter(
   });
 }
 
-export async function startEncounter(
+export function startEncounter(
   encounterId: string,
+  client?: Prisma.TransactionClient,
 ) {
+  return inClinicalWriteTransaction(tx => startEncounterInTransaction(encounterId, tx), client);
+}
+
+async function startEncounterInTransaction(
+  encounterId: string,
+  client: Prisma.TransactionClient,
+) {
+  await lockEditableEncounter(client, encounterId, [EncounterStatus.DRAFT]);
   const encounter =
     await requireEncounter(
       encounterId,
+      client,
     );
 
   if (
@@ -216,7 +253,7 @@ export async function startEncounter(
     throw new InvalidEncounterTransitionError();
   }
 
-  return db.encounter.update({
+  return client.encounter.update({
     where: {
       id: encounterId,
     },
@@ -228,46 +265,52 @@ export async function startEncounter(
   });
 }
 
-export async function completeEncounter(
+export function completeEncounter(
   encounterId: string,
   actorUserId?: string,
+  client?: Prisma.TransactionClient,
 ) {
-  const encounter =
-    await requireEncounter(
-      encounterId,
-    );
-
-  if (
-    encounter.status !==
-    EncounterStatus.IN_PROGRESS
-  ) {
-    throw new InvalidEncounterTransitionError();
-  }
-
-  const completedAt =
-    new Date();
-
-  if (
-    completedAt.getTime() <
-    encounter.occurredAt.getTime()
-  ) {
-    throw new InvalidEncounterTransitionError();
-  }
-
-  return db.$transaction(async tx => {
-    const changed = await tx.encounter.updateMany({where:{id:encounterId,status:EncounterStatus.IN_PROGRESS},data:{status:EncounterStatus.COMPLETED,completedAt}});
+  return inClinicalWriteTransaction(async tx => {
+    await lockEditableEncounter(tx, encounterId, [EncounterStatus.IN_PROGRESS]);
+    const encounter = await requireEncounter(encounterId, tx);
+    if (encounter.status !== EncounterStatus.IN_PROGRESS) {
+      throw new InvalidEncounterTransitionError();
+    }
+    const completedAt = new Date();
+    if (completedAt.getTime() < encounter.occurredAt.getTime()) {
+      throw new InvalidEncounterTransitionError();
+    }
+    const changed = await tx.encounter.updateMany({
+      where: { id: encounterId, status: EncounterStatus.IN_PROGRESS },
+      data: { status: EncounterStatus.COMPLETED, completedAt },
+    });
     if (changed.count !== 1) throw new InvalidEncounterTransitionError();
-    if (actorUserId) await tx.productActivityEvent.create({data:{eventKey:"encounter.completed",actorUserId,organizationId:encounter.organizationId,metadata:{source:"clinical-api",version:"beta1"},occurredAt:completedAt}});
-    return tx.encounter.findUniqueOrThrow({where:{id:encounterId}});
-  });
+    if (actorUserId) await tx.productActivityEvent.create({ data: {
+      eventKey: "encounter.completed", actorUserId,
+      organizationId: encounter.organizationId,
+      metadata: { source: "clinical-api", version: "beta1" },
+      occurredAt: completedAt,
+    } });
+    return tx.encounter.findUniqueOrThrow({ where: { id: encounterId } });
+  }, client);
 }
 
-export async function cancelEncounter(
+export function cancelEncounter(
   input: CancelEncounterInput,
+  client?: Prisma.TransactionClient,
 ) {
+  return inClinicalWriteTransaction(tx => cancelEncounterInTransaction(input, tx), client);
+}
+
+async function cancelEncounterInTransaction(
+  input: CancelEncounterInput,
+  client: Prisma.TransactionClient,
+) {
+  await lockEditableEncounter(client, input.encounterId);
   const encounter =
     await requireEncounter(
       input.encounterId,
+      client,
     );
 
   assertEncounterEditable(
@@ -289,7 +332,7 @@ export async function cancelEncounter(
     throw new InvalidEncounterTransitionError();
   }
 
-  return db.encounter.update({
+  return client.encounter.update({
     where: {
       id:
         input.encounterId,

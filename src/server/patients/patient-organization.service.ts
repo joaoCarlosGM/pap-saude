@@ -73,9 +73,10 @@ function normalizeListLimit(
 
 async function requireLinkablePatient(
   patientId: string,
+  client: Prisma.TransactionClient = db,
 ) {
   const patient =
-    await db.patient.findUnique({
+    await client.patient.findUnique({
       where: {
         id: patientId,
       },
@@ -98,9 +99,10 @@ async function requireLinkablePatient(
 
 async function requireActiveHealthUnit(
   organizationId: string,
+  client: Prisma.TransactionClient = db,
 ) {
   const organization =
-    await db.organization.findUnique({
+    await client.organization.findUnique({
       where: {
         id: organizationId,
       },
@@ -180,18 +182,21 @@ function mapPatientOrganizationConflict(
 
 export async function linkPatientToOrganization(
   input: LinkPatientToOrganizationInput,
+  client?: Prisma.TransactionClient,
 ) {
   await Promise.all([
     requireLinkablePatient(
       input.patientId,
+      client,
     ),
     requireActiveHealthUnit(
       input.organizationId,
+      client,
     ),
   ]);
 
   const existing =
-    await db.patientOrganization.findUnique({
+    await (client ?? db).patientOrganization.findUnique({
       where: {
         patientId_organizationId: {
           patientId:
@@ -218,39 +223,38 @@ export async function linkPatientToOrganization(
     );
 
   try {
-    return await db.$transaction(
-      async (tx) => {
-        if (input.isPrimary) {
-          await tx.patientOrganization.updateMany({
-            where: {
-              patientId:
-                input.patientId,
-              unlinkedAt: null,
-              isPrimary: true,
-            },
-            data: {
-              isPrimary: false,
-            },
-          });
-        }
-
-        return tx.patientOrganization.create({
-          data: {
+    const write = async (tx: Prisma.TransactionClient) => {
+      if (input.isPrimary) {
+        await tx.patientOrganization.updateMany({
+          where: {
             patientId:
               input.patientId,
-            organizationId:
-              input.organizationId,
-            medicalRecordNo,
-            isPrimary:
-              input.isPrimary ??
-              false,
+            unlinkedAt: null,
+            isPrimary: true,
           },
-          include: {
-            organization: true,
+          data: {
+            isPrimary: false,
           },
         });
-      },
-    );
+      }
+
+      return tx.patientOrganization.create({
+        data: {
+          patientId:
+            input.patientId,
+          organizationId:
+            input.organizationId,
+          medicalRecordNo,
+          isPrimary:
+            input.isPrimary ??
+            false,
+        },
+        include: {
+          organization: true,
+        },
+      });
+    };
+    return await (client ? write(client) : db.$transaction(write));
   } catch (error) {
     return mapPatientOrganizationConflict(
       error,
@@ -458,9 +462,10 @@ export async function listOrganizationPatients(
 export async function hasActivePatientOrganizationLink(
   patientId: string,
   organizationId: string,
+  client: Prisma.TransactionClient = db,
 ): Promise<boolean> {
   const link =
-    await db.patientOrganization.findUnique({
+    await client.patientOrganization.findUnique({
       where: {
         patientId_organizationId: {
           patientId,

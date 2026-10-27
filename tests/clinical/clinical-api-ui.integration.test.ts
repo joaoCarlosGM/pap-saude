@@ -54,6 +54,7 @@ async function assertSafeDatabase(): Promise<void> {
 
 async function clearFixtures(): Promise<void> {
   await db.auditEvent.deleteMany();
+  await db.clinicalProvenanceEvent.deleteMany();
   await db.clinicalEvaluation.deleteMany();
   await db.clinicalFlag.deleteMany();
   await db.vitalSigns.deleteMany();

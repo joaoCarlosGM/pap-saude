@@ -1,9 +1,11 @@
+import type { ClinicalMeasurementActorContext } from "../clinical-revision/clinical-provenance.service";
 import {
   ConsciousnessState,
   ProteinuriaResult,
 } from "@prisma/client";
 
 export type CreateVitalSignsInput = {
+  actorContext: ClinicalMeasurementActorContext;
   encounterId: string;
 
   systolicBp: number;
@@ -30,6 +32,7 @@ export type CreateVitalSignsInput = {
 };
 
 export type UpdateVitalSignsInput = {
+  actorContext: ClinicalMeasurementActorContext;
   systolicBp?: number;
   diastolicBp?: number;
   heartRate?: number;

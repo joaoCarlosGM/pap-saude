@@ -1,3 +1,4 @@
+import type { Prisma } from "@prisma/client";
 import {
   PregnancyStatus,
 } from "@prisma/client";
@@ -17,13 +18,14 @@ export async function validateEncounterPregnancy(
   patientId: string,
   pregnancyId: string | null,
   occurredAt: Date,
+  client: Prisma.TransactionClient = db,
 ) {
   if (!pregnancyId) {
     return null;
   }
 
   const pregnancy =
-    await db.pregnancy.findUnique({
+    await client.pregnancy.findUnique({
       where: {
         id: pregnancyId,
       },

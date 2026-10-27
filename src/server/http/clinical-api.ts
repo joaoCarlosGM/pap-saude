@@ -1,3 +1,4 @@
+import { randomUUID } from "node:crypto";
 import {
   MembershipStatus,
   OrganizationStatus,
@@ -699,10 +700,11 @@ async function vitalSignsResource(
         Omit<Parameters<typeof createVitalSigns>[0], "encounterId">
       >(request);
 
-    const vitalSigns = await createVitalSigns({
-      ...body,
-      encounterId,
-    });
+    const input = {
+      ...body, encounterId,
+      actorContext: { actorUserId: auth.user.id, organizationId, sessionId: auth.session.id, requestId: randomUUID() },
+    };
+    const vitalSigns = await createVitalSigns(input);
 
     return clinicalJson(
       {
@@ -728,7 +730,11 @@ async function vitalSignsResource(
     const body =
       await readJson<Parameters<typeof updateVitalSigns>[1]>(request);
 
-    const vitalSigns = await updateVitalSigns(encounterId, body);
+    const input = {
+      ...body,
+      actorContext: { actorUserId: auth.user.id, organizationId, sessionId: auth.session.id, requestId: randomUUID() },
+    };
+    const vitalSigns = await updateVitalSigns(encounterId, input);
 
     return clinicalJson({
       vitalSigns,
@@ -785,10 +791,11 @@ async function obstetricResource(
         Omit<Parameters<typeof createObstetricData>[0], "encounterId">
       >(request);
 
-    const obstetricData = await createObstetricData({
-      ...body,
-      encounterId,
-    });
+    const input = {
+      ...body, encounterId,
+      actorContext: { actorUserId: auth.user.id, organizationId, sessionId: auth.session.id, requestId: randomUUID() },
+    };
+    const obstetricData = await createObstetricData(input);
 
     return clinicalJson(
       {
@@ -814,7 +821,11 @@ async function obstetricResource(
     const body =
       await readJson<Parameters<typeof updateObstetricData>[1]>(request);
 
-    const obstetricData = await updateObstetricData(encounterId, body);
+    const input = {
+      ...body,
+      actorContext: { actorUserId: auth.user.id, organizationId, sessionId: auth.session.id, requestId: randomUUID() },
+    };
+    const obstetricData = await updateObstetricData(encounterId, input);
 
     return clinicalJson({
       obstetricData,
@@ -1134,6 +1145,8 @@ async function patientRevisions(
   });
 
   const items = await listClinicalRevisionHistory({
+    actorUserId: auth.user.id,
+    sessionId: auth.session.id,
     patientId,
     organizationId,
   });
@@ -1161,7 +1174,9 @@ async function revisionsCollection(request: NextRequest, method: string) {
 
     reason: string;
 
-    before: Parameters<typeof recordClinicalRevision>[0]["before"];
+    before?: Parameters<typeof recordClinicalRevision>[0]["before"];
+
+    expectedSnapshotHash?: string;
 
     after: Parameters<typeof recordClinicalRevision>[0]["after"];
 
@@ -1195,11 +1210,12 @@ async function revisionsCollection(request: NextRequest, method: string) {
 
     before: body.before,
 
+    expectedSnapshotHash: body.expectedSnapshotHash,
+
     after: body.after,
 
-    requestId: body.requestId,
-
-    correlationId: body.correlationId,
+    // Correlation supplied in an arbitrary clinical body is not trusted metadata.
+    requestId: randomUUID(),
 
     sessionId: auth.session.id,
   });

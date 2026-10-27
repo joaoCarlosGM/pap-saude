@@ -1,3 +1,4 @@
+import type { Prisma } from "@prisma/client";
 import {
   EncounterStatus,
 } from "@prisma/client";
@@ -14,9 +15,10 @@ import {
 
 export async function requireVitalSignsEncounter(
   encounterId: string,
+  client: Prisma.TransactionClient = db,
 ) {
   const encounter =
-    await db.encounter.findUnique({
+    await client.encounter.findUnique({
       where: {
         id: encounterId,
       },

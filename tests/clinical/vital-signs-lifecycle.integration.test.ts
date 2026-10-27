@@ -44,7 +44,7 @@ import {
   createVitalSigns,
   getVitalSignsByEncounter,
   updateVitalSigns,
-} from "../../src/server/vital-signs/vital-signs.service";
+} from "../helpers/attributed-vital-signs";
 
 const EXPECTED_DATABASE =
   "pap_saude_f03_vital_signs_test";
@@ -66,6 +66,7 @@ Promise<void> {
 
 async function clearFixtures():
 Promise<void> {
+  await db.clinicalProvenanceEvent.deleteMany();
   await db.clinicalEvaluation.deleteMany();
   await db.vitalSigns.deleteMany();
   await db.obstetricData.deleteMany();
@@ -74,6 +75,8 @@ Promise<void> {
   await db.allergy.deleteMany();
   await db.pregnancy.deleteMany();
   await db.patient.deleteMany();
+  await db.roleAssignment.deleteMany({ where: { user: { email: { endsWith: "@p0-fixture.synthetic.invalid" } } } });
+  await db.membership.deleteMany({ where: { user: { email: { endsWith: "@p0-fixture.synthetic.invalid" } } } });
   await db.organization.deleteMany();
 }
 

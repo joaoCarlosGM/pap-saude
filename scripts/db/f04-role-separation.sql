@@ -36,6 +36,24 @@ GRANT USAGE, SELECT ON ALL SEQUENCES IN SCHEMA public TO :"runtime_role";
 REVOKE ALL ON public._prisma_migrations FROM :"runtime_role";
 REVOKE ALL ON public.audit_events FROM :"runtime_role";
 GRANT SELECT, INSERT ON public.audit_events TO :"runtime_role";
+-- Clinical snapshots live in a separate append-only ledger, never the admin log.
+DO $clinical_ledger$
+BEGIN
+ IF to_regclass('public.clinical_provenance_events') IS NOT NULL THEN
+  EXECUTE format('REVOKE ALL ON public.clinical_provenance_events FROM %I', current_setting('pap.runtime_role'));
+  EXECUTE format('GRANT SELECT, INSERT ON public.clinical_provenance_events TO %I', current_setting('pap.runtime_role'));
+ END IF;
+END $clinical_ledger$;
+-- Registration may complete a pending claim, but cannot rewrite its identity
+-- or remove a terminal idempotency/cancellation barrier.
+DO $registration_operations$
+BEGIN
+ IF to_regclass('public.clinical_registration_operations') IS NOT NULL THEN
+  EXECUTE format('REVOKE ALL ON public.clinical_registration_operations FROM %I', current_setting('pap.runtime_role'));
+  EXECUTE format('GRANT SELECT, INSERT ON public.clinical_registration_operations TO %I', current_setting('pap.runtime_role'));
+  EXECUTE format('GRANT UPDATE ("status", "patientId", "pregnancyId", "encounterId", "evaluationId", "completedAt") ON public.clinical_registration_operations TO %I', current_setting('pap.runtime_role'));
+ END IF;
+END $registration_operations$;
 ALTER DEFAULT PRIVILEGES FOR ROLE :"migrator_role" IN SCHEMA public
  GRANT SELECT, INSERT, UPDATE, DELETE ON TABLES TO :"runtime_role";
 ALTER DEFAULT PRIVILEGES FOR ROLE :"migrator_role" IN SCHEMA public
