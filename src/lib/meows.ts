@@ -7,7 +7,7 @@ export type MeowsParameter = {
 }
 
 export type MeowsResult = {
-  score: number
+  score: null
   parameters: MeowsParameter[]
   classification: string
 }
@@ -27,11 +27,11 @@ export function calculateMeows(
    * MEOWS que será adotado oficialmente pelo sistema.
    */
 
-  const score = 0
+  const score = null
 
   return {
     score,
     parameters,
-    classification: "AVALIAÇÃO",
+    classification: "Indisponível nesta demonstração",
   }
 }

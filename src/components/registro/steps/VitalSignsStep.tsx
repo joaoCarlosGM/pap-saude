@@ -18,13 +18,14 @@ export default function VitalSignsStep({
   return (
     <div>
       {/* Cabeçalho */}
+      <p className="mb-4 text-sm text-slate-500">Campos em branco significam não aferido. Nenhuma medição normal será criada automaticamente.</p>
       <div className="mb-8">
         <h2 className="text-xl font-semibold text-slate-900">
           Sinais Vitais
         </h2>
 
         <p className="mt-1 text-sm text-slate-500">
-          Informe os sinais vitais para avaliação e cálculo do score MEOWS.
+          Informe dados demonstrativos. Avaliação MEOWS indisponível, sem classificação automática.
         </p>
       </div>
 

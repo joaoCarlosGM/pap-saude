@@ -1,5 +1,6 @@
 "use client"
 
+import { pregnancyFrom, DEMO_DATE } from "@/lib/demo/validation"
 import type { RegistrationData } from "@/types/registration"
 
 type PregnancyStepProps = {
@@ -9,46 +10,7 @@ type PregnancyStepProps = {
   onBack: () => void
 }
 
-function calculatePregnancyData(dum: string) {
-  if (!dum) {
-    return {
-      weeks: 0,
-      days: 0,
-      dueDate: "",
-      trimester: "1º Trimestre",
-    }
-  }
-
-  const dumDate = new Date(`${dum}T00:00:00`)
-  const today = new Date()
-
-  const differenceMs = today.getTime() - dumDate.getTime()
-  const differenceDays = Math.max(
-    0,
-    Math.floor(differenceMs / (1000 * 60 * 60 * 24))
-  )
-
-  const weeks = Math.floor(differenceDays / 7)
-  const days = differenceDays % 7
-
-  const dueDate = new Date(dumDate)
-  dueDate.setDate(dueDate.getDate() + 280)
-
-  let trimester = "1º Trimestre"
-
-  if (weeks >= 14 && weeks < 28) {
-    trimester = "2º Trimestre"
-  } else if (weeks >= 28) {
-    trimester = "3º Trimestre"
-  }
-
-  return {
-    weeks,
-    days,
-    dueDate: dueDate.toLocaleDateString("pt-BR"),
-    trimester,
-  }
-}
+function calculatePregnancyData(dum: string) {const g=pregnancyFrom(dum);return g?{...g,dueDate:new Date(g.dueDate+'T12:00:00Z').toLocaleDateString('pt-BR',{timeZone:'UTC'})}:{weeks:'—',days:'—',dueDate:'Desconhecida',trimester:'Desconhecido'}}
 
 export default function PregnancyStep({
   data,
@@ -56,7 +18,7 @@ export default function PregnancyStep({
   onNext,
   onBack,
 }: PregnancyStepProps) {
-  const pregnancy = calculatePregnancyData(data.dum)
+  const pregnancy = calculatePregnancyData(data.dumUnknown?"":data.dum)
 
   return (
     <div>
@@ -72,6 +34,7 @@ export default function PregnancyStep({
       </div>
 
       <div className="space-y-6">
+        <label className="flex items-center gap-2 text-sm"><input type="checkbox" checked={data.dumUnknown||false} onChange={e=>onChange({dumUnknown:e.target.checked,dum:e.target.checked?"":data.dum})}/>DUM desconhecida</label>
         {/* Primeiro atendimento */}
         <div>
           <label className="mb-2 block text-sm font-medium text-slate-700">
@@ -101,7 +64,7 @@ export default function PregnancyStep({
               }
               className={[
                 "rounded-md px-5 py-2 text-sm font-medium transition",
-                !data.primeiroAtendimento
+                data.primeiroAtendimento === false
                   ? "bg-pink-500 text-white shadow-sm"
                   : "text-slate-600 hover:bg-white",
               ].join(" ")}
@@ -123,6 +86,8 @@ export default function PregnancyStep({
           <input
             id="dum"
             type="date"
+              max={DEMO_DATE}
+              disabled={data.dumUnknown}
             value={data.dum}
             onChange={(event) =>
               onChange({ dum: event.target.value })

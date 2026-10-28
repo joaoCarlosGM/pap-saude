@@ -1,5 +1,8 @@
 "use client"
 
+import { useState } from "react"
+import { useDemo } from "@/components/demo/DemoProvider"
+import { normalizeIdentifier } from "@/lib/demo/validation"
 import { AlertTriangle, Search } from "lucide-react"
 
 import Input from "@/components/ui/Input"
@@ -10,6 +13,7 @@ import type { RegistrationData } from "@/types/registration"
 type IdentificationStepProps = {
   data: RegistrationData
   onChange: (data: Partial<RegistrationData>) => void
+  onNew: () => void
   onNext: () => void
 }
 
@@ -17,7 +21,11 @@ export default function IdentificationStep({
   data,
   onChange,
   onNext,
+  onNew,
 }: IdentificationStepProps) {
+  const {patients}=useDemo()
+  const [message,setMessage]=useState('Busca apenas na base sintética; sem consulta ao DATASUS.')
+  function search(){const p=patients.find(p=>normalizeIdentifier(p.cpf)===normalizeIdentifier(data.cpf));if(!p){setMessage('Paciente não encontrada na base sintética. Preencha o cadastro manual.');return};onChange({nomeCompleto:p.nome,dataNascimento:p.dataNascimento,dum:p.pregnancy.dum,dumUnknown:!p.pregnancy.dum,primeiroAtendimento:false,allergyStatus:p.allergies.length?'sim':'desconhecido',allergies:p.allergies.map(agent=>({agent,reaction:'',notes:''})),medications:p.medications.map(({name,dose,frequency,route})=>({name,dose,frequency,route})),comorbidityStatus:p.comorbidities.length?'sim':'desconhecido',conditions:p.comorbidities,pregnancies:p.obstetricHistory.pregnancies?.toString()||"",deliveries:p.obstetricHistory.deliveries?.toString()||"",cesareans:p.obstetricHistory.cesareans?.toString()||"",pregnancyLosses:p.obstetricHistory.abortions?.toString()||""});setMessage('Paciente sintética localizada. Revise os dados antes de continuar.')}
   return (
     <div>
       <header className="mb-6 sm:mb-8">
@@ -26,7 +34,7 @@ export default function IdentificationStep({
         </h2>
 
         <p className="mt-1 max-w-2xl text-sm leading-6 text-slate-500">
-          Busque pelo CPF para localizar os dados via DataSUS ou
+          Busque pelo CPF na base sintética da demonstração ou
           realize um cadastro manual.
         </p>
       </header>
@@ -56,6 +64,7 @@ export default function IdentificationStep({
 
             <Button
               type="button"
+              onClick={search}
               className="h-11 w-full sm:w-auto"
             >
               <Search size={17} />
@@ -74,12 +83,11 @@ export default function IdentificationStep({
 
             <div className="min-w-0 flex-1">
               <h3 className="text-sm font-semibold text-slate-900">
-                CPF não encontrado no DataSUS
+                Busca demonstrativa — sem integração externa
               </h3>
 
               <p className="mt-1 text-sm leading-6 text-slate-600">
-                Realize o cadastro manual para prosseguir com o
-                atendimento.
+                <span role="status">{message}</span>
               </p>
 
               <div className="mt-5 grid grid-cols-1 gap-4 sm:grid-cols-2">
@@ -115,6 +123,7 @@ export default function IdentificationStep({
         </div>
       </div>
 
+      <button type="button" className="mt-4 rounded px-2 py-1 text-sm text-pink-600 underline" onClick={onNew}>Iniciar novo cadastro sintético</button>
       <footer className="mt-8 flex border-t border-slate-200 pt-5 sm:mt-10 sm:justify-end sm:pt-6">
         <Button
           type="button"

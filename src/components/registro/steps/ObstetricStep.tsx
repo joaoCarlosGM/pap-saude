@@ -1,5 +1,6 @@
 "use client"
 
+import ClinicalHistory from "../ClinicalHistory"
 import type { RegistrationData } from "@/types/registration"
 
 type ObstetricStepProps = {
@@ -256,6 +257,7 @@ export default function ObstetricStep({
         </div>
       </div>
 
+      <ClinicalHistory data={data} onChange={onChange} />
       {/* Footer */}
       <div className="mt-10 flex items-center justify-between border-t border-slate-200 pt-6">
         <button

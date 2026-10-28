@@ -8,12 +8,18 @@ type ResultStepProps = {
   data: RegistrationData
   onRestart: () => void
   onSave: () => void
+  onBack: () => void
+  onChange: (data: Partial<RegistrationData>)=>void
+  saved: boolean
 }
 
 export default function ResultStep({
   data,
   onRestart,
   onSave,
+  onBack,
+  onChange,
+  saved,
 }: ResultStepProps) {
     const result = calculateMeows(data)
   return (
@@ -25,7 +31,7 @@ export default function ResultStep({
         </h2>
 
         <p className="mt-1 text-sm text-slate-500">
-          Score MEOWS calculado com base nos parâmetros informados.
+          Avaliação MEOWS não disponível nesta demonstração.
         </p>
       </div>
 
@@ -33,10 +39,10 @@ export default function ResultStep({
       <div className="grid gap-4 md:grid-cols-2">
         {/* SCORE */}
         <div className="rounded-xl border border-red-200 bg-red-50 p-5">
-          <div className="flex items-center gap-4">
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
             <div className="flex h-28 w-28 shrink-0 items-center justify-center rounded-xl border border-red-100 bg-white">
               <span className="text-6xl font-bold leading-none text-red-600">
-                  {result.score}
+                  {result.score ?? "—"}
               </span>
             </div>
 
@@ -50,7 +56,7 @@ export default function ResultStep({
               </p>
 
               <p className="mt-1 text-sm text-slate-700">
-                Aguardando regra de pontuação
+                Nenhuma pontuação clínica calculada.
               </p>
             </div>
           </div>
@@ -63,8 +69,7 @@ export default function ResultStep({
           </h3>
 
           <p className="mt-3 text-sm text-slate-600">
-            O resultado clínico será determinado após a aplicação da regra
-            MEOWS configurada no sistema.
+            Simulação sem classificação ou recomendação clínica automática.
           </p>
         </div>
       </div>
@@ -72,14 +77,14 @@ export default function ResultStep({
 {/* PARÂMETROS */}
 <div className="mt-6">
   <h3 className="text-base font-semibold text-slate-900">
-    PARÂMETROS AVALIADOS
+    REVISÃO DOS DADOS INFORMADOS
   </h3>
 
   <div className="mt-4 space-y-2">
     {result.parameters.length === 0 ? (
       <div className="rounded-lg bg-slate-100 px-4 py-4">
         <p className="text-sm text-slate-500">
-          Nenhum parâmetro pontuado.
+          Dados ausentes permanecem não aferidos ou desconhecidos.
         </p>
       </div>
     ) : (
@@ -101,8 +106,11 @@ export default function ResultStep({
   </div>
 </div>
 
+      <dl className="mt-4 grid gap-3 text-sm sm:grid-cols-2">{Object.entries(data).map(([key,value])=><div key={key} className="min-w-0 rounded-lg bg-slate-50 p-3"><dt className="font-medium text-slate-700">{key.replace(/([A-Z])/g,' $1')}</dt><dd className="break-words text-slate-500">{value===null || value==='' || value===undefined ? 'Não informado' : typeof value==='boolean' ? (value?'Sim':'Não') : Array.isArray(value)?(value.length?value.map(v=>typeof v==='string'?v:Object.values(v).filter(Boolean).join(' · ')).join('; '):'Sem registro') : String(value)}</dd></div>)}</dl>
+      <div className="mt-4 grid gap-3 sm:grid-cols-2">{(['referral','outcome'] as const).map((key,i)=><label key={key} className="text-sm text-slate-700">{['Encaminhamento demonstrativo','Desfecho demonstrativo'][i]}<textarea className="mt-1 w-full rounded-lg border p-3" disabled={saved} value={data[key]||''} onChange={e=>onChange({[key]:e.target.value})}/></label>)}</div>
+      <button type="button" onClick={onBack} disabled={saved} className="mt-4 rounded-lg border px-4 py-2 text-sm">Voltar para revisar</button>
       {/* FOOTER */}
-      <div className="mt-8 flex items-center justify-between border-t border-slate-200 pt-5">
+      <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between border-t border-slate-200 pt-5">
         <button
           type="button"
           onClick={onRestart}
@@ -115,10 +123,11 @@ export default function ResultStep({
         <button
           type="button"
           onClick={onSave}
+          disabled={saved}
           className="flex items-center gap-2 rounded-lg bg-pink-500 px-6 py-2.5 text-sm font-medium text-white transition hover:bg-pink-600"
         >
           <Save size={16} />
-          Salvar Registro
+          {saved ? "Registro demonstrativo salvo" : "Salvar Registro"}
         </button>
       </div>
     </div>
