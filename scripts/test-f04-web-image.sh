@@ -39,12 +39,33 @@ const assert = require('node:assert/strict');
  let r=await fetch('http://127.0.0.1:3000/api/health');
  assert.equal(r.status,200); assert.deepEqual(await r.json(),{status:'ok'});
  r=await fetch('http://127.0.0.1:3000/login'); assert.equal(r.status,200);
- r=await fetch('http://127.0.0.1:3000/api/auth/login',{method:'POST',headers:{'content-type':'application/json',origin:'http://synthetic.invalid','x-test-client-ip':'synthetic-client'},body:JSON.stringify({email:'nonexistent@example.invalid',password:'synthetic_password_only'})});
+ const headers={'content-type':'application/json',origin:'http://synthetic.invalid','x-test-client-ip':'synthetic-client'};
+ const credentials={email:'nonexistent@example.invalid',password:'synthetic_password_only'};
+ r=await fetch('http://127.0.0.1:3000/api/auth/login',{method:'POST',headers,body:JSON.stringify(credentials)});
+ assert.equal(r.status,400);
+ assert.deepEqual(await r.json(),{error:'LOGIN_VERIFICATION_REQUIRED'});
+
+ // Exercise the real accessible challenge, with the same trusted client and binding cookie.
+ r=await fetch('http://127.0.0.1:3000/api/auth/login/verification',{method:'POST',headers,body:JSON.stringify({accessible:true})});
+ assert.equal(r.status,200);
+ const challenge=await r.json();
+ assert.ok(typeof challenge.id==='string' && /^[\w-]{32}$/.test(challenge.id),'Expected a challenge identifier');
+ const question=/^Qual é o produto de (\d{3}) por (\d{3})\? Você pode usar uma calculadora\.$/.exec(challenge.question);
+ assert.ok(question,'Expected the real accessible multiplication challenge');
+ const binding=r.headers.getSetCookie().find(c=>c.startsWith('pap_login_verification='));
+ assert.ok(binding,'Expected a challenge binding cookie');
+ assert.ok(/; HttpOnly/i.test(binding),'Expected an HttpOnly binding cookie');
+ assert.ok(/; Secure/i.test(binding),'Expected a Secure binding cookie');
+ const cookie=binding.split(';',1)[0];
+ assert.ok(/^pap_login_verification=[\w-]{43}$/.test(cookie),'Expected a valid binding cookie');
+ r=await fetch('http://127.0.0.1:3000/api/auth/login',{method:'POST',headers:{...headers,cookie},body:JSON.stringify({...credentials,verificationId:challenge.id,verificationAnswer:String(Number(question[1])*Number(question[2]))})});
  assert.equal(r.status,401);
- console.log('PASS runner non-root, liveness, login render and runtime DB-backed denied authentication');
+ assert.deepEqual(await r.json(),{error:'INVALID_CREDENTIALS'});
+ console.log('PASS runner non-root, liveness, login render, CAPTCHA required and verified denied authentication');
 })().catch(e=>{console.error(e.message);process.exitCode=1});
 JS
-# A denied login must have reached the database using the runtime role.
-COUNT="$(docker exec "$PG" psql -X -U postgres -d pap_f0410_web -Atqc 'SELECT count(*) FROM login_attempts')"
-test "$COUNT" -gt 0
-echo 'PASS runtime role persisted login attempt without migration credentials'
+# The fresh database must contain exactly the CAPTCHA-verified denied login, no session.
+# Read back as the same least-privilege runtime role used exclusively by the web container.
+RESULT="$(docker exec -e PGPASSWORD=synthetic_runtime_only "$PG" psql -X -h 127.0.0.1 -U pap_runtime -d pap_f0410_web -v ON_ERROR_STOP=1 -Atqc "SELECT current_user, count(*), count(*) FILTER (WHERE outcome='FAILURE'), (SELECT count(*) FROM sessions) FROM login_attempts")"
+test "$RESULT" = 'pap_runtime|1|1|0'
+echo 'PASS runtime role persisted exactly one denied login and no session, without migration credentials'
