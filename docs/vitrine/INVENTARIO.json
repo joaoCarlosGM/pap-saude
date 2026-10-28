@@ -1,0 +1,143 @@
+{
+  "base": "40896212cb01e35fb6b204f6226b8d28ba1f6d1b",
+  "branch": "feature/prod-vitrine-ui-refresh",
+  "count": 104,
+  "sourceCount": 69,
+  "groups": [
+    {
+      "message": "refactor(demo): centralize coherent synthetic clinical data",
+      "paths": [
+        "package.json",
+        "src/types/paciente.ts",
+        "src/types/atendimento.ts",
+        "src/types/dashboard.ts",
+        "src/types/registration.ts",
+        "src/lib/demo/data.ts",
+        "src/lib/demo/fixtures.ts",
+        "src/lib/demo/validation.ts",
+        "src/lib/mock-pacientes.ts",
+        "src/lib/mock-atendimentos.ts",
+        "src/lib/mock-dashboard.ts",
+        "tests/demo/load.mjs",
+        "tests/demo/data.test.mjs"
+      ]
+    },
+    {
+      "message": "feat(demo): complete registration history and validation",
+      "paths": [
+        "src/lib/meows.ts",
+        "src/components/registro/ClinicalHistory.tsx",
+        "src/components/registro/RegistrationWizard.tsx",
+        "src/components/registro/steps/IdentificationStep.tsx",
+        "src/components/registro/steps/PregnancyStep.tsx",
+        "src/components/registro/steps/VitalSignsStep.tsx",
+        "src/components/registro/steps/ObstetricStep.tsx",
+        "src/components/registro/steps/ResultStep.tsx",
+        "tests/demo/registration.test.mjs"
+      ]
+    },
+    {
+      "message": "fix(demo): synchronize records dashboard and patient views",
+      "paths": [
+        "src/components/demo/DemoProvider.tsx",
+        "src/components/demo/DemoDashboardView.tsx",
+        "src/components/demo/DemoPatientsView.tsx",
+        "src/components/demo/DemoAttendancesView.tsx",
+        "src/components/pacientes/DemoPatientView.tsx",
+        "src/app/(dashboard)/dashboard/page.tsx",
+        "src/app/(dashboard)/pacientes/page.tsx",
+        "src/app/(dashboard)/pacientes/[id]/page.tsx",
+        "src/app/(dashboard)/atendimentos/page.tsx",
+        "src/components/layout/DashboardShell.tsx",
+        "src/components/pacientes/AnimatedLineChart.tsx",
+        "src/components/pacientes/PatientCard.tsx",
+        "src/components/pacientes/PatientDocuments.tsx",
+        "src/components/pacientes/PatientEvolution.tsx",
+        "src/components/pacientes/PatientExams.tsx",
+        "src/components/pacientes/PatientHeader.tsx",
+        "src/components/pacientes/PatientMedications.tsx",
+        "src/components/pacientes/PatientPreviousNotes.tsx",
+        "src/components/pacientes/PatientSummary.tsx",
+        "src/components/pacientes/PatientVaccines.tsx",
+        "src/components/dashboard/AttendanceChart.tsx",
+        "src/components/dashboard/DashboardKpi.tsx",
+        "src/components/dashboard/RecentAttendances.tsx",
+        "src/components/dashboard/RiskDistribution.tsx",
+        "src/components/atendimentos/AtendimentoFilters.tsx",
+        "src/components/atendimentos/AtendimentoTable.tsx",
+        "src/components/atendimentos/AtendimentoDetailsModal.tsx"
+      ]
+    },
+    {
+      "message": "fix(demo): complete interactions and demo disclosures",
+      "paths": [
+        "src/components/configuracoes/NotificationsSettings.tsx",
+        "src/components/configuracoes/PreferencesSettings.tsx",
+        "src/components/configuracoes/ProfileSettings.tsx",
+        "src/components/configuracoes/SecuritySettings.tsx",
+        "src/components/configuracoes/SettingSwitch.tsx",
+        "src/components/cursos/CourseDetailsModal.tsx",
+        "src/components/ferramentas/GestationalCalculatorModal.tsx",
+        "src/components/protocolos/AddProtocolModal.tsx",
+        "src/components/protocolos/ProtocolPreviewModal.tsx"
+      ]
+    },
+    {
+      "message": "feat(ui): animate chat ai icon and refine mobile behavior",
+      "paths": [
+        "src/components/layout/Sidebar.tsx",
+        "src/components/layout/Topbar.tsx",
+        "src/components/chat/AnimatedChatIcon.tsx",
+        "src/components/chat/animated-chat-icon.module.css",
+        "src/components/chat/ChatEmptyState.tsx",
+        "src/components/chat/ChatHeader.tsx",
+        "src/components/chat/ChatLayout.tsx",
+        "src/components/ui/Modal.tsx",
+        "src/app/layout.tsx"
+      ]
+    },
+    {
+      "message": "test(demo): cover registration data consistency and visual preservation",
+      "paths": [
+        "tests/demo/browser.mjs",
+        "tests/demo/components.test.mjs",
+        "docs/vitrine/CHECKPOINT.md",
+        "docs/vitrine/MISSAO.md",
+        "docs/vitrine/RELATORIO.md",
+        "docs/vitrine/VISUAL.md",
+        "docs/vitrine/PR.md",
+        "docs/vitrine/evidence/validation.json",
+        "docs/vitrine/INVENTARIO.json",
+        "docs/vitrine/evidence/after-atendimentos-1440.png",
+        "docs/vitrine/evidence/after-atendimentos-390.png",
+        "docs/vitrine/evidence/after-chat-1440.png",
+        "docs/vitrine/evidence/after-chat-390.png",
+        "docs/vitrine/evidence/after-dashboard-1440.png",
+        "docs/vitrine/evidence/after-dashboard-390.png",
+        "docs/vitrine/evidence/after-history-1440.png",
+        "docs/vitrine/evidence/after-history-390.png",
+        "docs/vitrine/evidence/after-pacientes-1440.png",
+        "docs/vitrine/evidence/after-pacientes-390.png",
+        "docs/vitrine/evidence/after-pacientes-maria-gracas-1440.png",
+        "docs/vitrine/evidence/after-pacientes-maria-gracas-390.png",
+        "docs/vitrine/evidence/after-registro-1440.png",
+        "docs/vitrine/evidence/after-registro-390.png",
+        "docs/vitrine/evidence/after-result-1440.png",
+        "docs/vitrine/evidence/after-result-390.png",
+        "docs/vitrine/evidence/before-atendimentos-1440.png",
+        "docs/vitrine/evidence/before-atendimentos-390.png",
+        "docs/vitrine/evidence/before-chat-1440.png",
+        "docs/vitrine/evidence/before-chat-390.png",
+        "docs/vitrine/evidence/before-dashboard-1440.png",
+        "docs/vitrine/evidence/before-dashboard-390.png",
+        "docs/vitrine/evidence/before-ficha-1440.png",
+        "docs/vitrine/evidence/before-ficha-390.png",
+        "docs/vitrine/evidence/before-pacientes-1440.png",
+        "docs/vitrine/evidence/before-pacientes-390.png",
+        "docs/vitrine/evidence/before-registro-1440.png",
+        "docs/vitrine/evidence/before-registro-390.png"
+      ]
+    }
+  ],
+  "excluded": "Raw private logs, caches, environment files and database/infra files are never staged."
+}

@@ -1,0 +1,193 @@
+{
+  "base": "40896212cb01e35fb6b204f6226b8d28ba1f6d1b",
+  "branch": "feature/prod-vitrine-ui-refresh",
+  "nodeTests": {
+    "result": "PASS",
+    "passed": 10,
+    "failed": 0,
+    "skipped": 0,
+    "command": "npm run test:demo"
+  },
+  "typescript": {
+    "result": "PASS",
+    "command": "npx tsc --noEmit"
+  },
+  "lint": {
+    "result": "PASS",
+    "command": "npm run lint"
+  },
+  "browser": {
+    "registration": "PASS in targeted final run (see log hash)",
+    "documentsAndDemoStates": "PASS",
+    "responsiveKeyboardReducedMotion": "PASS",
+    "widths": [
+      320,
+      375,
+      390,
+      430,
+      768,
+      1440
+    ],
+    "pageCases": 60,
+    "extendedFormsCases": 12,
+    "prefetchFix": "Disable automatic prefetch for memory-dependent navigation and newly created patient link. Real clicks and all negative assertions retained.",
+    "finalVisualChecks": "PASS: zero bars have zero height; terminology; desktop/mobile recaptures"
+  },
+  "build": {
+    "result": "BLOCKED",
+    "attempt": "npm run build -> FAIL next/font Google Fonts CONNECT403",
+    "finalSnapshot": "NOT RUN past unchanged external font blocker; no valid production build claimed"
+  },
+  "remoteCi": {
+    "result": "NOT RUN",
+    "reason": "Feature push alone is excluded by existing workflow; requires PR to prod. Workflow unchanged."
+  },
+  "preservation": {
+    "P0": "UNTOUCHED",
+    "database": "NOT ACCESSED",
+    "PrismaMigrations": "UNCHANGED",
+    "DockerAndWorkflows": "UNCHANGED",
+    "VPS": "NOT ACCESSED",
+    "mergeDeploy": "NOT EXECUTED"
+  },
+  "privateLogs": {
+    "tests-final.log": {
+      "sha256": "92bc4bb141fbd722d5bd681609ec63f469c10434d2b69e6a4f8b3914c7ed9f99",
+      "path": "/tmp/pap-prod-vitrine-private-evidence/tests-final.log"
+    },
+    "typescript.log": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "path": "/tmp/pap-prod-vitrine-private-evidence/typescript.log"
+    },
+    "lint.log": {
+      "sha256": "6776ca8b5caa97180a9cc908fe219366e4fb0b59dbda2702f82fffe8ae30246b",
+      "path": "/tmp/pap-prod-vitrine-private-evidence/lint.log"
+    },
+    "browser-registration-final.log": {
+      "sha256": "9595dd77782a85ebd66b94ef308c73098354eb0cb2624c18bdffadc87f57c48f",
+      "path": "/tmp/pap-prod-vitrine-private-evidence/browser-registration-final.log"
+    },
+    "browser-no-prefetch-remaining.log": {
+      "sha256": "f482848187553074ea6f2e49ee3a08177a0d88dfdca8670cdec0254bdd99461d",
+      "path": "/tmp/pap-prod-vitrine-private-evidence/browser-no-prefetch-remaining.log"
+    },
+    "visual-final-check.log": {
+      "sha256": "a050b2e89a47ff621ff440a306b44a508aacd2870a6c9d046864122a52e7b619",
+      "path": "/tmp/pap-prod-vitrine-private-evidence/visual-final-check.log"
+    },
+    "build.log": {
+      "sha256": "ff25cbd863a6c730ae6cb0116d44a353a9e5eaaebe9e4d6e5da6431c88c2cdec",
+      "path": "/tmp/pap-prod-vitrine-private-evidence/build.log"
+    },
+    "font-network-error.log": {
+      "sha256": "115ac061d5c11b9f88bc706341277e549679986ec53ba237026722b790803312",
+      "path": "/tmp/pap-prod-vitrine-private-evidence/font-network-error.log"
+    },
+    "baseline-soft-navigation.log": {
+      "sha256": "6d8b7294a71724791399158ebef18d60fdd7aac6a81e9cf2aef116a4ef81ecb7",
+      "path": "/tmp/pap-prod-vitrine-private-evidence/baseline-soft-navigation.log"
+    }
+  },
+  "sourceHashes": {
+    "package.json": "b27ae5e86dcff3aff3d18e0c25c2ff549d61cc7bee08f93a8f427e917224fd84",
+    "src/app/(dashboard)/atendimentos/page.tsx": "db22a218f3469f95716e7701e57c9e2b5eafb5ea394439dc7875aced3117ebcc",
+    "src/app/(dashboard)/dashboard/page.tsx": "2582bdc07d04b283e207e767cd4fe1058a2c7792785ffd9d6ceaa4d922f208c0",
+    "src/app/(dashboard)/pacientes/[id]/page.tsx": "4223741ab298507d3532f2879cee1a47efae326a6f01b98cb883a5898a8b148a",
+    "src/app/(dashboard)/pacientes/page.tsx": "4d65de1ea0ffa2865362f053bf465af786029a361ea0fce770eeae1bc6fb07de",
+    "src/app/layout.tsx": "7a0b880c7fe411da5dbaf48f90e6298f7e300b2a3b5ca17167071e312f45531f",
+    "src/components/atendimentos/AtendimentoDetailsModal.tsx": "529eeecf7d5c87c29930deb856ded75dc64afd2479c9ae5d28c85fe4391a4b02",
+    "src/components/atendimentos/AtendimentoFilters.tsx": "e08414f5b4601ef65af8d5244a52288fd17a869b6cb526e4dfc3960d7809a5e6",
+    "src/components/atendimentos/AtendimentoTable.tsx": "a651549d978d77451ef2123d04e79825706e79a8580ef36cd30f92860d363c64",
+    "src/components/chat/AnimatedChatIcon.tsx": "50c14807078947547d4d9a3619ea5f8ce3c4c8e28b6e6aa6e15b1b8b66cbc274",
+    "src/components/chat/ChatEmptyState.tsx": "0e38c6cf851604a7b519563cc1b616cce6009878a7565eb8c9de90f845222eaa",
+    "src/components/chat/ChatHeader.tsx": "4324e931ef7e200c926d0bf94178adc9f687a2e375d55f023de1fc262cfa1d0e",
+    "src/components/chat/ChatLayout.tsx": "54956ba7ce9a41f722ea1d630cceb45aab2fcb6dcdbbe113d1150ba1777a6ae7",
+    "src/components/chat/animated-chat-icon.module.css": "cba9b20ae7b577922229c5f4309f650e56c57ac2a1abd76cd8797acc82403bf1",
+    "src/components/configuracoes/NotificationsSettings.tsx": "f939d5e9519f638d2131ac2eede0f77d2a41a4a5d090a99dd6ac6b551cb2e06a",
+    "src/components/configuracoes/PreferencesSettings.tsx": "40e6129a6f3913ac61c0ec59d698cd5e10b10216f2a64575949ddcba80f77e05",
+    "src/components/configuracoes/ProfileSettings.tsx": "fd4f782351a76c2a7258be653dea43d284a4e514ca3455b8c65c24a18490cc77",
+    "src/components/configuracoes/SecuritySettings.tsx": "585c55a2e835c0f1b23de67ce00cb7b6e2711aa17e5ead8c0a11077b5e2c2718",
+    "src/components/configuracoes/SettingSwitch.tsx": "5a636d31b7260e3bb25523311db910249dc03e837aefac3216a4ca9841c176e3",
+    "src/components/cursos/CourseDetailsModal.tsx": "e2c29e13d82dbddea2b80787355a602073e22509d7c2ffda0a3bc85bf324eda5",
+    "src/components/dashboard/AttendanceChart.tsx": "e155228653690bf34157bc43337afa32d5e2d82aa9932e9a242f25bb4e107708",
+    "src/components/dashboard/DashboardKpi.tsx": "bac4160e86c215c7c524d5cf1cd59953f9c4d845e462d7a306e16502ebe26704",
+    "src/components/dashboard/RecentAttendances.tsx": "f62771cc169b24d802a99976b817311a2d9843d5c71e61af8f2a4c4259872928",
+    "src/components/dashboard/RiskDistribution.tsx": "efab08620e855db5de393593979e0c10f00bf4a0eec5c52a1c9782b64d06054c",
+    "src/components/demo/DemoAttendancesView.tsx": "bac38930e81d62a028b7ce03e1483d475e77d2bfa07b792b99dd35f8ff396b0b",
+    "src/components/demo/DemoDashboardView.tsx": "7cc69c72aa6ef73d4d502ca7cb8462143ef58edec00ce4708e46db55f524ccb0",
+    "src/components/demo/DemoPatientsView.tsx": "323f95f1360acc56e94afd57e09bd33eef0e527f54b06984831a3ab1d7d5c28a",
+    "src/components/demo/DemoProvider.tsx": "d5e62982f1997fdf4ad5cbc9f52e8dd53ced28f344b83c2902fe9a8599c1d04a",
+    "src/components/ferramentas/GestationalCalculatorModal.tsx": "359c0019e78d5ddf6f7e74fd51f48a1aaa13b5f0da29f4c90699adf46491cda3",
+    "src/components/layout/DashboardShell.tsx": "652261ac9a0a193a132677e87f0948eb3c2f18bfe060d889c5dd114b31ed83d9",
+    "src/components/layout/Sidebar.tsx": "47735785488777809d7487afc34a6f3f272179e7bba85ef5a9378fe74f607294",
+    "src/components/layout/Topbar.tsx": "5138d1b802e626fcfa3da1625326b61f4dbec05618802bd82f1689b2a051285f",
+    "src/components/pacientes/AnimatedLineChart.tsx": "88bbb5bd1f5a63c47bd6ab89f3a7d4b0be60ca3d7ce20c62d80baf15b14b7f73",
+    "src/components/pacientes/DemoPatientView.tsx": "ab108e62dd7b02bd98454468206df37e0d922bf0b8d975fd7a7f772ecbe99c54",
+    "src/components/pacientes/PatientCard.tsx": "32a1fbfcf3b1dd9a04d13b31eeaa581dc51c6d717ed91ecc04a2aaf0eecc4586",
+    "src/components/pacientes/PatientDocuments.tsx": "b31ed0564350ccf17e114e4190411f107155b88fd15e2d09519af83dd7d7314e",
+    "src/components/pacientes/PatientEvolution.tsx": "26d213f2563d3c4f23b7942e777da3296ca61b3c336f3c9c43b39bd1b7ba0dce",
+    "src/components/pacientes/PatientExams.tsx": "778c1d41e156b1a7884076c79dc91fa4b5ba9a143a0fc0d8f5e414ee47ab7226",
+    "src/components/pacientes/PatientHeader.tsx": "81ca4efce6db296858291121b34d213a2b875ef8f52611b43054de4d8f4b99af",
+    "src/components/pacientes/PatientMedications.tsx": "e70b3ddeeb748d4179909fa25cdadc1e10a46f4ac64a6bae61407ae7a10c135e",
+    "src/components/pacientes/PatientPreviousNotes.tsx": "455cb43d02a2d5e6ebe226f8c94d8a55fc3d1287a34af26e1c01f61636e53219",
+    "src/components/pacientes/PatientSummary.tsx": "03436bb3938dc7179ac1175df43815859647d7c82608e533bacf1e9c51d97a88",
+    "src/components/pacientes/PatientVaccines.tsx": "0f04e1971f0f3f72b6b0de3d95f8270bd824853cdff86b84d3d7a0f1e0a8f19f",
+    "src/components/protocolos/AddProtocolModal.tsx": "58ddbe17cc0e1d0dea2b1dfd05ad10e4c2103946c2b08f8085e1849421efec72",
+    "src/components/protocolos/ProtocolPreviewModal.tsx": "e9328e2a93c89d2b7cde2ba8872025ebfe186c09e4a960e6112c052b48d1565f",
+    "src/components/registro/ClinicalHistory.tsx": "5ac3b1ea1960a2ce084c53d1f268c5ade852f3864876e4a34d3264d42d2949a5",
+    "src/components/registro/RegistrationWizard.tsx": "4a02f60538e5e267306153d65b1d25b555a83b353108eabfc8f14f925e2b8adb",
+    "src/components/registro/steps/IdentificationStep.tsx": "7b3eac6afb50ea99c5d2079b8108cb2c4487f01166e6bede4baecb1f182bcbb1",
+    "src/components/registro/steps/ObstetricStep.tsx": "1a7aec22a809033909eebd7c504e17eec3780173be974ddb3e9777a022a986ee",
+    "src/components/registro/steps/PregnancyStep.tsx": "66e84fbb0b9a128fe3b1669dadc295f9f8bd8af79429049f3f7496244a2bf9a3",
+    "src/components/registro/steps/ResultStep.tsx": "49bc6fb95327be37dab2fee936a17effe14d26d02b047489594e2c1bdad9cccb",
+    "src/components/registro/steps/VitalSignsStep.tsx": "e4bdd6e4a15dd9de344000fd7ffbf4c3c43860c94141c74bca3619496b875427",
+    "src/components/ui/Modal.tsx": "032d6fdb6f478adc879cb15631a5abbee03f68d63466f02d31b3ea08416e7c95",
+    "src/lib/demo/data.ts": "cd34c15bfcfbd81d632f28472c701a0d4df4b593e916ddb8b84f26e950b7d608",
+    "src/lib/demo/fixtures.ts": "ef18ec40f319063f1480f1c8f1916fae2bdc2d43ce231a25c06a31f11dd5bd2e",
+    "src/lib/demo/validation.ts": "7b035aa593a0437cc536a27c7a033574ad31560afd8c0d7827c48ce5f61794cf",
+    "src/lib/meows.ts": "9f4f940ade78234d32ad8bacedab202e4829c1d64b8123f4689f2686adf0da92",
+    "src/lib/mock-atendimentos.ts": "cf947364363db01b9e48878a17b47f98e1e82c41b9b9aff3c02213ada8543468",
+    "src/lib/mock-dashboard.ts": "bda625cffdff9903add6b6743624ea9086da9868c9365b5d18079848ee17af92",
+    "src/lib/mock-pacientes.ts": "c3907e2e7fd07febd4872d43226d0d40e60d29435c172af6f557b2c481f1b2f9",
+    "src/types/atendimento.ts": "5fa956b62f15d647d38cb2c5b3b543c1a0fe692581f99750b7743c6edc651a0f",
+    "src/types/dashboard.ts": "14b2dde106ca7c4f5928073eaf486018119533caa7d609750e7254e549d82ae4",
+    "src/types/paciente.ts": "ad407642b3c09093d02cc3919c3aaa71ba8625618d2bc554c5456af46bc98792",
+    "src/types/registration.ts": "09090f71e92dee00b86e0bc02bf6db79587af24f2609c5cd2a37bc19aee24422",
+    "tests/demo/browser.mjs": "76d359ef85e2cbcee1f0ebf729c30f15e31aa53d5cf15407ecf1d8995f9c6f99",
+    "tests/demo/components.test.mjs": "7a075a071ffa35b456b14a4097facb98e810030d15023052a5b71379410af35f",
+    "tests/demo/data.test.mjs": "80b48afadf7224863cb17289d7c8ed254b8c790f65ccd172f877177977366c29",
+    "tests/demo/load.mjs": "955dfea451674c1d3031753909b331750575e1ff77843460b04949f4311ee7ef",
+    "tests/demo/registration.test.mjs": "03c5822ef71278edd353664ea09674d8b94b8e7ed5e85fd5dbf6b2c4c0fa73ed"
+  },
+  "sourceFingerprint": "6c0d85608aaa617ddf234dc88abd3e6370427e6e709bd7cba677698e19073810",
+  "screenshots": {
+    "after-atendimentos-1440.png": "19924e917bf52dc1da678adc89831a25c25bc7750686efaab7851f31701b827e",
+    "after-atendimentos-390.png": "7e9f0e9c78a2436d7b7a7d54c11d82e2ebb46551f566864d8667d751de981d2c",
+    "after-chat-1440.png": "275ccf859d0999b9e4d4c27afd10a94d0f334ebe4a04063559c3c3affd18c53d",
+    "after-chat-390.png": "a91d79dde0191e1a30ef3541aa7b018d1f2f2232001c8de4fe4d2acd4d06ca1f",
+    "after-dashboard-1440.png": "0cfcd300dabe0d988b5c2e1a95fc76df6fe09615088efa4239abca8e7a589acd",
+    "after-dashboard-390.png": "947c0ae6d18339b7fdbbf5fc0928a2822134a46281b8bb4aae5962d0fb6c6dc8",
+    "after-history-1440.png": "3dddfe5a68d706b0d59df06b7fc3985e71ed4dd3081a6f018de3a4bc3281cb1a",
+    "after-history-390.png": "3e506306331531e670b848470c22f6f78e16ffbdb66aee52079bdb1e67a0715b",
+    "after-pacientes-1440.png": "2fa0fc97acb7fec45c6d090228e9fed786f96dc209d5a16db9b796a1d5346f95",
+    "after-pacientes-390.png": "fbc13e4f9b135eeff8314050108b74af5ddf2c8ebbeb3198f72bc8da90b5a80e",
+    "after-pacientes-maria-gracas-1440.png": "7b546c89d332bc71f8fc953c4d830a1516c0dd1edb8ad07a9d5ae260c652e537",
+    "after-pacientes-maria-gracas-390.png": "bde7aadd2c4a12e9c1ceaeb328d604bc754ad9de64fe395f801d3821da6fadee",
+    "after-registro-1440.png": "c22cb965d0c9afd2f324e4ee0d9863cc5fcdea63a1623e859e1deb4b7ca221fe",
+    "after-registro-390.png": "17872c30d1a6bc79dc24319edb44572e8f39aa2a0860d6ee06a38c6142e1955a",
+    "after-result-1440.png": "5590b4c06edca54661d61dbe9f1f3b121c39fcf466516ff231293406d8ec9d35",
+    "after-result-390.png": "1216b6f3e6970d8e8938d8a65d92b6956358eee15e5eeae176de4fe35f93903f",
+    "before-atendimentos-1440.png": "65acf700f19521ba816a7c27b7d958f98abd9f605bc1ff28449a7ebc5e634faf",
+    "before-atendimentos-390.png": "55fdc2f07ddc29c779195af42e88cb1e956e27aebbbaf2e2a209c7e1ebb3e64b",
+    "before-chat-1440.png": "1f176a7dafdb2235f9582b04068fc58e672ad248da9b12ff495d56ca2ee3323e",
+    "before-chat-390.png": "939c46ead54432d143972ff6ba7e7d6e7f3d228f407d9e1c37178193e787257c",
+    "before-dashboard-1440.png": "2ea51f1442cb4a1351660cb3492434f3be7a499eebcdbc0835466da0a433681f",
+    "before-dashboard-390.png": "64f5456a23c5267e981e1cc75f07fb65488da61974c242dd9113a16d4e0a1799",
+    "before-ficha-1440.png": "7dc993946d23523892035d032a63c6204eadd8100a59ccae67f943490da5beae",
+    "before-ficha-390.png": "559186b95e4dd9dfda95dc8ea8f013f2ebab74e74d5e67e67d7a8efa9baf0951",
+    "before-pacientes-1440.png": "ac024937090227569fdf901879b0c2056b3c08efc101a42111f2eddbd60af81a",
+    "before-pacientes-390.png": "4815271e63831bf07d96dfec35791c31f3357d51f59c337281daf88c060fb903",
+    "before-registro-1440.png": "86d922c9715deae37f14704843024633eb2e7c58ac774a1e18bdd41cf4d01404",
+    "before-registro-390.png": "5878605105cc0387b9d92e0722b86765d65d695eeb6845064fe3b72c14ac1898"
+  }
+}
