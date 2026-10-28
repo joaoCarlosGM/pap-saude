@@ -12,6 +12,9 @@ export default defineConfig({
   reporter: "./safe-reporter.ts",
   outputDir: "../../.test-audit/first-access-browser",
   use: {
+    // Derived B/C/E configs also use this trusted-proxy test server. First-access
+    // browser-fixtures replaces this default with a distinct client per test.
+    extraHTTPHeaders: { "x-pap-test-client-ip": "2001:db8::1" },
     baseURL: "http://127.0.0.1:3110",
     trace: "off",
     video: "off",

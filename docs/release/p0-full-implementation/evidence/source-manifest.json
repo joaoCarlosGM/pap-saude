@@ -94,7 +94,7 @@
     "tests/first-access/captcha-client-limits.test.ts": "bd97658c977f0727d2b747c1f435752ecd3c5edbb7213b6d00b98885b6015e19",
     "tests/first-access/login-navigation.spec.ts": "823401ed931a06e35f560597bcdbd9060e6f783ee903931c248bb5c451b4c647",
     "tests/first-access/login-navigation.test.ts": "42e8a1d73713ca847ae7454e23e8bdd16323226e9969b7813e071a4f9bc5576c",
-    "tests/first-access/playwright.config.ts": "7f25ad1c82024d79bba9df086043a937da85ff0488dd01fa92b6af17ed222d87",
+    "tests/first-access/playwright.config.ts": "8ce53b2b422042f96c2b23bf8f36c51bef893c6db4abe5513bf50a46d42f7eeb",
     "tests/first-access/security.test.ts": "d5963841d5c05832431e256473b3db925a9abda739e68b6d984e52c1bff2a90e",
     "tests/helpers/browser-login-verification.ts": "e89f4c5bbfc6e515e4ea783cca72d750c80e314cd10c8adef04f276109baed68",
     "tests/helpers/login-verification.ts": "ea75b465f6bdb896181c43b4dacdc3ebbfad1f33dfc43902899eb020eadd2c4a",
@@ -119,10 +119,11 @@
     "tests/release/mfa-block-ui.spec.ts": "7258dc5b649a0d544ffeff80193db07d289f7010728d7dca087378583f7b7722",
     "tests/mission04-b/governance.test.ts": "dfb167612f8866951cc59db03f7e9dd1a45b426654e49f411e6fac0de5cd6aa8"
   },
-  "fingerprint": "ed7304a0bfce27694f159211b623ba22493fb286e3bdc7c8c1702bc3c60e8f1f",
+  "fingerprint": "8c7ce76067008ee75c3743e87684b98ca5cc33e2fc4bdd08d7af8f1be7d273c8",
   "scope": "Current code/test/CI content. Directed tests recorded by log hash; global final CI not claimed PASS.",
   "postCiCorrectionParent": "a5a77de93b0c4b97e09abef050c7ec8fe40687b2",
   "fingerprintAlgorithm": "sha256(JSON sourceFiles sorted keys, separators comma/colon, UTF-8)",
   "captchaCorrectionParent": "8aa7919c53f601539df89b4f671e64ff821b5a4c",
-  "sliceBCorrectionParent": "58991c86fd212df44df1f30fbcff8ed2da71b4ba"
+  "sliceBCorrectionParent": "58991c86fd212df44df1f30fbcff8ed2da71b4ba",
+  "bBrowserCorrectionParent": "0915259991cdaabfab6730c3767e351b998c01a5"
 }

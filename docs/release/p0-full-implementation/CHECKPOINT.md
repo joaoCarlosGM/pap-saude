@@ -104,3 +104,8 @@ Cada etapa terá commit/push seletivo do que estiver validado e checkpoint. Requ
 
 - Contrato profissional atualizado: primária403; MFA real própria200/estrangeira403; administração negada com ambas. Backend preservado.
 - PASS dirigido1, governança27, TypeScript/lint/diff. Ver CORRECAO-CI-SLICE-B.md. Próximo: CI do novo SHA, somente próximo gate falho.
+
+### B browser — compatibilidade de proxy
+
+- Base0915259, CI40688111302: primeiro acesso PASS, B FAIL. Falta do header confiável no contexto herdado reproduzida. Default sintético na config compartilhada; primeiro acesso continua com contexto único.
+- PASS browser B5/5, MFA pendente1/1, TS/lint/diff. Próximo CI; sem alteração de backend.

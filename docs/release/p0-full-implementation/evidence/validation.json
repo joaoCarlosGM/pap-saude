@@ -317,5 +317,19 @@
       ".test-audit/p0-full/b-mfa-typescript.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
       ".test-audit/p0-full/b-mfa-lint.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
     }
+  },
+  "bBrowserProxyCorrection": {
+    "parent": "0915259991cdaabfab6730c3767e351b998c01a5",
+    "browser": "PASS5/5",
+    "pendingMFA": "PASS1/1",
+    "typescript": "PASS",
+    "lint": "PASS",
+    "logs": {
+      ".test-audit/p0-full/b-browser-proxy-repro.log": "c86e710a2635ee92b71cb3c5236b469757f82ccde1a88c10a590536f20843cb4",
+      ".test-audit/p0-full/b-browser-all.log": "49f8bbfe305ff5a479735e0aa13483569730d797304a3cd2fda40aad0178fa9a",
+      ".test-audit/p0-full/b-proxy-pending-mfa.log": "21720518b7a7d25c0c5acd0bf76ef382cfbfd58275afbe5c8e23627b1023e718",
+      ".test-audit/p0-full/b-proxy-typescript.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      ".test-audit/p0-full/b-proxy-lint.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
   }
 }
