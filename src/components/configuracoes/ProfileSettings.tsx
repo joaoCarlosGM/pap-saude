@@ -74,7 +74,7 @@ export default function ProfileSettings({
           </div>
 
           <button
-            type="button"
+            type="button" disabled title="Avatar demonstrativo"
             className="
               absolute
               bottom-0
@@ -109,7 +109,7 @@ export default function ProfileSettings({
           </p>
 
           <Button
-            type="button"
+            type="button" disabled title="Avatar demonstrativo"
             variant="ghost"
             size="sm"
             className="mt-2 px-0 text-pink-600"
@@ -202,9 +202,10 @@ export default function ProfileSettings({
       >
         <Button
           type="button"
+          onClick={()=>window.alert("Dados demonstrativos alterados apenas na memória deste formulário.")}
           className="w-full sm:w-auto"
         >
-          Salvar alterações
+          Salvar alterações demonstrativas
         </Button>
       </div>
     </section>

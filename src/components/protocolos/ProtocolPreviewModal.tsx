@@ -58,7 +58,7 @@ export default function ProtocolPreviewModal({
             Fechar
           </Button>
 
-          <Button
+          <Button disabled title="Arquivo indisponível na demonstração"
             type="button"
             className="w-full sm:w-auto"
           >
@@ -70,6 +70,7 @@ export default function ProtocolPreviewModal({
       }
     >
       <div className="space-y-5">
+        <p role="status" className="text-sm text-slate-600">Arquivo indisponível nesta demonstração. Upload e download não são executados.</p>
         <div
           className="
             flex

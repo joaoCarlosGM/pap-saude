@@ -31,6 +31,7 @@ export default function NotificationsSettings({
 
   return (
     <section>
+      <p className="mb-4 text-sm text-slate-500">Controles ilustrativos indisponíveis nesta demonstração; sem alterações de interface, alertas, e-mails ou confirmação de saída.</p>
       <div>
         <h2 className="text-base font-semibold text-slate-900">
           Notificações
@@ -58,7 +59,7 @@ export default function NotificationsSettings({
           </div>
         </div>
 
-        <SettingSwitch
+        <SettingSwitch disabled
           checked={notifications.clinicalAlerts}
           onChange={(value) =>
             update("clinicalAlerts", value)
@@ -67,7 +68,7 @@ export default function NotificationsSettings({
           description="Exibe avisos relacionados a eventos importantes registrados no atendimento."
         />
 
-        <SettingSwitch
+        <SettingSwitch disabled
           checked={notifications.appointmentReminders}
           onChange={(value) =>
             update("appointmentReminders", value)
@@ -76,7 +77,7 @@ export default function NotificationsSettings({
           description="Exibe lembretes relacionados aos acompanhamentos registrados."
         />
 
-        <SettingSwitch
+        <SettingSwitch disabled
           checked={notifications.protocolUpdates}
           onChange={(value) =>
             update("protocolUpdates", value)
@@ -97,7 +98,7 @@ export default function NotificationsSettings({
           </p>
         </div>
 
-        <SettingSwitch
+        <SettingSwitch disabled
           checked={notifications.emailNotifications}
           onChange={(value) =>
             update("emailNotifications", value)

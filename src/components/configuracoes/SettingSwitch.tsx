@@ -1,6 +1,7 @@
 "use client"
 
 type Props = {
+  disabled?: boolean
   checked: boolean
   onChange: (checked: boolean) => void
   label: string
@@ -8,6 +9,7 @@ type Props = {
 }
 
 export default function SettingSwitch({
+  disabled,
   checked,
   onChange,
   label,
@@ -40,6 +42,8 @@ export default function SettingSwitch({
 
       <button
         type="button"
+        disabled={disabled}
+        aria-label={label}
         role="switch"
         aria-checked={checked}
         onClick={() => onChange(!checked)}

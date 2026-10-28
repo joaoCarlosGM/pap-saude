@@ -45,7 +45,7 @@ export default function AddProtocolModal({
             Cancelar
           </Button>
 
-          <Button
+          <Button disabled title="Arquivo indisponível na demonstração"
             type="button"
             className="w-full sm:w-auto"
           >
@@ -57,6 +57,7 @@ export default function AddProtocolModal({
       }
     >
       <div className="space-y-5">
+        <p role="status" className="text-sm text-slate-600">Arquivo indisponível nesta demonstração. Upload e download não são executados.</p>
         <Input
           id="protocol-title"
           label="Título do protocolo"
@@ -167,7 +168,7 @@ export default function AddProtocolModal({
 
             <input
               id="protocol-file"
-              type="file"
+              type="file" disabled
               accept=".pdf,application/pdf"
               className="hidden"
             />

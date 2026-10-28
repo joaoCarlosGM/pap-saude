@@ -13,6 +13,7 @@ import { Button } from "@/components/ui/button"
 export default function SecuritySettings() {
   return (
     <section>
+      <p role="status" className="mb-4 text-sm text-slate-500">Segurança ilustrativa: esta demonstração não altera senha, MFA ou sessões reais.</p>
       <div>
         <h2 className="text-base font-semibold text-slate-900">
           Segurança
@@ -42,7 +43,7 @@ export default function SecuritySettings() {
           </div>
 
           <Button
-            type="button"
+            type="button" disabled title="Indisponível: demonstração sem autenticação real"
             variant="outline"
             className="w-full sm:w-auto"
           >
@@ -68,7 +69,7 @@ export default function SecuritySettings() {
           </div>
 
           <Button
-            type="button"
+            type="button" disabled title="Indisponível: demonstração sem autenticação real"
             variant="outline"
             className="w-full sm:w-auto"
           >
@@ -107,7 +108,7 @@ export default function SecuritySettings() {
               </div>
 
               <p className="mt-1 text-xs text-slate-400">
-                Sessão ativa
+                Dispositivo ilustrativo, sem sessão autenticada real
               </p>
             </div>
 
@@ -117,7 +118,7 @@ export default function SecuritySettings() {
           </div>
 
           <Button
-            type="button"
+            type="button" disabled title="Indisponível: demonstração sem autenticação real"
             variant="outline"
             className="mt-4 w-full border-red-200 text-red-600 hover:bg-red-50 hover:text-red-700 sm:w-auto"
           >

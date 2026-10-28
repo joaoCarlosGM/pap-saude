@@ -50,6 +50,7 @@ export default function CourseDetailsModal({
 
           <Button
             type="button"
+            disabled title="Player demonstrativo, sem aula disponível"
             className="w-full sm:w-auto"
           >
             {completed ? (
@@ -103,11 +104,11 @@ export default function CourseDetailsModal({
             </div>
 
             <p className="mt-3 text-sm font-medium text-white">
-              Conteúdo do curso
+              Player demonstrativo
             </p>
 
             <p className="mt-1 text-xs text-slate-400">
-              O player será conectado na camada de dados.
+              Nenhuma aula é reproduzida. Catálogo e progresso são ilustrativos.
             </p>
           </div>
         </div>

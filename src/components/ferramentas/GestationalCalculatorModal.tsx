@@ -5,6 +5,7 @@ import {
   useState,
 } from "react"
 
+import { pregnancyFrom, DEMO_DATE } from "@/lib/demo/validation"
 import Modal from "@/components/ui/Modal"
 import { Button } from "@/components/ui/button"
 
@@ -13,109 +14,15 @@ type GestationalCalculatorModalProps = {
   onClose: () => void
 }
 
-function addDays(
-  date: Date,
-  days: number,
-) {
-  const result = new Date(date)
-  result.setDate(result.getDate() + days)
-
-  return result
-}
-
-function startOfDay(date: Date) {
-  return new Date(
-    date.getFullYear(),
-    date.getMonth(),
-    date.getDate(),
-  )
-}
-
-function formatDate(date: Date) {
-  return new Intl.DateTimeFormat(
-    "pt-BR",
-  ).format(date)
-}
-
-function getTrimester(weeks: number) {
-  if (weeks <= 13) {
-    return "1º Trimestre"
-  }
-
-  if (weeks <= 27) {
-    return "2º Trimestre"
-  }
-
-  return "3º Trimestre"
-}
-
-function getTodayInputDate() {
-  const today = new Date()
-
-  const yyyy =
-    today.getFullYear()
-
-  const mm = String(
-    today.getMonth() + 1,
-  ).padStart(2, "0")
-
-  const dd = String(
-    today.getDate(),
-  ).padStart(2, "0")
-
-  return `${yyyy}-${mm}-${dd}`
-}
-
+function formatDate(date:Date){return date.toLocaleDateString('pt-BR',{timeZone:'UTC'})}
 export default function GestationalCalculatorModal({
   open,
   onClose,
 }: GestationalCalculatorModalProps) {
   const [dum, setDum] =
-    useState(getTodayInputDate)
+    useState("")
 
-  const calculation = useMemo(() => {
-    if (!dum) {
-      return null
-    }
-
-    const dumDate =
-      startOfDay(
-        new Date(`${dum}T12:00:00`),
-      )
-
-    const today =
-      startOfDay(new Date())
-
-    const difference =
-      today.getTime() -
-      dumDate.getTime()
-
-    const totalDays =
-      Math.max(
-        0,
-        Math.floor(
-          difference /
-            (1000 * 60 * 60 * 24),
-        ),
-      )
-
-    const weeks =
-      Math.floor(totalDays / 7)
-
-    const days =
-      totalDays % 7
-
-    const estimatedDelivery =
-      addDays(dumDate, 280)
-
-    return {
-      weeks,
-      days,
-      trimester:
-        getTrimester(weeks),
-      dpp: estimatedDelivery,
-    }
-  }, [dum])
+  const calculation=useMemo(()=>{const g=pregnancyFrom(dum);return g?{...g,dpp:new Date(g.dueDate+'T12:00:00Z')}:null},[dum])
 
   return (
     <Modal
@@ -136,6 +43,7 @@ export default function GestationalCalculatorModal({
       }
     >
       <div className="space-y-5">
+        {!calculation && <p role="status" className="text-sm text-slate-500">Informe DUM válida até 28/10/2026 (referência demonstrativa), de até 45 semanas. DUM ausente ou inválida não gera IG/DPP.</p>}
         <div>
           <label
             htmlFor="dum"
@@ -153,11 +61,7 @@ export default function GestationalCalculatorModal({
                 event.target.value,
               )
             }
-            max={
-              new Date()
-                .toISOString()
-                .split("T")[0]
-            }
+            max={DEMO_DATE}
             className="
               h-11
               w-full

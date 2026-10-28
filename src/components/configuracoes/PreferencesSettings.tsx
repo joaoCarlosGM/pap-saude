@@ -32,6 +32,7 @@ export default function PreferencesSettings({
 
   return (
     <section>
+      <p className="mb-4 text-sm text-slate-500">Controles ilustrativos indisponíveis nesta demonstração; sem alterações de interface, alertas, e-mails ou confirmação de saída.</p>
       <div>
         <h2 className="text-base font-semibold text-slate-900">
           Preferências
@@ -80,7 +81,7 @@ export default function PreferencesSettings({
           </div>
         </div>
 
-        <SettingSwitch
+        <SettingSwitch disabled
           checked={preferences.compactMode}
           onChange={(value) =>
             update("compactMode", value)
@@ -89,7 +90,7 @@ export default function PreferencesSettings({
           description="Reduz espaçamentos para exibir mais informações na tela."
         />
 
-        <SettingSwitch
+        <SettingSwitch disabled
           checked={
             preferences.reducedAnimations
           }
@@ -142,7 +143,7 @@ export default function PreferencesSettings({
           </div>
         </div>
 
-        <SettingSwitch
+        <SettingSwitch disabled
           checked={
             preferences.confirmBeforeLeavingForm
           }
