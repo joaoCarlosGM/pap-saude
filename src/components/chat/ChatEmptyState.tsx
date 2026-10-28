@@ -1,11 +1,12 @@
 "use client"
 
 import {
-  Bot,
   ClipboardList,
   FileText,
   HeartPulse,
 } from "lucide-react"
+
+import AnimatedChatIcon from "./AnimatedChatIcon"
 
 type Props = {
   onSuggestion: (
@@ -55,6 +56,7 @@ export default function ChatEmptyState({
       "
     >
       <div className="w-full max-w-2xl text-center">
+        <p className="mb-3 text-xs text-slate-500">Chat IA demonstrativo — respostas simuladas, sem modelo externo.</p>
         <div
           className="
             mx-auto
@@ -68,7 +70,7 @@ export default function ChatEmptyState({
             text-pink-500
           "
         >
-          <Bot size={26} />
+          <AnimatedChatIcon size={26} />
         </div>
 
         <h2

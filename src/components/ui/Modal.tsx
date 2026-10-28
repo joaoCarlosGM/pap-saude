@@ -1,6 +1,6 @@
 "use client"
 
-import type { ReactNode } from "react"
+import {useEffect,useRef,useId,type ReactNode} from "react"
 import { X } from "lucide-react"
 
 type ModalProps = {
@@ -29,6 +29,8 @@ export default function Modal({
   footer,
   maxWidth = "lg",
 }: ModalProps) {
+  const dialog=useRef<HTMLDivElement>(null), titleId=useId()
+  useEffect(()=>{if(!open)return;const previous=document.activeElement as HTMLElement|null;const el=dialog.current;el?.querySelector<HTMLElement>('button:not([disabled]),input:not([disabled]),select:not([disabled]),textarea:not([disabled]),a[href]')?.focus();return()=>previous?.focus()},[open])
   if (!open) return null
 
   return (
@@ -42,6 +44,10 @@ export default function Modal({
 
       <div className="relative flex min-h-full items-end justify-center sm:items-center sm:p-4">
         <div
+          ref={dialog}
+          aria-labelledby={title?titleId:undefined}
+          aria-label={title?undefined:'Janela demonstrativa'}
+          onKeyDown={e=>{if(e.key==='Escape'){e.stopPropagation();onClose()}if(e.key==='Tab'){const nodes=Array.from(dialog.current?.querySelectorAll<HTMLElement>('button:not([disabled]),input:not([disabled]),select:not([disabled]),textarea:not([disabled]),a[href]')||[]).filter(el=>el.getClientRects().length>0);const first=nodes[0],last=nodes.at(-1);if(e.shiftKey&&document.activeElement===first){e.preventDefault();last?.focus()}else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first?.focus()}}}}
           role="dialog"
           aria-modal="true"
           className={[
@@ -55,7 +61,7 @@ export default function Modal({
             <div className="flex shrink-0 items-start justify-between gap-4 border-b border-slate-200 px-4 py-4 sm:px-6">
               <div className="min-w-0">
                 {title && (
-                  <h2 className="text-base font-semibold text-slate-900 sm:text-lg">
+                  <h2 id={titleId} className="text-base font-semibold text-slate-900 sm:text-lg">
                     {title}
                   </h2>
                 )}

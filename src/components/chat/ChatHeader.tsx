@@ -60,7 +60,7 @@ export default function ChatHeader({
               text-slate-900
             "
           >
-            {title}
+            {title} · Simulação
           </h2>
 
           <p className="text-xs text-slate-400">

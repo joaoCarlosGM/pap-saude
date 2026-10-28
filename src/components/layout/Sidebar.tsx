@@ -1,5 +1,6 @@
 "use client"
 
+import {useEffect,useRef} from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 
@@ -13,8 +14,9 @@ import {
   Settings,
   X,
   GraduationCap,
-  Bot,
 } from "lucide-react"
+
+import AnimatedChatIcon from "@/components/chat/AnimatedChatIcon"
 
 const menuItems = [
   {
@@ -35,7 +37,7 @@ const menuItems = [
   {
   label: "Chat IA",
   href: "/chat",
-  icon: Bot,
+  icon: AnimatedChatIcon,
   },
   {
     label: "Protocolos",
@@ -69,6 +71,8 @@ export default function Sidebar({
   onClose,
 }: SidebarProps) {
   const pathname = usePathname()
+  const drawer=useRef<HTMLElement>(null)
+  useEffect(()=>{if(!open)return;const previous=document.activeElement as HTMLElement|null;drawer.current?.querySelector<HTMLElement>('button')?.focus();return()=>previous?.focus()},[open])
 
   return (
     <>
@@ -83,12 +87,17 @@ export default function Sidebar({
       )}
 
       <aside
+        ref={drawer}
+        role={open?'dialog':undefined}
+        aria-modal={open?true:undefined}
+        aria-label="Navegação principal"
+        onKeyDown={e=>{if(!open)return;if(e.key==='Escape')onClose();if(e.key==='Tab'){const nodes=Array.from(drawer.current?.querySelectorAll<HTMLElement>('button,a[href]')||[]).filter(el=>el.getClientRects().length>0);if(e.shiftKey&&document.activeElement===nodes[0]){e.preventDefault();nodes.at(-1)?.focus()}else if(!e.shiftKey&&document.activeElement===nodes.at(-1)){e.preventDefault();nodes[0]?.focus()}}}}
         className={[
           "fixed inset-y-0 left-0 z-50 flex w-64 shrink-0 flex-col",
           "border-r border-gray-200 bg-white",
           "transform transition-transform duration-200 ease-in-out",
           "md:static md:z-auto md:w-56 md:translate-x-0",
-          open ? "translate-x-0" : "-translate-x-full",
+          open ? "translate-x-0 visible" : "-translate-x-full invisible md:visible",
         ].join(" ")}
       >
         {/* Logo */}
@@ -117,7 +126,7 @@ export default function Sidebar({
               const active = pathname === item.href
 
               return (
-                <Link
+                <Link prefetch={false}
                   key={item.href}
                   href={item.href}
                   onClick={onClose}
@@ -144,7 +153,7 @@ export default function Sidebar({
 
         {/* Rodapé */}
         <div className="shrink-0 border-t border-gray-100 p-3">
-          <Link
+          <Link prefetch={false}
             href="/configuracoes"
             onClick={onClose}
             className="flex items-center gap-3 rounded-md px-3 py-2.5 text-sm text-gray-600 transition-colors hover:bg-gray-50 hover:text-gray-900"

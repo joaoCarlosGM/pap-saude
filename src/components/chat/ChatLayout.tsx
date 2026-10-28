@@ -30,15 +30,14 @@ export default function ChatLayout({
     conversations,
     setConversations,
   ] = useState(
-    initialConversations,
+    [{id:"demo-start",title:"Nova conversa",updatedAt:"2026-10-28T12:00:00Z",messages:[]},...initialConversations],
   )
 
   const [
     selectedId,
     setSelectedId,
   ] = useState<string | null>(
-    initialConversations[0]?.id ??
-      null,
+    "demo-start",
   )
 
   const [
@@ -140,7 +139,7 @@ export default function ChatLayout({
               "ASSISTANT",
 
             content:
-              "Esta é uma resposta simulada do assistente do PAP Saúde. Na camada de integração, esta mensagem será substituída pela resposta da API de IA.",
+              "Simulação: nenhuma IA externa foi consultada. Este texto ilustrativo não avalia dados nem orienta condutas clínicas.",
 
             createdAt:
               new Date().toISOString(),

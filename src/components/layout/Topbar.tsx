@@ -42,6 +42,7 @@ export default function Topbar({
         <button
           type="button"
           aria-label="Ajuda"
+          onClick={()=>window.alert("Demonstração interativa com dados sintéticos. Não insira informações reais de pacientes.")}
           className="flex h-9 items-center gap-2 rounded-md px-2 text-sm transition hover:bg-white/10 sm:px-3"
         >
           <HelpCircle
@@ -58,6 +59,7 @@ export default function Topbar({
         <button
           type="button"
           aria-label="Notificações"
+          onClick={()=>window.alert("Nenhuma notificação real: ambiente demonstrativo.")}
           className="relative flex h-9 w-9 items-center justify-center rounded-md transition hover:bg-white/10"
         >
           <Bell
@@ -73,6 +75,7 @@ export default function Topbar({
         <button
           type="button"
           aria-label="Menu do usuário"
+          onClick={()=>window.alert("Perfil demonstrativo. Nenhuma conta autenticada real nesta versão.")}
           className="ml-1 flex items-center gap-2 rounded-md px-1.5 py-1.5 transition hover:bg-white/10 sm:ml-2 sm:px-2"
         >
           <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-pink-500 text-xs font-medium">
