@@ -1,27 +1,11 @@
+import { cookies } from "next/headers";
 import { requireClinicalPageSession } from "@/server/clinical/clinical-page-session";
-import SettingsLayout from "@/components/configuracoes/SettingsLayout"
-
-import { mockUserSettings } from "@/lib/mock-configuracao"
-
+import { SESSION_COOKIE_NAME } from "@/server/security/constants";
+import { ownProfile } from "@/server/account/own-profile.service";
+import OwnProfileSettings from "@/components/configuracoes/OwnProfileSettings";
+export const dynamic = "force-dynamic";
 export default async function ConfiguracoesPage() {
-  await requireClinicalPageSession();
-  return (
-    <div className="mx-auto w-full max-w-[1600px]">
-      <header className="mb-6">
-        <h1 className="text-xl font-semibold text-slate-900 sm:text-2xl">
-          Configurações
-        </h1>
-
-        <p className="mt-1 text-sm text-slate-500">
-          Gerencie seu perfil e preferências
-        </p>
-      </header>
-
-      <SettingsLayout
-        initialSettings={
-          mockUserSettings
-        }
-      />
-    </div>
-  )
+ await requireClinicalPageSession();
+ const profile=await ownProfile((await cookies()).get(SESSION_COOKIE_NAME)?.value??"");
+ return <div className="mx-auto w-full max-w-4xl"><OwnProfileSettings initial={profile}/></div>;
 }

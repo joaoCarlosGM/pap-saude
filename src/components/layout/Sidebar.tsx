@@ -13,10 +13,11 @@ const items = [
     { label: "Cursos", href: "/cursos", icon: GraduationCap },
     { label: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
 ];
-export default function Sidebar({ open, onClose, demo = false }: {
+export default function Sidebar({ open, onClose, demo = false, displayName }: {
     open: boolean;
     onClose: () => void;
     demo?: boolean;
+    displayName?: string;
 }) {
     const pathname = usePathname(), ref = useRef<HTMLElement>(null);
     useEffect(() => {
@@ -59,7 +60,7 @@ export default function Sidebar({ open, onClose, demo = false }: {
             const Icon = item.icon;
             return <Link key={href} href={href} prefetch={demo ? false : undefined} onClick={onClose} aria-current={pathname === href ? "page" : undefined} className={`flex items-center gap-3 rounded-md px-3 py-2.5 text-sm ${pathname === href ? "bg-pink-50 font-medium text-pink-600" : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"}`}><Icon size={18} aria-hidden="true"/><span>{item.label}</span></Link>;
         })}</div></nav>
-      <div className="shrink-0 border-t border-gray-100 p-3"><Link href={demo ? "/vitrine/ajuda" : "/configuracoes"} prefetch={demo ? false : undefined} onClick={onClose} className="flex items-center gap-3 rounded-md px-3 py-2.5 text-sm text-gray-600"><Settings size={18} aria-hidden="true"/><span>{demo ? "Sobre a demonstração" : "Configurações"}</span></Link><div className="mt-3 border-t border-gray-100 px-3 pt-3"><p className="truncate text-sm font-medium text-gray-900">{demo ? "Profissional demonstrativo" : "Dr. Ana Paula"}</p><p className="mt-0.5 text-xs text-gray-500">{demo ? "Personagem fictício · DEMO" : "Profissional de saúde"}</p></div></div>
+      <div className="shrink-0 border-t border-gray-100 p-3"><Link href={demo ? "/vitrine/ajuda" : "/configuracoes"} prefetch={demo ? false : undefined} onClick={onClose} className="flex items-center gap-3 rounded-md px-3 py-2.5 text-sm text-gray-600"><Settings size={18} aria-hidden="true"/><span>{demo ? "Sobre a demonstração" : "Configurações"}</span></Link><div className="mt-3 border-t border-gray-100 px-3 pt-3"><p className="truncate text-sm font-medium text-gray-900">{demo ? "Profissional demonstrativo" : (displayName ?? "Sua conta")}</p><p className="mt-0.5 text-xs text-gray-500">{demo ? "Personagem fictício · DEMO" : "Profissional de saúde"}</p></div></div>
     </aside>
   </>;
 }

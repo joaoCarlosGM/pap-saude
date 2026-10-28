@@ -47,11 +47,13 @@ export type DashboardAttendance = {
   gestationalAge: string
   professional: string
   time: string
-  score: number
+  score: number | null
+  statusLabel?: string
   classification:
     | "BAIXO_RISCO"
     | "ATENCAO"
     | "URGENCIA"
+    | null
 }
 
 export type UpcomingDelivery = {

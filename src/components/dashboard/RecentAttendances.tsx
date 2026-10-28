@@ -18,6 +18,7 @@ function classificationStyle(
     DashboardAttendance["classification"],
 ) {
   switch (classification) {
+    case null: return { label: "Sem classificação automática", className: "bg-slate-50 text-slate-600" };
     case "URGENCIA":
       return {
         label: "Urgência",
@@ -69,6 +70,7 @@ export default function RecentAttendances({
       </div>
 
       <div className="divide-y divide-slate-100">
+        {data.length === 0 && <p className="p-5 text-sm text-slate-600">Sem dados de atendimentos neste escopo.</p>}
         {data.map((attendance) => {
           const classification =
             classificationStyle(
@@ -107,8 +109,7 @@ export default function RecentAttendances({
                     classification.className,
                   ].join(" ")}
                 >
-                  {attendance.score} ·{" "}
-                  {classification.label}
+                  {attendance.statusLabel ?? <>{attendance.score} · {classification.label}</>}
                 </span>
               </div>
             </div>

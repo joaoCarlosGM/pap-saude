@@ -13,7 +13,7 @@ type Props = {
 
 export default function AttendanceChart({
   data,
-  comparisonLabel = "+12,1%",
+  comparisonLabel = "Sem comparação disponível",
 }: Props) {
   const max =
     Math.max(...data.map((item) => item.total)) || 1
@@ -41,7 +41,7 @@ export default function AttendanceChart({
         {data.map((item) => {
           const height =
             Math.max(
-              12,
+              0,
               Math.round((item.total / max) * 100),
             )
 

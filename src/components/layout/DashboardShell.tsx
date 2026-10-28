@@ -8,9 +8,11 @@ import Topbar from "@/components/layout/Topbar";
 export default function DashboardShell({
   children,
   demo = false,
+  identity,
 }: {
   children: React.ReactNode;
   demo?: boolean;
+  identity?: {id:string;displayName:string};
 }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
@@ -19,10 +21,10 @@ export default function DashboardShell({
   return (
     <div className={`${demo ? "pap-demo" : ""} flex min-h-screen bg-gray-50`}>
       {demo && <a className="workspace-skip" href="#demo-main">Ir para o conteúdo</a>}
-      <Sidebar open={sidebarOpen} onClose={closeSidebar} demo={demo} />
+      <Sidebar open={sidebarOpen} onClose={closeSidebar} demo={demo} displayName={identity?.displayName} />
 
       <div className="flex min-w-0 flex-1 flex-col">
-        <Topbar onMenuClick={() => setSidebarOpen(true)} demo={demo} />
+        <Topbar onMenuClick={() => setSidebarOpen(true)} demo={demo} displayName={identity?.displayName} />
 
         <main id={demo ? "demo-main" : undefined} tabIndex={demo ? -1 : undefined} className="min-h-0 flex-1 overflow-auto p-4 sm:p-5 lg:p-6">
           <nav
