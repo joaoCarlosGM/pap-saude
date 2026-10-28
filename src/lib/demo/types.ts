@@ -1,3 +1,4 @@
+import type {PatientRecordPresentation} from "@/lib/clinical-presentation";
 import type { DashboardKpi, MonthlyAttendance, RiskDistributionItem, DashboardAttendance, UpcomingDelivery } from "@/types/dashboard";
 import type { Course } from "@/types/curso";
 import type { Protocol } from "@/types/protocolo";
@@ -23,6 +24,7 @@ export type DemoContent = {
     scope: "SYNTHETIC";
     section: DemoSection;
     patients: DemoPatient[];
+    records: Record<string,PatientRecordPresentation>;
     dashboard: DashboardData;
     courses: Course[];
     protocols: Protocol[];

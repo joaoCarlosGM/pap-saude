@@ -66,3 +66,11 @@ Cada etapa terá commit/push seletivo do que estiver validado e checkpoint. Requ
 - Chat/cursos/protocolos/ferramentas/casos sem backend estão explicitamente indisponíveis no operacional. Não foram inventados serviços ou catálogo. DataSUS não é mais apresentado como consulta realizada; botão inexistente desabilitado.
 - Testes server/API: PASS 2/2 (ID sintético, rejeição de contexto real, nenhuma escrita clínica, Comercial negado na API real, providers/rotas sem mocks operacionais). Browser: shell/preferências/destinos PASS 1/1; overlay/reduced-motion/axe WCAG2 A/AA/2.1 AA e jornada com quatro etapas/simulação PASS 2/2 após correção do harness Axe/contexto e seletor com asterisco. Total 3 cenários únicos. TypeScript/lint/guard SQL/diff PASS. Captura mobile sintética em `.test-audit/p0-full/screenshots/`.
 - Paridade completa de ficha de paciente e prontuário DEMO, jornadas avançadas de cursos/protocolos sem backend e nova captura dark do shell ainda pendentes; não declarar E integralmente PASS. Próximo F: confirmação servidor, acabamento e integração.
+
+### E2 — ficha de paciente compartilhada (retomada)
+
+- Removida a duplicidade visual da ficha: `PatientRecordView` recebe DTO mínimo e não importa serviços. O loader operacional mantém suas consultas e seus guards originais. A vitrine recebe prontuários estritamente sintéticos do provider servidor independente, sem campos de escore ou conexão clínica.
+- Reutilizadas as seções reais de identidade, gestação, flags, alergias, atendimentos e histórico de revisões. Links DEMO permanecem em `/vitrine`. Não há seleção de provider por flag cliente, query string ou cookie.
+- `tsx --test --test-name-pattern='same patient record' tests/p0-full/workspace-ui.test.ts`: PASS 1/1; ficha completa apresentada, navegação demonstrativa e zero requisições clínicas. TypeScript e lint dos arquivos E2: PASS; diff check PASS.
+- Último SHA remoto confirmado antes de E2: `e3b00929298ff8b2a1b0bdb93b0b0a55e4d0fa5b`. A branch candidata e todas as worktrees originais permanecem preservadas.
+- F permanece em andamento, com alterações não versionadas; erro do helper de convite corrigido e cenários direcionados PASS. Não repetir gates já aprovados ao retomar.

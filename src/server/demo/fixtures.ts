@@ -9,6 +9,12 @@ const patients = [
 ];
 const content: Omit<DemoContent, "section"> = {
     mode: "DEMO", scope: "SYNTHETIC", patients,
+    records:Object.fromEntries(patients.map((p,i)=>[p.id,{
+      patient:{id:p.id,fullName:p.name,socialName:null,birthDate:`${2026-p.age}-01-01`,cpf:null,cns:null,phone:null},
+      pregnancies:[{id:`demo-pregnancy-${i}`,status:"ACTIVE",lastMenstrualDate:"2026-06-01",estimatedDueDate:"2027-03-08"}],
+      encounters:[{id:`demo-encounter-${i}`,status:"COMPLETED",occurredAt:"2026-10-01T09:00:00.000Z",chiefComplaint:"Acompanhamento fictício · sem validade clínica"}],
+      allergies:[],flags:[],revisions:[{id:`demo-revision-${i}`,resourceType:"VITAL_SIGNS",reason:"Exemplo fictício de proposta não aplicada. Nenhuma alteração clínica ocorreu.",occurredAt:"2026-10-01T09:00:00.000Z"}],
+    }])) ,
     dashboard: {
         kpis: [
             { id: "demo-kpi-patients", title: "Pacientes simuladas", value: "3", description: "Personagens deste cenário", icon: "users", tone: "pink" },

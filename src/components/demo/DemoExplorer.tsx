@@ -1,4 +1,5 @@
 "use client";
+import PatientRecordView from "@/components/workspace/PatientRecordView";
 import PatientCollection from "@/components/workspace/PatientCollection";
 import EncounterCollection from "@/components/workspace/EncounterCollection";
 import AiSparkIcon from "@/components/workspace/AiSparkIcon";
@@ -18,6 +19,7 @@ export default function DemoExplorer({ data }: {
         title: string;
         text: string;
         courseId?: string;
+        patientId?: string;
     } | null>(null);
     const [progress, setProgress] = useState<Record<string, number>>({});
     const [message, setMessage] = useState(""), [chat, setChat] = useState(false);
@@ -26,7 +28,7 @@ export default function DemoExplorer({ data }: {
     return <div className="demo-explorer"><header className="demo-section-title"><p className="workspace-eyebrow">PAP Saúde · Dados simulados</p><h1>{section==="chat"&&<AiSparkIcon/>}{titles[section]}</h1><p>Explore exemplos fictícios. Nenhuma informação de pacientes ou UBS reais é consultada.</p></header>
     {section === "pacientes" && <>
       <label className="demo-search">Buscar entre as personagens<input type="search" value={query} onChange={e => setQuery(e.target.value)} placeholder="Nome demonstrativo"/></label>
-      <PatientCollection items={data.patients.filter(p=>p.name.toLocaleLowerCase("pt-BR").includes(query.toLocaleLowerCase("pt-BR"))).map(p=>({id:p.id,name:p.name,description:`${p.age} anos · ${p.gestationalAge}`,detail:p.note,active:true}))} onOpen={id=>{const p=data.patients.find(p=>p.id===id)!;setSelected({title:p.name,text:`${p.note} Identificador fictício: ${p.id}. Nenhuma pessoa real.`});}}/>
+      <PatientCollection items={data.patients.filter(p=>p.name.toLocaleLowerCase("pt-BR").includes(query.toLocaleLowerCase("pt-BR"))).map(p=>({id:p.id,name:p.name,description:`${p.age} anos · ${p.gestationalAge}`,detail:p.note,active:true}))} onOpen={id=>{const p=data.patients.find(p=>p.id===id)!;setSelected({patientId:p.id,title:p.name,text:`${p.note} Identificador fictício: ${p.id}. Nenhuma pessoa real.`});}}/>
 
       {!data.patients.some(p => p.name.toLocaleLowerCase("pt-BR").includes(query.toLocaleLowerCase("pt-BR"))) && <div className="workspace-card" role="status">Nenhuma personagem encontrada. Experimente outro nome demonstrativo.</div>}
     </>}
@@ -37,6 +39,6 @@ export default function DemoExplorer({ data }: {
     {section === "cursos" && <><CourseRecommendations demo/><p className="demo-disclaimer">Popularidade, aulas e progresso são fictícios. Não há matrícula, vídeo externo ou certificado.</p><div className="demo-grid">{data.courses.map(c => <div className="demo-course" key={c.id}><Image src="/illustrations/pap-demo-learning.svg" width={360} height={240} alt=""/><CourseCard course={{ ...c, progress: progress[c.id] || 0, status: progress[c.id] ? "IN_PROGRESS" : "NOT_STARTED" }} onOpen={c => setSelected({ title: c.title, text: c.description, courseId: c.id })}/></div>)}</div></>}
     {section === "chat" && <section className="workspace-card"><h2>Uma conversa ilustrativa</h2><p>Este exemplo não usa inteligência artificial e não oferece orientação clínica.</p><button type="button" className="workspace-primary" onClick={() => setChat(true)}>Simular conversa</button>{chat && <div className="demo-chat" role="status"><p><strong>Pergunta de exemplo:</strong> Como a equipe encontra um resumo?</p><p><strong>Resposta fictícia:</strong> A apresentação reúne informações em cartões e ajuda a conhecer a navegação. Este texto é pré-definido; nenhuma IA foi consultada.</p></div>}<button type="button" className="workspace-secondary" onClick={() => setChat(false)}>Limpar exemplo</button></section>}
     {section === "ajuda" && <section className="workspace-card"><h2>Apresente com tranquilidade</h2><ol className="commercial-steps"><li><strong>Todos os dados são fictícios</strong><span>As personagens e os conteúdos não pertencem a pacientes ou instituições reais.</span></li><li><strong>Explore sem salvar</strong><span>Registros, aulas e conversas não alteram o atendimento real. Recarregar descarta as interações locais.</span></li><li><strong>Respeite os limites do perfil</strong><span>Alterar um endereço não libera acesso a prontuários ou funções administrativas.</span></li></ol><p>Para voltar ao trabalho comercial, use Voltar ao Comercial no cabeçalho.</p></section>}
-    {selected && <DemoDialog title={selected.title} onClose={() => setSelected(null)}><p>{selected.text}</p>{selected.courseId && <button type="button" className="workspace-primary" onClick={() => { setProgress(p => ({ ...p, [selected.courseId!]: 25 })); setMessage("Aula simulada: progresso local de 25%. Nada foi salvo."); }}>Simular início da aula</button>}{selected.courseId && <p role="status">{message}</p>}</DemoDialog>}
+    {selected && <DemoDialog title={selected.title} onClose={() => setSelected(null)}>{selected.patientId&&data.records[selected.patientId]?<PatientRecordView data={data.records[selected.patientId]} demo/>:<p>{selected.text}</p>}{selected.courseId && <button type="button" className="workspace-primary" onClick={() => { setProgress(p => ({ ...p, [selected.courseId!]: 25 })); setMessage("Aula simulada: progresso local de 25%. Nada foi salvo."); }}>Simular início da aula</button>}{selected.courseId && <p role="status">{message}</p>}</DemoDialog>}
   </div>;
 }
