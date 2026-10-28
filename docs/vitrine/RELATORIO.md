@@ -84,3 +84,13 @@ O push será exclusivamente na feature; PR solicitado para `prod`, sem merge. Ba
 As rodadas iniciais falharam e foram preservadas nos logs privados. Entre os achados: seletor de alerta abrangia o anunciador do Next; DPP desconhecida era formatada como Date inválida; navegação/preload em modo dev falhava. O prefetch automático da sidebar e do link para paciente criado em memória foi desativado sem alterar cliques, URL, guards ou asserts. Com o conteúdo congelado, os testes finais de navegação e a matriz passaram. As páginas mantêm wrappers server; a leitura do estado sintético fica em componentes client.
 
 O corpus de fontes não foi substituído para passar o build. Nenhum sucesso de CI anterior, incluindo o P0, foi reutilizado como validação desta branch. Decisão atual: **NO-GO para merge/deploy** até build/CI válidos e revisão das limitações externas.
+
+## Publicação e bloqueio externo final
+
+Seis commits seletivos publicados; código consolidado em `c23195402b1f271867c6a10f2fc1a7a78194244a`. A atualização documental posterior mantém o mesmo fingerprint de código/testes. `origin/prod` continuou em `40896212cb01e35fb6b204f6226b8d28ba1f6d1b`.
+
+**PR: BLOCKED, não criado.** Tentativa `gh pr create --draft --base prod --head feature/prod-vitrine-ui-refresh` falhou com `Post https://api.github.com/graphql: Forbidden`. Fallback REST `POST /repos/joaoCarlosGM/pap-saude/pulls`, com `draft:true` e base `prod`, também recebeu `Forbidden`. Nenhum PR ou CI remoto foi declarado aprovado; nenhuma permissão/gate foi ampliada para contornar a negativa.
+
+[Comparação para abrir o PR contra prod](https://github.com/joaoCarlosGM/pap-saude/compare/prod...feature/prod-vitrine-ui-refresh?expand=1). O texto está em `PR.md`; manter draft. O workflow existente só é acionado por push em prod ou PR para prod, portanto o push desta feature não equivale a CI.
+
+Estado da missão: **BLOCKED / não concluída nos critérios finais**, até abertura do PR, build/CI do candidato e revisão da tipografia com acesso às fontes. A implementação/testes locais estão preservados e publicados para revisão. Sem merge, deploy, envio de e-mail, acesso a banco/VPS ou alteração do P0/laboratórios.

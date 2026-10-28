@@ -139,5 +139,6 @@
       ]
     }
   ],
-  "excluded": "Raw private logs, caches, environment files and database/infra files are never staged."
+  "excluded": "Raw private logs, caches, environment files and database/infra files are never staged.",
+  "documentaryFollowup": "Final report, checkpoint and validation updated after GitHub GraphQL/REST denied PR creation. Unique path inventory and source fingerprint remain unchanged."
 }

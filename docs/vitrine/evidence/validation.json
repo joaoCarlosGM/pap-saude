@@ -39,8 +39,8 @@
     "finalSnapshot": "NOT RUN past unchanged external font blocker; no valid production build claimed"
   },
   "remoteCi": {
-    "result": "NOT RUN",
-    "reason": "Feature push alone is excluded by existing workflow; requires PR to prod. Workflow unchanged."
+    "result": "NOT RUN / BLOCKED",
+    "reason": "PR creation denied by GitHub API (GraphQL and REST Forbidden); unchanged workflow does not run for feature pushes."
   },
   "preservation": {
     "P0": "UNTOUCHED",
@@ -189,5 +189,15 @@
     "before-pacientes-390.png": "4815271e63831bf07d96dfec35791c31f3357d51f59c337281daf88c060fb903",
     "before-registro-1440.png": "86d922c9715deae37f14704843024633eb2e7c58ac774a1e18bdd41cf4d01404",
     "before-registro-390.png": "5878605105cc0387b9d92e0722b86765d65d695eeb6845064fe3b72c14ac1898"
+  },
+  "validatedCodeCommit": "c23195402b1f271867c6a10f2fc1a7a78194244a",
+  "pullRequest": {
+    "result": "BLOCKED",
+    "created": false,
+    "requestedBase": "prod",
+    "requestedDraft": true,
+    "GraphQL": "Forbidden",
+    "REST": "Forbidden",
+    "compare": "https://github.com/joaoCarlosGM/pap-saude/compare/prod...feature/prod-vitrine-ui-refresh?expand=1"
   }
 }
