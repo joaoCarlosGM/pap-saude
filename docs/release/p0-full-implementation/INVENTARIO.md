@@ -153,3 +153,14 @@ docs/release/p0-full-implementation/INVENTARIO.md
 docs/release/p0-full-implementation/evidence/validation.json
 docs/release/p0-full-implementation/evidence/source-manifest.json
 ```
+
+## Diagnóstico RSC — staging
+
+```text
+tests/mission04-e/boundaries.spec.ts
+docs/release/p0-full-implementation/CORRECAO-CI-RSC.md
+docs/release/p0-full-implementation/CHECKPOINT.md
+docs/release/p0-full-implementation/INVENTARIO.md
+docs/release/p0-full-implementation/evidence/validation.json
+docs/release/p0-full-implementation/evidence/source-manifest.json
+```

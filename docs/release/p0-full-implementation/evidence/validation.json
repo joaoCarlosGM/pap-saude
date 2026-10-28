@@ -378,5 +378,20 @@
       ".test-audit/p0-full/e-final-typescript.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
       ".test-audit/p0-full/e-final-lint.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
     }
+  },
+  "rscDiagnostic": {
+    "parent": "f7538e0e79099c6c4873a68c31df05319dec9db5",
+    "localBoundary": "PASS1",
+    "localSuffixKind": "null",
+    "remoteSuffixKind": "UNKNOWN pending diagnostic CI",
+    "projectionSafety": "PASS",
+    "typescript": "PASS",
+    "lint": "PASS",
+    "logs": {
+      ".test-audit/p0-full/rsc-diagnostic-lint.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      ".test-audit/p0-full/rsc-diagnostic-typescript.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      ".test-audit/p0-full/rsc-diagnostic-safety.log": "94c08b46b234a0f7019e8fb5c444316c74b1ed44a0937d1e81dd12d97a19bbcc",
+      ".test-audit/p0-full/rsc-wire-diagnostic.log": "c31092fd2dce637ec5d03aa6b9d0e4b84374399bc8570d227ccf63b93749cc33"
+    }
   }
 }

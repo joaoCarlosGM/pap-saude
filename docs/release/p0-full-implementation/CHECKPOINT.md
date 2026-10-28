@@ -124,3 +124,8 @@ Cada etapa terá commit/push seletivo do que estiver validado e checkpoint. Requ
 
 - Base50089d9 CI40696085848: B/C/D PASS; E FAIL. Runtime restrito e visual PASS2; passos de registro antigos e reset ausente reproduzidos. Reset local restaurado, interação dirigida PASS1.
 - Fronteiras: mobile PASS1; MFA primário corrigido PASS1; RSC/HTML/API/revogação corrigido PASS1. Metadado Next s:null estrito, POST revogado403. TS/lint/diff finais PASS. Ver CORRECAO-CI-SLICE-E.md. Próximo CI.
+
+### RSC — diagnóstico sanitizado, contrato ainda inalterado
+
+- Basef7538e0, gateE falha objeto dinâmico. Projeção estrutural no console e resumo GitHub sem conteúdo desconhecido. Local shape s:null, fronteiras PASS1; segurança da projeção/TS/lint/diff PASS.
+- Próximo: obter forma real no resumo remoto, só então corrigir contrato estrito. Não presumir s:[] nem enfraquecer guard. Ver CORRECAO-CI-RSC.md.

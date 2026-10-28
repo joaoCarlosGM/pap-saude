@@ -104,7 +104,7 @@
     "tests/mission04-c/invitations.test.ts": "fe9e1ba5e7bb04b09196f2e912b40b807cfa2650d3447ec57e860543a618d522",
     "tests/mission04-d/recovery.spec.ts": "6650f7bcd720b8e1c7cf76d9f369302f8248b3fc6fe867b23040b6461c9354c5",
     "tests/mission04-e/access.test.ts": "2a594ed9a16d9ccc396640b4c349afbaf51aae2b511bd946f2c5e30196c2a83d",
-    "tests/mission04-e/boundaries.spec.ts": "c8b37c720a6ae722fee7c9f1f4fa7d44d0e3b6cc6d9229b5610deb114c139e8a",
+    "tests/mission04-e/boundaries.spec.ts": "1e9487fa92c3cd04964b48708b30932c56c275bd792317ee8963404398c1f9d5",
     "tests/p0-full/auth-ui.test.ts": "9f00ed7cf58ed14a83a6fee5d5fcaf515a1f5c8cafa5b168234968ec1e8f3960",
     "tests/p0-full/browser.ts": "a378aef1ab22cb9d9aaed0ce22034258c0024db8e6c50ffebee8611caf75e683",
     "tests/p0-full/demo-boundaries.test.ts": "161e18512b43faed07251d1e76ec76fd327c1dd5d772b1245662098b4cdf4d4a",
@@ -121,7 +121,7 @@
     "tests/mission04-c/journey.spec.ts": "7c204086206ad5845c628e20af2b8c0ebe31a4156d5327dd1bd699feb7e88c0e",
     "tests/mission04-e/journey.spec.ts": "b4a7a74df7541545e43ead599c67c22d1b0af25399632621e06d0287e449502f"
   },
-  "fingerprint": "49c312b7c7fa29655ca3f8d17830a820c4c6d666b6a2a8c062e44ba2140b0740",
+  "fingerprint": "35bc7b581492f8e479179569de6ede33e8dcac90932040955f502fe59bede6df",
   "scope": "Current code/test/CI content. Directed tests recorded by log hash; global final CI not claimed PASS.",
   "postCiCorrectionParent": "a5a77de93b0c4b97e09abef050c7ec8fe40687b2",
   "fingerprintAlgorithm": "sha256(JSON sourceFiles sorted keys, separators comma/colon, UTF-8)",
@@ -130,5 +130,6 @@
   "bBrowserCorrectionParent": "0915259991cdaabfab6730c3767e351b998c01a5",
   "cBrowserCorrectionParent": "ccb2817d503be6e6992a28d99dda773023101986",
   "dBrowserCorrectionParent": "1f165d6a0db0f7dc1eb834ab7d20dd7c03cf05c3",
-  "eCorrectionParent": "50089d9e61ce5f34de2c370be9e58192b7d38c08"
+  "eCorrectionParent": "50089d9e61ce5f34de2c370be9e58192b7d38c08",
+  "rscDiagnosticParent": "f7538e0e79099c6c4873a68c31df05319dec9db5"
 }

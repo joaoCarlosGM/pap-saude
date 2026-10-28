@@ -1,6 +1,7 @@
 import {solveLoginVerification} from "../helpers/browser-login-verification";
 import { test, expect, type APIResponse, type Page, type BrowserContext } from "@playwright/test";
 import { writeFile } from "node:fs/promises";
+import { appendFileSync } from "node:fs";
 import AxeBuilder from "@axe-core/playwright";
 import { db } from "../../src/server/db/client";
 import { navigationFingerprint } from "../first-access/login-fixtures";
@@ -31,6 +32,27 @@ async function boundaryRequest(page: Page, path: string, headers: Record<string,
 }
 // Next's non-PPR prefetch deliberately sends only public router metadata.
 // Reject anything beyond this closed transport-tree shape (no rendered data).
+const reportedMetadataShapes = new Set<string>();
+function diagnoseDynamicMetadata(segment: Record<string, unknown>, expectedKey: string) {
+    const suffix = segment.s;
+    // Closed projection: never serialize unknown property names or string values,
+    // response bodies, request headers, identities or credentials.
+    const safe = {
+        event: "PAP_RSC_DYNAMIC_METADATA",
+        keys: Object.keys(segment).map(k => ["n", "t", "k", "s"].includes(k) ? k : "<unexpected>").sort(),
+        nameMatches: segment.n === "section", typeMatches: segment.t === "d",
+        routeKeyMatches: segment.k === expectedKey,
+        suffixKind: suffix === null ? "null" : Array.isArray(suffix) ? "array" : typeof suffix,
+        suffixArrayLength: Array.isArray(suffix) ? suffix.length : null,
+        suffixArrayKinds: Array.isArray(suffix) ? [...new Set(suffix.map(item => item === null ? "null" : Array.isArray(item) ? "array" : typeof item))].sort() : [],
+    };
+    const line = JSON.stringify(safe);
+    if (reportedMetadataShapes.has(line)) return;
+    reportedMetadataShapes.add(line);
+    console.log(line);
+    if (process.env.GITHUB_STEP_SUMMARY)
+        appendFileSync(process.env.GITHUB_STEP_SUMMARY, `\nRSC diagnostic (structure only):\n\n\`\`\`json\n${line}\n\`\`\`\n`);
+}
 function assertMetadataPrefetch(body: string, path: string) {
     const rows = new Map<string, unknown>();
     for (const line of body.trim().split("\n")) {
@@ -51,6 +73,7 @@ function assertMetadataPrefetch(body: string, path: string) {
         expect(Object.keys(value).every(k => ["s","c","h"].includes(k))).toBe(true);
         if (typeof value.s === "object" && value.s !== null) {
             expect(path.startsWith("/vitrine/")).toBe(true);
+            diagnoseDynamicMetadata(value.s as Record<string, unknown>, path.split("/")[2]);
             expect(value.s).toEqual({ n:"section", t:"d", k:path.split("/")[2], s:null });
         } else expect([...segments]).toContain(value.s);
         if (value.h !== undefined) expect(typeof value.h).toBe("number");
