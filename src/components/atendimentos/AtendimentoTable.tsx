@@ -5,6 +5,8 @@ import { Eye, Sparkles } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 
+import Modal from "@/components/ui/Modal"
+import Link from "next/link"
 import type { Atendimento } from "@/types/atendimento"
 
 import AtendimentoDetailsModal from "./AtendimentoDetailsModal"
@@ -15,6 +17,7 @@ type AtendimentoTableProps = {
 
 function formatDateTime(date: string) {
   return new Intl.DateTimeFormat("pt-BR", {
+    timeZone: "America/Fortaleza",
     day: "2-digit",
     month: "2-digit",
     year: "numeric",
@@ -27,6 +30,7 @@ function getClassificationLabel(
   classificacao: Atendimento["classificacao"],
 ) {
   switch (classificacao) {
+    case "NAO_AVALIADO": return "Não avaliado"
     case "URGENCIA":
       return "Urgência"
 
@@ -42,6 +46,7 @@ function getClassificationClasses(
   classificacao: Atendimento["classificacao"],
 ) {
   switch (classificacao) {
+    case "NAO_AVALIADO": return "bg-slate-50 text-slate-600"
     case "URGENCIA":
       return "bg-red-50 text-red-600"
 
@@ -56,6 +61,7 @@ function getClassificationClasses(
 export default function AtendimentoTable({
   atendimentos,
 }: AtendimentoTableProps) {
+  const [ai,setAi]=useState(false)
   const [selectedAtendimento, setSelectedAtendimento] =
     useState<Atendimento | null>(null)
 
@@ -73,6 +79,7 @@ export default function AtendimentoTable({
         </div>
       </div>
 
+      {atendimentos.length===0 && <p role="status" className="py-4 text-sm text-slate-500">Nenhum atendimento corresponde aos filtros.</p>}
       {/* MOBILE */}
       <div className="space-y-3 md:hidden">
         {atendimentos.map((atendimento) => (
@@ -83,7 +90,7 @@ export default function AtendimentoTable({
             <div className="flex items-start justify-between gap-3">
               <div className="min-w-0">
                 <p className="truncate text-sm font-semibold text-slate-900">
-                  {atendimento.paciente.nome}
+                  <Link href={"/pacientes/"+atendimento.paciente.id} className="hover:underline">{atendimento.paciente.nome}</Link>
                 </p>
 
                 <p className="mt-1 text-xs text-slate-500">
@@ -122,7 +129,7 @@ export default function AtendimentoTable({
                 </p>
 
                 <p className="mt-1 text-sm font-semibold text-slate-900">
-                  {atendimento.score}
+                  {atendimento.score ?? "—"}
                 </p>
               </div>
 
@@ -165,6 +172,7 @@ export default function AtendimentoTable({
                 variant="outline"
                 size="icon"
                 title="Resumo IA"
+                onClick={()=>setAi(true)}
               >
                 <Sparkles size={17} />
               </Button>
@@ -223,7 +231,7 @@ export default function AtendimentoTable({
 
                   <td className="px-4 py-4 align-top lg:px-6">
                     <p className="text-sm font-medium text-slate-900">
-                      {atendimento.paciente.nome}
+                      <Link href={"/pacientes/"+atendimento.paciente.id} className="hover:underline">{atendimento.paciente.nome}</Link>
                     </p>
 
                     <p className="mt-1 text-xs text-slate-500">
@@ -243,7 +251,7 @@ export default function AtendimentoTable({
 
                   <td className="px-4 py-4 align-top lg:px-6">
                     <span className="text-sm font-semibold text-slate-900">
-                      {atendimento.score}
+                      {atendimento.score ?? "—"}
                     </span>
                   </td>
 
@@ -283,6 +291,7 @@ export default function AtendimentoTable({
                         variant="outline"
                         size="icon"
                         title="Resumo IA"
+                onClick={()=>setAi(true)}
                       >
                         <Sparkles size={17} />
                       </Button>
@@ -295,6 +304,7 @@ export default function AtendimentoTable({
         </div>
       </div>
 
+      <Modal open={ai} onClose={()=>setAi(false)} title="Resumo IA — demonstração"><p>Integração IA indisponível. Nenhum prontuário é enviado a um serviço externo.</p></Modal>
       <AtendimentoDetailsModal
         atendimento={selectedAtendimento}
         open={!!selectedAtendimento}

@@ -1,3 +1,4 @@
+import {formatDemoDate} from "@/lib/demo/validation"
 import AnimatedLineChart from "./AnimatedLineChart"
 
 import type {
@@ -10,10 +11,11 @@ type Props = {
 }
 
 function scoreText(risk: PatientRisk) {
+  if(risk === "NAO_AVALIADO") return {title:"Não avaliado",text:"Avaliação MEOWS não disponível nesta demonstração",classes:"border-slate-100 bg-slate-50 text-slate-600"}
   if (risk === "URGENCIA") {
     return {
       title: "URGÊNCIA",
-      text: "Avaliação clínica prioritária.",
+      text: "Classificação ilustrativa da fixture; sem conduta clínica.",
       classes:
         "border-red-100 bg-red-50 text-red-600",
     }
@@ -22,7 +24,7 @@ function scoreText(risk: PatientRisk) {
   if (risk === "ATENCAO") {
     return {
       title: "ATENÇÃO",
-      text: "Reavaliar parâmetros clínicos.",
+      text: "Classificação ilustrativa da fixture; sem conduta clínica.",
       classes:
         "border-amber-100 bg-amber-50 text-amber-600",
     }
@@ -30,7 +32,7 @@ function scoreText(risk: PatientRisk) {
 
   return {
     title: "BAIXO RISCO",
-    text: "Manter acompanhamento de rotina.",
+    text: "Classificação ilustrativa da fixture; sem conduta clínica.",
     classes:
       "border-emerald-100 bg-emerald-50 text-emerald-600",
   }
@@ -121,7 +123,7 @@ export default function PatientSummary({
                   .deliveries,
               ],
               [
-                "Abortos",
+                "Perdas gestacionais",
                 patient.obstetricHistory
                   .abortions,
               ],
@@ -158,6 +160,7 @@ export default function PatientSummary({
             </p>
 
             <div className="mt-2 space-y-2">
+              {patient.historyStatus && <p className="text-xs text-slate-500">{patient.historyStatus}</p>}
               {patient.comorbidities.length ? (
                 patient.comorbidities.map(
                   (item) => (
@@ -181,6 +184,7 @@ export default function PatientSummary({
             </p>
 
             <div className="mt-2 flex flex-wrap gap-2">
+              {patient.allergies.length===0 && <p className="text-sm text-slate-500">{patient.historyStatus || "Nenhum registro de alergia na fixture"}</p>}
               {patient.allergies.map(
                 (item) => (
                   <span
@@ -214,13 +218,7 @@ export default function PatientSummary({
 
           <Info
             label="Data de nascimento"
-            value={new Intl.DateTimeFormat(
-              "pt-BR",
-            ).format(
-              new Date(
-                patient.dataNascimento,
-              ),
-            )}
+            value={formatDemoDate(patient.dataNascimento.slice(0,10))}
           />
 
           <Info
@@ -235,13 +233,7 @@ export default function PatientSummary({
 
           <Info
             label="DPP"
-            value={new Intl.DateTimeFormat(
-              "pt-BR",
-            ).format(
-              new Date(
-                patient.pregnancy.dpp,
-              ),
-            )}
+            value={patient.pregnancy.dpp ? new Date(patient.pregnancy.dpp+"T12:00:00Z").toLocaleDateString("pt-BR",{timeZone:"UTC"}) : "DUM desconhecida"}
           />
         </div>
       </section>

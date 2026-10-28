@@ -1,3 +1,4 @@
+import {formatDemoDate} from "@/lib/demo/validation"
 import {
   Clock3,
   FlaskConical,
@@ -15,6 +16,7 @@ export default function PatientExams({
 }: Props) {
   return (
     <div className="space-y-3">
+      {patient.exams.length===0 && <p className="text-sm text-slate-500">Nenhum exame demonstrativo registrado.</p>}
       {patient.exams.map((exam) => {
         const altered =
           exam.status === "ALTERADO"
@@ -53,11 +55,7 @@ export default function PatientExams({
                 </p>
 
                 <p className="mt-1 text-xs text-slate-400">
-                  {new Intl.DateTimeFormat(
-                    "pt-BR",
-                  ).format(
-                    new Date(exam.date),
-                  )}
+                  {formatDemoDate(exam.date.slice(0,10))}
                 </p>
 
                 {exam.summary && (

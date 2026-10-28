@@ -31,17 +31,14 @@ export default function AttendanceChart({
 
         <div className="flex w-fit items-center gap-1.5 rounded-full bg-emerald-50 px-2.5 py-1 text-xs font-semibold text-emerald-600">
           <TrendingUp size={13} />
-          +12,1%
+          {data.length>1 && data.at(-2)!.total>0 ? `${(((data.at(-1)!.total-data.at(-2)!.total)/data.at(-2)!.total)*100).toFixed(1)}%` : "Sem comparativo"}
         </div>
       </div>
 
       <div className="mt-7 flex h-64 items-end gap-3 sm:gap-5">
         {data.map((item) => {
           const height =
-            Math.max(
-              12,
-              Math.round((item.total / max) * 100),
-            )
+            Math.round((item.total / max) * 100)
 
           return (
             <div
@@ -51,6 +48,7 @@ export default function AttendanceChart({
               <div className="flex flex-1 items-end justify-center">
                 <div
                   className="group relative w-full max-w-12 rounded-t-lg bg-pink-500 transition hover:bg-pink-600"
+                  data-demo-total={item.total}
                   style={{
                     height: `${height}%`,
                   }}

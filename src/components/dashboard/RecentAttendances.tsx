@@ -17,6 +17,7 @@ function classificationStyle(
     DashboardAttendance["classification"],
 ) {
   switch (classification) {
+    case "NAO_AVALIADO": return {label:"Não avaliado",className:"bg-slate-50 text-slate-600"}
     case "URGENCIA":
       return {
         label: "Urgência",

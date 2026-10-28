@@ -1,3 +1,4 @@
+import {formatDemoDate} from "@/lib/demo/validation"
 import Link from "next/link"
 import {
   AlertTriangle,
@@ -14,6 +15,7 @@ type Props = {
 }
 
 function riskLabel(risk: PatientRisk) {
+  if(risk === "NAO_AVALIADO") return "Não avaliado"
   if (risk === "URGENCIA") return "URGÊNCIA"
   if (risk === "ATENCAO") return "ATENÇÃO"
 
@@ -21,6 +23,7 @@ function riskLabel(risk: PatientRisk) {
 }
 
 function riskClasses(risk: PatientRisk) {
+  if(risk === "NAO_AVALIADO") return "bg-slate-50 text-slate-600 border-slate-100"
   if (risk === "URGENCIA") {
     return "bg-red-50 text-red-600 border-red-100"
   }
@@ -50,8 +53,7 @@ export default function PatientCard({
               </h2>
 
               <span className="text-xs text-slate-400">
-                {patient.latestScore.classification ===
-                "URGENCIA"
+                {patient.latestScore.classification === "NAO_AVALIADO" ? "Não avaliado" : patient.latestScore.classification === "URGENCIA"
                   ? "Urgência"
                   : patient.latestScore.classification ===
                       "ATENCAO"
@@ -73,9 +75,7 @@ export default function PatientCard({
 
               <span>
                 DPP:{" "}
-                {new Intl.DateTimeFormat("pt-BR").format(
-                  new Date(patient.pregnancy.dpp),
-                )}
+                {formatDemoDate(patient.pregnancy.dpp)}
               </span>
             </div>
 
@@ -114,7 +114,7 @@ export default function PatientCard({
                 ),
               ].join(" ")}
             >
-              {patient.latestScore.value} -{" "}
+              {patient.latestScore.value ?? "—"} -{" "}
               {riskLabel(
                 patient.latestScore.classification,
               )}

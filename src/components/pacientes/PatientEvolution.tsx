@@ -25,7 +25,7 @@ export default function PatientEvolution({
 
           <span className="rounded-full bg-pink-50 px-2.5 py-1 text-[11px] font-medium text-pink-600">
             Atual:{" "}
-            {patient.latestScore.value}
+            {patient.latestScore.value ?? "Não avaliado"}
           </span>
         </div>
 
@@ -87,47 +87,45 @@ export default function PatientEvolution({
             </thead>
 
             <tbody className="divide-y divide-slate-100">
-              {patient.meowsTrend
+              {(patient.encounters || [])
                 .slice()
                 .reverse()
                 .map((item, index) => (
-                  <tr key={item.label}>
+                  <tr key={item.id}>
                     <td className="px-5 py-3 text-sm text-slate-600">
                       {patient.consultations -
                         index}
                     </td>
 
                     <td className="px-5 py-3 text-sm text-slate-500">
-                      Consulta{" "}
-                      {patient.consultations -
-                        index}
+                      {new Date(item.dataHora).toLocaleDateString("pt-BR",{timeZone:"UTC"})}
                     </td>
 
                     <td className="px-5 py-3 text-sm font-semibold text-slate-700">
-                      {item.value}
+                      {item.score ?? "Não avaliado"}
                     </td>
 
                     <td className="px-5 py-3">
                       <span
                         className={[
                           "rounded-full px-2.5 py-1 text-[11px] font-medium",
-                          item.value >= 5
+                          item.classificacao === "URGENCIA"
                             ? "bg-red-50 text-red-600"
-                            : item.value >= 3
+                            : item.classificacao === "ATENCAO"
                               ? "bg-amber-50 text-amber-600"
                               : "bg-emerald-50 text-emerald-600",
                         ].join(" ")}
                       >
-                        {item.value >= 5
+                        {item.classificacao === "URGENCIA"
                           ? "URGÊNCIA"
-                          : item.value >= 3
+                          : item.classificacao === "ATENCAO"
                             ? "ATENÇÃO"
-                            : "BAIXO RISCO"}
+                            : item.classificacao === "NAO_AVALIADO" ? "Não avaliado" : "BAIXO RISCO"}
                       </span>
                     </td>
 
                     <td className="px-5 py-3 text-sm text-slate-500">
-                      Enf. Ana Paula
+                      {item.profissional.nome}
                     </td>
                   </tr>
                 ))}

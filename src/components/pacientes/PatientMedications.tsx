@@ -38,7 +38,8 @@ export default function PatientMedications({
           </thead>
 
           <tbody className="divide-y divide-slate-100">
-            {patient.medications.map(
+            {patient.medications.length===0 && <tr><td colSpan={4} className="px-5 py-4 text-sm text-slate-500">Sem informação registrada sobre medicações em uso.</td></tr>}
+      {patient.medications.map(
               (medication) => (
                 <tr key={medication.id}>
                   <td className="px-5 py-4">
@@ -55,15 +56,15 @@ export default function PatientMedications({
                   </td>
 
                   <td className="px-5 py-4 text-sm text-slate-500">
-                    {medication.dose}
+                    {medication.dose || "Não informado"}
                   </td>
 
                   <td className="px-5 py-4 text-sm text-slate-500">
-                    {medication.frequency}
+                    {medication.frequency || "Não informado"}
                   </td>
 
                   <td className="px-5 py-4 text-sm text-slate-500">
-                    {medication.route}
+                    {medication.route || "Não informado"}
                   </td>
                 </tr>
               ),

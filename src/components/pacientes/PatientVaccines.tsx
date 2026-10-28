@@ -1,3 +1,4 @@
+import {formatDemoDate} from "@/lib/demo/validation"
 import {
   CheckCircle2,
   Syringe,
@@ -14,6 +15,7 @@ export default function PatientVaccines({
 }: Props) {
   return (
     <div className="grid grid-cols-1 gap-3 lg:grid-cols-2">
+      {patient.vaccines.length===0 && <p className="text-sm text-slate-500">Nenhuma vacinação demonstrativa registrada.</p>}
       {patient.vaccines.map((vaccine) => (
         <article
           key={vaccine.id}
@@ -30,11 +32,7 @@ export default function PatientVaccines({
               </p>
 
               <p className="mt-1 text-xs text-slate-400">
-                {new Intl.DateTimeFormat(
-                  "pt-BR",
-                ).format(
-                  new Date(vaccine.date),
-                )}
+                {formatDemoDate(vaccine.date.slice(0,10))}
 
                 {vaccine.dose
                   ? ` • ${vaccine.dose}`
@@ -43,9 +41,9 @@ export default function PatientVaccines({
             </div>
           </div>
 
-          <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 px-2.5 py-1 text-[11px] font-medium text-emerald-500">
-            <CheckCircle2 size={12} />
-            Aplicada
+          <span className={vaccine.status === "APLICADA" ? "inline-flex items-center gap-1 rounded-full bg-emerald-50 px-2.5 py-1 text-[11px] font-medium text-emerald-500" : "rounded-full bg-amber-50 px-2.5 py-1 text-[11px] font-medium text-amber-700"}>
+            {vaccine.status === "APLICADA" && <CheckCircle2 size={12} />}
+            {vaccine.status === "APLICADA" ? "Aplicada" : "Pendente"}
           </span>
         </article>
       ))}

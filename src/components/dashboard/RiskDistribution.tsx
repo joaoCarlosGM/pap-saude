@@ -39,7 +39,7 @@ export default function RiskDistribution({
       </h2>
 
       <p className="mt-1 text-xs text-slate-400">
-        Situação atual das pacientes acompanhadas
+        Classificações ilustrativas; não avaliadas ficam fora deste total
       </p>
 
       <div className="mt-6 space-y-5">
@@ -97,7 +97,7 @@ export default function RiskDistribution({
 
       <div className="mt-7 rounded-lg bg-slate-50 p-4">
         <p className="text-xs text-slate-400">
-          Total acompanhado
+          Total classificado (fixtures)
         </p>
 
         <p className="mt-1 text-2xl font-semibold text-slate-900">

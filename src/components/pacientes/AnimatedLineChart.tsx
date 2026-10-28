@@ -107,6 +107,8 @@ export default function AnimatedLineChart({
     }
   }, [data, height, max, min])
 
+  if(!data.length)return <p className="p-4 text-sm text-slate-500">Nenhuma medição demonstrativa registrada para este gráfico.</p>
+
   return (
     <div className="w-full overflow-hidden">
       <svg

@@ -3,6 +3,7 @@
 import Modal from "@/components/ui/Modal"
 import { Button } from "@/components/ui/button"
 
+import Link from "next/link"
 import type { Atendimento } from "@/types/atendimento"
 
 type AtendimentoDetailsModalProps = {
@@ -15,6 +16,7 @@ function getClassificationLabel(
   classificacao: Atendimento["classificacao"],
 ) {
   switch (classificacao) {
+    case "NAO_AVALIADO": return "Não avaliado"
     case "URGENCIA":
       return "Urgência"
 
@@ -30,6 +32,7 @@ function getClassificationClasses(
   classificacao: Atendimento["classificacao"],
 ) {
   switch (classificacao) {
+    case "NAO_AVALIADO": return "bg-slate-50 text-slate-600"
     case "URGENCIA":
       return "bg-red-50 text-red-600"
 
@@ -43,6 +46,7 @@ function getClassificationClasses(
 
 function formatDateTime(date: string) {
   return new Intl.DateTimeFormat("pt-BR", {
+    timeZone: "America/Fortaleza",
     dateStyle: "short",
     timeStyle: "short",
   }).format(new Date(date))
@@ -70,6 +74,8 @@ export default function AtendimentoDetailsModal({
           onClick={onClose}
           className="w-full sm:w-auto"
         >
+
+      <Link className="text-sm text-pink-600 underline" href={"/pacientes/"+atendimento.paciente.id}>Abrir ficha da paciente</Link>
           Fechar
         </Button>
       }
@@ -139,7 +145,7 @@ export default function AtendimentoDetailsModal({
               </p>
 
               <p className="mt-1 text-3xl font-bold text-slate-700">
-                {atendimento.score}
+                {atendimento.score ?? "—"}
               </p>
             </div>
 

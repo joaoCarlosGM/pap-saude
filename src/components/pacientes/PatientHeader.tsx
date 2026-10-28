@@ -1,3 +1,4 @@
+import {formatDemoDate} from "@/lib/demo/validation"
 import {
   AlertTriangle,
   Bell,
@@ -29,8 +30,7 @@ export default function PatientHeader({
               </h1>
 
               <span className="text-xs text-slate-400">
-                {patient.latestScore.classification ===
-                "URGENCIA"
+                {patient.latestScore.classification === "NAO_AVALIADO" ? "Não avaliado" : patient.latestScore.classification === "URGENCIA"
                   ? "Urgência"
                   : patient.latestScore.classification ===
                       "ATENCAO"
@@ -49,13 +49,7 @@ export default function PatientHeader({
               <span>•</span>
               <span>
                 DPP:{" "}
-                {new Intl.DateTimeFormat(
-                  "pt-BR",
-                ).format(
-                  new Date(
-                    patient.pregnancy.dpp,
-                  ),
-                )}
+                {formatDemoDate(patient.pregnancy.dpp)}
               </span>
             </div>
 

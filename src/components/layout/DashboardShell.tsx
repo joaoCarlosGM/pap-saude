@@ -3,6 +3,7 @@
 import { useState } from "react"
 
 import Sidebar from "@/components/layout/Sidebar"
+import { DemoProvider, DemoNotice } from "@/components/demo/DemoProvider"
 import Topbar from "@/components/layout/Topbar"
 
 export default function DashboardShell({
@@ -13,7 +14,7 @@ export default function DashboardShell({
   const [sidebarOpen, setSidebarOpen] = useState(false)
 
   return (
-    <div className="flex min-h-screen bg-gray-50">
+    <DemoProvider><div className="flex min-h-screen bg-gray-50">
       <Sidebar
         open={sidebarOpen}
         onClose={() => setSidebarOpen(false)}
@@ -23,9 +24,10 @@ export default function DashboardShell({
         <Topbar onMenuClick={() => setSidebarOpen(true)} />
 
         <main className="min-h-0 flex-1 overflow-auto p-4 sm:p-5 lg:p-6">
+          <DemoNotice />
           {children}
         </main>
       </div>
-    </div>
+    </div></DemoProvider>
   )
 }

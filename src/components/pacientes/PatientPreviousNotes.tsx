@@ -1,3 +1,4 @@
+import {formatDemoDate} from "@/lib/demo/validation"
 import type { Patient } from "@/types/paciente"
 
 type Props = {
@@ -27,11 +28,7 @@ export default function PatientPreviousNotes({
                   </p>
 
                   <p className="text-[11px] text-slate-400">
-                    {new Intl.DateTimeFormat(
-                      "pt-BR",
-                    ).format(
-                      new Date(note.date),
-                    )}
+                    {formatDemoDate(note.date.slice(0,10))}
                   </p>
                 </div>
 
