@@ -104,7 +104,7 @@
     "tests/mission04-c/invitations.test.ts": "fe9e1ba5e7bb04b09196f2e912b40b807cfa2650d3447ec57e860543a618d522",
     "tests/mission04-d/recovery.spec.ts": "6650f7bcd720b8e1c7cf76d9f369302f8248b3fc6fe867b23040b6461c9354c5",
     "tests/mission04-e/access.test.ts": "2a594ed9a16d9ccc396640b4c349afbaf51aae2b511bd946f2c5e30196c2a83d",
-    "tests/mission04-e/boundaries.spec.ts": "1e9487fa92c3cd04964b48708b30932c56c275bd792317ee8963404398c1f9d5",
+    "tests/mission04-e/boundaries.spec.ts": "85580176ec322b490f66bffec679ee8897849fef9f786177d7d60cad48fc4d18",
     "tests/p0-full/auth-ui.test.ts": "9f00ed7cf58ed14a83a6fee5d5fcaf515a1f5c8cafa5b168234968ec1e8f3960",
     "tests/p0-full/browser.ts": "a378aef1ab22cb9d9aaed0ce22034258c0024db8e6c50ffebee8611caf75e683",
     "tests/p0-full/demo-boundaries.test.ts": "161e18512b43faed07251d1e76ec76fd327c1dd5d772b1245662098b4cdf4d4a",
@@ -119,9 +119,11 @@
     "tests/release/mfa-block-ui.spec.ts": "7258dc5b649a0d544ffeff80193db07d289f7010728d7dca087378583f7b7722",
     "tests/mission04-b/governance.test.ts": "dfb167612f8866951cc59db03f7e9dd1a45b426654e49f411e6fac0de5cd6aa8",
     "tests/mission04-c/journey.spec.ts": "7c204086206ad5845c628e20af2b8c0ebe31a4156d5327dd1bd699feb7e88c0e",
-    "tests/mission04-e/journey.spec.ts": "b4a7a74df7541545e43ead599c67c22d1b0af25399632621e06d0287e449502f"
+    "tests/mission04-e/journey.spec.ts": "b4a7a74df7541545e43ead599c67c22d1b0af25399632621e06d0287e449502f",
+    "tests/mission04-e/rsc-dynamic-metadata.ts": "3d14e410c8711e7622ae07d755fe5015a0608db3ffa7b62453e2080926560209",
+    "tests/mission04-e/rsc-dynamic-metadata.test.ts": "6b5239fdfed177de1815d0450cfa46ee6903076bf9b52654251079b7e42b39eb"
   },
-  "fingerprint": "35bc7b581492f8e479179569de6ede33e8dcac90932040955f502fe59bede6df",
+  "fingerprint": "7f86a1cbba6b5671b5e5b05e7cdd81f0d1250c43334e666802898c2fcdafc5ec",
   "scope": "Current code/test/CI content. Directed tests recorded by log hash; global final CI not claimed PASS.",
   "postCiCorrectionParent": "a5a77de93b0c4b97e09abef050c7ec8fe40687b2",
   "fingerprintAlgorithm": "sha256(JSON sourceFiles sorted keys, separators comma/colon, UTF-8)",
@@ -131,5 +133,6 @@
   "cBrowserCorrectionParent": "ccb2817d503be6e6992a28d99dda773023101986",
   "dBrowserCorrectionParent": "1f165d6a0db0f7dc1eb834ab7d20dd7c03cf05c3",
   "eCorrectionParent": "50089d9e61ce5f34de2c370be9e58192b7d38c08",
-  "rscDiagnosticParent": "f7538e0e79099c6c4873a68c31df05319dec9db5"
+  "rscDiagnosticParent": "f7538e0e79099c6c4873a68c31df05319dec9db5",
+  "rscContractParent": "26c41c831dfbad04e79807da2d06f358b2167d31"
 }

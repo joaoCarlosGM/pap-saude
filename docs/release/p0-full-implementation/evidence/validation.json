@@ -393,5 +393,78 @@
       ".test-audit/p0-full/rsc-diagnostic-safety.log": "94c08b46b234a0f7019e8fb5c444316c74b1ed44a0937d1e81dd12d97a19bbcc",
       ".test-audit/p0-full/rsc-wire-diagnostic.log": "c31092fd2dce637ec5d03aa6b9d0e4b84374399bc8570d227ccf63b93749cc33"
     }
+  },
+  "rscContractCorrection": {
+    "parent": "26c41c831dfbad04e79807da2d06f358b2167d31",
+    "shapes": {
+      "turboBefore": [
+        {
+          "event": "PAP_RSC_DYNAMIC_METADATA",
+          "keys": [
+            "k",
+            "n",
+            "s",
+            "t"
+          ],
+          "nameMatches": true,
+          "typeMatches": true,
+          "routeKeyMatches": true,
+          "suffixKind": "array",
+          "suffixArrayLength": 0,
+          "suffixArrayKinds": []
+        }
+      ],
+      "turboAfter": [
+        {
+          "event": "PAP_RSC_DYNAMIC_METADATA",
+          "keys": [
+            "k",
+            "n",
+            "s",
+            "t"
+          ],
+          "nameMatches": true,
+          "typeMatches": true,
+          "routeKeyMatches": true,
+          "suffixKind": "array",
+          "suffixArrayLength": 0,
+          "suffixArrayKinds": []
+        }
+      ],
+      "webpackAfter": [
+        {
+          "event": "PAP_RSC_DYNAMIC_METADATA",
+          "keys": [
+            "k",
+            "n",
+            "s",
+            "t"
+          ],
+          "nameMatches": true,
+          "typeMatches": true,
+          "routeKeyMatches": true,
+          "suffixKind": "null",
+          "suffixArrayLength": null,
+          "suffixArrayKinds": []
+        }
+      ]
+    },
+    "turboBefore": "FAIL exact null assertion",
+    "turboAfter": "PASS1",
+    "webpackAfter": "PASS1",
+    "contractUnit": "PASS2 / 18 invalid variants",
+    "diagnosticSafety": "PASS",
+    "typescript": "PASS",
+    "lint": "PASS",
+    "backendChanged": false,
+    "logs": {
+      ".test-audit/p0-full/rsc-turbo-wire-diagnostic.log": "3e96904eb1ca01ec87197e5c3c20125b96a91458a4e82b314f34f1202bc15489",
+      ".test-audit/p0-full/rsc-turbo-contract-fixed.log": "609489d34909099d3c3b2155c1a07d3826543abf289f81d14f6b95b04dd4af08",
+      ".test-audit/p0-full/rsc-webpack-contract-fixed.log": "ad65cd67e508e7b4bc6ce2c421fc577a5e4624a6322a61e3673c73e1dedaa5a3",
+      ".test-audit/p0-full/rsc-contract-unit.log": "b244b0747c309d12fabb39e925898201f494e4c5a45a6e4397acf3f74561dec6",
+      ".test-audit/p0-full/rsc-diagnostic-safety.log": "94c08b46b234a0f7019e8fb5c444316c74b1ed44a0937d1e81dd12d97a19bbcc",
+      ".test-audit/p0-full/rsc-contract-typescript.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      ".test-audit/p0-full/rsc-contract-lint.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
   }
 }

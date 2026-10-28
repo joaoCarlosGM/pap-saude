@@ -9,6 +9,7 @@ import { fixture } from "../first-access/fixtures";
 import { createSession } from "../../src/server/auth/session.service";
 import { bootstrapSystemIam } from "../../src/server/iam/bootstrap.service";
 import { actor, origin } from "../mission04-b/fixtures";
+import { isDynamicRouteMetadata } from "./rsc-dynamic-metadata";
 test.beforeAll(async () => { expect(new URL(process.env.DATABASE_URL!).pathname).toBe("/pap_saude_m04_e_test"); await bootstrapSystemIam(); });
 test.afterAll(() => db.$disconnect());
 test.afterEach(async ({}, info) => { for (const e of info.errors) {
@@ -74,7 +75,8 @@ function assertMetadataPrefetch(body: string, path: string) {
         if (typeof value.s === "object" && value.s !== null) {
             expect(path.startsWith("/vitrine/")).toBe(true);
             diagnoseDynamicMetadata(value.s as Record<string, unknown>, path.split("/")[2]);
-            expect(value.s).toEqual({ n:"section", t:"d", k:path.split("/")[2], s:null });
+            expect(isDynamicRouteMetadata(value.s, path.split("/")[2]),
+                "RSC dynamic segment must contain only the exact route metadata and an empty suffix").toBe(true);
         } else expect([...segments]).toContain(value.s);
         if (value.h !== undefined) expect(typeof value.h).toBe("number");
         if (value.c !== undefined) {

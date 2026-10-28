@@ -164,3 +164,16 @@ docs/release/p0-full-implementation/INVENTARIO.md
 docs/release/p0-full-implementation/evidence/validation.json
 docs/release/p0-full-implementation/evidence/source-manifest.json
 ```
+
+## RSC contrato final — staging
+
+```text
+tests/mission04-e/boundaries.spec.ts
+tests/mission04-e/rsc-dynamic-metadata.ts
+tests/mission04-e/rsc-dynamic-metadata.test.ts
+docs/release/p0-full-implementation/CORRECAO-CI-RSC.md
+docs/release/p0-full-implementation/CHECKPOINT.md
+docs/release/p0-full-implementation/INVENTARIO.md
+docs/release/p0-full-implementation/evidence/validation.json
+docs/release/p0-full-implementation/evidence/source-manifest.json
+```

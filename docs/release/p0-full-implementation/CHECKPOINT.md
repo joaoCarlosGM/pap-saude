@@ -129,3 +129,8 @@ Cada etapa terá commit/push seletivo do que estiver validado e checkpoint. Requ
 
 - Basef7538e0, gateE falha objeto dinâmico. Projeção estrutural no console e resumo GitHub sem conteúdo desconhecido. Local shape s:null, fronteiras PASS1; segurança da projeção/TS/lint/diff PASS.
 - Próximo: obter forma real no resumo remoto, só então corrigir contrato estrito. Não presumir s:[] nem enfraquecer guard. Ver CORRECAO-CI-RSC.md.
+
+### RSC — correção comprovada
+
+- Base26c41c8. Turbopack real recebeu s:[] vazio; webpack s:null. Helper estrito aceita somente essas duas formas sem dados extras; restante das fronteiras preservado.
+- PASS: caso completo em Turbo1 + webpack1; contrato2 testes/18 variantes negativas; projeção segura, TS/lint/diff. Reprodução /tmp com hardlinks de dependências, sem reinstalar/gerar Prisma ou tocar laboratório. Próximo CI final.
