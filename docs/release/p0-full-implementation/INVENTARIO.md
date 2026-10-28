@@ -129,3 +129,14 @@ docs/release/p0-full-implementation/INVENTARIO.md
 docs/release/p0-full-implementation/evidence/validation.json
 docs/release/p0-full-implementation/evidence/source-manifest.json
 ```
+
+## D browser — staging
+
+```text
+tests/mission04-d/recovery.spec.ts
+docs/release/p0-full-implementation/CORRECAO-CI-SLICE-D.md
+docs/release/p0-full-implementation/CHECKPOINT.md
+docs/release/p0-full-implementation/INVENTARIO.md
+docs/release/p0-full-implementation/evidence/validation.json
+docs/release/p0-full-implementation/evidence/source-manifest.json
+```

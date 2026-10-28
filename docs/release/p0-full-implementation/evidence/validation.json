@@ -343,5 +343,22 @@
       ".test-audit/p0-full/c-browser-typescript.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
       ".test-audit/p0-full/c-browser-lint.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
     }
+  },
+  "dBrowserCorrection": {
+    "parent": "1f165d6a0db0f7dc1eb834ab7d20dd7c03cf05c3",
+    "node": "PASS31",
+    "browserInitial": "7PASS/1FAIL",
+    "browserDirected": "PASS1",
+    "legacyOwnedHarness": "PASS1; only resource names/connections/import paths adapted privately",
+    "typescript": "PASS",
+    "lint": "PASS",
+    "logs": {
+      ".test-audit/p0-full/d-browser-repro.log": "dace6538c7f95bf48cf59e441193203569fe143ad0d5ac23a72e89aff7af854a",
+      ".test-audit/p0-full/d-reset-fragment-directed.log": "4a4d230a8d24a17eedcee3581bc3730a506ab6d2131e1ff22a48952bdb30809f",
+      ".test-audit/p0-full/d-email-node.log": "47f43d7755c89bb49faf8085108c8d33f9b94c2f46a19259a71d02244e6054e8",
+      ".test-audit/p0-full/d-legacy-owned-repro.log": "889c9adc775e3f7929a974fd6a1cda4e9ca32a3e9b71c1ef6b1bc01e624f2813",
+      ".test-audit/p0-full/d-reset-typescript.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      ".test-audit/p0-full/d-reset-lint.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
   }
 }

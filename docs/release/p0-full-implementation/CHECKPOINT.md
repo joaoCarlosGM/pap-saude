@@ -114,3 +114,8 @@ Cada etapa terá commit/push seletivo do que estiver validado e checkpoint. Requ
 
 - Baseccb2817 CI40690382799: B PASS, C FAIL. Helper login legado sem CAPTCHA e espera sem pré-condição MFA. Somente teste C ajustado; serviços reais reutilizados.
 - Browser C8/8, TS/lint/diff PASS. Ver CORRECAO-CI-SLICE-C.md. Próximo CI exato.
+
+### D browser — seletor de erro
+
+- Base1f165d6 CI40693217223: B/C PASS, D FAIL. Alert global colidia com route announcer; escopado ao form, assertions preservadas.
+- Node31 PASS; browser7PASS/1FAIL seguido de dirigido1PASS; upgrade privado1PASS (adaptação de recursos documentada); TS/lint/diff PASS. Próximo CI.

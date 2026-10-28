@@ -102,7 +102,7 @@
     "tests/mission04-b/governance.spec.ts": "1d6f37cfbb17c097b853ab048609add4266b7f425529ff5cb3ea609836740edc",
     "tests/mission04-c/fixtures.ts": "074f62aba028e36825e42db2b4178090fe038baea9833c71d1c46f1530c31182",
     "tests/mission04-c/invitations.test.ts": "fe9e1ba5e7bb04b09196f2e912b40b807cfa2650d3447ec57e860543a618d522",
-    "tests/mission04-d/recovery.spec.ts": "1589da52f18f51e2059916a800732daf11ccde9c925271b26895cefe769c8bfb",
+    "tests/mission04-d/recovery.spec.ts": "6650f7bcd720b8e1c7cf76d9f369302f8248b3fc6fe867b23040b6461c9354c5",
     "tests/mission04-e/access.test.ts": "2a594ed9a16d9ccc396640b4c349afbaf51aae2b511bd946f2c5e30196c2a83d",
     "tests/mission04-e/boundaries.spec.ts": "65f3b6f41b9f69eec74064bfbd9f789e86ae2641b8dec32f08f7c670ef61d667",
     "tests/p0-full/auth-ui.test.ts": "9f00ed7cf58ed14a83a6fee5d5fcaf515a1f5c8cafa5b168234968ec1e8f3960",
@@ -120,12 +120,13 @@
     "tests/mission04-b/governance.test.ts": "dfb167612f8866951cc59db03f7e9dd1a45b426654e49f411e6fac0de5cd6aa8",
     "tests/mission04-c/journey.spec.ts": "7c204086206ad5845c628e20af2b8c0ebe31a4156d5327dd1bd699feb7e88c0e"
   },
-  "fingerprint": "90d6758bbce93e7add46dd1b9ed9cb96498a1734bc20a669fe637d235c67470e",
+  "fingerprint": "91ff5ebc8419dfd7444d87a100961057aab33b619e4cdb54245affd634b22318",
   "scope": "Current code/test/CI content. Directed tests recorded by log hash; global final CI not claimed PASS.",
   "postCiCorrectionParent": "a5a77de93b0c4b97e09abef050c7ec8fe40687b2",
   "fingerprintAlgorithm": "sha256(JSON sourceFiles sorted keys, separators comma/colon, UTF-8)",
   "captchaCorrectionParent": "8aa7919c53f601539df89b4f671e64ff821b5a4c",
   "sliceBCorrectionParent": "58991c86fd212df44df1f30fbcff8ed2da71b4ba",
   "bBrowserCorrectionParent": "0915259991cdaabfab6730c3767e351b998c01a5",
-  "cBrowserCorrectionParent": "ccb2817d503be6e6992a28d99dda773023101986"
+  "cBrowserCorrectionParent": "ccb2817d503be6e6992a28d99dda773023101986",
+  "dBrowserCorrectionParent": "1f165d6a0db0f7dc1eb834ab7d20dd7c03cf05c3"
 }

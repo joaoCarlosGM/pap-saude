@@ -59,7 +59,7 @@ test("reset fragment is removed from history and never enters request URLs, Refe
   await page.getByLabel("Nova senha",{exact:true}).fill("synthetic-not-a-real-password");
   await page.getByLabel("Confirme a nova senha",{exact:true}).fill("synthetic-not-a-real-password");
   await page.getByRole("button", { name: "Confirmar nova senha" }).click();
-  await expect(page.getByRole("alert")).toContainText("Não foi possível redefinir a senha.");
+  await expect(page.locator("form").getByRole("alert")).toContainText("Não foi possível redefinir a senha.");
   expect(inspected).toBe(true);
   inspected = false;
   token = randomBytes(32).toString("base64url");
@@ -71,7 +71,7 @@ test("reset fragment is removed from history and never enters request URLs, Refe
   await page.getByLabel("Nova senha",{exact:true}).fill("synthetic-not-a-real-password");
   await page.getByLabel("Confirme a nova senha",{exact:true}).fill("synthetic-not-a-real-password");
   await page.getByRole("button", { name: "Confirmar nova senha" }).click();
-  await expect(page.getByRole("alert")).toContainText("Não foi possível redefinir a senha.");
+  await expect(page.locator("form").getByRole("alert")).toContainText("Não foi possível redefinir a senha.");
   expect(inspected).toBe(true);
   expect(urls.some(url => url.includes(token) || url.includes(original))).toBe(false);
   expect(consoleMessages.some(message => message.includes(token) || message.includes(original))).toBe(false);
