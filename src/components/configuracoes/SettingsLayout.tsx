@@ -1,5 +1,6 @@
 "use client"
 
+import { useDemo } from "@/components/demo/DemoProvider"
 import { useState } from "react"
 
 import NotificationsSettings from "./NotificationsSettings"
@@ -23,19 +24,17 @@ type SettingsLayoutProps = {
 export default function SettingsLayout({
   initialSettings,
 }: SettingsLayoutProps) {
+  const {state,updateProfile}=useDemo()
   const [activeTab, setActiveTab] =
     useState<SettingsTab>("profile")
 
   const [settings, setSettings] =
-    useState<UserSettings>(initialSettings)
+    useState<Omit<UserSettings,"profile">>({preferences:initialSettings.preferences,notifications:initialSettings.notifications})
 
   function handleProfileChange(
     profile: UserProfileSettings,
   ) {
-    setSettings((current) => ({
-      ...current,
-      profile,
-    }))
+    updateProfile(profile)
   }
 
   function handlePreferencesChange(
@@ -83,7 +82,7 @@ export default function SettingsLayout({
         <div className="mx-auto w-full max-w-5xl">
           {activeTab === "profile" && (
             <ProfileSettings
-              profile={settings.profile}
+              profile={state.profile}
               onChange={handleProfileChange}
             />
           )}

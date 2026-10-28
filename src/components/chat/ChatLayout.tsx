@@ -1,5 +1,6 @@
 "use client"
 
+import { useDemo } from "@/components/demo/DemoProvider"
 import {
   useState,
 } from "react"
@@ -40,10 +41,7 @@ export default function ChatLayout({
     "demo-start",
   )
 
-  const [
-    sidebarOpen,
-    setSidebarOpen,
-  ] = useState(false)
+  const {conversationMenuOpen:sidebarOpen,closeConversationMenu,openConversationMenu}=useDemo()
 
   const selectedConversation =
     conversations.find(
@@ -186,12 +184,12 @@ export default function ChatLayout({
   return (
     <div
       className="
-        -m-4
+        -mx-4 -mb-4
         flex
-        h-[calc(100dvh-64px)]
+        h-[calc(100dvh-48px)] md:h-dvh
         overflow-hidden
         bg-slate-50
-        sm:-m-5
+        sm:-mx-5 sm:-mb-5 md:-m-5
         lg:-m-6
       "
     >
@@ -204,7 +202,7 @@ export default function ChatLayout({
         }
         open={sidebarOpen}
         onClose={() =>
-          setSidebarOpen(false)
+          closeConversationMenu()
         }
         onSelect={
           setSelectedId
@@ -230,7 +228,7 @@ export default function ChatLayout({
             "Nova conversa"
           }
           onOpenSidebar={() =>
-            setSidebarOpen(true)
+            openConversationMenu()
           }
         />
 

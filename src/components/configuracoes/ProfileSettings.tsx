@@ -7,6 +7,8 @@ import {
   UserRound,
 } from "lucide-react"
 
+import { useState } from "react"
+import { useDemo } from "@/components/demo/DemoProvider"
 import { Button } from "@/components/ui/button"
 import Input from "@/components/ui/Input"
 
@@ -23,6 +25,8 @@ export default function ProfileSettings({
   profile,
   onChange,
 }: Props) {
+  const [saved,setSaved]=useState(false)
+  const {state,updateProfile,requestReset}=useDemo()
   function updateField(
     field: keyof UserProfileSettings,
     value: string,
@@ -35,6 +39,7 @@ export default function ProfileSettings({
 
   return (
     <section>
+      {saved&&<p role="status" className="mb-3 text-sm text-emerald-700">Preferências do perfil demonstrativo atualizadas na memória desta navegação.</p>}
       <div>
         <h2 className="text-base font-semibold text-slate-900">
           Informações do perfil
@@ -45,6 +50,13 @@ export default function ProfileSettings({
         </p>
       </div>
 
+      <div className="mt-5 grid gap-4 sm:grid-cols-2" data-tour="institution">
+        <Input id="demo-municipality" label="Município demonstrativo" value={state.profile.municipality} onChange={e=>updateProfile({municipality:e.target.value})}/>
+        <Input id="demo-uf" label="UF demonstrativa" maxLength={2} value={state.profile.uf} onChange={e=>updateProfile({uf:e.target.value})}/>
+        <Input id="demo-unit" label="UBS demonstrativa" value={state.profile.unit} onChange={e=>updateProfile({unit:e.target.value})}/>
+        <div className="flex items-end"><Button variant="outline" onClick={()=>requestReset(true)}>Restaurar demonstração</Button></div>
+      </div>
+      <p className="mt-2 text-xs text-slate-500">Metadados fictícios, sem vínculo oficial, CNES ou IAM. A sidebar é atualizada imediatamente.</p>
       <div
         className="
           mt-6
@@ -202,7 +214,7 @@ export default function ProfileSettings({
       >
         <Button
           type="button"
-          onClick={()=>window.alert("Dados demonstrativos alterados apenas na memória deste formulário.")}
+          onClick={()=>setSaved(true)}
           className="w-full sm:w-auto"
         >
           Salvar alterações demonstrativas

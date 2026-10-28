@@ -1,3 +1,4 @@
+import { DEFAULT_DEMO_PROFILE, type DemoProfile } from "./profile"
 import type { Patient } from '../../types/paciente'
 import type { Atendimento } from '../../types/atendimento'
 import type { DashboardKpi } from '../../types/dashboard'
@@ -5,7 +6,7 @@ import type { RegistrationData } from '../../types/registration'
 import { seedPatients } from './fixtures'
 import { civilDate, DEMO_DATE, normalizeIdentifier, pregnancyFrom, validDemoIdentifier } from './validation'
 export { DEMO_DATE, pregnancyFrom }
-export type DemoState = { patients: Patient[]; encounters: Atendimento[]; next: number }
+export type DemoState = { patients: Patient[]; encounters: Atendimento[]; next: number; profile: DemoProfile }
 export const professionals = [{id:'ana-paula',nome:'Enf. Ana Paula Ferreira',cargo:'Enfermeira'}, {id:'carlos',nome:'Dr. Carlos Mendes',cargo:'Médico'}]
 export function initialDemo(): DemoState {
  const patients=structuredClone(seedPatients).map((p,i)=>{
@@ -16,7 +17,7 @@ export function initialDemo(): DemoState {
   const date=`2026-${['08','09','10'][n]}-${['18','20','28'][n]}T12:00:00Z`,g=pregnancyFrom(p.pregnancy.dum,date.slice(0,10))!
   return {id:`demo-${p.id}-${n+1}`,consultaNumero:n+1,dataHora:date,paciente:{id:p.id,nome:p.nome,idadeGestacional:`${g.weeks}s ${g.days}d`},profissional:professionals[(i+n)%2],score:[0,3,6][i],classificacao:(['BAIXO_RISCO','ATENCAO','URGENCIA'] as const)[i]}
  }))
- return {patients,encounters,next:1}
+ return {patients,encounters,next:1,profile:{...DEFAULT_DEMO_PROFILE}}
 }
 export function patientViews(state:DemoState):Patient[] {
  return state.patients.map(p=>{
@@ -41,7 +42,7 @@ export function saveDemo(state:DemoState,d:RegistrationData):DemoState {
  const existing=state.patients.find(p=>normalizeIdentifier(p.cpf)===normalizeIdentifier(d.cpf)),id=existing?.id??`demo-patient-${state.next}`,g=!d.dumUnknown?pregnancyFrom(d.dum):null
  const patient:Patient={id,initials:d.nomeCompleto.trim().split(/\s+/).slice(0,2).map(n=>n[0]).join(''),nome:d.nomeCompleto.trim(),cpf:normalizeIdentifier(d.cpf),sus:existing?.sus||'Não informado',dataNascimento:d.dataNascimento,idade:Math.floor((+civilDate(DEMO_DATE)!-+civilDate(d.dataNascimento)!)/31557600000),telefone:existing?.telefone||'Não informado',endereco:existing?.endereco||'Não informado',pregnancy:{dum:g?d.dum:'',dpp:g?.dueDate||'',gestationalAge:g?`${g.weeks}s ${g.days}d`:'Desconhecida',trimester:g?.trimester||'Desconhecido'},allergies:d.allergyStatus==='sim'?(d.allergies||[]).map(a=>[a.agent,a.reaction,a.notes].filter(Boolean).join(' — ')):[],comorbidities:d.comorbidityStatus==='sim'?(d.conditions||[]):[],historyStatus:`Alergias: ${d.allergyStatus||'desconhecido'}; comorbidades: ${d.comorbidityStatus||'desconhecido'}`,consultations:0,alerts:0,latestScore:{value:null,classification:'NAO_AVALIADO',date:DEMO_DATE},meowsTrend:[],systolicTrend:[],obstetricHistory:{pregnancies:d.pregnancies?Number(d.pregnancies):null,deliveries:d.deliveries?Number(d.deliveries):null,cesareans:d.cesareans?Number(d.cesareans):null,abortions:d.pregnancyLosses?Number(d.pregnancyLosses):null},timeline:existing?.timeline||[],exams:existing?.exams||[],vaccines:existing?.vaccines||[],documents:existing?.documents||[],medications:(d.medications||[]).map((m,i)=>({id:`med-${i}`,...m})),previousNotes:[]}
  const encounter:Atendimento={id:`demo-record-${state.next}`,consultaNumero:state.encounters.filter(a=>a.paciente.id===id).length+1,dataHora:`${DEMO_DATE}T15:${String(state.next%60).padStart(2,'0')}:00Z`,paciente:{id,nome:patient.nome,idadeGestacional:patient.pregnancy.gestationalAge},profissional:professionals[0],score:null,classificacao:'NAO_AVALIADO',registration:structuredClone(d)}
- return {patients:[...state.patients.filter(p=>p.id!==id),patient],encounters:[...state.encounters,encounter],next:state.next+1}
+ return {...state,patients:[...state.patients.filter(p=>p.id!==id),patient],encounters:[...state.encounters,encounter],next:state.next+1}
 }
 export function dashboardFrom(state:DemoState){
  const patients=patientViews(state),all=state.encounters,month=all.filter(a=>a.dataHora.startsWith(DEMO_DATE.slice(0,7)))
