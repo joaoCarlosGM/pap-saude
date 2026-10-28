@@ -11,10 +11,13 @@ export class CaptchaError extends Error {
 function prefix(id: string, binding: string, origin: string) {
   return `captcha:v1:${sha256(`${id}\0${binding}\0${origin}`)}:`;
 }
-/** Only a salted digest is persisted, in the existing expiring abuse ledger.
- * Rendering happens before storage; plaintext never leaves this service. */
-export async function issueLoginCaptcha(origin: string, accessible = false, now = new Date()) {
-  const rateKey = sha256(`captcha-limit:v1:${origin}:${Math.floor(+now / WINDOW)}`);
+/** clientOrigin is the server-resolved trusted proxy client identifier, NOT
+ * the HTTP Origin, a browser-supplied forwarding header or a new cookie.
+ * Production fails closed without explicit trusted-proxy configuration.
+ * Keep the 30/client/10-minute atomic limit; test contexts must be isolated.
+ * Only salted challenge digests are persisted in the expiring abuse ledger. */
+export async function issueLoginCaptcha(clientOrigin: string, accessible = false, now = new Date()) {
+  const rateKey = sha256(`captcha-limit:v1:${clientOrigin}:${Math.floor(+now / WINDOW)}`);
   const attempts = await db.betaAbuseBucket.upsert({ where: { key: rateKey }, create: { key: rateKey, count: 1, expiresAt: new Date(+now + 2 * WINDOW) }, update: { count: { increment: 1 } } });
   if (attempts.count > 30) throw new CaptchaError(429);
   const id = randomBytes(24).toString("base64url"), binding = randomBytes(32).toString("base64url");
@@ -27,7 +30,7 @@ export async function issueLoginCaptcha(origin: string, accessible = false, now 
     image = `data:image/png;base64,${png.toString("base64")}`;
   }
   const expiresAt = new Date(+now + TTL);
-  await db.betaAbuseBucket.create({ data: { key: prefix(id, binding, origin) + sha256(`${answer}\0${binding}`), count: 0, expiresAt } });
+  await db.betaAbuseBucket.create({ data: { key: prefix(id, binding, clientOrigin) + sha256(`${answer}\0${binding}`), count: 0, expiresAt } });
   return { binding, public: { id, image, question: accessible ? `Qual é o produto de ${a} por ${b}? Você pode usar uma calculadora.` : undefined, expiresAt: expiresAt.toISOString() } };
 }
 export async function verifyLoginCaptcha(input: { id?: string; answer?: string; binding?: string; origin: string; now?: Date }) {

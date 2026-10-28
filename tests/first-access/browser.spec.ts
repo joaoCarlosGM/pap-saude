@@ -1,6 +1,7 @@
 import {solveLoginVerification} from "../helpers/browser-login-verification";
 import { verifiedSessionToken } from "../helpers/verified-admin-session";
-import { test, expect, type Page } from "@playwright/test";
+import type { Page } from "@playwright/test";
+import { test, expect } from "./browser-fixtures";
 import AxeBuilder from "@axe-core/playwright";
 import * as OTPAuth from "otpauth";
 import { mkdir } from "node:fs/promises";

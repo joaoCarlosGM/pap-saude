@@ -73,7 +73,7 @@
     "src/server/auth/captcha-glyphs.ts": "9713452f1f9fc845f4af223618b9e0c7736368694501d2e5d914cc2f131efabd",
     "src/server/auth/first-access.service.ts": "c9856cb2a831b057cc129dbddf94bcc7d584b47b53f7a68a05d530f2d074f118",
     "src/server/auth/http-auth.ts": "16845d1bed27f1a7a01d33dc7de1ff0d09fb7d79a95cf1756bf88831755b3596",
-    "src/server/auth/login-captcha.service.ts": "a2134008893960d75334df20cb0aa3ee4c12d6cb92581b454620853fb39a5fba",
+    "src/server/auth/login-captcha.service.ts": "a464502afbb77fd148ca5334b612f91f4896a3f5ec73b2098f7159efe503a4d6",
     "src/server/auth/login-navigation.service.ts": "2c9a1583bdfe4a7fa78c8323e902619cd80ba40060aaf45071e60fdbe6df28c4",
     "src/server/auth/operational-mfa.service.ts": "0a7ce2b2686c601ec4f4acb84c5934d1e9d82107a77f66bc39a4f56f03ef3f5a",
     "src/server/auth/security-http.ts": "3752c3bab2f67b815302751d738e3b5da7319a7cdcf52e01c584ee68b2d9cdb2",
@@ -88,10 +88,13 @@
     "tests/auth/http-auth.integration.test.ts": "3595b9e163a6e6b89536db7d638eb723f8c83b84ec73ba988d1916d2d704cfce",
     "tests/auth/http-mfa.integration.test.ts": "44843caef3ff3132d9705c937bb705f73294298e1860522e7c221ef0d0893640",
     "tests/clinical/clinical-api-ui.integration.test.ts": "a60d81aa8078f3d4b94e7fffa8eab77c4e17aecc40f7fa17202d7901c6f25bc3",
-    "tests/first-access/account-security.spec.ts": "a600833bf32a28c67778b5405d7553b80653627dd062ebb29eaba051492b5901",
-    "tests/first-access/browser.spec.ts": "adf23e5e22e77fa6710ca6cb12d64861bbbf9a209d2e4b462933dce335813f01",
-    "tests/first-access/login-navigation.spec.ts": "3c084cb906919041f03fa33cf8383c4a1dabba46581d035bd864fc577b436f6e",
+    "tests/first-access/account-security.spec.ts": "227a60068d902bb8016d37ba4eabd0fdd9d5f9cc71d7071676dc2b81f865d34e",
+    "tests/first-access/browser-fixtures.ts": "6860e0a490d4705614f03da4ecc3516e07ff30dccdacfcdc0726c36c22ec1296",
+    "tests/first-access/browser.spec.ts": "5bca7cdf192b9a4d998732761f9383c1c534b822e3ccb66eed18e46e833c4b58",
+    "tests/first-access/captcha-client-limits.test.ts": "bd97658c977f0727d2b747c1f435752ecd3c5edbb7213b6d00b98885b6015e19",
+    "tests/first-access/login-navigation.spec.ts": "823401ed931a06e35f560597bcdbd9060e6f783ee903931c248bb5c451b4c647",
     "tests/first-access/login-navigation.test.ts": "42e8a1d73713ca847ae7454e23e8bdd16323226e9969b7813e071a4f9bc5576c",
+    "tests/first-access/playwright.config.ts": "7f25ad1c82024d79bba9df086043a937da85ff0488dd01fa92b6af17ed222d87",
     "tests/first-access/security.test.ts": "d5963841d5c05832431e256473b3db925a9abda739e68b6d984e52c1bff2a90e",
     "tests/helpers/browser-login-verification.ts": "e89f4c5bbfc6e515e4ea783cca72d750c80e314cd10c8adef04f276109baed68",
     "tests/helpers/login-verification.ts": "ea75b465f6bdb896181c43b4dacdc3ebbfad1f33dfc43902899eb020eadd2c4a",
@@ -115,8 +118,9 @@
     "tests/p0-remediation/registration.spec.ts": "018d100242a7001f1eb2b5109149a7bd9fe31784dbb120199260d33560fd9435",
     "tests/release/mfa-block-ui.spec.ts": "7258dc5b649a0d544ffeff80193db07d289f7010728d7dca087378583f7b7722"
   },
-  "fingerprint": "37dd712b87892d2cf0206b46519eea4992b980d6e2617188e57414238630d581",
+  "fingerprint": "adcaae292c16095b4478dd5ac2114656c46419f726f5bdcf851bd9a03ea1e54f",
   "scope": "Current code/test/CI content. Directed tests recorded by log hash; global final CI not claimed PASS.",
   "postCiCorrectionParent": "a5a77de93b0c4b97e09abef050c7ec8fe40687b2",
-  "fingerprintAlgorithm": "sha256(JSON sourceFiles sorted keys, separators comma/colon, UTF-8)"
+  "fingerprintAlgorithm": "sha256(JSON sourceFiles sorted keys, separators comma/colon, UTF-8)",
+  "captchaCorrectionParent": "8aa7919c53f601539df89b4f671e64ff821b5a4c"
 }

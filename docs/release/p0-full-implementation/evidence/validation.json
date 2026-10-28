@@ -270,5 +270,38 @@
       ".test-audit/p0-full/f-ci-navigation-typescript.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
       ".test-audit/p0-full/f-ci-navigation-lint.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
     }
+  },
+  "captchaCiCorrection": {
+    "parent": "8aa7919c53f601539df89b4f671e64ff821b5a4c",
+    "reproduction": {
+      "status": 429,
+      "publicError": "VERIFICATION_UNAVAILABLE",
+      "request": 31
+    },
+    "productionPolicy": "UNCHANGED: atomic30/trusted-client/10min; original ledger keys preserved",
+    "fix": "Explicit trusted proxy simulation and unique stable client per first-access Playwright context",
+    "tests": {
+      "clientLimitAdversarial": 4,
+      "captchaAndLogin": 5,
+      "exactPendingMfaBrowser": 1,
+      "fullFirstAccessBrowser": 15,
+      "httpLogin": 7,
+      "httpMfa": 2,
+      "typescript": "PASS",
+      "lint": "PASS"
+    },
+    "logs": {
+      ".test-audit/p0-full/captcha-rate-reproduction.log": "74c36209d992082baa01fffd4f8a4417cb0149a6b632ddcea60b18c7385c3da0",
+      ".test-audit/p0-full/captcha-trusted-client-tests.log": "10fb0bb4c7ec78d69504e37b4fe8732fd6e5ddd95d17cadf4b0690571899af19",
+      ".test-audit/p0-full/captcha-security-directed.log": "2bb8d3ae1895b3b83f5c475bff65075facac10b54c6d27b88a574b476a6b7cd5",
+      ".test-audit/p0-full/captcha-pending-mfa-browser.log": "459f11d9e85e53430c9c75b841ccb9ce6b2157b9f3c36c213cab1fb04bda7fd4",
+      ".test-audit/p0-full/captcha-first-access-browser-all.log": "49201831c40b92c671e2e713762284ba5ea8925cb16491c5c10f70c09fa1ea4e",
+      ".test-audit/p0-full/captcha-http-login-regression.log": "31d7c82c0a564dcc6a8883181da0d4a53da97633d06b6731ba22b2e6b2f04e73",
+      ".test-audit/p0-full/captcha-http-mfa-regression.log": "144194de40ed3ab0b1ef91f2bb5704fe2bef5a7a766eb7209eabfeaea0760b44",
+      ".test-audit/p0-full/captcha-ci-typescript.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      ".test-audit/p0-full/captcha-ci-lint.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "CI": "PENDING exact post-commit SHA",
+    "operatorLabs": "UNTOUCHED"
   }
 }

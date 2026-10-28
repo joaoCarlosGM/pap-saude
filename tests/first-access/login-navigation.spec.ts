@@ -1,4 +1,5 @@
-import { test, expect, type Page } from "@playwright/test";
+import type { Page } from "@playwright/test";
+import { test, expect } from "./browser-fixtures";
 import AxeBuilder from "@axe-core/playwright";
 import { randomBytes } from "node:crypto";
 import { db } from "../../src/server/db/client";

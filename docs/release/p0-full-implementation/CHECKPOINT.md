@@ -92,3 +92,10 @@ Cada etapa terá commit/push seletivo do que estiver validado e checkpoint. Requ
 - F remoto `a5a77de`: run 40677604924 FAIL no primeiro acesso. Reprodução/correção dirigida detalhada em VALIDACAO.md. Código de produção preservado; CAPTCHA e MFA não afrouxados.
 - Browser de área: 13 PASS/2 FAIL; restante sem papel PASS1 após fixture verificada; visual PASS1 após janela natural do limitador (sem reset). TypeScript/lint/diff PASS.
 - Próximo: push do commit de testes/documentação e conferir CI do SHA exato. PR draft bloqueado por API403; fotografia/licença ainda BLOCKED. Não executar homologação nos laboratórios existentes.
+
+### Correção dirigida CAPTCHA — base 8aa7919
+
+- Operador forneceu a linha remota: emissão anterior ao MFA. Reprodução HTTP429/VERIFICATION_UNAVAILABLE na 31ª emissão. O serviço já limita por cliente do proxy; fallback dev comum causava interferência.
+- Isolamento de proxy explícito por contexto Playwright, sem mudar limite/chaves/contadores ou confiar em forwarding implícito. Ver CORRECAO-CI-CAPTCHA.md.
+- PASS: novos adversariais4, CAPTCHA/login5, caso pendente1, browser completo15, HTTP login7/MFA2, TypeScript/lint/diff. Sem repetições gerais ou Docker builds.
+- Próximo: commit/push seletivo autorizado, CI do SHA exato; investigar somente o próximo gate falho. Laboratórios e candidato original preservados.

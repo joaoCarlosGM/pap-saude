@@ -21,6 +21,9 @@ export default defineConfig({
       : {},
   },
   webServer: {
+    // Explicit trusted-proxy simulation for this disposable test server only.
+    // Production must have its reverse proxy overwrite the configured header.
+    env: { AUTH_TRUSTED_CLIENT_IP_HEADER: "x-pap-test-client-ip" },
     command:
       "node node_modules/next/dist/bin/next dev --hostname 127.0.0.1 --port 3110",
     cwd: process.cwd(),

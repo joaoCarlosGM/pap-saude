@@ -79,3 +79,20 @@ docs/release/p0-full-implementation/evidence/validation.json
 docs/release/p0-full-implementation/evidence/source-manifest.json
 docs/release/p0-full-implementation/INVENTARIO.md
 ```
+
+## Correção dirigida CAPTCHA — 12 caminhos
+
+```text
+src/server/auth/login-captcha.service.ts
+tests/first-access/browser-fixtures.ts
+tests/first-access/captcha-client-limits.test.ts
+tests/first-access/playwright.config.ts
+tests/first-access/browser.spec.ts
+tests/first-access/account-security.spec.ts
+tests/first-access/login-navigation.spec.ts
+docs/release/p0-full-implementation/CORRECAO-CI-CAPTCHA.md
+docs/release/p0-full-implementation/CHECKPOINT.md
+docs/release/p0-full-implementation/evidence/validation.json
+docs/release/p0-full-implementation/evidence/source-manifest.json
+docs/release/p0-full-implementation/INVENTARIO.md
+```

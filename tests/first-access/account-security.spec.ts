@@ -1,5 +1,6 @@
 import {solveLoginVerification} from "../helpers/browser-login-verification";
-import { test, expect, type Page } from "@playwright/test";
+import type { Page } from "@playwright/test";
+import { test, expect } from "./browser-fixtures";
 import AxeBuilder from "@axe-core/playwright";
 import { mkdir, writeFile } from "node:fs/promises";
 import * as OTPAuth from "otpauth";
