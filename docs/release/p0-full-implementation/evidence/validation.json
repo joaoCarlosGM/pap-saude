@@ -331,5 +331,17 @@
       ".test-audit/p0-full/b-proxy-typescript.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
       ".test-audit/p0-full/b-proxy-lint.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
     }
+  },
+  "cBrowserCorrection": {
+    "parent": "ccb2817d503be6e6992a28d99dda773023101986",
+    "browser": "PASS8/8",
+    "typescript": "PASS",
+    "lint": "PASS",
+    "logs": {
+      ".test-audit/p0-full/c-browser-login-repro.log": "4f1702a767c86d1f5d267203cbf0323612d9a79c15b36ba83422d993071775db",
+      ".test-audit/p0-full/c-browser-directed.log": "f19f73b4544006a499dfa26d3878cd0b960c43e8348545777b1a300ab9acffa0",
+      ".test-audit/p0-full/c-browser-typescript.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      ".test-audit/p0-full/c-browser-lint.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
   }
 }

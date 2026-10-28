@@ -6,6 +6,7 @@ import { randomUUID } from "node:crypto";
 import { db } from "../../src/server/db/client";
 import { bootstrapSystemIam } from "../../src/server/iam/bootstrap.service";
 import { navigationFingerprint } from "../first-access/login-fixtures";
+import { solveLoginVerification } from "../helpers/browser-login-verification";
 import {
   actor,
   invite,
@@ -62,6 +63,7 @@ async function login(page: Page, email: string, password: string) {
   await page.goto("/login");
   await page.getByLabel("E-mail", { exact: true }).fill(email);
   await page.getByLabel("Senha", { exact: true }).fill(password);
+  await solveLoginVerification(page);
   await page.getByRole("button", { name: "Entrar", exact: true }).click();
 }
 async function capture(page: Page, name: string) {
@@ -104,7 +106,7 @@ async function a11y(page: Page, name: string) {
   ).toBe(true);
 }
 
-test("recipient accepts by fragment, waits without wizard, checks authorization and receives a persistent notification; 320/768/1440 light/dark and keyboard", async ({
+test("recipient accepts by fragment, waits after verified MFA without repeating wizard, checks authorization and receives a persistent notification; 320/768/1440 light/dark and keyboard", async ({
   page,
 }) => {
   await page.addInitScript(() => {
@@ -150,7 +152,10 @@ test("recipient accepts by fragment, waits without wizard, checks authorization 
   await expect(
     page.getByRole("heading", { name: "Convite aceito", exact: true }),
   ).toBeVisible();
-  await login(page, i.email, i.password);
+  // Waiting/consent UX uses the existing real enrollment/challenge fixture;
+  // the separate Manager journey below exercises enrollment in the browser.
+  await cookie(page.context(), await signIn(i.email, i.password));
+  await page.goto("/login");
   await expect(page).toHaveURL(/\/aguardando-autorizacao$/);
   await expect(
     page.getByRole("heading", { name: "Aguardando autorização", exact: true }),

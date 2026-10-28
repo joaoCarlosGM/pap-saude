@@ -118,3 +118,14 @@ docs/release/p0-full-implementation/INVENTARIO.md
 docs/release/p0-full-implementation/evidence/validation.json
 docs/release/p0-full-implementation/evidence/source-manifest.json
 ```
+
+## C browser — staging
+
+```text
+tests/mission04-c/journey.spec.ts
+docs/release/p0-full-implementation/CORRECAO-CI-SLICE-C.md
+docs/release/p0-full-implementation/CHECKPOINT.md
+docs/release/p0-full-implementation/INVENTARIO.md
+docs/release/p0-full-implementation/evidence/validation.json
+docs/release/p0-full-implementation/evidence/source-manifest.json
+```

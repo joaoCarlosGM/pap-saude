@@ -109,3 +109,8 @@ Cada etapa terá commit/push seletivo do que estiver validado e checkpoint. Requ
 
 - Base0915259, CI40688111302: primeiro acesso PASS, B FAIL. Falta do header confiável no contexto herdado reproduzida. Default sintético na config compartilhada; primeiro acesso continua com contexto único.
 - PASS browser B5/5, MFA pendente1/1, TS/lint/diff. Próximo CI; sem alteração de backend.
+
+### C browser — contrato CAPTCHA/MFA
+
+- Baseccb2817 CI40690382799: B PASS, C FAIL. Helper login legado sem CAPTCHA e espera sem pré-condição MFA. Somente teste C ajustado; serviços reais reutilizados.
+- Browser C8/8, TS/lint/diff PASS. Ver CORRECAO-CI-SLICE-C.md. Próximo CI exato.
