@@ -1,7 +1,9 @@
 "use client";
 import { useRef, useState, useSyncExternalStore } from "react";
 import { useRouter } from "next/navigation";
-import Image from "next/image";
+import Link from "next/link";
+import AuthAccessShell from "./AuthAccessShell";
+import styles from "./auth-access.module.css";
 const subscribe = () => () => {};
 export default function LoginSecurity({
   initialMode = "LOGIN",
@@ -16,6 +18,7 @@ export default function LoginSecurity({
   const router = useRouter();
   const lock = useRef(false);
   const [busy, setBusy] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const [mfaTemporarilyBlocked, setMfaTemporarilyBlocked] = useState(false);
   const [email, setEmail] = useState(""),
     [password, setPassword] = useState(""),
@@ -97,125 +100,22 @@ export default function LoginSecurity({
       setBusy(false);
     }
   };
-  return (
-    <main className="ob account-login" data-theme="auto">
-      <aside
-        className="account-login-art"
-        aria-label="Cuidado e tecnologia PAP Saúde"
-      >
-        <p className="ob-eyebrow">PAP SAÚDE</p>
-        <h2>
-          Cuidado conectado.
-          <br />
-          Acesso protegido.
-        </h2>
-        <p>Um ambiente de confiança para quem cuida da saúde.</p>
-        <Image
-          src="/illustrations/pap-login-care.svg"
-          alt="Unidade de saúde entre natureza e recursos digitais de cuidado"
-          width={1000}
-          height={720}
-          sizes="(max-width: 760px) 220px, 440px"
-          unoptimized
-        />
-      </aside>
-      <form
-        className="ob-card w-full max-w-md ob-stack"
-        onSubmit={(e) => {
-          e.preventDefault();
-          void submit();
-        }}
-        aria-busy={busy}
-      >
-        <p className="ob-eyebrow">PAP SAÚDE · ACESSO SEGURO</p>
-        <h1 className="text-2xl font-semibold">Acesso ao PAP Saúde</h1>
-        {error && (
-          <p role="alert" className="ob-error">
-            {error}
-          </p>
-        )}
-        {mode !== "MFA" && (
-          <>
-            <label className="block">
-              E-mail
-              <input
-                type="email"
-                autoComplete="username"
-                className="mt-1 block w-full rounded border p-2"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
-            </label>
-            <label className="block">
-              Senha
-              <input
-                type="password"
-                autoComplete="current-password"
-                className="mt-1 block w-full rounded border p-2"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-              />
-            </label>
-          </>
-        )}
-        {(mode === "MFA" || mode === "CHANGE") && (
-          <label className="block">
-            {mode === "MFA"
-              ? "Código do autenticador ou código de recuperação"
-              : "Código MFA, se configurado"}
-            <input
-              className="mt-1 block w-full rounded border p-2"
-              value={code}
-              onChange={(e) => setCode(e.target.value)}
-            />
-          </label>
-        )}
-        {mode === "CHANGE" && (
-          <label className="block">
-            Nova senha
-            <input
-              className="mt-1 block w-full rounded border p-2"
-              type="password"
-              autoComplete="new-password"
-              value={newPassword}
-              onChange={(e) => setNewPassword(e.target.value)}
-            />
-          </label>
-        )}
-        <button type="submit" disabled={busy || !ready || mfaTemporarilyBlocked} className="ob-primary">
-          {mfaTemporarilyBlocked
-            ? "Verificação temporariamente bloqueada"
-            : mode === "LOGIN"
-            ? "Entrar"
-            : mode === "MFA"
-              ? "Confirmar MFA"
-              : "Atualizar senha"}
-        </button>
-        <a className="ob-link" href="/recuperar-senha">
-          Esqueci minha senha
-        </a>
-        <a className="ob-link" href="/solicitar-adesao">
-          Solicitar adesão de uma UBS
-        </a>
-        {mode === "MFA" && (
-          <button
-            type="button"
-            className="ob-secondary"
-            disabled={busy}
-            onClick={() => {
-              setMode("LOGIN");
-              setPassword("");
-              setCode("");
-              setMfaTemporarilyBlocked(false);
-              setError(mfaTemporarilyBlocked
-                ? "Aguarde até 15 minutos antes de tentar novamente. Depois, entre com sua senha e um código atual do autenticador ou um código de recuperação ainda não utilizado."
-                : "");
-            }}
-          >
-            {mfaTemporarilyBlocked ? "Voltar ao login" : "Reiniciar login"}
-          </button>
-        )}
-      </form>
-    </main>
-  );
+  return <AuthAccessShell>
+    <form className={styles.form} onSubmit={e => { e.preventDefault(); void submit(); }} aria-busy={busy}>
+      <p className={styles.eyebrow}>{mode === "LOGIN" ? "PORTAL PAP SAÚDE" : mode === "MFA" ? "VERIFICAÇÃO EM DUAS ETAPAS" : "SEGURANÇA DA CONTA"}</p>
+      <h1 className={styles.title}>{mode === "LOGIN" ? "Bem-vindo de volta" : mode === "MFA" ? "Confirme sua identidade" : "Atualize sua senha"}</h1>
+      <p className={styles.intro}>{mode === "LOGIN" ? "Entre com suas credenciais para acessar seu espaço de trabalho." : mode === "MFA" ? "Abra seu autenticador e informe o código atual. Você também pode usar um código de recuperação ainda não utilizado." : "Defina uma senha forte e exclusiva para continuar."}</p>
+      {error && <p role="alert" className={styles.error}>{error}</p>}
+      {mode !== "MFA" && <>
+        <label className={styles.label}>E-mail<input type="email" required autoComplete="username" className={styles.input} value={email} onChange={e => setEmail(e.target.value)} /></label>
+        <div className={styles.label}><label htmlFor="login-password">Senha</label><span className={styles.passwordWrap}><input id="login-password" type={showPassword ? "text" : "password"} required autoComplete="current-password" className={styles.input} value={password} onChange={e => setPassword(e.target.value)} /><button className={styles.toggle} type="button" aria-label={showPassword ? "Ocultar senha" : "Mostrar senha"} aria-pressed={showPassword} onClick={() => setShowPassword(v => !v)}>{showPassword ? "Ocultar" : "Mostrar"}</button></span></div>
+      </>}
+      {(mode === "MFA" || mode === "CHANGE") && <label className={styles.label}>{mode === "MFA" ? "Código do autenticador ou código de recuperação" : "Código MFA, se configurado"}<input className={styles.input} autoComplete="one-time-code" autoCapitalize="none" spellCheck={false} required={mode === "MFA"} value={code} onChange={e => setCode(e.target.value)} /></label>}
+      {mode === "CHANGE" && <label className={styles.label}>Nova senha<input className={styles.input} type="password" required minLength={12} autoComplete="new-password" value={newPassword} onChange={e => setNewPassword(e.target.value)} /></label>}
+      <button type="submit" disabled={busy || !ready || mfaTemporarilyBlocked} className={styles.primary}>{busy ? "Aguarde…" : mfaTemporarilyBlocked ? "Verificação temporariamente bloqueada" : mode === "LOGIN" ? "Entrar" : mode === "MFA" ? "Confirmar MFA" : "Atualizar senha"}</button>
+      <Link className={styles.link} href="/recuperar-senha">Esqueci minha senha</Link>
+      {mode === "LOGIN" && <p className={styles.divider}>Sua instituição ainda não participa? <Link className={styles.link} href="/solicitar-adesao">Solicitar adesão de uma UBS</Link></p>}
+      {mode === "MFA" && <button type="button" className={styles.secondary} disabled={busy} onClick={() => { setMode("LOGIN"); setPassword(""); setCode(""); setMfaTemporarilyBlocked(false); setError(mfaTemporarilyBlocked ? "Aguarde até 15 minutos antes de tentar novamente. Depois, entre com sua senha e um código atual do autenticador ou um código de recuperação ainda não utilizado." : ""); }}>{mfaTemporarilyBlocked ? "Voltar ao login" : "Reiniciar login"}</button>}
+    </form>
+  </AuthAccessShell>;
 }

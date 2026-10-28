@@ -1,0 +1,48 @@
+import { test, before, after } from "node:test";
+import assert from "node:assert/strict";
+import { createServer, type Server } from "node:http";
+import { mkdir, readFile } from "node:fs/promises";
+import { build } from "esbuild";
+import { chromium, expect, type Browser, type Page } from "@playwright/test";
+let server: Server, browser: Browser, origin: string;
+before(async () => {
+  const bundle = await build({ stdin: { contents: `import React from 'react';import {createRoot} from 'react-dom/client';import Login from './src/components/auth/LoginSecurity';import Recovery from './src/components/auth/PasswordRecoveryClient';const p=new URLSearchParams(location.search);createRoot(document.getElementById('root')).render(p.has('recovery')?<Recovery reset={p.has('reset')}/>:<Login initialMode={p.has('mfa')?'MFA':'LOGIN'}/>);`, resolveDir: process.cwd(), loader: "tsx" }, bundle: true, write: false, outfile: "test.js", jsx: "automatic", plugins: [{ name: "next-test-only-adapters", setup(b) { b.onResolve({ filter: /^next\/(image|link|navigation)$/ }, a => ({ path: a.path, namespace: "next-test" })); b.onLoad({ filter: /.*/, namespace: "next-test" }, a => ({ contents: a.path.endsWith("navigation") ? `export const useRouter=()=>({replace:p=>{window.__destination=p},refresh:()=>{}});` : `import React from 'react';export default function C({children,unoptimized,preload,priority,fill,...p}){return React.createElement('${a.path.endsWith("image") ? "img" : "a"}',p,children)}`, loader: "jsx", resolveDir: process.cwd() })); } }] });
+  const js = bundle.outputFiles.find(f => f.path.endsWith(".js"))!.contents, css = bundle.outputFiles.find(f => f.path.endsWith(".css"))!.contents;
+  server = createServer((req, res) => {
+    if (req.url === "/test.js") { res.setHeader("Content-Type", "text/javascript"); res.end(js); }
+    else if (req.url === "/test.css") { res.setHeader("Content-Type", "text/css"); res.end(css); }
+    else if (req.url?.startsWith("/illustrations/")) { res.setHeader("Content-Type", "image/svg+xml"); void readFile(`public${req.url}`).then(x => res.end(x)); }
+    else res.end('<!doctype html><html lang="pt-BR"><head><meta name="viewport" content="width=device-width,initial-scale=1"><title>UI isolada de teste</title><link rel="stylesheet" href="/test.css"><style>body{margin:0;font-family:system-ui}*{box-sizing:border-box}</style></head><body><div id="root"></div><script src="/test.js"></script></body></html>');
+  });
+  await new Promise<void>(r => server.listen(0, "127.0.0.1", r)); origin = `http://127.0.0.1:${(server.address() as { port: number }).port}`;
+  browser = await chromium.launch({ executablePath: "/usr/bin/chromium", headless: true, args: ["--no-sandbox"] });
+});
+after(async () => { await browser?.close(); await new Promise<void>(r => server?.close(() => r())); });
+async function page(query = "") { const p = await browser.newPage(); p.setDefaultTimeout(5000); await p.goto(origin + "/" + query); return p; }
+async function credentials(p: Page) { await p.getByLabel("E-mail", { exact: true }).fill("synthetic@example.invalid"); await p.getByLabel("Senha", { exact: true }).fill("Synthetic-test-only-42!"); }
+
+test("login keeps real endpoint payload, password visibility and MFA transition without retaining password", async () => {
+  const p = await page(); try {
+    await credentials(p); await p.getByRole("button", { name: "Mostrar senha" }).click(); await expect(p.getByLabel("Senha", { exact: true })).toHaveAttribute("type", "text");
+    await p.route("**/api/auth/login", r => { assert.deepEqual(Object.keys(r.request().postDataJSON()).sort(), ["email", "password"]); return r.fulfill({ json: { mfaRequired: true } }); });
+    await p.getByRole("button", { name: "Entrar", exact: true }).click(); await expect(p.getByRole("heading", { name: "Confirme sua identidade" })).toBeVisible();
+    await expect(p.getByLabel("Senha", { exact: true })).toHaveCount(0); await p.getByLabel("Código do autenticador ou código de recuperação").fill("123456");
+    await p.route("**/api/auth/mfa/verify", r => r.fulfill({ status: 401, json: { error: "INVALID_MFA_CODE" } })); await p.getByRole("button", { name: "Confirmar MFA", exact: true }).click(); await expect(p.getByRole("alert")).toContainText("Código inválido");
+    await p.getByRole("button", { name: "Reiniciar login" }).click(); await expect(p.getByLabel("Senha", { exact: true })).toHaveValue("");
+  } finally { await p.close(); }
+});
+test("MFA temporary block cannot submit repeatedly and restart preserves wait guidance", async () => {
+  const p = await page("?mfa"); try { await p.route("**/api/auth/mfa/verify", r => r.fulfill({ status: 429, json: { error: "MFA_TEMPORARILY_UNAVAILABLE" } })); await p.getByLabel("Código do autenticador ou código de recuperação").fill("123456"); await p.getByRole("button", { name: "Confirmar MFA", exact: true }).click(); await expect(p.getByRole("button", { name: "Verificação temporariamente bloqueada" })).toBeDisabled(); await p.getByRole("button", { name: "Voltar ao login" }).click(); await expect(p.getByRole("alert")).toContainText("15 minutos"); } finally { await p.close(); }
+});
+test("forced password change retains its endpoint and re-login contract", async () => {
+  const p = await page(); try { await credentials(p); await p.route("**/api/auth/login", r => r.fulfill({ status: 403, json: { error: "PASSWORD_CHANGE_REQUIRED" } })); await p.getByRole("button", { name: "Entrar", exact: true }).click(); await expect(p.getByRole("heading", { name: "Atualize sua senha" })).toBeVisible(); await p.getByLabel("Nova senha", { exact: true }).fill("Synthetic-new-only-42!"); await p.route("**/api/auth/password/forced-change", r => { assert.equal(r.request().postDataJSON().newPassword, "Synthetic-new-only-42!"); return r.fulfill({ json: { ok: true } }); }); await p.getByRole("button", { name: "Atualizar senha", exact: true }).click(); await expect(p.getByRole("heading", { name: "Bem-vindo de volta" })).toBeVisible(); await expect(p.getByLabel("Senha", { exact: true })).toHaveValue(""); } finally { await p.close(); }
+});
+test("forgot password reports transport/server failures honestly and public success stays neutral", async () => {
+  const p = await page("?recovery"); try { await p.getByLabel("E-mail", { exact: true }).fill("synthetic@example.invalid"); await p.route("**/api/auth/password/forgot", r => r.abort()); await p.getByRole("button", { name: "Solicitar link" }).click(); await expect(p.getByRole("alert")).toContainText("conectar"); await expect(p.getByRole("status")).toHaveCount(0); await p.unroute("**/api/auth/password/forgot"); await p.route("**/api/auth/password/forgot", r => r.fulfill({ status: 429, json: { error: "RATE_LIMITED" } })); await p.getByRole("button", { name: "Solicitar link" }).click(); await expect(p.getByRole("alert")).toContainText("Aguarde"); await p.unroute("**/api/auth/password/forgot"); await p.route("**/api/auth/password/forgot", r => r.fulfill({ json: { ok: true } })); await p.getByRole("button", { name: "Solicitar link" }).click(); await expect(p.getByRole("status")).toContainText("Solicitação recebida"); } finally { await p.close(); }
+});
+test("reset removes bearer from address, validates confirmation and clears secrets after success", async () => {
+  const p = await page("?recovery&reset#token=synthetic-test-only"); try { assert.ok(!p.url().includes("token=")); let calls = 0; await p.route("**/api/auth/password/reset", r => { calls++; assert.equal(r.request().postDataJSON().token, "synthetic-test-only"); return r.fulfill({ json: { ok: true } }); }); await p.getByLabel("Nova senha", { exact: true }).fill("Synthetic-new-only-42!"); await p.getByLabel("Confirme a nova senha").fill("Synthetic-other-42!"); await p.getByRole("button", { name: "Confirmar nova senha" }).click(); await expect(p.getByRole("alert")).toContainText("não coincidem"); assert.equal(calls, 0); await p.getByLabel("Confirme a nova senha").fill("Synthetic-new-only-42!"); await p.getByRole("button", { name: "Confirmar nova senha" }).click(); await expect(p.getByRole("status")).toContainText("autenticador foi preservado"); await expect(p.locator("input")).toHaveCount(0); assert.equal(calls, 1); } finally { await p.close(); }
+});
+test("desktop, mobile and dark UI have valid links, labels, keyboard access and no horizontal overflow", async () => {
+  const p = await page(); try { await mkdir(".test-audit/p0-full/screenshots", { recursive: true }); for (const [width, height, dark] of [[1440, 1000, false], [390, 844, false], [390, 844, true]] as const) { await p.setViewportSize({ width, height }); await p.emulateMedia({ colorScheme: dark ? "dark" : "light", reducedMotion: "reduce" }); await expect(p.getByRole("heading", { name: "Bem-vindo de volta" })).toBeVisible(); assert.ok(await p.evaluate(() => document.documentElement.scrollWidth <= innerWidth)); await expect(p.getByRole("link", { name: "Esqueci minha senha" })).toHaveAttribute("href", "/recuperar-senha"); await expect(p.getByRole("link", { name: "Solicitar adesão de uma UBS" })).toHaveAttribute("href", "/solicitar-adesao"); await p.screenshot({ path: `.test-audit/p0-full/screenshots/login-${width}-${dark ? "dark" : "light"}.png`, fullPage: true }); } await p.keyboard.press("Tab"); assert.notEqual(await p.evaluate(() => document.activeElement?.tagName), "BODY"); } finally { await p.close(); }
+});
