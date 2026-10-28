@@ -119,3 +119,8 @@ Cada etapa terá commit/push seletivo do que estiver validado e checkpoint. Requ
 
 - Base1f165d6 CI40693217223: B/C PASS, D FAIL. Alert global colidia com route announcer; escopado ao form, assertions preservadas.
 - Node31 PASS; browser7PASS/1FAIL seguido de dirigido1PASS; upgrade privado1PASS (adaptação de recursos documentada); TS/lint/diff PASS. Próximo CI.
+
+### E — etapas compartilhadas e reset DEMO
+
+- Base50089d9 CI40696085848: B/C/D PASS; E FAIL. Runtime restrito e visual PASS2; passos de registro antigos e reset ausente reproduzidos. Reset local restaurado, interação dirigida PASS1.
+- Fronteiras: mobile PASS1; MFA primário corrigido PASS1; RSC/HTML/API/revogação corrigido PASS1. Metadado Next s:null estrito, POST revogado403. TS/lint/diff finais PASS. Ver CORRECAO-CI-SLICE-E.md. Próximo CI.

@@ -140,3 +140,16 @@ docs/release/p0-full-implementation/INVENTARIO.md
 docs/release/p0-full-implementation/evidence/validation.json
 docs/release/p0-full-implementation/evidence/source-manifest.json
 ```
+
+## E — staging seletivo
+
+```text
+src/components/demo/DemoRegistrationWizard.tsx
+tests/mission04-e/journey.spec.ts
+tests/mission04-e/boundaries.spec.ts
+docs/release/p0-full-implementation/CORRECAO-CI-SLICE-E.md
+docs/release/p0-full-implementation/CHECKPOINT.md
+docs/release/p0-full-implementation/INVENTARIO.md
+docs/release/p0-full-implementation/evidence/validation.json
+docs/release/p0-full-implementation/evidence/source-manifest.json
+```

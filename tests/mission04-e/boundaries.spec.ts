@@ -51,8 +51,8 @@ function assertMetadataPrefetch(body: string, path: string) {
         expect(Object.keys(value).every(k => ["s","c","h"].includes(k))).toBe(true);
         if (typeof value.s === "object" && value.s !== null) {
             expect(path.startsWith("/vitrine/")).toBe(true);
-            expect(value.s).toEqual({ n:"section", t:"d", k:path.split("/")[2], s:[] });
-        } else expect(segments.has(value.s as string)).toBe(true);
+            expect(value.s).toEqual({ n:"section", t:"d", k:path.split("/")[2], s:null });
+        } else expect([...segments]).toContain(value.s);
         if (value.h !== undefined) expect(typeof value.h).toBe("number");
         if (value.c !== undefined) {
             expect(typeof value.c).toBe("string");
@@ -131,10 +131,14 @@ test("direct HTML/RSC/API and URL changes never grant clinical/admin access; rev
     }
     await cookie(context, f.token);
     await page.goto("/vitrine/registro");
+    for (let step = 0; step < 4; step++)
+        await page.getByRole("button", { name: "Próxima etapa demonstrativa", exact: true }).click();
     await db.roleAssignment.deleteMany({ where: { userId: f.user.id } });
     expect((await page.request.get("/api/vitrine/pacientes")).status()).toBe(403);
-    await page.getByRole("button", { name: "Simular registro", exact: true }).click();
-    await expect(page.getByRole("status")).toContainText("Confira sua sessão");
+    const deniedWrite = page.waitForResponse(r => new URL(r.url()).pathname === "/api/vitrine/registro" && r.request().method() === "POST");
+    await page.getByRole("button", { name: "Simular registro sem salvar", exact: true }).click();
+    expect((await deniedWrite).status()).toBe(403);
+    await expect(page.getByRole("status")).toContainText("Nada foi confirmado");
     await page.reload();
     await expect(page).toHaveURL(/\/login$/);
     await writeFile("docs/evidence/missao-04-e/rsc-boundaries.json",JSON.stringify(receipts,null,2)+"\n");
@@ -174,7 +178,8 @@ test("primary Commercial with active TOTP exits navigation loop and completes re
     let navigations = 0;
     page.on("request", r => { if (r.isNavigationRequest()) navigations++; });
     await page.goto("/login");
-    await expect(page).toHaveURL(/\/comercial$/);
+    await expect(page).toHaveURL(/\/primeiros-passos$/);
+    await page.goto("/comercial");
     await expect(page.getByRole("heading", { name: "Confirme a segurança desta sessão" })).toBeVisible();
     expect((await page.request.get("/api/vitrine/pacientes")).status()).toBe(403);
     await page.goto("/vitrine");

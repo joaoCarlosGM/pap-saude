@@ -113,11 +113,15 @@ test("all demo interactions are labeled, keyboard accessible and reset without p
     await page.keyboard.press("Escape");
     await expect(button).toBeFocused();
     await page.goto("/vitrine/registro");
-    await page.getByRole("button", { name: "Simular registro", exact: true }).click();
+    await expect(page.locator("#patient-name")).toBeDisabled();
+    for (let step = 0; step < 4; step++)
+        await page.getByRole("button", { name: "Próxima etapa demonstrativa", exact: true }).click();
+    await page.getByRole("button", { name: "Simular registro sem salvar", exact: true }).click();
     await expect(page.getByRole("status")).toContainText("Nenhum registro foi salvo");
     await capture(page, "registro-simulado-dark");
     await page.getByRole("button", { name: "Reiniciar simulação" }).click();
-    await expect(page.getByRole("status")).toHaveText("");
+    await expect(page.getByRole("status")).toHaveCount(0);
+    await expect(page.getByRole("heading", { name: "Identifique a paciente", exact: true })).toBeVisible();
     await page.goto("/vitrine/cursos");
     await page.getByRole("button").filter({ hasText: /Iniciar curso|Continuar/ }).first().click();
     await expect(page.getByRole("dialog")).toBeVisible();

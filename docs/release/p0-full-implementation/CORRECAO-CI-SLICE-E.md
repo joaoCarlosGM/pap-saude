@@ -1,0 +1,11 @@
+# Correção dirigida do gate E
+
+Base50089d9, CI40696085848: primeiro acesso/B/C/D PASS; E FAIL. Reproduzido com runtime PostgreSQL restrito conforme gate: organizações/pacientes/atendimentos SELECT e escrita negados. Esse teste e os 12 estados de viewport/tema passaram; interação falhou ao tentar botão antigo sem percorrer etapas compartilhadas.
+
+Teste percorre as quatro etapas reais compartilhadas, verifica dados desabilitados e usa Simular registro sem salvar. Revelou regressão funcional DEMO: controle Reiniciar simulação havia desaparecido. Restaurado somente no componente demonstrativo, limpando etapa/personagem/mensagem locais, desabilitado enquanto há solicitação pendente, sem chamada de banco/API no reset. Assertion de retorno à primeira etapa e ausência de mensagem permanece. Backend, autenticação e clínica inalterados.
+
+Fronteiras E: navegação de login primário agora espera primeiros-passos, mantendo o aviso explícito em comercial e o login MFA real sem reabrir wizard concluído. Teste de revogação percorre etapas antes de remover papel; confirma POST403 e nada confirmado. Validação Flight continua estrita: valor s de rota dinâmica atualizado de [] para null, observado no Next instalado; chaves, referências, segmentos e ausência de dados continuam exigidos. Sem allowlist genérica ou remoção de checks.
+
+Execuções: journey inicial2PASS/1FAIL; caso de registro dirigido ainda FAIL pela falta do reset; após restaurá-lo, dirigido1PASS. Fronteiras inicial1PASS/2FAIL; após contratos, MFA primário1PASS; após ajuste exato Flight, HTML/RSC/API/revogação1PASS. Não alegar uma nova suíte6/6 única. TypeScript final e lint dos três arquivos PASS; uma execução anterior de TS falhou por arquivos gerados removidos durante startup Next e foi repetida somente após servidor encerrar. Diff check PASS.
+
+Logs e fingerprints privados em .test-audit/p0-full e evidence/validation.json. Papel runtime novo apenas no container descartável com ID/owner/loopback verificados; credenciais privadas, bancos existentes não apagados. Screenshots gerados guardados privadamente, históricos preservados. Sem auditoria geral, instalação ou Docker build local. Próximo: CI do SHA exato, somente próximo gate falho. Release NO-GO até CI/aceites restantes. Laboratórios/VPS/produção/credenciais preservados; sem merge/deploy/email externo.

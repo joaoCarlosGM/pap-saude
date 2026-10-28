@@ -51,7 +51,7 @@
     "src/components/dashboard/ClinicalDashboardView.tsx": "ed50c842ffd272126a1d17f6fe8f0d23634040a9b94f242e29b91d5bde801dae",
     "src/components/dashboard/RecentAttendances.tsx": "e41237f13595504673e34d89c5a5aa220717dac6e28babb997806ea212dbc7b5",
     "src/components/demo/DemoExplorer.tsx": "bbb4b38ce8ad6af5adb9cf8d56a6868a686084c28b62f1ccb267fe57cfdb3406",
-    "src/components/demo/DemoRegistrationWizard.tsx": "d34aa7ed46e91f1da6128804193f655ec1550ac4ee0e13d6434afe4f8a3e56fc",
+    "src/components/demo/DemoRegistrationWizard.tsx": "51aaadd8bad4c1e31a7178a4ad77d6a8420cd8e10de5fd0b145e375b57d610e5",
     "src/components/layout/DashboardShell.tsx": "9204edabd71c17e3a6cb138d7a750ee649b8523ab8a1e5737797420af692863e",
     "src/components/layout/Sidebar.tsx": "2ac87d000b66c68573c4acda74ccdc7ed14f9b5548b75b4a4a50fd94ef2c4300",
     "src/components/layout/Topbar.tsx": "7fe68272929501f75dd94ce477e06811f070f8c4a79d67b9099ec6f4ca6261ab",
@@ -104,7 +104,7 @@
     "tests/mission04-c/invitations.test.ts": "fe9e1ba5e7bb04b09196f2e912b40b807cfa2650d3447ec57e860543a618d522",
     "tests/mission04-d/recovery.spec.ts": "6650f7bcd720b8e1c7cf76d9f369302f8248b3fc6fe867b23040b6461c9354c5",
     "tests/mission04-e/access.test.ts": "2a594ed9a16d9ccc396640b4c349afbaf51aae2b511bd946f2c5e30196c2a83d",
-    "tests/mission04-e/boundaries.spec.ts": "65f3b6f41b9f69eec74064bfbd9f789e86ae2641b8dec32f08f7c670ef61d667",
+    "tests/mission04-e/boundaries.spec.ts": "c8b37c720a6ae722fee7c9f1f4fa7d44d0e3b6cc6d9229b5610deb114c139e8a",
     "tests/p0-full/auth-ui.test.ts": "9f00ed7cf58ed14a83a6fee5d5fcaf515a1f5c8cafa5b168234968ec1e8f3960",
     "tests/p0-full/browser.ts": "a378aef1ab22cb9d9aaed0ce22034258c0024db8e6c50ffebee8611caf75e683",
     "tests/p0-full/demo-boundaries.test.ts": "161e18512b43faed07251d1e76ec76fd327c1dd5d772b1245662098b4cdf4d4a",
@@ -118,9 +118,10 @@
     "tests/p0-remediation/registration.spec.ts": "018d100242a7001f1eb2b5109149a7bd9fe31784dbb120199260d33560fd9435",
     "tests/release/mfa-block-ui.spec.ts": "7258dc5b649a0d544ffeff80193db07d289f7010728d7dca087378583f7b7722",
     "tests/mission04-b/governance.test.ts": "dfb167612f8866951cc59db03f7e9dd1a45b426654e49f411e6fac0de5cd6aa8",
-    "tests/mission04-c/journey.spec.ts": "7c204086206ad5845c628e20af2b8c0ebe31a4156d5327dd1bd699feb7e88c0e"
+    "tests/mission04-c/journey.spec.ts": "7c204086206ad5845c628e20af2b8c0ebe31a4156d5327dd1bd699feb7e88c0e",
+    "tests/mission04-e/journey.spec.ts": "b4a7a74df7541545e43ead599c67c22d1b0af25399632621e06d0287e449502f"
   },
-  "fingerprint": "91ff5ebc8419dfd7444d87a100961057aab33b619e4cdb54245affd634b22318",
+  "fingerprint": "49c312b7c7fa29655ca3f8d17830a820c4c6d666b6a2a8c062e44ba2140b0740",
   "scope": "Current code/test/CI content. Directed tests recorded by log hash; global final CI not claimed PASS.",
   "postCiCorrectionParent": "a5a77de93b0c4b97e09abef050c7ec8fe40687b2",
   "fingerprintAlgorithm": "sha256(JSON sourceFiles sorted keys, separators comma/colon, UTF-8)",
@@ -128,5 +129,6 @@
   "sliceBCorrectionParent": "58991c86fd212df44df1f30fbcff8ed2da71b4ba",
   "bBrowserCorrectionParent": "0915259991cdaabfab6730c3767e351b998c01a5",
   "cBrowserCorrectionParent": "ccb2817d503be6e6992a28d99dda773023101986",
-  "dBrowserCorrectionParent": "1f165d6a0db0f7dc1eb834ab7d20dd7c03cf05c3"
+  "dBrowserCorrectionParent": "1f165d6a0db0f7dc1eb834ab7d20dd7c03cf05c3",
+  "eCorrectionParent": "50089d9e61ce5f34de2c370be9e58192b7d38c08"
 }

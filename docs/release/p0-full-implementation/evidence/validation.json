@@ -360,5 +360,23 @@
       ".test-audit/p0-full/d-reset-typescript.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
       ".test-audit/p0-full/d-reset-lint.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
     }
+  },
+  "eCorrection": {
+    "parent": "50089d9e61ce5f34de2c370be9e58192b7d38c08",
+    "journey": "2initialPASS,1directedPASS after fixes",
+    "boundaries": "1initialPASS,2directedPASS after fixes",
+    "typescriptFinal": "PASS",
+    "lintFinal": "PASS",
+    "logs": {
+      ".test-audit/p0-full/e-browser-repro.log": "b2eb0565507f3372322d3f5ecef90b809bda408dfb2b42d03000c5b780ce947e",
+      ".test-audit/p0-full/e-registration-journey-directed.log": "7bca1a9fbaec84c57080995b671399b6bb48f651b309debbc21fda680a5d6900",
+      ".test-audit/p0-full/e-registration-reset-directed.log": "6d194fa30dee2e3b7c2b58891eee6b3ed63ab347f527e03c53d2de0a4c10ad21",
+      ".test-audit/p0-full/e-boundaries-directed.log": "a61f72633dce5f4bcdf4533e5c1eee790f47f5a636280fe201348a16b46675ad",
+      ".test-audit/p0-full/e-boundary-contracts-directed.log": "cd661096f572b8e7f4fb71288a8b9bddda54b01a443746a3c1faea389dd0efae",
+      ".test-audit/p0-full/e-boundary-rsc-directed.log": "c8cba65898a4d7e4c3be865f5d1e21b4c2854f20b99a4f7a5c048ac0d7323fdb",
+      ".test-audit/p0-full/e-journey-typescript.log": "bc73247e26ed3436836eb260b7ec8bdb0d6c6a5354797cad41fbe13f838fda76",
+      ".test-audit/p0-full/e-final-typescript.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      ".test-audit/p0-full/e-final-lint.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
   }
 }
