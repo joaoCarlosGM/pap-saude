@@ -39,7 +39,7 @@ export default function PatientCard({
   patient,
 }: Props) {
   return (
-    <article className="rounded-xl border border-slate-200 bg-white px-4 py-4 shadow-sm transition hover:border-pink-200 hover:shadow-md sm:px-5">
+    <Link href={`/pacientes/${patient.id}`} prefetch={false} data-patient-id={patient.id} aria-label={`Abrir prontuário de ${patient.nome}`} className="block cursor-pointer focus-visible:outline-2 focus-visible:outline-pink-500 rounded-xl border border-slate-200 bg-white px-4 py-4 shadow-sm transition hover:border-pink-200 hover:shadow-md sm:px-5">
       <div className="flex flex-col gap-5 xl:flex-row xl:items-center">
         <div className="flex min-w-0 flex-1 items-start gap-3 sm:gap-4">
           <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-pink-500 text-xs font-semibold text-white sm:h-12 sm:w-12">
@@ -125,15 +125,14 @@ export default function PatientCard({
             </p>
           </div>
 
-          <Link
-            href={`/pacientes/${patient.id}`}
+          <span
             className="col-span-2 inline-flex h-9 items-center justify-center gap-1 rounded-lg bg-pink-50 px-3 text-xs font-medium text-pink-600 transition hover:bg-pink-100 sm:col-span-1"
           >
             Ver prontuário
             <ChevronRight size={15} />
-          </Link>
+          </span>
         </div>
       </div>
-    </article>
+    </Link>
   )
 }

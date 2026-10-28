@@ -1,3 +1,7 @@
+"use client"
+import {useState} from "react"
+import {useDemo} from "@/components/demo/DemoProvider"
+import AtendimentoDetailsModal from "@/components/atendimentos/AtendimentoDetailsModal"
 import Link from "next/link"
 
 import {
@@ -44,6 +48,9 @@ function classificationStyle(
 export default function RecentAttendances({
   data,
 }: Props) {
+  const {state}=useDemo()
+  const [selectedId,setSelectedId]=useState<string|null>(null)
+  const selected=state.encounters.find(a=>a.id===selectedId)||null
   return (
     <section className="rounded-xl border border-slate-200 bg-white shadow-sm">
       <div className="flex items-center justify-between border-b border-slate-100 p-4 sm:p-5">
@@ -76,7 +83,10 @@ export default function RecentAttendances({
           return (
             <div
               key={attendance.id}
-              className="flex flex-col gap-3 p-4 sm:flex-row sm:items-center sm:justify-between sm:p-5"
+              role="button" tabIndex={0} aria-label={`Ver atendimento de ${attendance.patient}`} data-recent-encounter={attendance.id}
+              onClick={()=>setSelectedId(attendance.id)}
+              onKeyDown={e=>{if(e.target===e.currentTarget&&['Enter',' '].includes(e.key)){e.preventDefault();setSelectedId(attendance.id)}}}
+              className="cursor-pointer focus-visible:outline-2 focus-visible:outline-pink-500 hover:bg-slate-50 flex flex-col gap-3 p-4 sm:flex-row sm:items-center sm:justify-between sm:p-5"
             >
               <div className="flex min-w-0 items-center gap-3">
                 <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-pink-50 text-xs font-semibold text-pink-600">
@@ -113,6 +123,7 @@ export default function RecentAttendances({
           )
         })}
       </div>
+      <AtendimentoDetailsModal atendimento={selected} open={!!selected} onClose={()=>setSelectedId(null)}/>
     </section>
   )
 }

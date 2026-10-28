@@ -65,6 +65,14 @@ export default function AtendimentoTable({
   const [selectedAtendimento, setSelectedAtendimento] =
     useState<Atendimento | null>(null)
 
+  function surfaceClick(event: React.MouseEvent<HTMLElement>, atendimento: Atendimento) {
+    if ((event.target as Element).closest('a,button,input,select,textarea')) return
+    setSelectedAtendimento(atendimento)
+  }
+  function surfaceKey(event: React.KeyboardEvent<HTMLElement>, atendimento: Atendimento) {
+    if(event.target!==event.currentTarget || !['Enter',' '].includes(event.key))return
+    event.preventDefault();setSelectedAtendimento(atendimento)
+  }
   return (
     <div>
       <div className="mb-4 flex items-end justify-between gap-4 border-t border-slate-100 pt-5">
@@ -80,17 +88,20 @@ export default function AtendimentoTable({
       </div>
 
       {atendimentos.length===0 && <p role="status" className="py-4 text-sm text-slate-500">Nenhum atendimento corresponde aos filtros.</p>}
+      <span id="attendance-row-help" className="sr-only">Pressione Enter ou Espaço para abrir os detalhes. Links e botões internos têm ações independentes.</span>
       {/* MOBILE */}
       <div className="space-y-3 md:hidden">
         {atendimentos.map((atendimento) => (
           <article
             key={atendimento.id}
-            className="rounded-xl border border-slate-200 bg-white p-4"
+            data-encounter-id={atendimento.id} tabIndex={0} aria-describedby="attendance-row-help"
+            onClick={e=>surfaceClick(e,atendimento)} onKeyDown={e=>surfaceKey(e,atendimento)}
+            className="cursor-pointer rounded-xl border border-slate-200 bg-white p-4 hover:border-pink-200 focus-visible:outline-2 focus-visible:outline-pink-500"
           >
             <div className="flex items-start justify-between gap-3">
               <div className="min-w-0">
                 <p className="truncate text-sm font-semibold text-slate-900">
-                  <Link href={"/pacientes/"+atendimento.paciente.id} className="hover:underline">{atendimento.paciente.nome}</Link>
+                  <Link prefetch={false} onClick={e=>e.stopPropagation()} href={"/pacientes/"+atendimento.paciente.id} className="hover:underline">{atendimento.paciente.nome}</Link>
                 </p>
 
                 <p className="mt-1 text-xs text-slate-500">
@@ -217,7 +228,9 @@ export default function AtendimentoTable({
               {atendimentos.map((atendimento) => (
                 <tr
                   key={atendimento.id}
-                  className="transition hover:bg-slate-50"
+                  data-encounter-id={atendimento.id} tabIndex={0} aria-describedby="attendance-row-help"
+                  onClick={e=>surfaceClick(e,atendimento)} onKeyDown={e=>surfaceKey(e,atendimento)}
+                  className="cursor-pointer transition hover:bg-slate-50 focus-visible:outline-2 focus-visible:outline-pink-500"
                 >
                   <td className="px-4 py-4 align-top lg:px-6">
                     <p className="text-sm font-medium text-slate-900">
@@ -231,7 +244,7 @@ export default function AtendimentoTable({
 
                   <td className="px-4 py-4 align-top lg:px-6">
                     <p className="text-sm font-medium text-slate-900">
-                      <Link href={"/pacientes/"+atendimento.paciente.id} className="hover:underline">{atendimento.paciente.nome}</Link>
+                      <Link prefetch={false} onClick={e=>e.stopPropagation()} href={"/pacientes/"+atendimento.paciente.id} className="hover:underline">{atendimento.paciente.nome}</Link>
                     </p>
 
                     <p className="mt-1 text-xs text-slate-500">

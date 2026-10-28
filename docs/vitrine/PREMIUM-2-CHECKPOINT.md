@@ -4,8 +4,8 @@ Fases 2/P0 e 3/PR não autorizadas. Só feature/push e preview 3400; não tocar 
 Referência visual reutilizada: docs/vitrine/evidence/after-* (missão anterior). Preservar componentes/cores/grids/rotas.
 
 - [x] A: remover topbar/aviso; perfil institucional central + reset; sidebar branca compacta/footer; mobile/menus independentes.
-- [ ] B: superfícies paciente/atendimento/recentes acessíveis e sem eventos duplicados.
-- [ ] C: três estrelas #EC268F, movimento reduzido.
+- [x] B: superfícies paciente/atendimento/recentes acessíveis e sem eventos duplicados.
+- [x] C: três estrelas #EC268F, movimento reduzido.
 - [ ] D: marcador/entrada de páginas/KPIs/contadores/gráficos, sem perder estado nem inventar métricas.
 - [ ] E/F: boas-vindas por sessão e tour real em seis rotas; foco, skip, reabrir/resize/mobile.
 - [ ] G: componente agnóstico + roteiros/permissões documentados; não integrar ao P0.
@@ -17,3 +17,5 @@ Dependências: perfil/drawer -> tour; engine -> resultado/histórico/KPIs; teste
 Aceite: 20 itens da missão vinculados a evidências. PASS só executado; build/fontes externas e falhas técnicas explicitamente BLOCKED/FAIL.
 
 A: Node11/11, TypeScript, lint, browser1/1 PASS; logs .test-audit/premium2/a-*. Sem reinstalações/banco; perfil central e menus independentes.
+
+B/C: browser2/2, TypeScript/lint PASS. Superfícies usam Link único/linhas nativas com teclado e filhos independentes; seis estrelas (três por ícone) #EC268F/reduced-motion.
