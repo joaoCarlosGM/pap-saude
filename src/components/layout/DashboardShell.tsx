@@ -1,9 +1,11 @@
 "use client";
 
-import { useCallback, useState } from "react";
+import { useCallback, useState, useSyncExternalStore } from "react";
 
 import Sidebar from "@/components/layout/Sidebar";
 import Topbar from "@/components/layout/Topbar";
+import { navigationMode, navigationKey, type NavigationMode } from "./navigation-preference";
+const subscribe = (callback:()=>void) => { window.addEventListener("storage",callback); window.addEventListener("pap:clinical-navigation",callback); return ()=>{window.removeEventListener("storage",callback);window.removeEventListener("pap:clinical-navigation",callback);}; };
 
 export default function DashboardShell({
   children,
@@ -15,18 +17,22 @@ export default function DashboardShell({
   identity?: {id:string;displayName:string};
 }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [fallback,setFallback]=useState<NavigationMode>("expanded");
+  const key=navigationKey(identity?.id,demo);
+  const mode=useSyncExternalStore(subscribe,()=>{try{return navigationMode(localStorage.getItem(key)??fallback);}catch{return fallback;}},()=>"expanded" as NavigationMode);
+  const changeMode=(next:NavigationMode)=>{setFallback(next);try{localStorage.setItem(key,next);}catch{/* Browser preference remains optional. */}window.dispatchEvent(new Event("pap:clinical-navigation"));};
 
   const closeSidebar = useCallback(() => setSidebarOpen(false), []);
 
   return (
-    <div className={`${demo ? "pap-demo" : ""} flex min-h-screen bg-gray-50`}>
-      {demo && <a className="workspace-skip" href="#demo-main">Ir para o conteúdo</a>}
-      <Sidebar open={sidebarOpen} onClose={closeSidebar} demo={demo} displayName={identity?.displayName} />
+    <div className={`clinical-shell ${demo ? "pap-demo" : ""} flex min-h-screen bg-gray-50`}>
+      {<a className="workspace-skip" href={demo?"#demo-main":"#clinical-main"}>Ir para o conteúdo</a>}
+      <Sidebar open={sidebarOpen} onClose={closeSidebar} demo={demo} displayName={identity?.displayName} mode={mode} />
 
       <div className="flex min-w-0 flex-1 flex-col">
-        <Topbar onMenuClick={() => setSidebarOpen(true)} demo={demo} displayName={identity?.displayName} />
+        <Topbar onMenuClick={() => setSidebarOpen(true)} demo={demo} displayName={identity?.displayName} mode={mode} onModeChange={changeMode} />
 
-        <main id={demo ? "demo-main" : undefined} tabIndex={demo ? -1 : undefined} className="min-h-0 flex-1 overflow-auto p-4 sm:p-5 lg:p-6">
+        <main id={demo ? "demo-main" : "clinical-main"} tabIndex={-1} className="min-h-0 flex-1 overflow-auto p-4 sm:p-5 lg:p-6">
           <nav
             aria-label="Ajuda e segurança"
             className="mb-4 flex gap-4 text-sm"

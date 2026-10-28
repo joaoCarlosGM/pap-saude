@@ -1,25 +1,3 @@
-import { requireClinicalPageSession } from "@/server/clinical/clinical-page-session";
-import CourseList from "@/components/cursos/CourseList"
-
-import { mockCursos } from "@/lib/mock-cursos"
-
-export default async function CursosPage() {
-  await requireClinicalPageSession();
-  return (
-    <div className="mx-auto w-full max-w-[1600px]">
-      <header className="mb-6">
-        <h1 className="text-xl font-semibold text-slate-900 sm:text-2xl">
-          Cursos
-        </h1>
-
-        <p className="mt-1 text-sm text-slate-500">
-          Capacitação e educação continuada
-        </p>
-      </header>
-
-      <CourseList
-        courses={mockCursos}
-      />
-    </div>
-  )
-}
+import {requireClinicalPageSession} from "@/server/clinical/clinical-page-session";
+import ClinicalModuleNotice from "@/components/workspace/ClinicalModuleNotice";
+export default async function Page(){await requireClinicalPageSession();return <ClinicalModuleNotice title="Cursos" description="Não há catálogo de capacitação operacional conectado." />;}

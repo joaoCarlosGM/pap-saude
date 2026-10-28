@@ -1,36 +1,3 @@
-import { requireClinicalPageSession } from "@/server/clinical/clinical-page-session";
-import ToolsGrid from "@/components/ferramentas/ToolsGrid"
-
-import { clinicalTools } from "@/lib/mock-ferramentas"
-
-export default async function FerramentasPage() {
-  await requireClinicalPageSession();
-  return (
-    <div
-      className="
-        mx-auto
-        w-full
-        max-w-[1600px]
-      "
-    >
-      <header className="mb-6">
-        <h1
-          className="
-            text-xl
-            font-semibold
-            text-slate-900
-            sm:text-2xl
-          "
-        >
-          Ferramentas
-        </h1>
-
-        <p className="mt-1 text-sm text-slate-500">
-          Calculadoras e ferramentas clínicas
-        </p>
-      </header>
-
-      <ToolsGrid tools={clinicalTools} />
-    </div>
-  )
-}
+import {requireClinicalPageSession} from "@/server/clinical/clinical-page-session";
+import ClinicalModuleNotice from "@/components/workspace/ClinicalModuleNotice";
+export default async function Page(){await requireClinicalPageSession();return <ClinicalModuleNotice title="Ferramentas" description="Não há catálogo de ferramentas clínicas homologadas conectado." />;}

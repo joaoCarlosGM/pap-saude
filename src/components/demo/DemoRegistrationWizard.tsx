@@ -1,0 +1,17 @@
+"use client";
+import {useState} from "react";
+import Stepper from "@/components/registro/Stepper";
+import IdentificationStep from "@/components/registro/steps/IdentificationStep";
+import PregnancyStep from "@/components/registro/steps/PregnancyStep";
+import VitalSignsStep from "@/components/registro/steps/VitalSignsStep";
+import ObstetricStep from "@/components/registro/steps/ObstetricStep";
+import type {RegistrationData} from "@/types/registration";
+import type {DemoPatient} from "@/lib/demo/types";
+/** Real step components, fixed synthetic inputs. No clinical API/provider import. */
+export default function DemoRegistrationWizard({patients}:{patients:DemoPatient[]}){
+ const [step,setStep]=useState(1),[patientId,setPatientId]=useState(patients[0].id),[message,setMessage]=useState(''),[busy,setBusy]=useState(false);const patient=patients.find(p=>p.id===patientId)!;
+ const data:RegistrationData={cpf:'',nomeCompleto:patient.name,dataNascimento:'1995-01-01',primeiroAtendimento:true,dum:'2026-06-01',paSistolica:'110',paDiastolica:'70',frequenciaCardiaca:'80',frequenciaRespiratoria:'16',temperatura:'36.5',saturacaoO2:'98',nivelConsciencia:'ALERT',debitoUrinario:'',proteinuria:'',alturaUterina:'20',bcf:'140',movimentacaoFetal:'Presente (fictício)',edema:'',sangramentoVaginal:'',pesoAtual:'60',queixasPrincipais:'Cenário exclusivamente sintético',observacoesProfissional:'Sem avaliação clínica ou recomendação terapêutica.'};
+ const next=()=>setStep(n=>Math.min(5,n+1)),back=()=>setStep(n=>Math.max(1,n-1));const props={data,onChange:()=>{},onNext:next,onBack:back};
+ async function simulate(){if(busy)return;setBusy(true);setMessage('');try{const r=await fetch('/api/vitrine/registro',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({patientId,kind:'PRE_NATAL'})});if(!r.ok)throw Error();const b=await r.json();if(b.persisted!==false||b.simulated!==true)throw Error();setMessage('Simulação concluída. Nenhum registro foi salvo.');}catch{setMessage('Não foi possível simular. Nada foi confirmado.');}finally{setBusy(false);}}
+ return <section className="rounded-xl border bg-white p-5"><h2 className="text-xl font-semibold">Jornada demonstrativa de registro</h2><p className="my-3">Os mesmos campos da plataforma, preenchidos com cenário fixo. Não insira dados pessoais. Não há avaliação de risco.</p><label className="my-4 block">Personagem<select className="ml-3 rounded border p-2" value={patientId} onChange={e=>setPatientId(e.target.value)}>{patients.map(p=><option key={p.id} value={p.id}>{p.name}</option>)}</select></label><Stepper currentStep={step}/><fieldset disabled aria-label="Dados sintéticos somente para leitura">{step===1&&<IdentificationStep {...props}/>} {step===2&&<PregnancyStep {...props}/>} {step===3&&<VitalSignsStep {...props}/>} {step===4&&<ObstetricStep {...props}/>}</fieldset>{step===5&&<div><h3 className="font-semibold">Resultado demonstrativo</h3><p>MEOWS não validado. Nenhum escore, classificação ou orientação clínica foi produzido.</p><button className="workspace-primary" type="button" disabled={busy} onClick={()=>void simulate()}>Simular registro sem salvar</button>{message&&<p role="status">{message}</p>}</div>}<nav className="mt-5 flex gap-4" aria-label="Etapas da demonstração"><button type="button" className="workspace-secondary" disabled={step===1} onClick={back}>Voltar na demonstração</button><button type="button" className="workspace-primary" disabled={step===5} onClick={next}>Próxima etapa demonstrativa</button></nav></section>;
+}

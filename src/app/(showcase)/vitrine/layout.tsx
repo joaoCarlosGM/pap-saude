@@ -1,3 +1,4 @@
+import {redirect} from "next/navigation";
 import type { Metadata } from "next";
 import { requireCommercialPageSession } from "@/server/demo/commercial-page-session";
 import DashboardShell from "@/components/layout/DashboardShell";
@@ -7,6 +8,7 @@ export const dynamic = "force-dynamic";
 export default async function Layout({ children }: {
     children: React.ReactNode;
 }) {
-    await requireCommercialPageSession();
-    return <DashboardShell demo>{children}</DashboardShell>;
+    const actor = await requireCommercialPageSession();
+    if (actor.mfaRequired) redirect("/primeiros-passos");
+    return <DashboardShell demo identity={{id:actor.userId,displayName:"Profissional demonstrativo"}}>{children}</DashboardShell>;
 }

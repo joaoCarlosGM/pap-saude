@@ -1,17 +1,3 @@
-import { requireClinicalPageSession } from "@/server/clinical/clinical-page-session";
-import ChatLayout from "@/components/chat/ChatLayout"
-
-import {
-  mockChatConversations,
-} from "@/lib/mock-chat"
-
-export default async function ChatPage() {
-  await requireClinicalPageSession();
-  return (
-    <ChatLayout
-      initialConversations={
-        mockChatConversations
-      }
-    />
-  )
-}
+import {requireClinicalPageSession} from "@/server/clinical/clinical-page-session";
+import ClinicalModuleNotice from "@/components/workspace/ClinicalModuleNotice";
+export default async function Page(){await requireClinicalPageSession();return <ClinicalModuleNotice title="Chat IA" description="Não há serviço de IA clínica conectado ou homologado. Nenhuma pergunta ou prontuário é enviado a modelos externos." ai/>;}

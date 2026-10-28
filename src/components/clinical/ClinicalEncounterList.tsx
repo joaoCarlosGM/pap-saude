@@ -1,4 +1,5 @@
 "use client";
+import EncounterCollection from "@/components/workspace/EncounterCollection";
 
 import { useEffect, useState } from "react";
 
@@ -68,40 +69,5 @@ export default function ClinicalEncounterList() {
     );
   }
 
-  return (
-    <div className="overflow-hidden rounded-xl border border-slate-200 bg-white">
-      <div className="divide-y divide-slate-100">
-        {items.length === 0 ? (
-          <div className="p-6 text-sm text-slate-500">
-            Nenhum atendimento registrado nesta unidade.
-          </div>
-        ) : (
-          items.map((encounter) => (
-            <div
-              key={encounter.id}
-              className="grid gap-2 p-4 sm:grid-cols-[1fr_auto]"
-            >
-              <div>
-                <p className="font-medium text-slate-900">
-                  {encounter.chiefComplaint || "Atendimento clínico"}
-                </p>
-
-                <p className="mt-1 text-xs tex-slate-500">
-                  {formatDate(encounter.occurredAt)}
-                </p>
-
-                <p className="mt-1 text-xs text-slate-400">
-                  Paciente: {encounter.patientId}
-                </p>
-              </div>
-
-              <span className="h-fit rounded-full bg-slate-100 px-2.5 py-1 text-xs font-semibold text-slate-600">
-                {encounter.status}
-              </span>
-            </div>
-          ))
-        )}
-      </div>
-    </div>
-  );
+  return <EncounterCollection items={items.map(e=>({id:e.id,title:e.chiefComplaint||"Atendimento clínico",time:formatDate(e.occurredAt),patient:e.patientId,status:e.status}))}/>;
 }

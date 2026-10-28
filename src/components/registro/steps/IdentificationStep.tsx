@@ -26,8 +26,7 @@ export default function IdentificationStep({
         </h2>
 
         <p className="mt-1 max-w-2xl text-sm leading-6 text-slate-500">
-          Busque pelo CPF para localizar os dados via DataSUS ou
-          realize um cadastro manual.
+          Preencha os dados da paciente. Não há consulta automática ao DataSUS neste formulário.
         </p>
       </header>
 
@@ -56,6 +55,7 @@ export default function IdentificationStep({
 
             <Button
               type="button"
+              disabled title="Consulta automática indisponível"
               className="h-11 w-full sm:w-auto"
             >
               <Search size={17} />
@@ -74,7 +74,7 @@ export default function IdentificationStep({
 
             <div className="min-w-0 flex-1">
               <h3 className="text-sm font-semibold text-slate-900">
-                CPF não encontrado no DataSUS
+                Cadastro manual da paciente
               </h3>
 
               <p className="mt-1 text-sm leading-6 text-slate-600">

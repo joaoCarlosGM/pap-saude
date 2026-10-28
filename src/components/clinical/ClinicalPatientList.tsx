@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import PatientCollection from "@/components/workspace/PatientCollection";
 
 import { useEffect, useState } from "react";
 
@@ -60,6 +60,7 @@ export default function ClinicalPatientList() {
   return (
     <div className="space-y-4">
       <input
+        aria-label="Buscar pacientes"
         type="search"
         value={query}
         onChange={(event) => setQuery(event.target.value)}
@@ -83,43 +84,8 @@ export default function ClinicalPatientList() {
         </div>
       )}
 
-      <div className="grid gap-3">
-        {patients.map((patient) => (
-          <Link
-            key={patient.id}
-            href={`/pacientes/${patient.id}`}
-            className="rounded-xl border border-slate-200 bg-white p-4 transition hover:border-pink-300 hover:shadow-sm"
-          >
-            <div className="flex items-start justify-between gap-4">
-              <div>
-                <h2 className="font-semibold text-slate-900">
-                  {patient.fullName}
-                </h2>
+      <PatientCollection items={patients.map(p=>({id:p.id,name:p.fullName,description:`Nascimento: ${formatDate(p.birthDate)}`,detail:p.cpf?`CPF: ${p.cpf}`:undefined,active:p.isActive,href:`/pacientes/${p.id}`}))}/>
 
-                <p className="mt-1 text-sm text-slate-500">
-                  Nascimento: {formatDate(patient.birthDate)}
-                </p>
-
-                {patient.cpf && (
-                  <p className="mt-1 text-xs text-slate-400">
-                    CPF: {patient.cpf}
-                  </p>
-                )}
-              </div>
-
-              <span
-                className={
-                  patient.isActive
-                    ? "rounded-full bg-emerald-50 px-2.5 py-1 text-xs font-medium text-emerald-700"
-                    : "rounded-full bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-500"
-                }
-              >
-                {patient.isActive ? "Ativa" : "Inativa"}
-              </span>
-            </div>
-          </Link>
-        ))}
-      </div>
     </div>
   );
 }

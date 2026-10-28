@@ -1,5 +1,3 @@
-import { requireClinicalPageSession } from "@/server/clinical/clinical-page-session";
-export default async function CasosPage() {
-  await requireClinicalPageSession();
-  return <h1 className="text-2xl font-semibold">Casos</h1>
-}
+import {requireClinicalPageSession} from "@/server/clinical/clinical-page-session";
+import ClinicalModuleNotice from "@/components/workspace/ClinicalModuleNotice";
+export default async function Page(){await requireClinicalPageSession();return <ClinicalModuleNotice title="Casos" description="O módulo de casos não está disponível para uso operacional." />;}
