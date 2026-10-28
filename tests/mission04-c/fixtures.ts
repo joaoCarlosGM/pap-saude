@@ -1,3 +1,6 @@
+import {createVerifiedSession} from "../helpers/verified-session";
+import {validateSession} from "../../src/server/auth/session.service";
+import {runFirstAccessAction} from "../../src/server/auth/first-access.service";
 import assert from "node:assert/strict";
 import { randomBytes, randomUUID } from "node:crypto";
 import { readdir, readFile } from "node:fs/promises";
@@ -5,7 +8,7 @@ import { join } from "node:path";
 import { actor, request, origin } from "../mission04-b/fixtures";
 import { POST as command } from "../../src/app/api/admin/access-invitations/route";
 import { POST as consent } from "../../src/app/api/access-invitations/accept/route";
-import { POST as login } from "../../src/app/api/auth/login/route";
+import { POST as login } from "../helpers/login-verification";
 export { actor, request, origin, command, consent };
 export const password = () => randomBytes(24).toString("base64url");
 export async function localMessages(address: string) {
@@ -79,14 +82,22 @@ export async function accept(
     }),
   );
 }
-export async function signIn(email: string, password: string) {
+export async function signIn(email: string, password: string, completeMfa = true) {
   const r = await login(
     request("/api/auth/login", undefined, { email, password }),
   );
   assert.equal(r.status, 200);
   const token = r.cookies.get("pap_session")?.value;
   assert.ok(!!token, "primary login returns its HttpOnly session cookie");
-  return token!;
+  if (!completeMfa) return token!;
+  // Positive access fixtures now finish the same mandatory MFA contract.
+  // Password and CAPTCHA have already been proven above; enroll/verify via real
+  // services, acknowledge recovery, then complete metadata without granting IAM.
+  const identity=await validateSession(token!);
+  const verified=await createVerifiedSession({userId:identity.user.id});
+  await runFirstAccessAction(identity.user.id,verified.session.id,"ACK_RECOVERY");
+  await runFirstAccessAction(identity.user.id,verified.session.id,"COMPLETE_ONBOARDING");
+  return verified.token;
 }
 export function decide(
   token: string,

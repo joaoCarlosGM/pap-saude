@@ -1,3 +1,4 @@
+import {createVerifiedSession} from "../helpers/verified-session";
 import { test, expect, type Page } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 import { mkdir, writeFile } from "node:fs/promises";
@@ -338,16 +339,14 @@ test("Manager institutional directory excludes private values from API, HTML and
   expect((await page.content()).includes(marker)).toBe(false);
 });
 
-test("Professional without mandatory MFA can access own clinical pages, foreign record denied by API", async ({
+test("Professional with verified MFA can access own clinical pages, foreign record denied by API", async ({
   page,
 }) => {
   const f = await fixture("PROFESSIONAL");
-  await runFirstAccessAction(
-    f.user.id,
-    f.session.session.id,
-    "DEFER_OPTIONAL_MFA",
-  );
-  await cookie(page, f.session.token);
+  const verified=await createVerifiedSession({userId:f.user.id});
+  await runFirstAccessAction(f.user.id,verified.session.id,"ACK_RECOVERY");
+  await runFirstAccessAction(f.user.id,verified.session.id,"COMPLETE_ONBOARDING");
+  await cookie(page, verified.token);
   await page.goto("/dashboard");
   await expect(
     page.getByRole("heading", { name: "Dashboard", exact: true }),

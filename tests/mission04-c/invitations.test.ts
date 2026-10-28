@@ -191,7 +191,7 @@ test("manager authorizes only Commercial; notification and release capture are p
     1,
   );
   const notice = await db.userNotification.findFirstOrThrow({
-    where: { invitationId: i.id },
+    where: { invitationId: i.id, kind: "ACCESS_APPROVED" },
   });
   assert.equal(notice.emailStatus, "CAPTURED");
   assert.equal((await localMessages(i.email)).length, 2);
@@ -246,7 +246,7 @@ test("Admin can appoint Manager; an existing MFA account, password, valid sessio
 test("new Manager cannot enter admin before real MFA setup/login and receives no clinical permission", async () => {
   const i = await invite(admin, "PAP_MANAGER");
   await accept(i);
-  const token = await signIn(i.email, i.password);
+  const token = await signIn(i.email, i.password, false);
   assert.equal((await decide(admin.token, i.id, "PAP_MANAGER")).status, 200);
   assert.deepEqual(await resolveLoginNavigation(token), {
     view: "REDIRECT",
@@ -608,7 +608,7 @@ test("concurrent approvals produce one assignment, audit decision, in-app notifi
     1,
   );
   assert.equal(
-    await db.userNotification.count({ where: { invitationId: i.id } }),
+    await db.userNotification.count({ where: { invitationId: i.id, kind: { in: ["ACCESS_APPROVED","ACCESS_REVOKED"] } } }),
     1,
   );
   assert.equal((await localMessages(i.email)).length, 2);
@@ -856,7 +856,7 @@ test("notification read is self-scoped, persistent, idempotent and CSRF protecte
   await decide(manager.token, i.id);
   const token = await signIn(i.email, i.password);
   const n = await db.userNotification.findFirstOrThrow({
-    where: { invitationId: i.id },
+    where: { invitationId: i.id, kind: "ACCESS_APPROVED" },
   });
   assert.equal(
     (await notifications(request("/api/account/notifications"))).status,
@@ -1162,7 +1162,7 @@ test("capture failure keeps an authorized in-app notification and retries withou
     process.env.PAP_LOCAL_DEMO = previous;
   }
   const n = await db.userNotification.findFirstOrThrow({
-    where: { invitationId: i.id },
+    where: { invitationId: i.id, kind: "ACCESS_APPROVED" },
   });
   assert.equal(n.emailStatus, "FAILED");
   assert.equal(
@@ -1266,7 +1266,7 @@ test("database refuses ACTIVE consent without its matching authorized assignment
     0,
   );
   assert.equal(
-    await db.userNotification.count({ where: { invitationId: row.id } }),
+    await db.userNotification.count({ where: { invitationId: row.id, kind: { in: ["ACCESS_APPROVED","ACCESS_REVOKED"] } } }),
     0,
   );
 });
@@ -1366,7 +1366,7 @@ test("municipal proposal follows the existing scope policy: only Global with act
     ),
   );
   assert.ok(!profile?.permissions.includes("patient.read"));
-  const token = await signIn(i.email, i.password);
+  const token = await signIn(i.email, i.password, false);
   assert.equal(
     (await organizations(request("/api/admin/organizations", token))).status,
     403,
@@ -1425,8 +1425,11 @@ async function consentSnapshot(id: string) {
       where: { userId: row.userId! },
       orderBy: { id: "asc" },
     }),
+    // Acceptance notices already exist before a decision. Preserve both sets in
+    // the denial fingerprint; only release/revocation notices count as grants.
+    pendingNotifications: await db.userNotification.findMany({where:{invitationId:id,kind:"ACCESS_PENDING_DECISION"},orderBy:{id:"asc"}}),
     notifications: await db.userNotification.findMany({
-      where: { invitationId: id },
+      where: { invitationId: id, kind: { in: ["ACCESS_APPROVED","ACCESS_REVOKED"] } },
       orderBy: { id: "asc" },
     }),
     auditCount: await db.auditEvent.count(),

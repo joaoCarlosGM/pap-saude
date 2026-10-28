@@ -1,9 +1,9 @@
 import { randomBytes, randomInt, timingSafeEqual } from "node:crypto";
 import sharp from "sharp";
+import {CAPTCHA_ALPHABET as ALPHABET,captchaGlyph} from "./captcha-glyphs";
 import { db } from "@/server/db/client";
 import { sha256 } from "@/server/security/crypto";
 const TTL = 2 * 60_000, WINDOW = 10 * 60_000;
-const ALPHABET = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
 export const CAPTCHA_COOKIE = "pap_login_verification";
 export class CaptchaError extends Error {
   constructor(readonly status: 400 | 429 = 400) { super("LOGIN_VERIFICATION_REQUIRED"); }
@@ -22,7 +22,7 @@ export async function issueLoginCaptcha(origin: string, accessible = false, now 
   const answer = accessible ? String(a * b) : Array.from({ length: 5 }, () => ALPHABET[randomInt(ALPHABET.length)]).join("");
   let image: string | undefined;
   if (!accessible) {
-    const letters = [...answer].map((c, i) => `<text x="${20 + i * 33}" y="46" transform="rotate(${randomInt(-12, 13)} ${20 + i * 33} 46)" font-size="32" font-family="sans-serif" font-weight="bold" fill="#154f50">${c}</text>`).join("");
+    const letters = [...answer].map((c, i) => captchaGlyph(c,20+i*33,randomInt(-8,9))).join("");
     const png = await sharp(Buffer.from(`<svg xmlns="http://www.w3.org/2000/svg" width="190" height="66"><rect width="190" height="66" fill="#edf7f3"/>${letters}<path d="M4 25 L182 32 M8 55 L185 14" stroke="#699b8b" fill="none"/></svg>`)).png().toBuffer();
     image = `data:image/png;base64,${png.toString("base64")}`;
   }

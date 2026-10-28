@@ -1,0 +1,252 @@
+{
+  "base": "e3c0cbc18ffa98be64470a7153b1e798a00fbe14",
+  "parentBeforeF": "35159ea781a45a61a0cb92932a13a10cd796f20d",
+  "tests": [
+    {
+      "log": ".test-audit/p0-full/f-consolidated.log",
+      "sha256": "2bd5dbb046210a7ec5ce615d3d1e4fdcb501ba420a624bfe69e23feafe44c8e7",
+      "reportedNodeCounts": {
+        "tests": 28,
+        "pass": 28,
+        "fail": 0,
+        "skipped": 0
+      },
+      "note": ""
+    },
+    {
+      "log": ".test-audit/p0-full/f-dashboard-private.log",
+      "sha256": "b5f59f9c7ec08fca62eb4348cc13cfc117049eac776d234753da85417f584096",
+      "reportedNodeCounts": {
+        "tests": 1,
+        "pass": 1,
+        "fail": 0,
+        "skipped": 0
+      },
+      "note": ""
+    },
+    {
+      "log": ".test-audit/p0-full/f-http-auth.log",
+      "sha256": "d43131f618cb6c7b49d630a04ba51c9adaf71ca6913fc0328493e7d32e9e2113",
+      "reportedNodeCounts": {
+        "tests": 7,
+        "pass": 7,
+        "fail": 0,
+        "skipped": 0
+      },
+      "note": ""
+    },
+    {
+      "log": ".test-audit/p0-full/f-http-mfa.log",
+      "sha256": "f626196152063f9f0e6e3f1a57c4c546a9f39e22211ac3bd3efac6934f4169b5",
+      "reportedNodeCounts": {
+        "tests": 2,
+        "pass": 2,
+        "fail": 0,
+        "skipped": 0
+      },
+      "note": ""
+    },
+    {
+      "log": ".test-audit/p0-full/f-login-navigation-after-flow.log",
+      "sha256": "aff88aa9357dcba0b76ae39f86ce262002e3883c8e0b80ec39d5d880d7609ea6",
+      "reportedNodeCounts": {
+        "tests": 10,
+        "pass": 10,
+        "fail": 0,
+        "skipped": 0
+      },
+      "note": ""
+    },
+    {
+      "log": ".test-audit/p0-full/f-onboarding-security.log",
+      "sha256": "83229aeba8d30eb8104ebbab21938d48730ca98a4cf8a407448ef8f8200070da",
+      "reportedNodeCounts": {
+        "tests": 10,
+        "pass": 10,
+        "fail": 0,
+        "skipped": 0
+      },
+      "note": ""
+    },
+    {
+      "log": ".test-audit/p0-full/f-e-access.log",
+      "sha256": "4fc3a3cd7535ccb3e51963f85eb478bb59c5ece96dc3062b12dbd4b4833b6d8d",
+      "reportedNodeCounts": {
+        "tests": 8,
+        "pass": 8,
+        "fail": 0,
+        "skipped": 0
+      },
+      "note": ""
+    },
+    {
+      "log": ".test-audit/p0-full/f-registration.log",
+      "sha256": "62c576d2a59a713038f5f5eadc0cc70649bf367512b5474b011323e45b376c19",
+      "reportedNodeCounts": {
+        "tests": 68,
+        "pass": 68,
+        "fail": 0,
+        "skipped": 0
+      },
+      "note": ""
+    },
+    {
+      "log": ".test-audit/p0-full/f-c-invitations-final.log",
+      "sha256": "0cc3a6298e501da6dc3be27a6f0733d66c6946c83b125181cf9fd78a6c610dc9",
+      "reportedNodeCounts": {
+        "tests": 40,
+        "pass": 37,
+        "fail": 3,
+        "skipped": 0
+      },
+      "note": "Full C run PASS37/FAIL3; all three failures fixed and rerun in f-c-failures-targeted. No assertion removed."
+    },
+    {
+      "log": ".test-audit/p0-full/f-c-failures-targeted.log",
+      "sha256": "20cbf0adf61d3525c60aa049a5c8ee6358084ca26c8d62d12461b8847cf2100c",
+      "reportedNodeCounts": {
+        "tests": 3,
+        "pass": 3,
+        "fail": 0,
+        "skipped": 0
+      },
+      "note": ""
+    },
+    {
+      "log": ".test-audit/p0-full/f-c-fixtures-targeted.log",
+      "sha256": "e216ae2dffcc8e6bcd7719320a70ecd1726321c3cef1f7d89dfd36aa25f4f160",
+      "reportedNodeCounts": {
+        "tests": 3,
+        "pass": 2,
+        "fail": 1,
+        "skipped": 0
+      },
+      "note": ""
+    },
+    {
+      "log": ".test-audit/p0-full/f-c-fixture-notice.log",
+      "sha256": "cc3d67e25a8143455dbee7ea9887947fe767376b929689feb1edbb6b8a4b45c8",
+      "reportedNodeCounts": {
+        "tests": 1,
+        "pass": 1,
+        "fail": 0,
+        "skipped": 0
+      },
+      "note": ""
+    },
+    {
+      "log": ".test-audit/p0-full/f-runtime.log",
+      "sha256": "4a048583445743d1e1682fcace50877e88bc6ba5d736c5b66698f4b845967881",
+      "reportedNodeCounts": {
+        "tests": 39,
+        "pass": 39,
+        "fail": 0,
+        "skipped": 0
+      },
+      "note": "Runtime log: Node PASS 39; following two old browser tests initially failed, corrected and rerun separately."
+    },
+    {
+      "log": ".test-audit/p0-full/f-pending-granular.log",
+      "sha256": "e415916e6af56bcede5552785d8ccc7e90bf48680f8f8398c991036154ec9a65",
+      "reportedNodeCounts": {
+        "tests": 1,
+        "pass": 1,
+        "fail": 0,
+        "skipped": 0
+      },
+      "note": ""
+    },
+    {
+      "log": ".test-audit/p0-full/f-network-invitations.log",
+      "sha256": "1bfd8a310076ab6ebecb2ed2d50161f2c4bddc73fbba36635f89091bf0f7e632",
+      "reportedNodeCounts": {
+        "tests": 1,
+        "pass": 1,
+        "fail": 0,
+        "skipped": 0
+      },
+      "note": ""
+    },
+    {
+      "log": ".test-audit/p0-full/f-commercial-onboarding.log",
+      "sha256": "6f12014c2543b91864de225d6514d6eca1f02f87e25480f32ba434828d5326da",
+      "reportedNodeCounts": {
+        "tests": 1,
+        "pass": 1,
+        "fail": 0,
+        "skipped": 0
+      },
+      "note": ""
+    },
+    {
+      "log": ".test-audit/p0-full/f-captcha-font-independent.log",
+      "sha256": "9f7bc04eb9fe19da3aeea981778c46cc0804ce61a0fc5a43b7ac3402e591e177",
+      "reportedNodeCounts": {
+        "tests": 5,
+        "pass": 5,
+        "fail": 0,
+        "skipped": 0
+      },
+      "note": ""
+    },
+    {
+      "log": ".test-audit/p0-full/f-strict-mode.log",
+      "sha256": "a89b6f68badcc2c0128dd665fb26857e29fa0dee596e34d2be6e67816d656721",
+      "reportedNodeCounts": {
+        "tests": 1,
+        "pass": 1,
+        "fail": 0,
+        "skipped": 0
+      },
+      "note": ""
+    },
+    {
+      "log": ".test-audit/p0-full/e-record-ui.log",
+      "sha256": "0192ae709277b2a14802955131d5fc0c958e6e7445a7b662162f2ea8b37252ee",
+      "reportedNodeCounts": {
+        "tests": 1,
+        "pass": 1,
+        "fail": 0,
+        "skipped": 0
+      },
+      "note": ""
+    },
+    {
+      "log": ".test-audit/p0-full/f-pending-focus.log",
+      "sha256": "126de7107196d15e670e45717a748e580a60802e46fb9016defd17b0291c34dd",
+      "reportedNodeCounts": {
+        "tests": 1,
+        "pass": 1,
+        "fail": 0,
+        "skipped": 0
+      },
+      "note": ""
+    },
+    {
+      "log": ".test-audit/p0-full/f-mfa-ui-targeted.log",
+      "sha256": "a0319b4a61a2c5482cc4b5d2d8c3cefc55215bb271f76fda909e8009f26d444f",
+      "playwrightPass": 2,
+      "note": "Real Next dev/Chromium. MFA UI contract intercepts endpoints; professional tests use real owned PostgreSQL/authentication."
+    },
+    {
+      "log": ".test-audit/p0-full/f-professional-browser.log",
+      "sha256": "c353edae004b64467d4af1eea7351e296a00d49e0ddc6b1ce28bfb957123da22",
+      "playwrightPass": 1,
+      "note": "Real Next dev/Chromium. MFA UI contract intercepts endpoints; professional tests use real owned PostgreSQL/authentication."
+    },
+    {
+      "log": ".test-audit/p0-full/f-professional-verified-browser.log",
+      "sha256": "c3b653324d212c93dfd1890e631a42959576f3f011c7db3d84873c518b6c3a15",
+      "playwrightPass": 1,
+      "note": "Real Next dev/Chromium. MFA UI contract intercepts endpoints; professional tests use real owned PostgreSQL/authentication."
+    }
+  ],
+  "typescript": "PASS",
+  "lint": "PASS (0 errors, 4 inherited warnings)",
+  "build": "FAIL: Google Fonts fetch blocked; not worked around",
+  "photo": "BLOCKED: Pexels photo/license HTTP403; no asset or license obtained",
+  "githubApi": "BLOCKED HTTP403 at last attempt; PR not created; CI not yet observed",
+  "fullFinalCandidateCI": "NOT RUN locally; configured to run once on F push without dropping any existing gate",
+  "operatorLabAccess": false,
+  "continuity": "C fixture repaired on resume; original C37/40 plus three corrected targeted cases. New clinical record presentation and StrictMode case PASS. Production build remains blocked by font downloads."
+}

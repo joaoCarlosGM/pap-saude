@@ -199,6 +199,7 @@ export async function listAccessInvitations(
   actor: InvitationActor,
   page = 1,
   status?: string,
+  focusId?: string,
 ) {
   if (!Number.isInteger(page) || page < 1 || page > 10000) invalid();
   if (
@@ -231,7 +232,7 @@ export async function listAccessInvitations(
             }
           : {};
     const where = {
-      AND: [full ? {} : { invitedByUserId: actor.userId }, filter],
+      AND: [full ? {} : { invitedByUserId: actor.userId }, filter, ...(focusId ? [{id:uuid(focusId)}] : [])],
     };
     const rows = await tx.accessInvitation.findMany({
       where,

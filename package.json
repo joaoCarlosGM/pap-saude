@@ -90,7 +90,9 @@
     "test:mission04:d": "bash scripts/test-mission04-d.sh",
     "test:mission04:d:browser": "bash scripts/test-mission04-d.sh --browser",
     "test:mission04:e": "bash scripts/test-mission04-e.sh",
-    "test:mission04:e:browser": "bash scripts/test-mission04-e.sh --browser"
+    "test:mission04:e:browser": "bash scripts/test-mission04-e.sh --browser",
+    "test:p0:full:ui": "tsx --test --test-concurrency=1 tests/p0-full/auth-ui.test.ts tests/p0-full/workspace-ui.test.ts",
+    "test:p0:full": "bash scripts/test-p0-full.sh"
   },
   "dependencies": {
     "@capacitor/android": "^8.5.2",

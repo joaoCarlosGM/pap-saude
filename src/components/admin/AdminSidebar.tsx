@@ -178,42 +178,16 @@ export default function AdminSidebar({
         .toLocaleLowerCase("pt-BR")
         .includes(search.toLocaleLowerCase("pt-BR")),
   );
-  const groups = [
-    {
-      label: "Principal",
-      items: visible.filter((i) =>
-        [
-          "/admin",
-          "/admin/pendencias",
-          "/admin/solicitacoes",
-          "/admin/organizacoes",
-          "/admin/rede",
-          "/admin/usuarios",
-          "/admin/convites",
-          "/admin/convites-globais",
-          "/admin/acessos",
-        ].includes(i.href),
-      ),
-    },
-    {
-      label: "Inteligência",
-      items: visible.filter((i) =>
-        ["/admin/metricas", "/admin/comercial"].includes(i.href),
-      ),
-    },
-    {
-      label: "Sistema",
-      items: visible.filter((i) =>
-        [
-          "/admin/monitoramento",
-          "/admin/auditoria",
-          "/admin/minha-seguranca",
-          "/admin/seguranca",
-          "/admin/integracoes",
-        ].includes(i.href),
-      ),
-    },
+  const categories = [
+    {label:"Gestão institucional",paths:["/admin","/admin/pendencias","/admin/solicitacoes","/admin/organizacoes","/admin/rede"]},
+    {label:"Pessoas e Acessos",paths:["/admin/usuarios","/admin/convites","/admin/convites-globais","/admin/acessos"]},
+    {label:"Inteligência",paths:["/admin/metricas"]},
+    {label:"Auditoria e Segurança",paths:["/admin/auditoria","/admin/minha-seguranca","/admin/seguranca"]},
+    {label:"Operações",paths:["/admin/monitoramento","/admin/integracoes"]},
   ];
+  const groups=categories.map(group=>({label:group.label,items:visible.filter(i=>group.paths.includes(i.href))}));
+  const remaining=visible.filter(i=>!categories.some(g=>g.paths.includes(i.href)));
+  if(remaining.length)groups.push({label:"Mais opções",items:remaining});
   return (
     <>
       {open && (

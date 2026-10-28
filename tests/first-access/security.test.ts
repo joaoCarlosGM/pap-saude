@@ -246,10 +246,9 @@ test("first access adversarial API and role journeys", async (t) => {
         const state = await (
           await security.GET(request(f.session.token))
         ).json();
-        assert.equal(state.onboarding.mfaRequired, role !== "PROFESSIONAL");
+        assert.equal(state.onboarding.mfaRequired, true);
         assert.equal((await f.post("COMPLETE_ONBOARDING")).status, 400);
-        if (role !== "PROFESSIONAL")
-          assert.equal((await f.post("DEFER_OPTIONAL_MFA")).status, 400);
+        assert.equal((await f.post("DEFER_OPTIONAL_MFA")).status, 400);
         const forged = await genericProgress(
           new NextRequest(origin + "/api/onboarding/security-first-access", {
             method: "PATCH",
@@ -370,13 +369,13 @@ test("first access adversarial API and role journeys", async (t) => {
       },
     );
   await t.test(
-    "professional may defer; progress remains owner-scoped and cannot bypass admin guards",
+    "professional cannot defer; progress remains owner-scoped and cannot bypass admin guards",
     async () => {
       const f = await fixture("PROFESSIONAL"),
         other = await fixture();
       assert.equal(
         (await f.post("DEFER_OPTIONAL_MFA", { userId: other.user.id })).status,
-        200,
+        400,
       );
       assert.equal(
         (await (await security.GET(request(other.session.token))).json())

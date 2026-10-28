@@ -74,3 +74,15 @@ Cada etapa terá commit/push seletivo do que estiver validado e checkpoint. Requ
 - `tsx --test --test-name-pattern='same patient record' tests/p0-full/workspace-ui.test.ts`: PASS 1/1; ficha completa apresentada, navegação demonstrativa e zero requisições clínicas. TypeScript e lint dos arquivos E2: PASS; diff check PASS.
 - Último SHA remoto confirmado antes de E2: `e3b00929298ff8b2a1b0bdb93b0b0a55e4d0fa5b`. A branch candidata e todas as worktrees originais permanecem preservadas.
 - F permanece em andamento, com alterações não versionadas; erro do helper de convite corrigido e cenários direcionados PASS. Não repetir gates já aprovados ao retomar.
+
+### F — checkpoint de consolidação
+
+- SHA E2 confirmado: `35159ea` (ficha compartilhada). F inclui correções dirigidas e está sendo preparado para versionamento seletivo; seu SHA é o commit que contém este checkpoint. Manifesto de conteúdo em `evidence/source-manifest.json`, resultados em `VALIDACAO.md` e `evidence/validation.json`.
+- Corrigido o helper C: extrator de bearer de convite permanece puro; inscrição/MFA e conclusão de onboarding só ocorrem no helper de sessão positiva. Testes negativos de Manager/Municipal continuam explicitamente primários. DTO público de notificações preservado; pendência não é aviso de concessão. Execução C completa 37 PASS/3 FAIL; correções dirigidas 3/3 PASS, sem remover asserts.
+- Corrigidos CAPTCHA reutilizado no retorno de MFA, emissão dupla por StrictMode e dependência de fontes nativas no desenho. PNG usa glifos geométricos próprios. Nova prova StrictMode PASS 1/1.
+- Sessões profissionais reais no navegador: sem MFA negadas (1/1), com MFA verificado permitidas no escopo e outra UBS negada (1/1). Runtime mínimo/ACL/drift e 39 testes Node passaram; dois testes MFA UI antigos corrigidos e repetidos PASS 2/2. Registro P0 PASS 68/68.
+- Dashboard exclui vínculos encerrados/inativos; fila respeita permissão de cada grant, sem somar escopo global de um papel à autoridade local de outro; UBS não expõe convites alheios/hashes. Casos específicos PASS.
+- Links acionáveis selecionam item exato de convite/solicitação. Solicitações não começam mais filtradas por NEW; READY não fica invisível. Caso dirigido PASS. Sidebar reorganizada por gestão institucional, pessoas, inteligência, auditoria/segurança e operações, preservando links autorizados.
+- TypeScript/lint/diff e guards de SQL/CI PASS; 4 warnings de lint herdados. Lock offline/dry-run npm ci PASS, nenhuma versão/integridade alterada. Auditorias completas preservadas sem audit fix.
+- **Bloqueios externos:** foto e licença Pexels HTTP403, API GitHub HTTP403, build Google Fonts indisponível. PR draft ainda não criado. CI remoto será acionado uma vez no push F; resultado não deve ser presumido. Não repetir toda a pipeline antes de diagnosticar um gate concreto.
+- **Próximo passo:** confirmar SHA remoto F, observar CI/abrir draft se a API permitir; caso contrário registrar bloqueio. Obter fotografia/licença e concluir homologação manual autorizada. NO-GO de release. Não usar os laboratórios WSL existentes nem criar credenciais neles.

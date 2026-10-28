@@ -1,3 +1,4 @@
+import {solveLoginVerification} from "../helpers/browser-login-verification";
 import { verifiedSessionToken } from "../helpers/verified-admin-session";
 import { test, expect, type Page } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
@@ -34,11 +35,12 @@ async function login(page: Page, email: string, password: string) {
   await page.goto("/login");
   await page.getByLabel("E-mail", { exact: true }).fill(email);
   await page.getByLabel("Senha", { exact: true }).fill(password);
-  await page.getByRole("button", { name: "Entrar", exact: true }).click();
+  await solveLoginVerification(page);
+    await page.getByRole("button", { name: "Entrar", exact: true }).click();
 }
 async function a11y(page: Page) {
   const results = await new AxeBuilder({ page })
-    .include(".ob")
+    .include(".ob, .auth-access")
     .withTags(["wcag2a", "wcag2aa", "wcag21aa"])
     .analyze();
   expect(
@@ -276,19 +278,15 @@ for (const role of ["PAP_ADMIN", "HEALTH_UNIT_ADMIN", "PROFESSIONAL"] as const)
     ).toBe(1);
     expect(external).toEqual([]);
   });
-test("professional can defer MFA without administrative privileges", async ({
-  page,
-}) => {
+test("professional cannot defer MFA or access clinical operations with a primary session", async ({page}) => {
   const f = await fixture("PROFESSIONAL");
-  await login(page, f.user.email, f.password);
-  await page.getByRole("button", { name: "Começar", exact: true }).click();
-  await page
-    .getByRole("button", { name: "Configurar depois e continuar" })
-    .click();
-  await expect(page).toHaveURL(/\/dashboard$/);
-  await page.goto("/admin");
-  await expect(page).toHaveURL(/\/dashboard$/);
-  expect(await db.mfaFactor.count({ where: { userId: f.user.id } })).toBe(0);
+  await login(page,f.user.email,f.password);
+  await page.getByRole("button",{name:"Começar",exact:true}).click();
+  await expect(page.getByRole("button",{name:"Configurar depois e continuar"})).toHaveCount(0);
+  expect((await page.request.get("/api/clinical/patients",{headers:{"x-organization-id":f.unit.id}})).status()).toBe(403);
+  await page.goto("/dashboard");await expect(page).toHaveURL(/\/primeiros-passos$/);
+  await page.goto("/admin");await expect(page).toHaveURL(/\/primeiros-passos$/);
+  expect(await db.mfaFactor.count({where:{userId:f.user.id}})).toBe(0);
 });
 
 test("keyboard exit and reload preserve progress without starting another enrollment", async ({

@@ -25,9 +25,9 @@ type Org = {
   city: string | null;
   state: string | null;
 };
-export default function BetaRequestsClient() {
+export default function BetaRequestsClient({focusId}:{focusId?:string}) {
   const [page, setPage] = useState(1),
-    [status, setStatus] = useState("NEW"),
+    [status, setStatus] = useState(""),
     [q, setQ] = useState(""),
     [selected, setSelected] = useState<RequestRow | null>(null),
     [parent, setParent] = useState(""),
@@ -39,7 +39,7 @@ export default function BetaRequestsClient() {
     total: number;
     canActivate: boolean;
   }>(
-    `/api/admin/beta/requests?${new URLSearchParams({ page: String(page), status, ...(q ? { q } : {}) })}`,
+    `/api/admin/beta/requests?${new URLSearchParams({ page: String(page), status, ...(focusId ? {id:focusId} : {}), ...(q ? { q } : {}) })}`,
   );
   const orgs = useBetaData<{ organizations: Org[] }>(
     "/api/admin/organizations",
@@ -140,6 +140,7 @@ export default function BetaRequestsClient() {
             }}
             className="rounded-lg border p-2"
           >
+            <option value="">Todos os estados</option>
             {[
               "NEW",
               "CHANGES_REQUESTED",

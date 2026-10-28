@@ -5,7 +5,7 @@ import styles from "./auth-access.module.css";
 
 /** Shared presentation only. Authentication and authorization stay server-side. */
 export default function AuthAccessShell({ children }: { children: ReactNode }) {
-  return <main className={styles.page}>
+  return <main className={`${styles.page} auth-access`}>
     <div className={styles.shell}>
       <aside className={styles.brandPanel} aria-label="Apresentação PAP Saúde">
         <Image className={styles.art} src="/illustrations/pap-login-care.svg" alt="Ilustração de uma unidade de saúde conectada" width={1000} height={720} unoptimized />

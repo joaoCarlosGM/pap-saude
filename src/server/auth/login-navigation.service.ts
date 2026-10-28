@@ -64,7 +64,7 @@ export async function resolveLoginNavigation(
   const profile = state.profile;
   if (!state.verified) return { view: "REDIRECT", destination: "/primeiros-passos" };
   if (accessDestination(profile) === "/comercial")
-    return { view: "REDIRECT", destination: "/comercial" };
+    return { view: "REDIRECT", destination: state.progress?.status === "COMPLETED" ? "/comercial" : "/primeiros-passos" };
   // Effective permissions already intersect the canonical role catalogue,
   // persisted grants, active memberships and available organizations.
   if (
@@ -73,7 +73,7 @@ export async function resolveLoginNavigation(
       !profile.permissions.includes(PERMISSIONS.PATIENT_READ))
   )
     return await ownAccessStatus(session.user.id)
-      ? { view: "REDIRECT", destination: "/aguardando-autorizacao" }
+      ? { view: "REDIRECT", destination: state.progress?.status === "COMPLETED" ? "/aguardando-autorizacao" : "/primeiros-passos" }
       : { view: "RESTRICTED" };
 
   if (

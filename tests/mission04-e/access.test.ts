@@ -39,11 +39,11 @@ test("only explicit global Commercial grant; Admin, Manager, clinical profession
     await db.roleAssignment.create({ data: { userId: professional.user.id, roleId: custom.id } });
     await denied(professional.session.token);
 });
-test("optional Commercial MFA remains optional; active factor requires real verification", async () => {
+test("Commercial MFA is mandatory before enrollment and an active factor requires real verification", async () => {
     const f = await fixture();
     await db.roleAssignment.deleteMany({ where: { userId: f.user.id } });
     await assignSystemRole({ userId: f.user.id, roleKey: "COMMERCIAL" });
-    assert.equal((await requireCommercialSession(f.session.token)).userId, f.user.id);
+    await denied(f.session.token);
     const pending = await createSession({ userId: commercial.user.id });
     await denied(pending.token);
 });

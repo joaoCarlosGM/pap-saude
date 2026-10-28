@@ -1,3 +1,4 @@
+import {solveLoginVerification} from "../helpers/browser-login-verification";
 import { test, expect, type APIResponse, type Page, type BrowserContext } from "@playwright/test";
 import { writeFile } from "node:fs/promises";
 import AxeBuilder from "@axe-core/playwright";
@@ -190,6 +191,7 @@ test("primary Commercial with active TOTP exits navigation loop and completes re
     expect((await db.session.findUniqueOrThrow({where:{id:f.verified.session.id}})).revokedAt).toBeNull();
     await page.getByLabel("E-mail", { exact: true }).fill(f.user.email);
     await page.getByLabel("Senha", { exact: true }).fill(f.password);
+    await solveLoginVerification(page);
     await page.getByRole("button", { name: "Entrar", exact: true }).click();
     await page.getByLabel("Código do autenticador ou código de recuperação").fill(f.codes[1]);
     await page.getByRole("button", { name: "Confirmar MFA", exact: true }).click();

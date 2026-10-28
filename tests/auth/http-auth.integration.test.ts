@@ -32,7 +32,7 @@ import {
 
 import {
   POST as loginPOST,
-} from "../../src/app/api/auth/login/route";
+} from "../helpers/login-verification";
 
 import {
   GET as sessionGET,
@@ -104,7 +104,7 @@ async function assertSafeDatabase(): Promise<void> {
 
 async function clearFixtures(): Promise<void> {
   await db.loginAttempt.deleteMany();
-  await db.auditEvent.deleteMany();
+  // Preserve append-only audit rows, including on disposable databases.
 
   await db.session.deleteMany({
     where: {
@@ -118,16 +118,13 @@ async function clearFixtures(): Promise<void> {
     },
   });
 
-  await db.user.deleteMany({
-    where: {
-      id: USER_ID,
-    },
-  });
 }
 
 async function createUser(): Promise<void> {
-  await db.user.create({
-    data: {
+  await db.user.upsert({
+    where: {id: USER_ID},
+    update: {email: EMAIL, isActive: true},
+    create: {
       id: USER_ID,
       email: EMAIL,
       displayName:

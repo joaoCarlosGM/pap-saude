@@ -39,7 +39,7 @@ import {
 
 import {
   POST as loginPOST,
-} from "../../src/app/api/auth/login/route";
+} from "../helpers/login-verification";
 
 import {
   POST as mfaPOST,
@@ -66,7 +66,7 @@ const CLIENT_ORIGIN =
 async function clearFixtures() {
   await db.mfaChallenge.deleteMany();
   await db.loginAttempt.deleteMany();
-  await db.auditEvent.deleteMany();
+  // Preserve append-only audit rows, including on disposable databases.
   await db.session.deleteMany();
   await db.mfaFactor.deleteMany({
     where: {
@@ -80,12 +80,6 @@ async function clearFixtures() {
         USER_ID,
     },
   });
-  await db.user.deleteMany({
-    where: {
-      id:
-        USER_ID,
-    },
-  });
 }
 
 async function createUser() {
@@ -94,8 +88,10 @@ async function createUser() {
       "2030-01-01T10:00:00.000Z",
     );
 
-  await db.user.create({
-    data: {
+  await db.user.upsert({
+    where: {id: USER_ID},
+    update: {email: EMAIL, isActive: true},
+    create: {
       id:
         USER_ID,
       email:

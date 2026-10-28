@@ -21,7 +21,7 @@ export async function GET(request: NextRequest) {
       request.nextUrl.search.length > 500 ||
       [...params.keys()].some(
         (k) =>
-          !["page", "status", "q"].includes(k) || params.getAll(k).length !== 1,
+          !["page", "status", "q", "id"].includes(k) || params.getAll(k).length !== 1,
       )
     )
       invalid();
@@ -31,6 +31,7 @@ export async function GET(request: NextRequest) {
         Number(params.get("page") || 1),
         params.get("status") || undefined,
         params.get("q") || undefined,
+        params.get("id") || undefined,
       ),
     );
   } catch (error) {

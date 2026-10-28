@@ -222,7 +222,7 @@ function Review({
     </li>
   );
 }
-export default function AccessInvitationsClient() {
+export default function AccessInvitationsClient({focusId}:{focusId?:string}) {
   const [page, setPage] = useState(1),
     [filter, setFilter] = useState(""),
     [busy, setBusy] = useState(false),
@@ -230,7 +230,7 @@ export default function AccessInvitationsClient() {
     [error, setError] = useState("");
   const lock = useRef(false);
   const result = useBetaData<Queue>(
-    `/api/admin/access-invitations?page=${page}${filter ? `&status=${filter}` : ""}`,
+    `/api/admin/access-invitations?page=${page}${filter ? `&status=${filter}` : ""}${focusId ? `&id=${encodeURIComponent(focusId)}` : ""}`,
   );
   async function action(body: Record<string, unknown>) {
     if (lock.current) return;

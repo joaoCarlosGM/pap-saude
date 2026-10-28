@@ -5,7 +5,7 @@ import { NextRequest } from "next/server";
 import { db } from "../../src/server/db/client";
 import { bootstrapSystemIam } from "../../src/server/iam/bootstrap.service";
 import { assignSystemRole } from "../../src/server/iam/role-assignment.service";
-import { createSession } from "../../src/server/auth/session.service";
+import { createVerifiedSession as createSession } from "../helpers/verified-session";
 import { createClinicalRegistrationService, clinicalRegistrationService, RegistrationOperationError, type RegistrationStage } from "../../src/server/clinical-registration/registration.service";
 import * as route from "../../src/app/api/clinical/registrations/route";
 import type { RegistrationData } from "../../src/types/registration";

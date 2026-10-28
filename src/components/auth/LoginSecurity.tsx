@@ -85,6 +85,7 @@ export default function LoginSecurity({
         return;
       }
       if (result.mfaRequired) {
+        setVerification(null);
         setPassword("");
         setMode("MFA");
         return;

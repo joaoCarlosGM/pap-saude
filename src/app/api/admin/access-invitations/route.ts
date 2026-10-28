@@ -30,7 +30,7 @@ export async function GET(request: NextRequest) {
       p = request.nextUrl.searchParams;
     if (
       [...p.keys()].some(
-        (k) => !["page", "status"].includes(k) || p.getAll(k).length !== 1,
+        (k) => !["page", "status", "id"].includes(k) || p.getAll(k).length !== 1,
       )
     )
       invalid();
@@ -39,6 +39,7 @@ export async function GET(request: NextRequest) {
         current,
         Number(p.get("page") || 1),
         p.get("status") ?? undefined,
+        p.get("id") ?? undefined,
       ),
     );
   } catch (error) {

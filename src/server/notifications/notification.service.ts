@@ -41,7 +41,7 @@ export async function ownNotifications(userId: string) {
     orderBy: [{ createdAt: "desc" }, { id: "desc" }],
     take: 30,
   });
-  return rows.map((row) => ({
+  return rows.map(({invitationId,...row}) => ({
     ...row,
     title:
       row.kind === "ACCESS_PENDING_DECISION" ? "Convite aceito aguarda sua análise" : row.kind === "ACCESS_APPROVED"
@@ -51,7 +51,7 @@ export async function ownNotifications(userId: string) {
       row.kind === "ACCESS_PENDING_DECISION" ? "Há uma identidade confirmada aguardando uma decisão autorizada. O aceite não concedeu papel nem acesso operacional." : row.kind === "ACCESS_APPROVED"
         ? "A autorização foi registrada. Entre para continuar com seu perfil e a verificação de segurança exigida."
         : "Você pode consultar sua situação e gerenciar a segurança da sua conta.",
-    href: row.kind === "ACCESS_PENDING_DECISION" ? `/admin/pendencias?kind=ASSIGN&focus=${row.invitationId}#pending-${row.invitationId}` : row.kind === "ACCESS_APPROVED" ? "/login" : "/aguardando-autorizacao",
+    href: row.kind === "ACCESS_PENDING_DECISION" ? `/admin/pendencias?kind=ASSIGN&focus=${invitationId}#pending-${invitationId}` : row.kind === "ACCESS_APPROVED" ? "/login" : "/aguardando-autorizacao",
   }));
 }
 

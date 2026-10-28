@@ -14,7 +14,7 @@ import { NextRequest } from "next/server";
 
 import { GET, PATCH, POST } from "../../src/app/api/clinical/[[...path]]/route";
 
-import { createSession } from "../../src/server/auth/session.service";
+import { createVerifiedSession as createSession } from "../helpers/verified-session";
 
 import { db } from "../../src/server/db/client";
 

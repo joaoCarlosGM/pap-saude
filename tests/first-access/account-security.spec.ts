@@ -1,3 +1,4 @@
+import {solveLoginVerification} from "../helpers/browser-login-verification";
 import { test, expect, type Page } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 import { mkdir, writeFile } from "node:fs/promises";
@@ -45,7 +46,7 @@ async function cookie(page: Page, token: string) {
 }
 async function a11y(page: Page) {
   const result = await new AxeBuilder({ page })
-    .include(".ob")
+    .include(".ob, .auth-access")
     .withTags(["wcag2a", "wcag2aa", "wcag21aa"])
     .analyze();
   expect(
@@ -172,16 +173,20 @@ test("login has local lightweight artwork, form first on mobile, dark and keyboa
     await page.goto("/login");
     await expect(
       page.getByRole("button", { name: "Entrar", exact: true }),
-    ).toBeEnabled();
+    ).toBeDisabled();
+    await solveLoginVerification(page);
+    await expect(page.getByRole("button",{name:"Entrar",exact:true})).toBeEnabled();
     const art = page.getByAltText(
-      "Unidade de saúde entre natureza e recursos digitais de cuidado",
+      "Ilustração de uma unidade de saúde conectada",
     );
-    await expect(art).toBeVisible();
+    if(width<=690)await expect(art).toBeHidden();else await expect(art).toBeVisible();
+    if(width>690) {
     expect(
       await art.evaluate(
         (img: HTMLImageElement) => img.complete && img.naturalWidth === 1000,
       ),
     ).toBe(true);
+    }
     expect(
       await page.evaluate(
         () => document.documentElement.scrollWidth <= innerWidth,
@@ -189,7 +194,7 @@ test("login has local lightweight artwork, form first on mobile, dark and keyboa
     ).toBe(true);
     const form = await page.locator("form").boundingBox(),
       picture = await art.boundingBox();
-    expect(!!form && !!picture && (width > 760 || form.y < picture.y)).toBe(
+    expect(!!form && (width<=690 || !!picture)).toBe(
       true,
     );
     await page.getByLabel("E-mail", { exact: true }).focus();

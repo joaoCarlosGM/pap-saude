@@ -1,3 +1,4 @@
+import { verifiedSessionToken } from "../helpers/verified-admin-session";
 import { test, after } from "node:test";
 import assert from "node:assert/strict";
 import { db } from "../../src/server/db/client";
@@ -105,17 +106,17 @@ test("login navigation uses live session, MFA and effective permissions without 
     },
   );
   await t.test(
-    "professional keeps optional MFA policy for existing sessions; a new login still challenges an active factor",
+    "professional requires MFA and cannot complete onboarding by deferral; active factor still challenges at login",
     async () => {
       const f = await fixture("PROFESSIONAL");
       assert.deepEqual(await resolveLoginNavigation(f.session.token), {
         view: "REDIRECT",
         destination: "/primeiros-passos",
       });
-      await f.post("DEFER_OPTIONAL_MFA");
+      assert.equal((await f.post("DEFER_OPTIONAL_MFA")).status,400);
       assert.deepEqual(await resolveLoginNavigation(f.session.token), {
         view: "REDIRECT",
-        destination: "/dashboard",
+        destination: "/primeiros-passos",
       });
       const setup = await (await f.post("START_MFA")).json();
       const OTPAuth = await import("otpauth");
@@ -125,7 +126,7 @@ test("login navigation uses live session, MFA and effective permissions without 
       });
       assert.deepEqual(await resolveLoginNavigation(f.session.token), {
         view: "REDIRECT",
-        destination: "/dashboard",
+        destination: "/primeiros-passos",
       });
       const login = await authenticateLogin({
         email: f.user.email,
@@ -144,7 +145,7 @@ test("login navigation uses live session, MFA and effective permissions without 
     async () => {
       for (const kind of ["role", "membership", "organization"] as const) {
         const f = await fixture("PROFESSIONAL");
-        await f.post("DEFER_OPTIONAL_MFA");
+        const verified=await verifiedSessionToken(f.user.id);
         if (kind === "role")
           await db.roleAssignment.deleteMany({ where: { userId: f.user.id } });
         if (kind === "membership")
@@ -158,7 +159,7 @@ test("login navigation uses live session, MFA and effective permissions without 
             data: { status: "SUSPENDED" },
           });
         const before = await navigationFingerprint(f.user.id);
-        assert.deepEqual(await resolveLoginNavigation(f.session.token), {
+        assert.deepEqual(await resolveLoginNavigation(verified), {
           view: "RESTRICTED",
         });
         assert.ok(before === (await navigationFingerprint(f.user.id)));

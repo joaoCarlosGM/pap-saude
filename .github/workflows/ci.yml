@@ -10,6 +10,7 @@ on:
       - codex/f04-10-release-hardening
       - codex/pap-admin-beta1
       - codex/p0-remediation-review-20261026
+      - codex/p0-full-implementation
   pull_request:
     branches:
       - develop
@@ -100,6 +101,9 @@ jobs:
       # This single command includes the protected-database invariant suite,
       # migration-on-fresh-database tests, SQL guard, IAM/MFA, anti-IDOR,
       # clinical API/UI, TypeScript, ESLint and the Next.js production build.
+      - name: P0 post-acceptance server security and data isolation
+        run: npm run test:p0:full -- --server
+
       - name: F04 integrated security and clinical regression gate
         run: npm run audit:f04:operations
 
@@ -111,6 +115,9 @@ jobs:
 
       - name: Install isolated browser for first-access regression
         run: npx playwright install --with-deps chromium
+
+      - name: P0 post-acceptance shared UI and accessibility
+        run: npm run test:p0:full:ui
 
       - name: First-access MFA API, QR, browser and accessibility regression
         run: npm run test:first-access:browser

@@ -130,6 +130,7 @@ export async function listBetaRequests(
   page: number,
   status?: string,
   query?: string,
+  focusId?: string,
 ) {
   await requirePapReviewer(userId);
   if (
@@ -147,6 +148,7 @@ export async function listBetaRequests(
   )
     invalid();
   const where: Prisma.OrganizationCandidateWhereInput = {
+    ...(focusId ? {id:uuid(focusId)} : {}),
     consentedAt: { not: null },
     status: status as Prisma.EnumOrganizationCandidateStatusFilter["equals"],
     ...(query

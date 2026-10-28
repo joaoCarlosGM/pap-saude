@@ -16,8 +16,8 @@ export default async function FirstAccessPage({
   const session = await requireOwnPageSession();
   const profile = await getEffectiveAccessProfile(session.user.id);
   const state = await firstAccessState(session.user.id, session.session.id);
-  if (state.verified && accessDestination(profile) === "/comercial") redirect("/comercial");
-  if (state.verified && accessDestination(profile) === "/login" && await ownAccessStatus(session.user.id))
+  if (state.verified && state.progress?.status === "COMPLETED" && accessDestination(profile) === "/comercial") redirect("/comercial");
+  if (state.verified && state.progress?.status === "COMPLETED" && accessDestination(profile) === "/login" && await ownAccessStatus(session.user.id))
     redirect("/aguardando-autorizacao");
   return <FirstAccessWizard />;
 }

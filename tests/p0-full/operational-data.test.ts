@@ -32,3 +32,8 @@ test("dashboard counts only authorized units, deduplicates shared patients and f
 test("empty scope has real zeroes and no fabricated comparisons; Admin and Commercial have no implicit clinical data",async()=>{
  const f=await professional();const d=await clinicalDashboard(f.token);assert.ok(d.kpis.every(k=>k.value==="0"&&!k.trend));assert.deepEqual(d.recent,[]);assert.ok(d.monthly.every(m=>m.total===0));await assert.rejects(clinicalDashboard((await actor()).token));await assert.rejects(clinicalDashboard((await actor("COMMERCIAL")).token));
 });
+test("dashboard does not disclose an encounter after patient unlinking or inactivation",async()=>{
+ const f=await professional(),p=await db.patient.create({data:{fullName:'Paciente sintética com vínculo encerrado',birthDate:new Date('1995-01-01'),organizations:{create:{organizationId:f.unit.id}}}});const e=await createEncounter({patientId:p.id,organizationId:f.unit.id});await startEncounter(e.id);await completeEncounter(e.id);
+ assert.equal((await clinicalDashboard(f.token)).recent.length,1);await db.patientOrganization.update({where:{patientId_organizationId:{patientId:p.id,organizationId:f.unit.id}},data:{unlinkedAt:new Date()}});const unlinked=await clinicalDashboard(f.token);assert.deepEqual(unlinked.recent,[]);assert.ok(unlinked.monthly.every(m=>m.total===0));assert.ok(unlinked.kpis.every(k=>k.value==='0'));
+ await db.patientOrganization.update({where:{patientId_organizationId:{patientId:p.id,organizationId:f.unit.id}},data:{unlinkedAt:null}});await db.patient.update({where:{id:p.id},data:{isActive:false}});assert.deepEqual((await clinicalDashboard(f.token)).recent,[]);
+});

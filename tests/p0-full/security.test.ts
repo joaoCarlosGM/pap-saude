@@ -1,3 +1,4 @@
+import {CAPTCHA_ALPHABET,CAPTCHA_GLYPHS,captchaGlyph} from "../../src/server/auth/captcha-glyphs";
 import { test, before, after } from "node:test";
 import assert from "node:assert/strict";
 import { db } from "../../src/server/db/client";
@@ -30,7 +31,7 @@ test("CAPTCHA denies wrong origin, missing cookie, expiry and wrong answer; wron
 });
 test("visual CAPTCHA is PNG bytes, never SVG/HTML/plaintext; issuer rate limit is persistent", async () => {
  const issued=await issueLoginCaptcha("captcha-visual"); assert.ok(issued.public.image?.startsWith("data:image/png;base64,"));assert.equal(issued.public.question,undefined);const png=Buffer.from(issued.public.image!.split(",")[1],"base64");assert.equal(png.subarray(1,4).toString(),"PNG");assert.ok(!png.includes(Buffer.from("<text")));
- const origin="captcha-limit";await db.betaAbuseBucket.create({data:{key:(await import("../../src/server/security/crypto")).sha256(`captcha-limit:v1:${origin}:${Math.floor(Date.now()/600000)}`),count:30,expiresAt:new Date(Date.now()+600000)}});await assert.rejects(issueLoginCaptcha(origin,true),CaptchaError);
+ const origin="captcha-limit-"+crypto.randomUUID();await db.betaAbuseBucket.create({data:{key:(await import("../../src/server/security/crypto")).sha256(`captcha-limit:v1:${origin}:${Math.floor(Date.now()/600000)}`),count:30,expiresAt:new Date(Date.now()+600000)}});await assert.rejects(issueLoginCaptcha(origin,true),CaptchaError);
 });
 test("all roles require current-session MFA, while own enrollment remains available and deferral is denied", async () => {
  for(const role of ["PAP_ADMIN","HEALTH_UNIT_ADMIN","PROFESSIONAL"] as const){const f=await fixture(role);await assert.rejects(requireHttpSession(request("/api/clinical/patients",f.session.token)));assert.equal((await requireHttpSession(request("/api/auth/security",f.session.token),{ownSecuritySetup:true})).user.id,f.user.id);assert.equal((await firstAccessState(f.user.id,f.session.session.id)).mfaRequired,true);await assert.rejects(runFirstAccessAction(f.user.id,f.session.session.id,"DEFER_OPTIONAL_MFA"));assert.deepEqual(await resolveLoginNavigation(f.session.token),{view:"REDIRECT",destination:"/primeiros-passos"});}
@@ -49,3 +50,9 @@ test("HTTP login fails closed without CAPTCHA and a valid challenge only creates
  assert.equal((await resolveLoginNavigation(session)).view,"REDIRECT");await assert.rejects(requireHttpSession(request("/api/clinical/patients",session)));
  assert.equal((await login(request("/api/auth/login",undefined,{email:f.user.email,password:f.password,verificationId:body.id,verificationAnswer:solve(body.question)},"POST",{cookie:`pap_login_verification=${cookie}`}))).status,400);
 });
+test("verified Commercial finishes recovery acknowledgment once and completed logins never reopen onboarding",async()=>{
+ const f=await actor('COMMERCIAL');const factor=await db.mfaFactor.findFirstOrThrow({where:{userId:f.user.id,status:'ACTIVE'}});await db.userOnboardingProgress.updateMany({where:{userId:f.user.id,tourKey:'security-first-access'},data:{status:'STARTED',currentStep:6,completedAt:null}});
+ assert.deepEqual(await resolveLoginNavigation(f.token),{view:'REDIRECT',destination:'/primeiros-passos'});await runFirstAccessAction(f.user.id,f.verified.session.id,'COMPLETE_ONBOARDING');for(let i=0;i<3;i++)assert.deepEqual(await resolveLoginNavigation(f.token),{view:'REDIRECT',destination:'/comercial'});assert.deepEqual(await db.mfaFactor.findUniqueOrThrow({where:{id:factor.id}}),factor);
+});
+
+test("CAPTCHA geometric glyphs cover every symbol without system fonts or plaintext text elements",()=>{for(const character of CAPTCHA_ALPHABET){const rows=CAPTCHA_GLYPHS[character].split('/');assert.equal(rows.length,7);assert.ok(rows.every(r=>/^[01]{5}$/.test(r)));const svg=captchaGlyph(character,20,0);assert.ok(svg.includes('<rect'));assert.ok(!svg.includes('<text'));}assert.throws(()=>captchaGlyph('?',0,0));});

@@ -2,7 +2,7 @@ import { expect, test, type Page, type BrowserContext } from "@playwright/test";
 import { randomUUID } from "node:crypto";
 import { db } from "../../src/server/db/client";
 import { assignSystemRole } from "../../src/server/iam/role-assignment.service";
-import { createSession } from "../../src/server/auth/session.service";
+import { createVerifiedSession as createSession } from "../helpers/verified-session";
 const origin="http://127.0.0.1:3126";
 test.beforeAll(async()=>{expect(new URL(process.env.DATABASE_URL!).pathname).toBe("/pap_p0_registration_test");expect(new URL(process.env.DATABASE_URL!).port).toBe("25443");});
 test.afterAll(()=>db.$disconnect());
