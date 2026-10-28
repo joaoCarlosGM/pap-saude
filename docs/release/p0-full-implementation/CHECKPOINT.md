@@ -86,3 +86,9 @@ Cada etapa terá commit/push seletivo do que estiver validado e checkpoint. Requ
 - TypeScript/lint/diff e guards de SQL/CI PASS; 4 warnings de lint herdados. Lock offline/dry-run npm ci PASS, nenhuma versão/integridade alterada. Auditorias completas preservadas sem audit fix.
 - **Bloqueios externos:** foto e licença Pexels HTTP403, API GitHub HTTP403, build Google Fonts indisponível. PR draft ainda não criado. CI remoto será acionado uma vez no push F; resultado não deve ser presumido. Não repetir toda a pipeline antes de diagnosticar um gate concreto.
 - **Próximo passo:** confirmar SHA remoto F, observar CI/abrir draft se a API permitir; caso contrário registrar bloqueio. Obter fotografia/licença e concluir homologação manual autorizada. NO-GO de release. Não usar os laboratórios WSL existentes nem criar credenciais neles.
+
+### Pós-CI F — contrato de teste de navegação
+
+- F remoto `a5a77de`: run 40677604924 FAIL no primeiro acesso. Reprodução/correção dirigida detalhada em VALIDACAO.md. Código de produção preservado; CAPTCHA e MFA não afrouxados.
+- Browser de área: 13 PASS/2 FAIL; restante sem papel PASS1 após fixture verificada; visual PASS1 após janela natural do limitador (sem reset). TypeScript/lint/diff PASS.
+- Próximo: push do commit de testes/documentação e conferir CI do SHA exato. PR draft bloqueado por API403; fotografia/licença ainda BLOCKED. Não executar homologação nos laboratórios existentes.

@@ -66,3 +66,16 @@ tests/release/mfa-block-ui.spec.ts
 ```
 
 Fonte completa desde a base (incluindo commits anteriores), com SHA-256 por caminho: `evidence/source-manifest.json`. O SHA F deve ser lido do commit que contém este inventário; o fingerprint não depende de SHA autorreferente.
+
+## Correção pós-CI F — staging seletivo separado
+
+Somente contrato de teste e documentação; seis caminhos:
+
+```text
+tests/first-access/login-navigation.spec.ts
+docs/release/p0-full-implementation/CHECKPOINT.md
+docs/release/p0-full-implementation/VALIDACAO.md
+docs/release/p0-full-implementation/evidence/validation.json
+docs/release/p0-full-implementation/evidence/source-manifest.json
+docs/release/p0-full-implementation/INVENTARIO.md
+```

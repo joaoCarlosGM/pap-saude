@@ -248,5 +248,27 @@
   "githubApi": "BLOCKED HTTP403 at last attempt; PR not created; CI not yet observed",
   "fullFinalCandidateCI": "NOT RUN locally; configured to run once on F push without dropping any existing gate",
   "operatorLabAccess": false,
-  "continuity": "C fixture repaired on resume; original C37/40 plus three corrected targeted cases. New clinical record presentation and StrictMode case PASS. Production build remains blocked by font downloads."
+  "continuity": "C fixture repaired on resume; original C37/40 plus three corrected targeted cases. New clinical record presentation and StrictMode case PASS. Production build remains blocked by font downloads.",
+  "postCiCorrection": {
+    "parent": "a5a77de93b0c4b97e09abef050c7ec8fe40687b2",
+    "run": "https://github.com/joaoCarlosGM/pap-saude/actions/runs/40677604924",
+    "remote": "FAIL first-access MFA browser gate; later gates skipped",
+    "productionCodeChanges": false,
+    "fullBrowser": "13 PASS / 2 FAIL; remaining cases resolved individually, not a new 15/15 aggregate",
+    "directedNoRole": "PASS 1",
+    "directedVisual": "PASS 1 after natural rate window; no reset or policy change",
+    "typescript": "PASS",
+    "lint": "PASS",
+    "logs": {
+      ".test-audit/p0-full/f-ci-first-access-repro.log": "2a21c29aab4c797130f7892b852b3cded3e783884a1297c522adb0a9fd31e339",
+      ".test-audit/p0-full/f-ci-first-access-corrected.log": "81b08ce22e34b67dce5d7c4a2654152163a77db8b3b1b7ecf9038b45bb789fb3",
+      ".test-audit/p0-full/f-ci-first-access-browser.log": "db657c35f8a1cfd7f08c28d87d44ec3eb1a5d163ea760ebb94de521e4091bd43",
+      ".test-audit/p0-full/f-ci-browser-remaining.log": "ebdfb30a71aaa5652357eb1fff9839c267021e9e2408a37bf94f8adb07b1a62a",
+      ".test-audit/p0-full/f-ci-login-visual-diagnosis.log": "84cd709d4b75123f9bc5dd8cd8b43edf68c90c8740749951d60c2d4d19f83cc0",
+      ".test-audit/p0-full/f-ci-captcha-counters.log": "95b89a2a36887a0ca3132bdbb097e3a9ccc5a522ebeb6f1b16a21d0f5e4b9004",
+      ".test-audit/p0-full/f-ci-login-visual-fresh-window.log": "aeb82c2ef0c85e863b8a57b9df774efe9d5d860085501aca663b3dcafed914af",
+      ".test-audit/p0-full/f-ci-navigation-typescript.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      ".test-audit/p0-full/f-ci-navigation-lint.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  }
 }

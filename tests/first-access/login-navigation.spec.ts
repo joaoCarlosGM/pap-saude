@@ -5,6 +5,8 @@ import { db } from "../../src/server/db/client";
 import { bootstrapSystemIam } from "../../src/server/iam/bootstrap.service";
 import { fixture } from "./fixtures";
 import { verifiedLoginFixture, navigationFingerprint } from "./login-fixtures";
+import { createVerifiedSession } from "../helpers/verified-session";
+import { runFirstAccessAction } from "../../src/server/auth/first-access.service";
 const origin = "http://127.0.0.1:3110";
 
 test.beforeAll(() => bootstrapSystemIam());
@@ -152,9 +154,22 @@ test("pending MFA resumes after reload ahead of an older session and only authen
   const older = await verifiedLoginFixture();
   const target = await verifiedLoginFixture();
   await cookie(page, older.verified.sessionToken);
+  const issued = await page.request.post("/api/auth/login/verification", {
+    headers: { origin },
+    data: { accessible: true },
+  });
+  expect(issued.status()).toBe(200);
+  const challenge = await issued.json();
+  const numbers = String(challenge.question).match(/\d+/g)?.map(Number);
+  expect(numbers?.length).toBe(2);
   const response = await page.request.post("/api/auth/login", {
     headers: { origin },
-    data: { email: target.user.email, password: target.password },
+    data: {
+      email: target.user.email,
+      password: target.password,
+      verificationId: challenge.id,
+      verificationAnswer: String(numbers![0] * numbers![1]),
+    },
   });
   expect(response.status()).toBe(200);
   expect((await response.json()).mfaRequired).toBe(true);
@@ -187,18 +202,23 @@ test("pending MFA resumes after reload ahead of an older session and only authen
   await expect(page).toHaveURL(/\/admin$/);
 });
 
-test("authorized professional with optional MFA goes to dashboard after deferral", async ({
+test("authorized professional stays in setup until verified MFA, then reaches dashboard without loops", async ({
   page,
 }) => {
   const f = await fixture("PROFESSIONAL");
-  await f.post("DEFER_OPTIONAL_MFA");
+  const deferred = await f.post("DEFER_OPTIONAL_MFA");
+  expect(deferred.status).toBe(400);
+  expect((await deferred.json()).error).toBe("MFA_REQUIRED");
   await cookie(page, f.session.token);
   const before = await navigationFingerprint(f.user.id);
   const counters = observeNavigation(page);
   await page.goto("/login");
-  await expect(page).toHaveURL(/\/dashboard$/);
+  await expect(page).toHaveURL(/\/primeiros-passos$/);
   expect(counters().documents <= 2).toBe(true);
   expect(before === (await navigationFingerprint(f.user.id))).toBe(true);
+  expect((await page.request.get("/api/clinical/patients", {
+    headers: { "x-organization-id": f.unit.id },
+  })).status()).toBe(403);
   expect(
     (
       await db.session.findUniqueOrThrow({
@@ -206,14 +226,25 @@ test("authorized professional with optional MFA goes to dashboard after deferral
       })
     ).mfaVerifiedAt,
   ).toBeNull();
+  const verified = await createVerifiedSession({ userId: f.user.id });
+  await runFirstAccessAction(f.user.id, verified.session.id, "ACK_RECOVERY");
+  await runFirstAccessAction(f.user.id, verified.session.id, "COMPLETE_ONBOARDING");
+  await cookie(page, verified.token);
+  const verifiedBefore = await navigationFingerprint(f.user.id);
+  await page.goto("/login");
+  await expect(page).toHaveURL(/\/dashboard$/);
+  expect(counters().documents <= 4).toBe(true);
+  expect(counters().loginCookieWrites).toBe(0);
+  expect(verifiedBefore === (await navigationFingerprint(f.user.id))).toBe(true);
+  expect((await db.session.findUniqueOrThrow({where:{id:verified.session.id}})).mfaVerifiedAt).not.toBeNull();
 });
 
 test("account without effective operational role stays restricted with no form or operational links", async ({
   page,
 }) => {
-  const f = await fixture();
+  const f = await verifiedLoginFixture();
   await db.roleAssignment.deleteMany({ where: { userId: f.user.id } });
-  await cookie(page, f.session.token);
+  await cookie(page, f.verified.sessionToken);
   const before = await navigationFingerprint(f.user.id);
   const counters = observeNavigation(page);
   await page.setViewportSize({ width: 320, height: 900 });

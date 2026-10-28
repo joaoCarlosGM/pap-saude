@@ -90,6 +90,7 @@
     "tests/clinical/clinical-api-ui.integration.test.ts": "a60d81aa8078f3d4b94e7fffa8eab77c4e17aecc40f7fa17202d7901c6f25bc3",
     "tests/first-access/account-security.spec.ts": "a600833bf32a28c67778b5405d7553b80653627dd062ebb29eaba051492b5901",
     "tests/first-access/browser.spec.ts": "adf23e5e22e77fa6710ca6cb12d64861bbbf9a209d2e4b462933dce335813f01",
+    "tests/first-access/login-navigation.spec.ts": "3c084cb906919041f03fa33cf8383c4a1dabba46581d035bd864fc577b436f6e",
     "tests/first-access/login-navigation.test.ts": "42e8a1d73713ca847ae7454e23e8bdd16323226e9969b7813e071a4f9bc5576c",
     "tests/first-access/security.test.ts": "d5963841d5c05832431e256473b3db925a9abda739e68b6d984e52c1bff2a90e",
     "tests/helpers/browser-login-verification.ts": "e89f4c5bbfc6e515e4ea783cca72d750c80e314cd10c8adef04f276109baed68",
@@ -114,6 +115,8 @@
     "tests/p0-remediation/registration.spec.ts": "018d100242a7001f1eb2b5109149a7bd9fe31784dbb120199260d33560fd9435",
     "tests/release/mfa-block-ui.spec.ts": "7258dc5b649a0d544ffeff80193db07d289f7010728d7dca087378583f7b7722"
   },
-  "fingerprint": "fc65d7d3dcaf3b6094ef35bff072f3cb70fb76a7a75ead046379d4dca201df27",
-  "scope": "Current code/test/CI content. Directed tests recorded by log hash; global final CI not claimed PASS."
+  "fingerprint": "37dd712b87892d2cf0206b46519eea4992b980d6e2617188e57414238630d581",
+  "scope": "Current code/test/CI content. Directed tests recorded by log hash; global final CI not claimed PASS.",
+  "postCiCorrectionParent": "a5a77de93b0c4b97e09abef050c7ec8fe40687b2",
+  "fingerprintAlgorithm": "sha256(JSON sourceFiles sorted keys, separators comma/colon, UTF-8)"
 }
