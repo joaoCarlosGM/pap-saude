@@ -26,6 +26,7 @@ import { mutateAdminOrganization } from "../../src/server/admin/admin-organizati
 import { reviewBetaRequest } from "../../src/server/admin-beta/requests.service";
 import { requireAdminActor } from "../../src/server/admin/admin-session.service";
 import { fixture } from "../first-access/fixtures";
+import { createVerifiedSession } from "../helpers/verified-session";
 import { navigationFingerprint } from "../first-access/login-fixtures";
 import { POST as assign } from "../../src/app/api/admin/role-assignments/route";
 import { DELETE as revoke } from "../../src/app/api/admin/role-assignments/[assignmentId]/route";
@@ -650,17 +651,27 @@ test("global nonclinical roles denied clinical GET/POST/PATCH with forged org an
       assert.equal(response.status, 403);
     }
 });
-test("Professional optional MFA retained: own-unit clinical access, foreign-unit denied", async () => {
+test("Professional requires real MFA: primary denied, verified own-unit allowed and foreign-unit denied", async () => {
   const f = await fixture("PROFESSIONAL");
+  const foreign = await db.organization.create({data:{
+    name:"Outra UBS sintética", type:"HEALTH_UNIT", parentId:f.unit.parentId, status:"ACTIVE",
+  }});
   const context = { params: Promise.resolve({ path: ["patients"] }) };
+  for (const id of [f.unit.id, foreign.id]) {
+    assert.equal((await clinicalGet(request("/api/clinical/patients", f.session.token, undefined, "GET", {
+      "x-organization-id":id,
+    }), context)).status,403);
+  }
+  const verified = await createVerifiedSession({userId:f.user.id});
+  assert.ok(verified.session.mfaVerifiedAt);
   for (const [id, status] of [
     [f.unit.id, 200],
-    [pendingId, 403],
+    [foreign.id, 403],
   ] as const)
     assert.equal(
       (
         await clinicalGet(
-          request("/api/clinical/patients", f.session.token, undefined, "GET", {
+          request("/api/clinical/patients", verified.token, undefined, "GET", {
             "x-organization-id": id,
           }),
           context,
@@ -668,14 +679,15 @@ test("Professional optional MFA retained: own-unit clinical access, foreign-unit
       ).status,
       status,
     );
-  await assert.rejects(
+  for (const token of [f.session.token,verified.token]) await assert.rejects(
     mutateAdminOrganization(
       f.user.id,
-      pendingId,
+      foreign.id,
       { operation: "ACTIVATE" },
-      f.session.token,
+      token,
     ),
   );
+  assert.equal((await db.session.findUniqueOrThrow({where:{id:f.session.session.id}})).mfaVerifiedAt,null);
 });
 test("anonymous and unassigned accounts cannot read or self-promote through admin API", async () => {
   assert.equal(

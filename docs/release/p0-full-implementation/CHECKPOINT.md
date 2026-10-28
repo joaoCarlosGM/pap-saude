@@ -99,3 +99,8 @@ Cada etapa terá commit/push seletivo do que estiver validado e checkpoint. Requ
 - Isolamento de proxy explícito por contexto Playwright, sem mudar limite/chaves/contadores ou confiar em forwarding implícito. Ver CORRECAO-CI-CAPTCHA.md.
 - PASS: novos adversariais4, CAPTCHA/login5, caso pendente1, browser completo15, HTTP login7/MFA2, TypeScript/lint/diff. Sem repetições gerais ou Docker builds.
 - Próximo: commit/push seletivo autorizado, CI do SHA exato; investigar somente o próximo gate falho. Laboratórios e candidato original preservados.
+
+### Correção dirigida Slice B — base 58991c8
+
+- Contrato profissional atualizado: primária403; MFA real própria200/estrangeira403; administração negada com ambas. Backend preservado.
+- PASS dirigido1, governança27, TypeScript/lint/diff. Ver CORRECAO-CI-SLICE-B.md. Próximo: CI do novo SHA, somente próximo gate falho.

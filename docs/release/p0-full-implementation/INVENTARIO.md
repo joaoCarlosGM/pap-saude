@@ -96,3 +96,14 @@ docs/release/p0-full-implementation/evidence/validation.json
 docs/release/p0-full-implementation/evidence/source-manifest.json
 docs/release/p0-full-implementation/INVENTARIO.md
 ```
+
+## Correção dirigida Slice B — staging seletivo
+
+```text
+tests/mission04-b/governance.test.ts
+docs/release/p0-full-implementation/CORRECAO-CI-SLICE-B.md
+docs/release/p0-full-implementation/CHECKPOINT.md
+docs/release/p0-full-implementation/INVENTARIO.md
+docs/release/p0-full-implementation/evidence/validation.json
+docs/release/p0-full-implementation/evidence/source-manifest.json
+```

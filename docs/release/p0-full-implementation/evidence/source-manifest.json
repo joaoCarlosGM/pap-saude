@@ -116,11 +116,13 @@
     "tests/p0-remediation/clinical-registration.integration.test.ts": "c79fea4ee792c698be297cdc6d4eddddbdbd8ed53f9f92efe628dde9260cd0d5",
     "tests/p0-remediation/registration-runtime.integration.test.ts": "e57be6175ac0d1358e0b4ffe705486abf9c4d1090201fee499a4c748866c31c0",
     "tests/p0-remediation/registration.spec.ts": "018d100242a7001f1eb2b5109149a7bd9fe31784dbb120199260d33560fd9435",
-    "tests/release/mfa-block-ui.spec.ts": "7258dc5b649a0d544ffeff80193db07d289f7010728d7dca087378583f7b7722"
+    "tests/release/mfa-block-ui.spec.ts": "7258dc5b649a0d544ffeff80193db07d289f7010728d7dca087378583f7b7722",
+    "tests/mission04-b/governance.test.ts": "dfb167612f8866951cc59db03f7e9dd1a45b426654e49f411e6fac0de5cd6aa8"
   },
-  "fingerprint": "adcaae292c16095b4478dd5ac2114656c46419f726f5bdcf851bd9a03ea1e54f",
+  "fingerprint": "ed7304a0bfce27694f159211b623ba22493fb286e3bdc7c8c1702bc3c60e8f1f",
   "scope": "Current code/test/CI content. Directed tests recorded by log hash; global final CI not claimed PASS.",
   "postCiCorrectionParent": "a5a77de93b0c4b97e09abef050c7ec8fe40687b2",
   "fingerprintAlgorithm": "sha256(JSON sourceFiles sorted keys, separators comma/colon, UTF-8)",
-  "captchaCorrectionParent": "8aa7919c53f601539df89b4f671e64ff821b5a4c"
+  "captchaCorrectionParent": "8aa7919c53f601539df89b4f671e64ff821b5a4c",
+  "sliceBCorrectionParent": "58991c86fd212df44df1f30fbcff8ed2da71b4ba"
 }
