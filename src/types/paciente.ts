@@ -1,10 +1,12 @@
+import type { Atendimento } from "./atendimento"
 export type PatientRisk =
   | "BAIXO_RISCO"
   | "ATENCAO"
   | "URGENCIA"
+  | "NAO_AVALIADO"
 
 export type ClinicalScore = {
-  value: number
+  value: number | null
   classification: PatientRisk
   date: string
 }
@@ -79,6 +81,8 @@ export type Patient = {
     dpp: string
   }
 
+  encounters?: Atendimento[]
+  historyStatus?: string
   allergies: string[]
   comorbidities: string[]
 
@@ -91,10 +95,10 @@ export type Patient = {
   systolicTrend: ChartPoint[]
 
   obstetricHistory: {
-    pregnancies: number
-    deliveries: number
-    abortions: number
-    cesareans: number
+    pregnancies: number | null
+    deliveries: number | null
+    abortions: number | null
+    cesareans: number | null
   }
 
   timeline: TimelineEvent[]

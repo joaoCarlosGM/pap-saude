@@ -1,7 +1,9 @@
+import type { RegistrationData } from "./registration"
 export type ClassificacaoAtendimento =
   | "BAIXO_RISCO"
   | "ATENCAO"
   | "URGENCIA"
+  | "NAO_AVALIADO"
 
 export type Atendimento = {
   id: string
@@ -20,6 +22,7 @@ export type Atendimento = {
     cargo: string
   }
 
-  score: number
+  registration?: RegistrationData
+  score: number | null
   classificacao: ClassificacaoAtendimento
 }

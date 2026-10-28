@@ -41,17 +41,19 @@ export type RiskDistributionItem = {
 }
 
 export type DashboardAttendance = {
+  patientId: string
   id: string
   patient: string
   initials: string
   gestationalAge: string
   professional: string
   time: string
-  score: number
+  score: number | null
   classification:
     | "BAIXO_RISCO"
     | "ATENCAO"
     | "URGENCIA"
+    | "NAO_AVALIADO"
 }
 
 export type UpcomingDelivery = {
