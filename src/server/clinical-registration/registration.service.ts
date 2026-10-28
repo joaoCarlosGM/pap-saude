@@ -1,3 +1,4 @@
+import { requireOperationalMfa, OperationalMfaRequiredError } from "../auth/operational-mfa.service";
 import { createHash, createHmac } from "node:crypto";
 import { AuditOutcome, Prisma, type ClinicalRegistrationOperation } from "@prisma/client";
 import { db } from "../db/client";
@@ -35,20 +36,15 @@ async function authorize(input: RegistrationIdentity, tx: Prisma.TransactionClie
   let actor;
   try {
     actor = await validateSession(input.sessionToken, { client: tx, updateLastSeen: false });
+    await requireOperationalMfa(actor, tx);
   } catch (error) {
+    if (error instanceof OperationalMfaRequiredError) throw new RegistrationOperationError("MFA_REQUIRED", 403);
     if (error instanceof InvalidSessionError || error instanceof ExpiredSessionError || error instanceof RevokedSessionError || error instanceof InactiveSessionUserError) {
       throw new RegistrationOperationError("AUTHENTICATION_REQUIRED", 401);
     }
     throw error;
   }
   for (const permission of permissions) await requirePermission({ userId: actor.user.id, organizationId: input.organizationId, permission }, tx);
-  // Professional enrollment remains optional. Once enrolled, a primary session
-  // cannot substitute for the real second-factor login, including old sessions.
-  const factor = await tx.mfaFactor.findFirst({ where: { userId: actor.user.id, type: "TOTP", status: "ACTIVE" }, orderBy: { enabledAt: "desc" }, select: { enabledAt: true } });
-  if (factor) {
-    const verified = actor.session.mfaVerifiedAt;
-    if (!verified || !factor.enabledAt || verified < factor.enabledAt || verified < actor.session.createdAt || verified > new Date()) throw new RegistrationOperationError("MFA_REQUIRED", 403);
-  }
   return { userId: actor.user.id, sessionId: actor.session.id, organizationId: input.organizationId };
 }
 function selector(actor: Actor, keyHash: string) {

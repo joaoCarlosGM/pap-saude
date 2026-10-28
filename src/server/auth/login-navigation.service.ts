@@ -62,6 +62,7 @@ export async function resolveLoginNavigation(
 
   const state = await firstAccessState(session.user.id, session.session.id);
   const profile = state.profile;
+  if (!state.verified) return { view: "REDIRECT", destination: "/primeiros-passos" };
   if (accessDestination(profile) === "/comercial")
     return { view: "REDIRECT", destination: "/comercial" };
   // Effective permissions already intersect the canonical role catalogue,

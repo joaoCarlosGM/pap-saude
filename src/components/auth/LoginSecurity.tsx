@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import AuthAccessShell from "./AuthAccessShell";
 import styles from "./auth-access.module.css";
+import LoginVerification, { type LoginVerificationValue } from "./LoginVerification";
 const subscribe = () => () => {};
 export default function LoginSecurity({
   initialMode = "LOGIN",
@@ -19,6 +20,8 @@ export default function LoginSecurity({
   const lock = useRef(false);
   const [busy, setBusy] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [verification, setVerification] = useState<LoginVerificationValue | null>(null);
+  const [verificationEpoch, setVerificationEpoch] = useState(0);
   const [mfaTemporarilyBlocked, setMfaTemporarilyBlocked] = useState(false);
   const [email, setEmail] = useState(""),
     [password, setPassword] = useState(""),
@@ -28,6 +31,7 @@ export default function LoginSecurity({
     [error, setError] = useState("");
   const submit = async () => {
     if (lock.current || mfaTemporarilyBlocked) return;
+    if (mode === "LOGIN" && !verification?.answer) { setError("Conclua a verificação de segurança para continuar."); return; }
     lock.current = true;
     setBusy(true);
     try {
@@ -40,7 +44,7 @@ export default function LoginSecurity({
             : "/api/auth/password/forced-change";
       const payload =
         mode === "LOGIN"
-          ? { email, password }
+          ? { email, password, verificationId: verification?.id, verificationAnswer: verification?.answer }
           : mode === "MFA"
             ? { code }
             : {
@@ -56,6 +60,7 @@ export default function LoginSecurity({
       });
       const result = await response.json();
       if (!response.ok) {
+        if (mode === "LOGIN") { setVerification(null); setVerificationEpoch(v => v + 1); }
         if (mode === "MFA" && result.error === "MFA_TEMPORARILY_UNAVAILABLE") {
           setCode("");
           setMfaTemporarilyBlocked(true);
@@ -69,7 +74,9 @@ export default function LoginSecurity({
           return;
         }
         setError(
-          result.error === "INVALID_CREDENTIALS"
+          result.error === "LOGIN_VERIFICATION_REQUIRED"
+            ? "A verificação expirou, já foi usada ou está incorreta. Responda ao novo desafio."
+            : result.error === "INVALID_CREDENTIALS"
             ? "Credenciais inválidas"
             : mode === "MFA"
               ? "Código inválido, já utilizado ou desafio expirado. Use um código atual ou reinicie o login."
@@ -112,7 +119,8 @@ export default function LoginSecurity({
       </>}
       {(mode === "MFA" || mode === "CHANGE") && <label className={styles.label}>{mode === "MFA" ? "Código do autenticador ou código de recuperação" : "Código MFA, se configurado"}<input className={styles.input} autoComplete="one-time-code" autoCapitalize="none" spellCheck={false} required={mode === "MFA"} value={code} onChange={e => setCode(e.target.value)} /></label>}
       {mode === "CHANGE" && <label className={styles.label}>Nova senha<input className={styles.input} type="password" required minLength={12} autoComplete="new-password" value={newPassword} onChange={e => setNewPassword(e.target.value)} /></label>}
-      <button type="submit" disabled={busy || !ready || mfaTemporarilyBlocked} className={styles.primary}>{busy ? "Aguarde…" : mfaTemporarilyBlocked ? "Verificação temporariamente bloqueada" : mode === "LOGIN" ? "Entrar" : mode === "MFA" ? "Confirmar MFA" : "Atualizar senha"}</button>
+      {mode === "LOGIN" && <LoginVerification key={verificationEpoch} onChange={setVerification} />}
+      <button type="submit" disabled={busy || !ready || mfaTemporarilyBlocked || (mode === "LOGIN" && !verification?.answer)} className={styles.primary}>{busy ? "Aguarde…" : mfaTemporarilyBlocked ? "Verificação temporariamente bloqueada" : mode === "LOGIN" ? "Entrar" : mode === "MFA" ? "Confirmar MFA" : "Atualizar senha"}</button>
       <Link className={styles.link} href="/recuperar-senha">Esqueci minha senha</Link>
       {mode === "LOGIN" && <p className={styles.divider}>Sua instituição ainda não participa? <Link className={styles.link} href="/solicitar-adesao">Solicitar adesão de uma UBS</Link></p>}
       {mode === "MFA" && <button type="button" className={styles.secondary} disabled={busy} onClick={() => { setMode("LOGIN"); setPassword(""); setCode(""); setMfaTemporarilyBlocked(false); setError(mfaTemporarilyBlocked ? "Aguarde até 15 minutos antes de tentar novamente. Depois, entre com sua senha e um código atual do autenticador ou um código de recuperação ainda não utilizado." : ""); }}>{mfaTemporarilyBlocked ? "Voltar ao login" : "Reiniciar login"}</button>}

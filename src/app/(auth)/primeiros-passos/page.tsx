@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import FirstAccessWizard from "@/components/security/FirstAccessWizard";
 import { getEffectiveAccessProfile } from "@/server/iam/effective-access-profile.service";
 import { ownAccessStatus } from "@/server/access-invitations/access-invitation.service";
+import { firstAccessState } from "@/server/auth/first-access.service";
 import { accessDestination } from "@/lib/auth/access-destination";
 export default async function FirstAccessPage({
   searchParams,
@@ -14,8 +15,9 @@ export default async function FirstAccessPage({
   if (ajuda === "1") redirect("/ajuda/seguranca");
   const session = await requireOwnPageSession();
   const profile = await getEffectiveAccessProfile(session.user.id);
-  if (accessDestination(profile) === "/comercial") redirect("/comercial");
-  if (accessDestination(profile) === "/login" && await ownAccessStatus(session.user.id))
+  const state = await firstAccessState(session.user.id, session.session.id);
+  if (state.verified && accessDestination(profile) === "/comercial") redirect("/comercial");
+  if (state.verified && accessDestination(profile) === "/login" && await ownAccessStatus(session.user.id))
     redirect("/aguardando-autorizacao");
   return <FirstAccessWizard />;
 }

@@ -19,6 +19,8 @@ const MAX_LOGIN_BODY_BYTES = 16 * 1024;
 const MAX_EMAIL_LENGTH = 320;
 
 export interface LoginHttpPayload {
+  verificationId?: string;
+  verificationAnswer?: string;
   email: string;
   password: string;
 }
@@ -250,6 +252,8 @@ export async function readLoginPayload(
   return {
     email,
     password,
+    ...(typeof record.verificationId === "string" && record.verificationId.length <= 64 ? { verificationId: record.verificationId } : {}),
+    ...(typeof record.verificationAnswer === "string" && record.verificationAnswer.length <= 32 ? { verificationAnswer: record.verificationAnswer } : {}),
   };
 }
 

@@ -18,13 +18,13 @@ before(async () => {
   browser = await chromium.launch({ executablePath: "/usr/bin/chromium", headless: true, args: ["--no-sandbox"] });
 });
 after(async () => { await browser?.close(); await new Promise<void>(r => server?.close(() => r())); });
-async function page(query = "") { const p = await browser.newPage(); p.setDefaultTimeout(5000); await p.goto(origin + "/" + query); return p; }
-async function credentials(p: Page) { await p.getByLabel("E-mail", { exact: true }).fill("synthetic@example.invalid"); await p.getByLabel("Senha", { exact: true }).fill("Synthetic-test-only-42!"); }
+async function page(query = "") { const p = await browser.newPage(); p.setDefaultTimeout(5000); await p.route("**/api/auth/login/verification", r => r.fulfill({ json: { id: "synthetic-test-verification", question: "Pergunta sintética apenas no teste" } })); await p.goto(origin + "/" + query); return p; }
+async function credentials(p: Page) { await p.getByLabel("E-mail", { exact: true }).fill("synthetic@example.invalid"); await p.getByLabel("Senha", { exact: true }).fill("Synthetic-test-only-42!"); await p.getByLabel("Resposta da verificação").fill("synthetic"); }
 
 test("login keeps real endpoint payload, password visibility and MFA transition without retaining password", async () => {
   const p = await page(); try {
     await credentials(p); await p.getByRole("button", { name: "Mostrar senha" }).click(); await expect(p.getByLabel("Senha", { exact: true })).toHaveAttribute("type", "text");
-    await p.route("**/api/auth/login", r => { assert.deepEqual(Object.keys(r.request().postDataJSON()).sort(), ["email", "password"]); return r.fulfill({ json: { mfaRequired: true } }); });
+    await p.route("**/api/auth/login", r => { assert.deepEqual(Object.keys(r.request().postDataJSON()).sort(), ["email", "password", "verificationAnswer", "verificationId"]); return r.fulfill({ json: { mfaRequired: true } }); });
     await p.getByRole("button", { name: "Entrar", exact: true }).click(); await expect(p.getByRole("heading", { name: "Confirme sua identidade" })).toBeVisible();
     await expect(p.getByLabel("Senha", { exact: true })).toHaveCount(0); await p.getByLabel("Código do autenticador ou código de recuperação").fill("123456");
     await p.route("**/api/auth/mfa/verify", r => r.fulfill({ status: 401, json: { error: "INVALID_MFA_CODE" } })); await p.getByRole("button", { name: "Confirmar MFA", exact: true }).click(); await expect(p.getByRole("alert")).toContainText("Código inválido");

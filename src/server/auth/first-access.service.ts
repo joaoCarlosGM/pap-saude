@@ -39,7 +39,7 @@ export async function firstAccessState(userId: string, sessionId: string) {
   return {
     profile,
     progress,
-    mfaRequired: !!profile?.canAccessAdmin,
+    mfaRequired: true,
     verified,
     active: !!factor,
   };

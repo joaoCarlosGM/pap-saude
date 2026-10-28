@@ -1,3 +1,4 @@
+import { requireOperationalMfa, OperationalMfaRequiredError } from "@/server/auth/operational-mfa.service";
 import type {
   NextRequest,
 } from "next/server"
@@ -58,6 +59,7 @@ function isSessionAuthenticationError(
 
 export async function requireHttpSession(
   request: NextRequest,
+  options: { ownSecuritySetup?: boolean } = {},
 ): Promise<AuthenticatedHttpSession> {
   const token =
     readSessionToken(
@@ -73,6 +75,8 @@ export async function requireHttpSession(
       await validateSession(
         token,
       )
+
+    if (!options.ownSecuritySetup) await requireOperationalMfa(result);
 
     return {
       user: {
@@ -95,6 +99,7 @@ export async function requireHttpSession(
       },
     }
   } catch (error) {
+    if (error instanceof OperationalMfaRequiredError) throw new HttpAccessDeniedError();
     if (
       isSessionAuthenticationError(
         error,

@@ -61,7 +61,7 @@ export async function readSecurityBody(
   return value as Record<string, unknown>;
 }
 export function authenticated(request: NextRequest) {
-  return requireHttpSession(request);
+  return requireHttpSession(request, { ownSecuritySetup: true });
 }
 export function validateOrigin(request: Request) {
   assertTrustedRequestOrigin(request);

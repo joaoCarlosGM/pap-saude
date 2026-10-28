@@ -1,3 +1,4 @@
+import { CaptchaError, CAPTCHA_COOKIE, verifyLoginCaptcha } from "@/server/auth/login-captcha.service";
 import {
   NextRequest,
   NextResponse,
@@ -65,6 +66,8 @@ export async function POST(
     const origin =
       resolveTrustedClientOrigin(request);
 
+    await verifyLoginCaptcha({ id: payload.verificationId, answer: payload.verificationAnswer, binding: request.cookies.get(CAPTCHA_COOKIE)?.value, origin });
+
     const result =
       await authenticateLogin({
         email: payload.email,
@@ -121,6 +124,7 @@ export async function POST(
 
     return response;
   } catch (error) {
+    if (error instanceof CaptchaError) return json({ error: error.message }, error.status);
     if (
       error instanceof
       InvalidLoginPayloadError

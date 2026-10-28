@@ -1,3 +1,4 @@
+import { requireOperationalMfa, OperationalMfaRequiredError } from "@/server/auth/operational-mfa.service";
 import { Prisma } from "@prisma/client";
 import { db } from "@/server/db/client";
 import { validateSession } from "@/server/auth/session.service";
@@ -11,7 +12,7 @@ export class CommercialMfaRequiredError extends CommercialAccessError {
 }
 /** Authentication/IAM metadata only. Never joins memberships or organizations.
  * No implicit preview for administrators: an explicit global COMMERCIAL grant is
- * required. Existing optional MFA stays optional until a factor is active.
+ * required. MFA is mandatory, including for identities without an active factor.
  */
 export async function requireCommercialSession(token: string | null | undefined) {
     if (!token)
@@ -26,17 +27,8 @@ export async function requireCommercialSession(token: string | null | undefined)
             const definition = getSystemRoleDefinition("COMMERCIAL");
             if (!definition?.permissions.includes("commercial.read") || !grants.some(g => g.role.key === "COMMERCIAL" && g.role.permissions.some(p => p.permission.key === "commercial.read")))
                 throw new CommercialAccessError(403);
-            const factor = await tx.mfaFactor.findFirst({
-                where: { userId: actor.user.id, type: "TOTP", status: "ACTIVE" },
-                orderBy: { enabledAt: "desc" }, select: { enabledAt: true },
-            });
-            const administrative = grants.some(g => ["PAP_ADMIN", "PAP_MANAGER"].includes(g.role.key));
-            if (factor || administrative) {
-                const verified = actor.session.mfaVerifiedAt;
-                if (!verified || !factor?.enabledAt || verified < factor.enabledAt ||
-                    verified < actor.session.createdAt || verified > new Date())
-                    throw new CommercialMfaRequiredError();
-            }
+            try { await requireOperationalMfa(actor, tx); }
+            catch (error) { if (error instanceof OperationalMfaRequiredError) throw new CommercialMfaRequiredError(); throw error; }
             return { userId: actor.user.id, displayName: actor.user.displayName };
         }, { isolationLevel: Prisma.TransactionIsolationLevel.RepeatableRead });
     }
