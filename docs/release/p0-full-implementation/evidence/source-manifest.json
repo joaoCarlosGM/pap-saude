@@ -121,9 +121,10 @@
     "tests/mission04-c/journey.spec.ts": "7c204086206ad5845c628e20af2b8c0ebe31a4156d5327dd1bd699feb7e88c0e",
     "tests/mission04-e/journey.spec.ts": "b4a7a74df7541545e43ead599c67c22d1b0af25399632621e06d0287e449502f",
     "tests/mission04-e/rsc-dynamic-metadata.ts": "3d14e410c8711e7622ae07d755fe5015a0608db3ffa7b62453e2080926560209",
-    "tests/mission04-e/rsc-dynamic-metadata.test.ts": "6b5239fdfed177de1815d0450cfa46ee6903076bf9b52654251079b7e42b39eb"
+    "tests/mission04-e/rsc-dynamic-metadata.test.ts": "6b5239fdfed177de1815d0450cfa46ee6903076bf9b52654251079b7e42b39eb",
+    "tests/auth/http-guards.integration.test.ts": "159b98bc9ab8fff4aee03c6292587cb0cabff44df4a7ee17feb855b0119e5cca"
   },
-  "fingerprint": "7f86a1cbba6b5671b5e5b05e7cdd81f0d1250c43334e666802898c2fcdafc5ec",
+  "fingerprint": "1bd4cb7dfcea8eb4890f5e86850c09bd991d4237800f317035fd2165b42efbbb",
   "scope": "Current code/test/CI content. Directed tests recorded by log hash; global final CI not claimed PASS.",
   "postCiCorrectionParent": "a5a77de93b0c4b97e09abef050c7ec8fe40687b2",
   "fingerprintAlgorithm": "sha256(JSON sourceFiles sorted keys, separators comma/colon, UTF-8)",
@@ -134,5 +135,6 @@
   "dBrowserCorrectionParent": "1f165d6a0db0f7dc1eb834ab7d20dd7c03cf05c3",
   "eCorrectionParent": "50089d9e61ce5f34de2c370be9e58192b7d38c08",
   "rscDiagnosticParent": "f7538e0e79099c6c4873a68c31df05319dec9db5",
-  "rscContractParent": "26c41c831dfbad04e79807da2d06f358b2167d31"
+  "rscContractParent": "26c41c831dfbad04e79807da2d06f358b2167d31",
+  "authGuardsCorrectionParent": "7b6d0413987da23e5d8de9e08a354befe504479a"
 }

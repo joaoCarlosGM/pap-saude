@@ -19,6 +19,7 @@ import {
 } from "next/server"
 
 import { db } from "../../src/server/db/client"
+import { createVerifiedSession } from "../helpers/verified-session"
 
 import {
   createSession,
@@ -223,9 +224,10 @@ async function activateMembership(
 
 async function authenticatedRequest(
   userId: string,
+  verified = true,
 ) {
   const created =
-    await createSession({
+    await (verified ? createVerifiedSession : createSession)({
       userId,
       userAgent:
         "PAP-F02.4I-Test",
@@ -322,6 +324,33 @@ test(
     )
   },
 )
+
+test("requireHttpSession rejects primary sessions before and after TOTP enrollment", async () => {
+  const user = await createUser("http-primary-mfa@example.test")
+  const primary = await authenticatedRequest(user.id, false)
+  await assert.rejects(() => requireHttpSession(primary.request), HttpAccessDeniedError)
+
+  const verified = await authenticatedRequest(user.id)
+  await requireHttpSession(verified.request)
+  // Another session's successful second factor never authorizes this primary session.
+  await assert.rejects(() => requireHttpSession(primary.request), HttpAccessDeniedError)
+  assert.equal((await db.session.findUniqueOrThrow({ where: { id: primary.session.id } })).mfaVerifiedAt, null)
+})
+
+test("requireHttpSession rejects a verified session after its TOTP factor is revoked", async () => {
+  const user = await createUser("http-revoked-factor@example.test")
+  const verified = await authenticatedRequest(user.id)
+  const factor = await db.mfaFactor.findFirstOrThrow({ where: { userId: user.id, status: "ACTIVE" } })
+  assert.ok(factor.enabledAt)
+  assert.ok(verified.session.mfaVerifiedAt)
+  assert.ok(verified.session.mfaVerifiedAt >= factor.enabledAt)
+  assert.ok(verified.session.mfaVerifiedAt >= verified.session.createdAt)
+  assert.ok(verified.session.mfaVerifiedAt <= new Date())
+  await requireHttpSession(verified.request)
+
+  await db.mfaFactor.update({ where: { id: factor.id }, data: { status: "REVOKED", revokedAt: new Date() } })
+  await assert.rejects(() => requireHttpSession(verified.request), HttpAccessDeniedError)
+})
 
 test(
   "requireHttpSession rejects invalid session token",
