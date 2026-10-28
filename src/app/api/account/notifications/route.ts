@@ -1,3 +1,4 @@
+import { db } from "@/server/db/client";
 import { NextRequest } from "next/server";
 import { assertTrustedRequestOrigin } from "@/server/auth/http-auth";
 import { readAdminJson } from "@/server/admin/admin-http";
@@ -17,7 +18,8 @@ export async function GET(request: NextRequest) {
   try {
     if (request.nextUrl.search) invalid();
     const { user } = await ownAccessSession(request);
-    return accessJson({ notifications: await ownNotifications(user.id) });
+    const [notifications,unread]=await Promise.all([ownNotifications(user.id),db.userNotification.count({where:{userId:user.id,readAt:null}})]);
+    return accessJson({ notifications,unread });
   } catch (error) {
     return accessError(error);
   }

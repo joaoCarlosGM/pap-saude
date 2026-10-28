@@ -141,3 +141,6 @@
     transform: translateY(0);
   }
 }
+/* Hide only the visual scrollbar; native scroll and keyboard access remain. */
+.pap-scroll-hidden { scrollbar-width: none; }
+.pap-scroll-hidden::-webkit-scrollbar { display: none; }

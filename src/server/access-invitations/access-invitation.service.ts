@@ -463,6 +463,18 @@ export async function acceptAccessInvitation(input: {
       },
     });
     await audit(tx, user.id, "ACCESS_INVITATION_ACCEPTED", accepted);
+    // One scoped, persistent notice per legitimate decision-maker. No assignment
+    // or email is triggered by acceptance; current permissions are checked again
+    // by the queue and decision services when the notification is opened.
+    const approvers = await tx.roleAssignment.findMany({
+      where: { organizationId: null, user: { isActive: true }, OR: [
+        { role: { system: true, key: "PAP_ADMIN", permissions: { some: { permission: { key: "role.manage" } } } } },
+        ...(accepted.proposedRoleKey === "COMMERCIAL" ? [{ userId: accepted.invitedByUserId, role: { system: true, key: "PAP_MANAGER", permissions: { some: { permission: { key: "role.assign_commercial" } } } } }] : []),
+      ] }, select: { userId: true },
+    });
+    for (const id of new Set(approvers.map(a => a.userId)))
+      await createAccessNotification(tx, id, accepted.id, "ACCESS_PENDING_DECISION", user.id);
+
   });
   return { accepted: true, next: "/login" };
 }

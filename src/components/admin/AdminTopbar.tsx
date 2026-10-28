@@ -1,5 +1,6 @@
 "use client";
 
+import NotificationLink from "./NotificationLink";
 import { ChevronDown, HelpCircle, Menu } from "lucide-react";
 
 import type { EffectiveAccessProfile } from "@/lib/admin/types";
@@ -53,7 +54,7 @@ export default function AdminTopbar({
       </div>
 
       <div className="flex shrink-0 items-center gap-1 sm:gap-2">
-        <a href="/notificacoes" className="rounded-lg px-2 py-3 text-sm underline" aria-label="Minhas notificações">Notificações</a>
+        <NotificationLink/>
         <button
           type="button"
           aria-label="Ajuda"

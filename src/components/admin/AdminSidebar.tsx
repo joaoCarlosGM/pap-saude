@@ -5,7 +5,6 @@ import { useState, useEffect, useRef } from "react";
 
 import {
   BarChart3,
-  BriefcaseBusiness,
   Building2,
   FileClock,
   KeyRound,
@@ -36,6 +35,7 @@ type NavigationItem = {
 };
 
 const navigation: NavigationItem[] = [
+  { label: "Central de Pendências", href: "/admin/pendencias", icon: FileClock },
   {
     label: "Visão geral",
     href: "/admin",
@@ -44,15 +44,15 @@ const navigation: NavigationItem[] = [
   },
 
   {
-    label: "Organizações",
-    href: "/admin/organizacoes",
+    label: "Rede de Saúde",
+    href: "/admin/rede",
     icon: Building2,
     requiredAny: ["organization.read"],
     tourId: "admin-organizations",
   },
 
   {
-    label: "Usuários",
+    label: "Pessoas e Acessos",
     href: "/admin/usuarios",
     icon: Users,
     requiredAny: ["user.read"],
@@ -108,12 +108,6 @@ const navigation: NavigationItem[] = [
     tourId: "admin-integrations",
   },
 
-  {
-    label: "Comercial",
-    href: "/admin/comercial",
-    icon: BriefcaseBusiness,
-    requiredAny: ["commercial.read"],
-  },
   {
     label: "Solicitações",
     href: "/admin/solicitacoes",
@@ -190,8 +184,10 @@ export default function AdminSidebar({
       items: visible.filter((i) =>
         [
           "/admin",
+          "/admin/pendencias",
           "/admin/solicitacoes",
           "/admin/organizacoes",
+          "/admin/rede",
           "/admin/usuarios",
           "/admin/convites",
           "/admin/convites-globais",
@@ -300,7 +296,7 @@ export default function AdminSidebar({
             </label>
           </div>
         </div>
-        <nav aria-label="Administração" className="flex-1 overflow-y-auto px-3">
+        <nav aria-label="Administração" className="pap-scroll-hidden flex-1 overflow-y-auto px-3">
           {groups
             .filter((g) => g.items.length)
             .map((g) => (
