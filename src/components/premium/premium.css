@@ -23,7 +23,8 @@
 .dark .premium-workspace main :is(section,article)[class*="bg-white"]{background:#211b26;color:#eee7ed}
 .dark .premium-workspace .premium-sidebar input{background:#211b26}
 .dark .premium-workspace .premium-sidebar [class~="bg-pink-50/40"]{background:#2b2230;color:#eee7ed;border-color:#514252}
-@keyframes premium-enter{from{opacity:.85;transform:translateY(4px)}to{opacity:1;transform:none}}
+/* Semantic text keeps AA contrast throughout entry, including stagger delays. */
+@keyframes premium-enter{from{transform:translateY(4px)}to{transform:none}}
 @keyframes premium-bar{from{transform:scaleY(0)}to{transform:scaleY(1)}}
 @media(prefers-reduced-motion:reduce){.premium-workspace *{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
 

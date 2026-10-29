@@ -70,10 +70,19 @@ test('operational keyboard drawer and reduced-motion use native navigation witho
 
 });
 
-test('real Admin and clinical Premium surfaces satisfy automated WCAG AA checks',async({page})=>{
+async function assertOperationalWcag(page:Page){
  for(const [f,path] of [[await actor(),'/admin'],[await professional(),'/dashboard']] as const){
   await cookie(page,f.token);await page.goto(path);await expect(page.locator('[data-motion-kpis]').first()).toBeVisible();
   const result=await new AxeBuilder({page}).withTags(['wcag2a','wcag2aa','wcag21aa']).analyze();
   expect(result.violations.map(v=>({id:v.id,nodes:v.nodes.map(n=>({target:n.target,summary:n.failureSummary}))}))).toEqual([]);
  }
+}
+test('real Admin and clinical Premium surfaces satisfy automated WCAG AA checks',async({page})=>{
+ await assertOperationalWcag(page);
+});
+test('Admin and clinical text retain WCAG AA contrast at the first frame of entry animations',async({page})=>{
+ const motion=await page.context().newCDPSession(page);
+ await motion.send('Animation.enable');
+ await motion.send('Animation.setPlaybackRate',{playbackRate:0});
+ try{await assertOperationalWcag(page);}finally{await motion.send('Animation.setPlaybackRate',{playbackRate:1});await motion.detach();}
 });

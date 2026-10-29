@@ -1,5 +1,11 @@
 # Continuidade — P0 Premium unificado
 
+## Gate Premium — contraste durante a animação
+
+Run40929820653/SHA6acb324 FAIL no caso WCAG (operational.spec.ts:77); operador forneceu a linha sanitizada, localizando a asserção. Reprodução controlada: congelar o primeiro frame das animações de entrada via CDP provocou color-contrast3,81–3,99:1 (mínimo4,5:1), sem alterar dados/guards/preferência de movimento. A opacidade.85 do contêiner e dos KPIs reduzia o contraste durante a entrada e o escalonamento.
+
+Fix: remover apenas a opacidade de premium-enter; manter transform, tempos, escalonamento, contadores, gráficos e reduced-motion. Asserção WCAG original preservada em helper; novo teste congela o início da animação e verifica Admin e Clínica. Resultado atual: produção6/6 PASS, build real Node22 PASS, TypeScript/lint PASS. Logs privados: /tmp/pap-unified-tests-74wxXR/browser.log e /tmp/pap-unified-evidence/premium-contrast-production-build.log. Novo CI ainda obrigatório. Chromium local154; tentativa isolada de baixar156 para reproduzir o CI bloqueada por403 Domain forbidden; nenhuma dependência da aplicação reinstalada. Não repetir bateria global local.
+
 ## Gate B — contraste reproduzido e corrigido
 
 CI40927491741 no SHA ccbe827: primeiro erro agora em Mission04 B; Premium, UI P0 e primeiro acesso/MFA executados antes da falha. Publicação/deploy SKIPPED. Reprodução B em cluster novo:4 jornadas PASS, Manager desktop/mobile/dark FAIL por color-contrast em15 nós da sidebar. Foreground/background intermediários2,29:1 e perfil1,30:1, mínimo4,5:1.

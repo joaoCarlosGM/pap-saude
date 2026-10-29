@@ -223,5 +223,43 @@
       "width": 768,
       "height": 900
     }
+  },
+  "motionContrastFix": {
+    "parent": "6acb324b014799fdb8be1a5c97532d19aa455d65",
+    "failedRun": "https://github.com/joaoCarlosGM/pap-saude/actions/runs/40929820653",
+    "reportedAssertion": "operational.spec.ts:77:116",
+    "reproduction": "FAIL color-contrast with first animation frame frozen; 3.81-3.99:1, minimum4.5:1",
+    "fix": "opacity removed from semantic entry; transform/stagger/reduced-motion unchanged",
+    "afterFix": {
+      "browserPassed": 6,
+      "browserFailed": 0,
+      "build": "PASS",
+      "typescript": "PASS",
+      "lint": "PASS"
+    },
+    "logs": {
+      "browser": {
+        "privatePath": "/tmp/pap-unified-tests-74wxXR/browser.log",
+        "sha256": "318d0e5f8e209bb8a19a2ef0debbe9215e51d6293b4ffb462e8777d9468576de"
+      },
+      "build": {
+        "privatePath": "/tmp/pap-unified-evidence/premium-contrast-production-build.log",
+        "sha256": "025d2c1f6aa2a2496a2b168883f87fecd3b06756012d9ff10cc49bf7586512ef"
+      },
+      "typescript": {
+        "privatePath": "/tmp/pap-unified-evidence/premium-motion-contrast-tsc.log",
+        "sha256": "377de7d896506376a8a039487f5f1a2d071010819947c8dbbc2a1f825e574c6d"
+      },
+      "lint": {
+        "privatePath": "/tmp/pap-unified-evidence/premium-motion-contrast-lint.log",
+        "sha256": "377de7d896506376a8a039487f5f1a2d071010819947c8dbbc2a1f825e574c6d"
+      },
+      "reproduction": {
+        "privatePath": "/tmp/pap-unified-evidence/premium-frozen-motion-reproduction.log",
+        "sha256": "c34a0ce024cc3c1f91e10f90766acdee8a1fb813a8a40d4b15b192aedc290647"
+      }
+    },
+    "managedChromium156": "BLOCKED: official CDN HTTP403 Domain forbidden; local Chromium154",
+    "remoteCi": "PENDING"
   }
 }
