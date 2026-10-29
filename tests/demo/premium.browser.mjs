@@ -55,3 +55,37 @@ test('D progressive motion preserves exact data, zero bars, state and does not r
  await p.getByRole('link',{name:'Pacientes',exact:true}).click();await expect(p).toHaveURL(base+'/pacientes');await expect(p.getByRole('link',{name:'Pacientes',exact:true})).toHaveAttribute('aria-current','page');await p.waitForTimeout(350);assert.notEqual(await indicator.evaluate(el=>getComputedStyle(el).transform),old)
  await expect(p.locator('[data-patient-id]')).toHaveCount(3);await p.locator('[data-patient-id]').first().focus();await p.keyboard.press('Enter');await expect(p).toHaveURL(base+'/pacientes/maria-gracas');await p.close()
 })
+
+test('E/F welcome is session-only, direct routes work, guided tour uses real anchors and can skip/restart',async()=>{
+ const p=await browser.newPage({viewport:{width:1440,height:960},reducedMotion:'reduce'})
+ p.on('pageerror',e=>console.log('tour-diagnostic',JSON.stringify({message:e.message.split('\n')[0].slice(0,160)})))
+ p.on('response',r=>{if(new URL(r.url()).pathname==='/dashboard')console.log('tour-response',JSON.stringify({path:'/dashboard',status:r.status()}))})
+ await p.goto(base+'/registro');await expect(p.getByRole('dialog',{name:'Bem-vindo ao PAP Saúde'})).toBeVisible();await expect(p.getByRole('dialog')).toContainText('Não insira dados pessoais ou clínicos verdadeiros')
+ await p.getByRole('button',{name:'Explorar a plataforma livremente'}).click();await p.reload();await p.locator('[data-demo-ready=true]').waitFor({state:'attached'});await expect(p.getByRole('dialog')).toHaveCount(0)
+ assert.deepEqual(await p.evaluate(()=>Object.keys(sessionStorage).filter(k=>k.startsWith('pap.demo.'))),['pap.demo.welcome.v2'])
+ await p.getByRole('button',{name:'Ajuda',exact:true}).click();await p.getByRole('button',{name:'Iniciar tutorial guiado'}).click()
+ await expect(p.locator('[data-tour-step="dashboard"]')).toBeVisible({timeout:20000});console.log('tour-position',JSON.stringify({url:new URL(p.url()).pathname,page:await p.locator('[data-motion-page]').getAttribute('data-motion-page')}))
+ for(const [i,path]of ['/dashboard','/registro','/pacientes','/atendimentos','/protocolos','/chat'].entries()){
+  const dialog=p.getByRole('dialog');await expect(p).toHaveURL(base+path,{timeout:20000});await expect(dialog).toContainText(`Etapa ${i+1} de 6`);await expect(dialog).toHaveAttribute("data-tour-ready","true");await expect(p.locator('[data-guided-target=true]')).toHaveCount(1)
+  await dialog.getByRole('button',{name:i===5?'Concluir':'Próximo',exact:true}).click()
+ }
+ await expect(p.getByRole('dialog')).toHaveCount(0);await p.getByRole('button',{name:'Ajuda',exact:true}).click();await p.getByRole('button',{name:'Iniciar tutorial guiado'}).click();await p.getByRole('dialog').getByRole('button',{name:'Pular',exact:true}).click();await expect(p.getByRole('dialog')).toHaveCount(0)
+ await p.close()
+})
+
+test('F mobile tour navigates six real routes, swaps menu/content, repositions and exits by keyboard',async()=>{
+ for(const width of [320,390]){
+  const p=await browser.newPage({viewport:{width,height:844},reducedMotion:'reduce'})
+  await p.goto(base+'/chat');await p.getByRole('button',{name:'Iniciar tutorial guiado'}).click()
+  for(const [i,path]of ['/dashboard','/registro','/pacientes','/atendimentos','/protocolos','/chat'].entries()){
+   await expect(p).toHaveURL(base+path,{timeout:20000});const dialog=p.locator('[data-tour-step]');await expect(dialog).toContainText(`Etapa ${i+1} de 6`);await expect(dialog).toHaveAttribute('data-tour-ready','true')
+   await dialog.getByRole('button',{name:'Ver conteúdo',exact:true}).click();await expect(p.locator('[data-guided-target=true]')).toHaveCount(1)
+   await p.setViewportSize({width:width+5,height:820});await p.waitForTimeout(100)
+   const box=await dialog.boundingBox();assert.ok(box.x>=0&&box.x+box.width<=width+6&&box.y>=0&&box.y+box.height<=821)
+   assert.equal(await p.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),true)
+   await dialog.getByRole('button',{name:i===5?'Concluir':'Próximo',exact:true}).click()
+  }
+  await expect(p.locator('[data-tour-step]')).toHaveCount(0);await p.getByRole('button',{name:'Abrir menu',exact:true}).click();await p.getByRole('button',{name:'Ajuda',exact:true}).click();await p.getByRole('button',{name:'Iniciar tutorial guiado'}).click();await expect(p.locator('[data-tour-step]')).toBeVisible({timeout:20000});await p.keyboard.press('Escape');await expect(p.locator('[data-tour-step]')).toHaveCount(0)
+  await p.close()
+ }
+})

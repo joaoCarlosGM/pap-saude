@@ -7,7 +7,7 @@ const {chromium,expect}=load(process.env.PAP_PLAYWRIGHT_MODULE||'@playwright/tes
 const base=process.env.PAP_DEMO_BASE_URL||'http://127.0.0.1:3301'
 assert.match(base,/^http:\/\/127\.0\.0\.1:\d+$/,'Browser tests may target only an explicit loopback demo server')
 const output=process.env.PAP_DEMO_EVIDENCE_DIR||'.test-audit/vitrine';mkdirSync(output,{recursive:true})
-async function visit(page,path){await page.goto(base+path);await page.locator('[data-demo-ready="true"]').waitFor({state:"attached"})}
+async function visit(page,path){await page.goto(base+path);await page.locator('[data-demo-ready="true"]').waitFor({state:"attached"});if(await page.locator("[data-demo-onboarding]").count()&&!await page.evaluate(()=>sessionStorage.getItem("pap.demo.welcome.v2")==="seen"))await page.getByRole("button",{name:"Explorar a plataforma livremente"}).click()}
 let browser
 before(async()=>{browser=await chromium.launch({executablePath:process.env.PAP_CHROMIUM||'/usr/bin/chromium',headless:true,args:['--no-sandbox']})})
 after(async()=>browser?.close())

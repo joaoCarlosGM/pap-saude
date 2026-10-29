@@ -1,0 +1,4 @@
+.layer{position:fixed;inset:0;z-index:80;overflow:hidden}
+.spotlight{position:fixed;pointer-events:none;border:2px solid #EC268F;border-radius:8px;box-shadow:0 0 0 9999px rgb(15 23 42 / .34)}
+.panel{position:fixed;z-index:82;overflow-y:auto;overscroll-behavior:contain;border:1px solid #fbcfe8;border-radius:12px;background:white;padding:14px;box-shadow:0 16px 48px rgb(15 23 42 / .18)}
+.target{outline:2px solid #EC268F;outline-offset:3px;scroll-margin-block:12px}

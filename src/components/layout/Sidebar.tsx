@@ -19,26 +19,26 @@ const menuItems = [
 ]
 export default function Sidebar({open,onClose}:{open:boolean;onClose:()=>void}) {
   const pathname = usePathname(), drawer = useRef<HTMLElement>(null)
-  const {state:{profile},requestHelp,requestNotices,requestReset} = useDemo()
+  const {state:{profile},requestHelp,requestNotices,requestReset,tourIndex} = useDemo()
   const [profileMenu,setProfileMenu] = useState(false)
   const activeIndex = menuItems.findIndex(item => pathname === item.href || pathname.startsWith(item.href + '/'))
   useEffect(() => {
-    if (!open) return
+    if (!open || tourIndex!==null) return
     const previous = document.activeElement as HTMLElement | null
     drawer.current?.querySelector<HTMLElement>('button')?.focus()
     return () => previous?.focus()
-  },[open])
+  },[open,tourIndex])
   return <>
     {open && <button type="button" aria-label="Fechar menu" onClick={onClose} className="fixed inset-0 z-40 bg-slate-900/40 md:hidden" />}
-    <aside ref={drawer} role={open?'dialog':undefined} aria-modal={open?true:undefined} aria-label="Navegação principal"
+    <aside ref={drawer} role={open&&tourIndex===null?'dialog':undefined} aria-modal={open&&tourIndex===null?true:undefined} aria-label="Navegação principal"
       onKeyDown={e => {
         if(e.key==='Escape'){setProfileMenu(false);if(open)onClose()}
-        if(!open||e.key!=='Tab')return
+        if(!open||tourIndex!==null||e.key!=='Tab')return
         const nodes=Array.from(drawer.current?.querySelectorAll<HTMLElement>('button,a[href]')||[]).filter(el=>el.getClientRects().length>0)
         if(e.shiftKey&&document.activeElement===nodes[0]){e.preventDefault();nodes.at(-1)?.focus()}
         else if(!e.shiftKey&&document.activeElement===nodes.at(-1)){e.preventDefault();nodes[0]?.focus()}
       }}
-      className={`fixed inset-y-0 left-0 z-50 flex h-dvh w-64 shrink-0 flex-col border-r border-gray-200 bg-white transition-transform duration-200 md:static md:z-auto md:w-56 md:translate-x-0 ${open?'translate-x-0 visible':'-translate-x-full invisible md:visible'}`}>
+      className={`fixed inset-y-0 left-0 z-50 flex h-dvh w-64 shrink-0 flex-col border-r border-gray-200 bg-white transition-transform duration-200 motion-reduce:transition-none md:static md:z-auto md:w-56 md:translate-x-0 ${open?'translate-x-0 visible':'-translate-x-full invisible md:visible'}`}>
       <div className="flex h-12 shrink-0 items-center justify-between px-5">
         <span className="text-xl font-semibold text-pink-500">PAP Saúde</span>
         <button type="button" aria-label="Fechar menu" onClick={onClose} className="rounded-md p-2 text-gray-500 hover:bg-gray-100 md:hidden"><X size={20}/></button>
@@ -52,7 +52,7 @@ export default function Sidebar({open,onClose}:{open:boolean;onClose:()=>void}) 
         <div className="mt-1 min-w-0 text-[11px] leading-4 text-slate-500"><p className="break-words">{profile.municipality||'Município demonstrativo'} — {profile.uf||'UF'}</p><p className="break-words">{profile.unit||'UBS Demonstrativa'}</p></div>
         <p className="mt-1 text-[10px] font-medium text-pink-600">Modo demonstração · vínculo fictício</p>
         <div className="mt-1 flex gap-2 text-xs text-slate-600">
-          <button type="button" onClick={()=>{onClose();requestHelp(true)}} className="flex items-center gap-1 rounded px-2 py-1.5 hover:bg-pink-50"><HelpCircle size={14}/>Ajuda</button>
+          <button type="button" data-tour-help onClick={()=>{onClose();requestHelp(true)}} className="flex items-center gap-1 rounded px-2 py-1.5 hover:bg-pink-50"><HelpCircle size={14}/>Ajuda</button>
           <button type="button" onClick={()=>{onClose();requestNotices(true)}} className="flex items-center gap-1 rounded px-2 py-1.5 hover:bg-pink-50"><Bell size={14}/>Avisos</button>
         </div>
       </div>
