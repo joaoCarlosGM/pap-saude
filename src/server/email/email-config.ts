@@ -22,8 +22,8 @@ export function mailProvider(): "LOCAL_DEMO" | "RESEND" | "DISABLED" {
   catch { throw new EmailDeliveryError(); }
   if (process.env.PAP_LOCAL_DEMO === "1" || process.env.PAP_LOCAL_DEMO_TEST === "1" ||
       !!process.env.PAP_LOCAL_MAIL_TEST_DIR ||
-      process.env.PAP_LOCAL_PROFILE === "p0-acceptance" ||
-      database.pathname === "/pap_admin_beta1_local" || database.pathname === "/pap_p0_acceptance") throw new EmailDeliveryError();
+      !!process.env.PAP_LOCAL_PROFILE ||
+      database.pathname === "/pap_admin_beta1_local" || database.pathname === "/pap_p0_acceptance" || database.pathname === "/pap_p0_unified_rc") throw new EmailDeliveryError();
   const base = new URL(invitationBaseUrl());
   const allowedHosts = (process.env.PAP_EMAIL_ALLOWED_HOSTS || "").split(",").map(s => s.trim());
   const from = process.env.PAP_EMAIL_FROM?.trim() || "";

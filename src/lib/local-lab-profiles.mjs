@@ -7,6 +7,13 @@ export const LOCAL_LAB_PROFILES = Object.freeze({
     privateDir: ".local/pap-admin", marker: "pap-local-admin-beta1",
     keyId: "local-admin-beta1",
   }),
+  "p0-unified-rc": Object.freeze({
+    name: "p0-unified-rc", appPort: "3600", dbPort: "15436",
+    database: "pap_p0_unified_rc", user: "pap_unified",
+    container: "pap-p0-unified-rc-db", volume: "pap-p0-unified-rc-data",
+    privateDir: ".local/pap-p0-unified-rc", marker: "pap-local-p0-unified-rc",
+    keyId: "local-p0-unified-rc",
+  }),
   "p0-acceptance": Object.freeze({
     name: "p0-acceptance", appPort: "3200", dbPort: "15433",
     database: "pap_p0_acceptance", user: "pap_p0",
@@ -24,7 +31,7 @@ export function assertLabDatabaseUrl(value, name = "admin-beta1") {
   if (u.protocol !== "postgresql:" || u.hostname !== "127.0.0.1" ||
       u.port !== p.dbPort || u.pathname !== `/${p.database}` ||
       u.search !== "?schema=public" || u.hash ||
-      (p.name === "p0-acceptance" && u.username !== p.user))
+      (p.name !== "admin-beta1" && u.username !== p.user))
     throw new Error("LOCAL_DATABASE_ONLY");
   return u;
 }

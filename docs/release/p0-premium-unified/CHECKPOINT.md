@@ -10,7 +10,7 @@ Nenhuma alteração em outros laboratórios, produção, VPS ou checkout de prev
 | B | Quatro KPIs e gráficos reais; zero/ausência; navegação; MEOWS não homologado | PASS dirigido |
 | C | Registro idempotente e listas/fichas reais preservados; Premium sem fixtures | PASS dirigido; E2E pendente |
 | D | Admin completo, permissões e tour existentes; áreas por autorização | PASS dirigido; E2E pendente |
-| E | Perfil persistente3600/15436 próprio, marcador, segredos privados, correio local, restart | NOT RUN |
+| E | Perfil persistente3600/15436 próprio, marcador, segredos privados, correio local, restart | Implementado; persistência BLOCKED por disco Docker |
 | F | Fontes legítimas locais, build/start, regressões, Playwright, Docker, scanners e CI exato | NOT RUN |
 | Release | Arquitetura, evidências, homologação local/VPS e GO/NO-GO | NOT RUN |
 
@@ -25,3 +25,5 @@ B: 4/4 testes de perfil/dashboard real PASS em PostgreSQL novo descartável, inc
 C: cards de pacientes, detalhes/filtragem/transições reais dos atendimentos, diálogo nativo e entrada entre etapas sem substituir o estado do wizard. Backend e contrato idempotente intactos. 32/32 regressões clínicas/conclusão concorrente/privacidade/MEOWS não homologado PASS em DB descartável; TypeScript/lint PASS. Log /tmp/pap-unified-tests-9Nf4JW/clinical.log. E2E de interação/persistência será executado no consolidado.
 
 D: AdminShell/Sidebar/Topbar e métricas reais em rosa/branco, mantendo menu completo filtrado, busca, compactação, tour e estados suprimidos/sem dados. Alternância clínica/Admin/Comercial deriva do perfil efetivo nas áreas autorizadas. 27/27 testes B de governança/IAM PASS, TypeScript/lint PASS. Log /tmp/pap-unified-tests-UyzL01/iam.log. Guard comercial e Vitrine permanecem sem leitura de organizações clínicas.
+
+E: perfil independente, CLI/mail/seed locais. 4 políticas legadas +14 perfil antigo +14 perfil novo +14 serviços de mail/provisionamento PASS. Seed real em PostgreSQL descartável15436 PASS:7 contas,3 pacientes/gestações/atendimentos, proveniência,0 fatores pré-configurados; replay não altera IDs/credenciais. Logs /tmp/pap-unified-seed-gvdYpZ. TypeScript/lint PASS. Tentativa de laboratório persistente próprio abortou initdb por No space left on device no armazenamento Docker; container pap-p0-unified-rc-db parado e volume vazio preservados, nenhum recurso desconhecido removido. Restart persistente NOT RUN. Primeiros testes novos continham duas portas antigas nos stubs; corrigidos só os stubs e repetidos14/14.

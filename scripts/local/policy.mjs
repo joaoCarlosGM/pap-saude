@@ -13,9 +13,10 @@ export function parseLocalArguments(args) {
     throw new Error("INVALID_LOCAL_ARGUMENTS");
   const profile = localLabProfile(flags.length ? flags[0].slice("--profile=".length) : "admin-beta1");
   const commandArgs = args.filter(a => !a.startsWith("--profile="));
-  if (!["init", "start", "stop", "migrate", "admin", "dev", "mail"].includes(commandArgs[0]) ||
+  if (!["init", "start", "stop", "migrate", "admin", "dev", "mail", "seed"].includes(commandArgs[0]) ||
       commandArgs.length > (commandArgs[0] === "mail" ? 2 : 1))
     throw new Error("INVALID_LOCAL_ARGUMENTS");
+  if (commandArgs[0] === "seed" && profile.name !== "p0-unified-rc") throw new Error("UNIFIED_PROFILE_ONLY");
   return { profile, commandArgs };
 }
 export function assertSeparateCheckout(profile, hasPath) {

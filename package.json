@@ -92,7 +92,8 @@
     "test:mission04:e": "bash scripts/test-mission04-e.sh",
     "test:mission04:e:browser": "bash scripts/test-mission04-e.sh --browser",
     "test:p0:full:ui": "tsx --test --test-concurrency=1 tests/p0-full/auth-ui.test.ts tests/p0-full/workspace-ui.test.ts",
-    "test:p0:full": "bash scripts/test-p0-full.sh"
+    "test:p0:full": "bash scripts/test-p0-full.sh",
+    "local:unified": "node scripts/local/dev.mjs --profile=p0-unified-rc"
   },
   "dependencies": {
     "@capacitor/android": "^8.5.2",

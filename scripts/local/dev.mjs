@@ -83,7 +83,7 @@ function config() {
   assertNoEnvFiles();
   const c = JSON.parse(readFileSync(configFile, "utf8"));
   assertLocalUrl(c.databaseUrl, profile.name);
-  if (profile.name === "p0-acceptance" && c.profile !== profile.name)
+  if (profile.name !== "admin-beta1" && c.profile !== profile.name)
     throw new Error("LOCAL_PROFILE_CONFIG_REQUIRED");
   if (process.env.DATABASE_URL && process.env.DATABASE_URL !== c.databaseUrl)
     throw new Error(
@@ -184,7 +184,7 @@ async function main() {
       JSON.stringify(
         {
           databaseUrl: `postgresql://${profile.user}:${password}@127.0.0.1:${profile.dbPort}/${profile.database}?schema=public`,
-          ...(profile.name === "p0-acceptance" ? { profile: profile.name } : {}),
+          ...(profile.name !== "admin-beta1" ? { profile: profile.name } : {}),
           mfaKey: randomBytes(32).toString("base64url"),
         },
         null,
@@ -364,8 +364,12 @@ async function main() {
     );
     return;
   }
+  if (command === "seed") {
+    run(process.execPath,["--import","tsx","scripts/local/seed-unified.ts"],{env,stdio:"inherit"});
+    return;
+  }
   if (command === "admin") {
-    if (profile.name === "p0-acceptance")
+    if (profile.name !== "admin-beta1")
       console.log("Perfil P0: use e-mail distinto do laboratório anterior e preserve a entrada TOTP antiga.");
     const email = await question("E-mail do primeiro PAP_ADMIN local: "),
       displayName = await question("Nome: "),
@@ -384,8 +388,8 @@ async function main() {
     return;
   }
   if (command === "dev") {
-    if (profile.name === "p0-acceptance")
-      console.log("Abra 127.0.0.1:3200 somente em perfil de navegador separado; cookies não são isolados por porta.");
+    if (profile.name !== "admin-beta1")
+      console.log(`Abra 127.0.0.1:${profile.appPort} somente em perfil de navegador separado; cookies não são isolados por porta.`);
     const child = spawn(
       process.execPath,
       [
