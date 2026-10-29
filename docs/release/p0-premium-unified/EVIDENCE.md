@@ -1,5 +1,11 @@
 # Evidências — PAP Saúde P0 Premium operacional
 
+## Gate B — correção dirigida de contraste
+
+CI40927491741/ccbe827 falhou primeiro em Mission04 B, após Premium/UI P0/primeiro acesso. No executor isolado,4/5 jornadas B PASS e1/5 FAIL: Manager desktop/mobile/dark, color-contrast15 nós (2,29:1/2,69:1 e perfil1,30:1, exigido4,5:1). O tema usava transition-all e o perfil claro translúcido permanecia na sidebar escura.
+
+Alteradas somente3 regras CSS: restringir transition-property a transform,width; aplicar superfície/texto/borda contrastantes ao perfil sob classe dark e media query. Nenhuma asserção reduzida. Caso que falhava: PASS1/1, incluindo os três tamanhos/temas e hover/foco. Log /tmp/pap-unified-tests-ePxbYV/browser.log; reprodução anterior /tmp/pap-unified-tests-dfUu4k/browser.log. Next dev compilou o CSS; TypeScript/lint anteriores reutilizados porque nenhum contrato JS/TS mudou. Build do novo CSS e regressões integrais dependem do próximo CI. Captura nova evidence/manager-dark.png contém apenas identidade sintética e campos mascarados, revisada antes do staging.
+
 ## Diagnóstico dirigido de CI — 29/10/2026
 
 Run40890691031/SHA7671924: FAIL no subprocesso browser, confirmado pelo operador; publish/deploy SKIPPED. O erro externo não identifica a asserção. Reprodução com Node22.23.4 e checkout limpo do mesmo SHA:137 Node PASS, seed/replay/restore35 PASS, build real PASS, artefato2/2 PASS e browser5/5 PASS. A causa da divergência remota continua desconhecida.

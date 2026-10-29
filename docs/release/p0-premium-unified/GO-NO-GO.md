@@ -18,7 +18,7 @@ O SHA final publicado é indicado pela entrega e por `git rev-parse HEAD`. O fin
 | Trivy das imagens candidatas | NOT RUN porque as imagens não foram construídas; não reutilizar scanner histórico |
 | npm produção / migrator | Zero HIGH/CRITICAL;6 e5 MODERATE respectivamente, ainda sujeitos a revisão |
 | npm incluindo desenvolvimento |14 HIGH,10 MODERATE,1 LOW herdados. Não houve audit fix/override/upgrade automático; análise em EVIDENCE/DEPENDENCY-AUDIT |
-| CI remoto | SHA7671924: FAIL no subprocesso browser do gate Premium, run40890691031. Publicação/deploy SKIPPED. Erro interno não disponível; diagnóstico sanitizado preparado para a próxima execução. Sem aprovação remota |
+| CI remoto | Run40927491741/SHA ccbe827: Premium/UI P0/primeiro acesso passaram; FAIL no gate B. Contraste escuro da sidebar reproduzido e corrigido localmente (caso1/1 PASS). Novo CI obrigatório; publicação/deploy SKIPPED |
 | F03/F04/Beta e B/C/D/E integrais no CI | Gates preservados; não usar resultados históricos como aprovação deste candidato |
 | Homologação humana3600 | NOT RUN pelo operador |
 | VPS, capacidade e backup do destino | NOT RUN / BLOCKED por ausência de autorização de acesso; não presumir estado |

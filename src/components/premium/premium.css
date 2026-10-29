@@ -12,7 +12,7 @@
 .premium-page [data-motion-kpis]>article:nth-child(4){animation-delay:120ms}
 .premium-page [data-chart-bar]{transform-origin:bottom;animation:premium-bar 650ms ease-out both}
 .premium-active-indicator{position:absolute;top:0;left:0;width:3px;border-radius:6px;background:#EC268F;pointer-events:none;transition:transform 280ms ease-out,height 280ms ease-out;z-index:1}
-.premium-workspace .premium-sidebar{background:#fff;color:#334155;border-right:1px solid #eee6ec}
+.premium-workspace .premium-sidebar{background:#fff;color:#334155;border-right:1px solid #eee6ec;transition-property:transform,width}
 .premium-workspace .premium-sidebar [aria-current="page"]{background:#fdf0f7;color:#a3155e;font-weight:600}
 .premium-workspace .premium-sidebar :is(a,summary,button,input){color:inherit}
 .premium-workspace .premium-sidebar input{background:#faf7f9;border-color:#e5dce3}
@@ -22,6 +22,7 @@
 .dark .premium-workspace .premium-sidebar [aria-current="page"]{background:#452337;color:#f9b6dc}
 .dark .premium-workspace main :is(section,article)[class*="bg-white"]{background:#211b26;color:#eee7ed}
 .dark .premium-workspace .premium-sidebar input{background:#211b26}
+.dark .premium-workspace .premium-sidebar [class~="bg-pink-50/40"]{background:#2b2230;color:#eee7ed;border-color:#514252}
 @keyframes premium-enter{from{opacity:.85;transform:translateY(4px)}to{opacity:1;transform:none}}
 @keyframes premium-bar{from{transform:scaleY(0)}to{transform:scaleY(1)}}
 @media(prefers-reduced-motion:reduce){.premium-workspace *{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
@@ -34,6 +35,7 @@
  .premium-workspace{--premium-bg:#15121a;--premium-brand:#f8b4d9;color:#eee7ed}
  .premium-workspace .premium-sidebar{background:#211b26;color:#eee7ed;border-color:#514252}
  .premium-workspace .premium-sidebar [aria-current="page"]{background:#452337;color:#f9b6dc}
+ .premium-workspace .premium-sidebar [class~="bg-pink-50/40"]{background:#2b2230;color:#eee7ed;border-color:#514252}
  .premium-workspace :is(header,main) [class~="bg-white"],.premium-workspace>div>header{background:#211b26;color:#eee7ed}
  .premium-workspace :is(header,main) :is([class~="text-slate-900"],[class~="text-slate-800"],[class~="text-slate-700"],[class~="text-gray-900"]){color:#eee7ed}
  .premium-workspace :is(header,main) :is([class~="text-slate-600"],[class~="text-slate-500"],[class~="text-slate-400"],[class~="text-gray-500"],[class~="text-gray-600"]){color:#c2b8c5}

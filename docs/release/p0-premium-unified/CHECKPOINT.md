@@ -1,5 +1,11 @@
 # Continuidade — P0 Premium unificado
 
+## Gate B — contraste reproduzido e corrigido
+
+CI40927491741 no SHA ccbe827: primeiro erro agora em Mission04 B; Premium, UI P0 e primeiro acesso/MFA executados antes da falha. Publicação/deploy SKIPPED. Reprodução B em cluster novo:4 jornadas PASS, Manager desktop/mobile/dark FAIL por color-contrast em15 nós da sidebar. Foreground/background intermediários2,29:1 e perfil1,30:1, mínimo4,5:1.
+
+Fix somente em premium.css: transição restrita a transform/width, preservando movimento; superfície opaca e texto contrastante no perfil escuro, em classe dark e preferência do sistema. Reteste exato do caso falho PASS (desktop/mobile/dark, hover/foco, Axe WCAG AA e controles autorizados), sem alterar testes/asserts. Log privado /tmp/pap-unified-tests-ePxbYV/browser.log. Captura sintética mascarada manager-dark.png revisada visualmente. Nenhum backend, IAM, banco, fixture, timeout ou autenticação alterado. Build e gate completo serão confirmados pelo próximo CI, sem repetir os gates locais não afetados.
+
 ## Retomada dirigida — 29/10/2026
 
 SHA publicado7671924; CI40890691031 FAIL especificamente no subprocesso browser do gate Premium. Operador confirmou o erro externo `browser FAIL`, sem identificação da asserção. API Forbidden e página pública exigindo login para o log detalhado. Não há causa funcional comprovada.

@@ -198,5 +198,30 @@
       "pg": "8.23.0",
       "eslint-config-next": "16.4.2"
     }
+  },
+  "directedCi": {
+    "parent": "ccbe827e17b2d8f5fa9f8ece1240b55d965e6ffb",
+    "run": "https://github.com/joaoCarlosGM/pap-saude/actions/runs/40927491741",
+    "status": "FAIL",
+    "firstFailedStep": "Mission 04 delegated IAM, legacy upgrade and clinical page boundaries",
+    "localReproduction": {
+      "passed": 4,
+      "failed": 1,
+      "rule": "color-contrast",
+      "affectedNodes": 15
+    },
+    "afterCssFix": {
+      "targetedBrowserPassed": 1,
+      "failed": 0,
+      "log": "/tmp/pap-unified-tests-ePxbYV/browser.log",
+      "logSha256": "745464d3f8c5a0a5b82a213e526213d1e7ce24bc72a4204e58e73d8ba8bb8337"
+    },
+    "newRemoteCi": "PENDING",
+    "screenshot": {
+      "path": "docs/release/p0-premium-unified/evidence/manager-dark.png",
+      "sha256": "b4f30cfdf80acff5232a3a9f3e53eb36d6c809f909a95c554c15f085dc9f0c9b",
+      "width": 768,
+      "height": 900
+    }
   }
 }
