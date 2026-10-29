@@ -1,0 +1,21 @@
+# Continuidade — P0 Premium unificado
+
+Branch `feature/p0-premium-unified-rc`; início `b8e900c2ca6f4b17375cc1fbe0ec397af0383a2a`.
+Worktree própria `/tmp/pap-p0-premium-unified`. Especificação lida integralmente.
+Nenhuma alteração em outros laboratórios, produção, VPS ou checkout de preview.
+
+| Etapa | Dependência / aceite | Estado |
+|---|---|---|
+| A | Apresentação compartilhada; shell clínico, identidade e menu autorizados; sem imports sintéticos | PASS dirigido |
+| B | Quatro KPIs e gráficos reais; zero/ausência; navegação; MEOWS não homologado | NOT RUN |
+| C | Registro idempotente e listas/fichas reais preservados; Premium sem fixtures | NOT RUN |
+| D | Admin completo, permissões e tour existentes; áreas por autorização | NOT RUN |
+| E | Perfil persistente3600/15436 próprio, marcador, segredos privados, correio local, restart | NOT RUN |
+| F | Fontes legítimas locais, build/start, regressões, Playwright, Docker, scanners e CI exato | NOT RUN |
+| Release | Arquitetura, evidências, homologação local/VPS e GO/NO-GO | NOT RUN |
+
+Commits/push seletivos apenas nesta feature, após testes pertinentes.
+Próxima ação: núcleo de apresentação e shell; reutilizar contratos operacionais.
+Sem PR, merge, deploy ou habilitação do MEOWS assistencial.
+
+A: apresentação pura/links por concessão efetiva, identidade/vínculos reais na sidebar e tour clínico via engine existente. 6 testes PASS, next typegen, TypeScript, ESLint direcionado e diff PASS. Browser/release ainda NOT RUN. Dependências existentes reutilizadas por hardlinks, sem instalação.

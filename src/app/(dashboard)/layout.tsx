@@ -7,5 +7,5 @@ export default async function DashboardLayout({
   children: React.ReactNode
 }) {
   const actor = await requireClinicalPageSession();
-  return <DashboardShell identity={{id:actor.user.id,displayName:actor.user.displayName}}>{children}</DashboardShell>
+  return <DashboardShell profile={actor.profile} identity={{id:actor.user.id,displayName:actor.user.displayName}}>{children}</DashboardShell>
 }
