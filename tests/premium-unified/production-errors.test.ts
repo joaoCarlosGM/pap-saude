@@ -5,6 +5,8 @@ import {mkdtempSync,writeFileSync,rmSync} from "node:fs";
 import {join} from "node:path";
 import {tmpdir} from "node:os";
 import {createRequire} from "node:module";
+import {VitalSignsEncounterNotEditableError} from "../../src/server/vital-signs/vital-signs.errors";
+import {ObstetricDataEncounterNotEditableError} from "../../src/server/obstetric-data/obstetric-data.errors";
 import {clinicalErrorResponse} from "../../src/server/http/clinical-api-response";
 test("minified encounter domain errors preserve their public names and HTTP denial contract",async()=>{
  const dir=mkdtempSync(join(tmpdir(),"pap-unified-errors-"));
@@ -19,4 +21,10 @@ test("minified encounter domain errors preserve their public names and HTTP deni
   }
  }
  }finally{rmSync(dir,{recursive:true,force:true});}
+});
+
+test("finalized vital and obstetric writes report a domain conflict instead of a false internal failure",async()=>{
+ for(const error of [new VitalSignsEncounterNotEditableError(),new ObstetricDataEncounterNotEditableError()]){
+  const response=clinicalErrorResponse(error);assert.equal(response.status,409);assert.equal((await response.json()).error,error.name);
+ }
 });

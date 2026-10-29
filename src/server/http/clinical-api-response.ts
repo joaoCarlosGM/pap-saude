@@ -33,6 +33,11 @@ function statusForError(error: Error): number {
     return 403;
   }
 
+  if (name === "VitalSignsEncounterNotEditableError" ||
+      name === "ObstetricDataEncounterNotEditableError") {
+    return 409;
+  }
+
   if (name.includes("NotFound") || error.message === "Encounter not found.") {
     return 404;
   }
