@@ -4,6 +4,7 @@ import {mkdtempSync,writeFileSync,cpSync,mkdirSync,readFileSync} from 'node:fs';
 import {tmpdir} from 'node:os';
 import {join} from 'node:path';
 import {assertDockerEndpoint} from '../../scripts/local/policy.mjs';
+import {publicBrowserDiagnostics} from './browser-diagnostics.mjs';
 const groups={
  browser:[],
  auth:[],
@@ -18,7 +19,7 @@ const dir=mkdtempSync(join(tmpdir(),'pap-unified-tests-')),owner=randomUUID(),na
 const password=randomBytes(24).toString('hex');let cid;
 function docker(args,input){return execFileSync('docker',args,{input,encoding:'utf8',stdio:['pipe','pipe','pipe']}).trim();}
 assertDockerEndpoint(process.env.DOCKER_HOST||JSON.parse(docker(['context','inspect']))[0].Endpoints.docker.Host);
-const log=(label,args,env)=>{const r=spawnSync(args[0],args.slice(1),{env,encoding:'utf8'});writeFileSync(join(dir,label+'.log'),(r.stdout||'')+(r.stderr||''),{mode:0o600});if(r.status!==0)throw Error(`${label} FAIL (private log ${dir}/${label}.log)`);};
+const log=(label,args,env)=>{const r=spawnSync(args[0],args.slice(1),{env,encoding:'utf8'});const output=(r.stdout||'')+(r.stderr||'');writeFileSync(join(dir,label+'.log'),output,{mode:0o600});if(r.status!==0){if(label==='browser')console.error('Sanitized browser failure:',JSON.stringify(publicBrowserDiagnostics(output)));throw Error(`${label} FAIL (private log ${dir}/${label}.log)`);}};
 try{
  cid=execFileSync('docker',['run','--rm','-d','--name',name,'--label','pap.disposable=unified-premium','--label',`pap.owner=${owner}`,'--tmpfs','/var/lib/postgresql/data:rw,size=536870912','-e','POSTGRES_USER=pap_user','-e','POSTGRES_PASSWORD','-e',`POSTGRES_DB=${dbName}`,'-p','127.0.0.1::5432','postgres:16-alpine'],{env:{...process.env,POSTGRES_PASSWORD:password},encoding:'utf8',stdio:['pipe','pipe','pipe']}).trim();
  let ready=false;for(let i=0;i<40;i++){try{if(docker(['exec',cid,'psql','-h','127.0.0.1','-U','pap_user','-d',dbName,'-Atqc','SELECT 1'])==='1'){ready=true;break;}}catch{}await new Promise(r=>setTimeout(r,500));}if(!ready)throw Error('Owned PostgreSQL not ready');

@@ -1,5 +1,11 @@
 # Evidências — PAP Saúde P0 Premium operacional
 
+## Diagnóstico dirigido de CI — 29/10/2026
+
+Run40890691031/SHA7671924: FAIL no subprocesso browser, confirmado pelo operador; publish/deploy SKIPPED. O erro externo não identifica a asserção. Reprodução com Node22.23.4 e checkout limpo do mesmo SHA:137 Node PASS, seed/replay/restore35 PASS, build real PASS, artefato2/2 PASS e browser5/5 PASS. A causa da divergência remota continua desconhecida.
+
+O harness agora preserva o erro bruto somente em arquivo privado e publica um resumo com campos allowlisted. Não foram alteradas aplicação, segurança, asserts, timeouts ou paralelismo. Testes adversariais do diagnóstico3/3 PASS (dados privados, códigos de seis dígitos, campos injetados e erros de setup não vazam); TypeScript e lint dirigido PASS. Regressão browser com o novo harness5/5 PASS em DB descartável próprio, log /tmp/pap-unified-tests-qeCWK5/browser.log. Logs privados da reprodução Node22 e hashes: /tmp/pap-unified-evidence/node22-ci-diagnosis.json. CI do novo commit deverá confirmar o gate ou fornecer o primeiro diagnóstico seguro para uma correção dirigida; não representa GO de release.
+
 Branch feature/p0-premium-unified-rc; base b8e900c2ca6f4b17375cc1fbe0ec397af0383a2a.
 O código foi versionado por responsabilidade. SHA final: consultar a entrega e `git rev-parse HEAD`.
 Hashes de logs privados, capturas e prova de integridade Prisma em VALIDATION.json. Logs completos não são versionados porque podem conter valores dinâmicos das fixtures. Dados de testes integralmente sintéticos. Nenhuma evidência da branch demonstrativa substitui estas execuções.

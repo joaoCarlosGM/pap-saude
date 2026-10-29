@@ -8,12 +8,13 @@ import {assignSystemRole} from "../../src/server/iam/role-assignment.service";
 import {createSession} from "../../src/server/auth/session.service";
 import {actor} from "../mission04-b/fixtures";
 import {solveLoginVerification} from "../helpers/browser-login-verification";
+import {diagnosticLine} from "./browser-diagnostics.mjs";
 const origin="http://127.0.0.1:3610";
 const images=process.env.PAP_UNIFIED_SCREENSHOTS||"/tmp/pap-unified-screenshots";
 test.beforeAll(async()=>{expect(new URL(process.env.DATABASE_URL!).pathname).toBe('/pap_p0_full_tests');expect(new URL(process.env.DATABASE_URL!).hostname).toBe('127.0.0.1');await bootstrapSystemIam();mkdirSync(images,{recursive:true});});
 test.afterAll(()=>db.$disconnect());
 // Raw assertions remain private. Never emit session cookies or fixture credentials.
-test.afterEach(async({},info)=>{if(info.errors.length&&process.env.PAP_UNIFIED_ARTIFACTS)writeFileSync(join(process.env.PAP_UNIFIED_ARTIFACTS,'private-'+info.title.replace(/[^a-zA-Z0-9]+/g,'-')+'.json'),JSON.stringify(info.errors.map(e=>({message:e.message,stack:e.stack}))),{mode:0o600});for(const error of info.errors){error.message=(error.message||'Assertion failed').split('\n')[0];error.stack=error.stack?.match(/operational.spec.ts:\d+:\d+/g)?.join(', ');}});
+test.afterEach(async({},info)=>{if(info.errors.length&&process.env.PAP_UNIFIED_ARTIFACTS)writeFileSync(join(process.env.PAP_UNIFIED_ARTIFACTS,'private-'+info.title.replace(/[^a-zA-Z0-9]+/g,'-')+'.json'),JSON.stringify(info.errors.map(e=>({message:e.message,stack:e.stack}))),{mode:0o600});for(const error of info.errors){console.error(diagnosticLine(error,info.line,info.status));error.message=(error.message||'Assertion failed').split('\n')[0];error.stack=error.stack?.match(/operational.spec.ts:\d+:\d+/g)?.join(', ');}});
 async function cookie(page:Page,token:string){await page.context().addCookies([{name:'pap_session',value:token,url:origin,httpOnly:true,sameSite:'Lax'}]);}
 async function professional(){const f=await actor();await db.roleAssignment.deleteMany({where:{userId:f.user.id}});await db.membership.create({data:{userId:f.user.id,organizationId:f.unit.id,status:'ACTIVE'}});await assignSystemRole({userId:f.user.id,roleKey:'PROFESSIONAL',organizationId:f.unit.id});return f;}
 async function shot(page:Page,name:string,width:number){await page.screenshot({path:join(images,`${name}-${width}.png`),fullPage:true});}

@@ -1,5 +1,13 @@
 # Continuidade — P0 Premium unificado
 
+## Retomada dirigida — 29/10/2026
+
+SHA publicado7671924; CI40890691031 FAIL especificamente no subprocesso browser do gate Premium. Operador confirmou o erro externo `browser FAIL`, sem identificação da asserção. API Forbidden e página pública exigindo login para o log detalhado. Não há causa funcional comprovada.
+
+Reprodução Node22.23.4:137 testes Node PASS, seed/replay/backup/restore35 PASS, build real de checkout limpo PASS, artefato2/2 PASS, produção browser5/5 PASS. Não reinstaladas dependências. Logs privados/hash em /tmp/pap-unified-evidence/node22-ci-diagnosis.json. Não repetir esses gates sem motivo.
+
+Correção restrita ao harness: emitir diagnóstico sanitizado antes da remoção do diff privado e encaminhá-lo ao CI quando o subprocesso falhar. Publicar apenas linha estática do teste/stack, categoria, matcher e escalares limitados; sem cookies, URLs, corpos, DOM, segredos ou diffs textuais. Asserts e aplicação intactos. Novos testes3/3, TypeScript, lint dirigido e navegador de produção5/5 PASS; evidências browser-diagnostics-* em /tmp/pap-unified-evidence. Próximo passo: commit seletivo na feature e CI do novo SHA; corrigir somente o primeiro erro comprovado. NO-GO permanece: CI, Docker/Trivy e laboratório persistente ainda não aprovados.
+
 Branch `feature/p0-premium-unified-rc`; início `b8e900c2ca6f4b17375cc1fbe0ec397af0383a2a`.
 Worktree própria `/tmp/pap-p0-premium-unified`. Especificação lida integralmente.
 Nenhuma alteração em outros laboratórios, produção, VPS ou checkout de preview.
