@@ -52,6 +52,7 @@ export default function CommercialWorkspace({ name }: {
         <Link href="/vitrine" prefetch={false}><Sparkles size={19} aria-hidden="true"/>Vitrine demonstrativa</Link>
         <a href="#roteiro" onClick={() => setOpen(false)}><BookOpen size={19} aria-hidden="true"/>Roteiro de apresentação</a>
         <a href="#notificacoes" onClick={() => setOpen(false)}><CircleCheck size={19} aria-hidden="true"/>Minhas notificações</a>
+        <Link href="/login" prefetch={false}>Início da minha conta</Link>
         <Link href="/minha-seguranca" prefetch={false}><ShieldCheck size={19} aria-hidden="true"/>Minha segurança</Link>
         <button type="button" onClick={() => void logout()}><LogOut size={19} aria-hidden="true"/>Sair da conta</button>
       </nav>

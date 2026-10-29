@@ -11,6 +11,7 @@ export async function captureLocalDemoMail(message: {
   messageId?: string;
   eventTime?: string;
 }) {
+  if (process.env.NODE_ENV === "production") throw new Error("LOCAL_DEMO_MAIL_DISABLED");
   const db = new URL(process.env.DATABASE_URL || "");
   // Separate, opt-in sink for this slice's disposable browser/API harness.
   // It never accepts the operator's database, port, directory or public origin.
@@ -32,16 +33,16 @@ export async function captureLocalDemoMail(message: {
   if (operatorLab) {
     for (const p of Object.values(LOCAL_LAB_PROFILES)) {
       if (p.name !== operatorLab.name) {
-        try { await lstat(resolve(process.cwd(), p.privateDir)); throw new Error("LOCAL_DEMO_PROFILE_CONFLICT"); }
+        try { await lstat(resolve(process.cwd(), ".local", p.privateDir.slice(".local/".length))); throw new Error("LOCAL_DEMO_PROFILE_CONFLICT"); }
         catch (error) { if ((error as NodeJS.ErrnoException).code !== "ENOENT") throw error; }
       }
     }
-    for (const parent of [".local", operatorLab.privateDir]) {
-      try { if ((await lstat(resolve(process.cwd(), parent))).isSymbolicLink()) throw new Error("LOCAL_DEMO_MAIL_DISABLED"); }
+    for (const parent of ["", operatorLab.privateDir.slice(".local/".length)]) {
+      try { if ((await lstat(resolve(process.cwd(), ".local", parent))).isSymbolicLink()) throw new Error("LOCAL_DEMO_MAIL_DISABLED"); }
       catch (error) { if ((error as NodeJS.ErrnoException).code !== "ENOENT") throw error; }
     }
   }
-  const dir = isolatedTest ? testDir! : resolve(process.cwd(), operatorLab!.privateDir, "mail");
+  const dir = isolatedTest ? testDir! : resolve(process.cwd(), ".local", operatorLab!.privateDir.slice(".local/".length), "mail");
   await mkdir(dir, { recursive: true, mode: 0o700 });
   const directory = await lstat(dir);
   if (!directory.isDirectory() || directory.isSymbolicLink() ||

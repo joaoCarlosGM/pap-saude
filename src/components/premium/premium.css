@@ -1,5 +1,5 @@
 /* Presentation tokens only. No synthetic data or authorization behavior. */
-.premium-workspace{--premium-pink:#EC268F;--premium-surface:#fff;--premium-bg:#fbf8fa;color:#172033;background:var(--premium-bg)}
+.premium-workspace{--premium-pink:#EC268F;--premium-brand:#b41468;--premium-surface:#fff;--premium-bg:#fbf8fa;color:#172033;background:var(--premium-bg)}
 .premium-workspace :is(a,button,input,select,textarea,summary):focus-visible{outline:2px solid #b41468;outline-offset:3px}
 .premium-workspace main{min-width:0}
 .premium-workspace main :is(section,article)[class*="rounded-"]{border-color:#eee6ec}
@@ -17,7 +17,7 @@
 .premium-workspace .premium-sidebar :is(a,summary,button,input){color:inherit}
 .premium-workspace .premium-sidebar input{background:#faf7f9;border-color:#e5dce3}
 .premium-workspace .premium-sidebar :is(p,summary)[class*="text-teal-"]{color:#64748b}
-.dark .premium-workspace{--premium-bg:#15121a;color:#eee7ed}
+.dark .premium-workspace{--premium-bg:#15121a;--premium-brand:#f8b4d9;color:#eee7ed}
 .dark .premium-workspace .premium-sidebar{background:#211b26;color:#eee7ed;border-color:#514252}
 .dark .premium-workspace .premium-sidebar [aria-current="page"]{background:#452337;color:#f9b6dc}
 .dark .premium-workspace main :is(section,article)[class*="bg-white"]{background:#211b26;color:#eee7ed}
@@ -27,3 +27,21 @@
 @media(prefers-reduced-motion:reduce){.premium-workspace *{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
 
 .premium-workspace [class~="bg-[#064f50]"]{background-color:#be186a}.premium-workspace [class~="text-[#064f50]"]{color:#9d1759}
+
+/* Keep legacy DEMO theme independent; operational dark palette follows the OS
+   and retains readable text within real forms and table surfaces. */
+@media(prefers-color-scheme:dark){
+ .premium-workspace{--premium-bg:#15121a;--premium-brand:#f8b4d9;color:#eee7ed}
+ .premium-workspace .premium-sidebar{background:#211b26;color:#eee7ed;border-color:#514252}
+ .premium-workspace .premium-sidebar [aria-current="page"]{background:#452337;color:#f9b6dc}
+ .premium-workspace :is(header,main) [class~="bg-white"],.premium-workspace>div>header{background:#211b26;color:#eee7ed}
+ .premium-workspace :is(header,main) :is([class~="text-slate-900"],[class~="text-slate-800"],[class~="text-slate-700"],[class~="text-gray-900"]){color:#eee7ed}
+ .premium-workspace :is(header,main) :is([class~="text-slate-600"],[class~="text-slate-500"],[class~="text-slate-400"],[class~="text-gray-500"],[class~="text-gray-600"]){color:#c2b8c5}
+ .premium-workspace .premium-sidebar :is(p,summary)[class*="text-slate-"]{color:#c2b8c5}
+ .premium-workspace :is(input,select,textarea){background:#211b26;color:#eee7ed;border-color:#9b869c}
+}
+
+.premium-workspace>.workspace-skip{position:fixed;top:8px;left:8px;z-index:200;transform:translateY(-180%);padding:8px 12px;background:#fff;color:#9d1759;border-radius:8px}
+.premium-workspace>.workspace-skip:focus{transform:none}
+/* Confirmed AA contrast defect: slate-400 on white was 2.63:1. */
+.premium-workspace :is([class~="text-slate-400"],[class~="text-slate-500"],[class~="text-gray-400"],[class~="text-gray-500"]){color:#5e6a7e}

@@ -31,7 +31,7 @@ export default function DashboardShell({
   const closeSidebar = useCallback(() => setSidebarOpen(false), []);
 
   return (
-    <div className={`premium-workspace clinical-shell ${demo ? "pap-demo" : ""} flex min-h-screen bg-gray-50`}>
+    <div className={`clinical-shell ${demo ? "pap-demo" : "premium-workspace"} flex min-h-screen bg-gray-50`}>
       {<a className="workspace-skip" href={demo?"#demo-main":"#clinical-main"}>Ir para o conteúdo</a>}
       <Sidebar open={sidebarOpen} onClose={closeSidebar} demo={demo} displayName={identity?.displayName} profile={profile} mode={mode} />
 

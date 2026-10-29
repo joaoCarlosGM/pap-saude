@@ -11,7 +11,7 @@ test('self-hosted approved families retain publisher integrity, license and bina
   assert.equal(row.license,'OFL-1.1');assert.match(row.tarball,/^https:\/\/registry\.npmjs\.org\/@fontsource-variable\//);
   assert.match(row.tarballIntegrity,/^sha512-/);
   if(row.file.endsWith('.woff2'))assert.equal(data.subarray(0,4).toString(),'wOF2');
-  else assert.match(data.toString(),/SIL OPEN FONT LICENSE/);
+  else {assert.match(data.toString(),/SIL OPEN FONT LICENSE/);assert.deepEqual(readFileSync('public/licenses/fonts/'+row.file),data,'licenses must accompany distributed public assets/images');}
  }
 });
 test('root typography is local and retains Inter, Geist and mono CSS variables',()=>{
