@@ -2,7 +2,7 @@ export class PatientOrganizationError
   extends Error {
   constructor(message: string) {
     super(message);
-    this.name = new.target.name;
+    this.name = "PatientOrganizationError";
   }
 }
 
@@ -12,6 +12,7 @@ export class PatientOrganizationNotFoundError
     super(
       "Patient organization link not found",
     );
+    this.name = "PatientOrganizationNotFoundError";
   }
 }
 
@@ -21,6 +22,7 @@ export class PatientAlreadyLinkedError
     super(
       "Patient is already linked to this organization",
     );
+    this.name = "PatientAlreadyLinkedError";
   }
 }
 
@@ -30,6 +32,7 @@ export class PatientOrganizationLinkInactiveError
     super(
       "Patient organization link exists but is inactive",
     );
+    this.name = "PatientOrganizationLinkInactiveError";
   }
 }
 
@@ -39,6 +42,7 @@ export class InvalidPatientOrganizationTargetError
     super(
       "Patient links are only allowed to active health units",
     );
+    this.name = "InvalidPatientOrganizationTargetError";
   }
 }
 
@@ -48,6 +52,7 @@ export class InactivePatientOrganizationLinkError
     super(
       "Inactive patients cannot be linked to an organization",
     );
+    this.name = "InactivePatientOrganizationLinkError";
   }
 }
 
@@ -57,5 +62,6 @@ export class PatientMedicalRecordConflictError
     super(
       "Medical record number is already in use in this organization",
     );
+    this.name = "PatientMedicalRecordConflictError";
   }
 }

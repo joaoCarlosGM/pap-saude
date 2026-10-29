@@ -2,7 +2,7 @@ export class EncounterError
   extends Error {
   constructor(message: string) {
     super(message);
-    this.name = new.target.name;
+    this.name = "EncounterError";
   }
 }
 
@@ -12,6 +12,7 @@ export class EncounterNotFoundError
     super(
       "Encounter not found",
     );
+    this.name = "EncounterNotFoundError";
   }
 }
 
@@ -21,6 +22,7 @@ export class InvalidEncounterTransitionError
     super(
       "Encounter status transition is invalid",
     );
+    this.name = "InvalidEncounterTransitionError";
   }
 }
 
@@ -30,6 +32,7 @@ export class EncounterFinalizedError
     super(
       "Finalized encounter cannot be modified",
     );
+    this.name = "EncounterFinalizedError";
   }
 }
 
@@ -39,6 +42,7 @@ export class InvalidEncounterDateError
     super(
       "Encounter date is invalid",
     );
+    this.name = "InvalidEncounterDateError";
   }
 }
 
@@ -48,6 +52,7 @@ export class InvalidEncounterOrganizationError
     super(
       "Encounter organization must be an active health unit",
     );
+    this.name = "InvalidEncounterOrganizationError";
   }
 }
 
@@ -57,6 +62,7 @@ export class EncounterPatientNotLinkedError
     super(
       "Patient is not actively linked to encounter organization",
     );
+    this.name = "EncounterPatientNotLinkedError";
   }
 }
 
@@ -66,6 +72,7 @@ export class InactivePatientEncounterError
     super(
       "Inactive patient cannot start an encounter",
     );
+    this.name = "InactivePatientEncounterError";
   }
 }
 
@@ -75,6 +82,7 @@ export class EncounterPregnancyNotFoundError
     super(
       "Pregnancy linked to encounter was not found",
     );
+    this.name = "EncounterPregnancyNotFoundError";
   }
 }
 
@@ -84,6 +92,7 @@ export class EncounterPregnancyMismatchError
     super(
       "Pregnancy does not belong to encounter patient",
     );
+    this.name = "EncounterPregnancyMismatchError";
   }
 }
 
@@ -93,6 +102,7 @@ export class EncounterPregnancyNotActiveError
     super(
       "Encounter can only be linked to an active pregnancy",
     );
+    this.name = "EncounterPregnancyNotActiveError";
   }
 }
 
@@ -102,6 +112,7 @@ export class InvalidEncounterPregnancyDateError
     super(
       "Encounter occurrence is inconsistent with pregnancy timeline",
     );
+    this.name = "InvalidEncounterPregnancyDateError";
   }
 }
 
@@ -111,6 +122,7 @@ export class InvalidChiefComplaintError
     super(
       "Chief complaint is invalid",
     );
+    this.name = "InvalidChiefComplaintError";
   }
 }
 
@@ -120,5 +132,6 @@ export class InvalidCancellationReasonError
     super(
       "Encounter cancellation reason is invalid",
     );
+    this.name = "InvalidCancellationReasonError";
   }
 }
