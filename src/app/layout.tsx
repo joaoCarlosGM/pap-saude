@@ -1,19 +1,13 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono, Inter } from "next/font/google";
+import localFont from "next/font/local";
 import "./globals.css";
 import { cn } from "@/lib/utils";
 
-const inter = Inter({subsets:['latin'],variable:'--font-sans'});
-
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
+// Redistributable SIL OFL fonts, verified against publisher tarball integrity.
+// Build and browsers never contact Google Fonts.
+const inter=localFont({src:"./fonts/inter.woff2",variable:"--font-sans",weight:"100 900",display:"swap"});
+const geistSans=localFont({src:"./fonts/geist.woff2",variable:"--font-geist-sans",weight:"100 900",display:"swap"});
+const geistMono=localFont({src:"./fonts/geist-mono.woff2",variable:"--font-geist-mono",weight:"100 900",display:"swap"});
 
 export const metadata: Metadata = {
   title: "PAP Saúde",
