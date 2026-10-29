@@ -35,7 +35,7 @@ test.afterEach(async ({ page }, info) => {
   }
 });
 test("global Admin cards use real counts with responsive dark/light keyboard and WCAG checks", async ({ page }) => {
-  const admin = await actor(); await cookie(page, admin.token);
+  const admin = await actor(); await actor("COMMERCIAL"); await cookie(page, admin.token);
   let external = 0;
   await page.route("**/*", route => {
     if (!route.request().url().startsWith(origin)) { external++; return route.abort(); }
@@ -55,8 +55,16 @@ test("global Admin cards use real counts with responsive dark/light keyboard and
     await expect(cards.getByText("Convite aceito, perfil autorizado e UBS ativada são etapas independentes.", { exact: false })).toBeVisible();
     const response = await page.request.get("/api/admin/beta/metrics");
     expect(response.status()).toBe(200); const data = (await response.json()).governanceSummary;
-    const values = await cards.locator("article > p.text-3xl").allTextContents();
-    expect(values).toEqual([data.invitationsCreated.value, data.pendingAssignments.value, data.commercialUsers.value, data.unitsAwaitingActivation.value].map(String));
+    const expected=[data.invitationsCreated.value,data.pendingAssignments.value,data.commercialUsers.value,data.unitsAwaitingActivation.value].map(String);
+    const metrics=cards.locator('article > p.text-3xl [data-metric-final]');
+    await expect(metrics).toHaveCount(expected.length);
+    // Reserve/animated text is aria-hidden. Validate the accessible value once,
+    // and independently wait for each real visual counter to reach the API value.
+    expect(await metrics.locator('.sr-only').allTextContents()).toEqual(expected);
+    for(const [index,value]of expected.entries()){
+      if(Number(value)>0)await expect(metrics.nth(index)).toHaveAttribute('data-counter-starts',/[1-9]\d*/);
+      await expect(metrics.nth(index).locator('span[aria-hidden="true"]:not(.invisible)')).toHaveText(value);
+    }
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
     const disclosure = cards.locator("summary").first(); await disclosure.focus(); await page.keyboard.press("Enter");
     await expect(cards.locator("details").first()).toHaveAttribute("open", "");

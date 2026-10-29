@@ -18,7 +18,7 @@ O SHA final publicado é indicado pela entrega e por `git rev-parse HEAD`. O fin
 | Trivy das imagens candidatas | NOT RUN porque as imagens não foram construídas; não reutilizar scanner histórico |
 | npm produção / migrator | Zero HIGH/CRITICAL;6 e5 MODERATE respectivamente, ainda sujeitos a revisão |
 | npm incluindo desenvolvimento |14 HIGH,10 MODERATE,1 LOW herdados. Não houve audit fix/override/upgrade automático; análise em EVIDENCE/DEPENDENCY-AUDIT |
-| CI remoto | Run40931996563/e0f2baf: Premium/UI P0/primeiro acesso/B/C/D passaram; FAIL no E. E corrigido e validado localmente (10 Node+6 browser). CI do novo SHA obrigatório; publish/deploy SKIPPED |
+| CI remoto | Run40942540263/47b46e4: E/F03/Auth passaram; FAIL no teste de contadores Admin F. Corrigido somente o teste (4/4 browser PASS local). CI do novo SHA e gates restantes obrigatórios; publish/deploy SKIPPED |
 | F03/F04/Beta e B/C/D/E integrais no CI | Gates preservados; não usar resultados históricos como aprovação deste candidato |
 | Homologação humana3600 | NOT RUN pelo operador |
 | VPS, capacidade e backup do destino | NOT RUN / BLOCKED por ausência de autorização de acesso; não presumir estado |

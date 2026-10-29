@@ -344,5 +344,55 @@
     },
     "remoteCi": "PENDING",
     "productionApproved": false
+  },
+  "adminCounterTestFix": {
+    "parent": "47b46e449aedbf61963f33b667007dd12b1c591b",
+    "failedRun": "https://github.com/joaoCarlosGM/pap-saude/actions/runs/40942540263",
+    "reportedLocation": "governance.spec.ts:59:20",
+    "cause": "allTextContents concatenated reserved/animated/screen-reader spans",
+    "observed": {
+      "testValues": [
+        "000",
+        "000",
+        "000",
+        "000"
+      ],
+      "apiValues": [
+        "0",
+        "0",
+        "0",
+        "0"
+      ]
+    },
+    "change": "test only; accessible and visual values independently match real API; legitimate nonzero Commercial fixture",
+    "results": {
+      "browser": {
+        "passed": 4,
+        "failed": 0
+      },
+      "typescript": "PASS",
+      "lint": "PASS",
+      "diff": "PASS"
+    },
+    "applicationUnchanged": true,
+    "logs": {
+      "browser": {
+        "privatePath": "/tmp/pap-unified-tests-1dTu97/browser.log",
+        "sha256": "22b74b7cb9e5b0659a4523985accb3782d7d045f9f42ce18b191fb07e7b5382a"
+      },
+      "typescript": {
+        "privatePath": "/tmp/pap-unified-evidence/admin-governance-tsc.log",
+        "sha256": "377de7d896506376a8a039487f5f1a2d071010819947c8dbbc2a1f825e574c6d"
+      },
+      "lint": {
+        "privatePath": "/tmp/pap-unified-evidence/admin-governance-lint.log",
+        "sha256": "377de7d896506376a8a039487f5f1a2d071010819947c8dbbc2a1f825e574c6d"
+      },
+      "reproduction": {
+        "privatePath": "/tmp/pap-unified-evidence/admin-count-reproduction.json",
+        "sha256": "55c3006db338eec64acb6aafc93bee9a75df3eaa9b2617d4d5af019acda9977c"
+      }
+    },
+    "remoteCi": "PENDING"
   }
 }

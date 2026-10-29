@@ -1,5 +1,10 @@
 # Continuidade — P0 Premium unificado
 
+## Admin F — contadores reais, correção apenas do teste
+
+Run40942540263/47b46e4 passou E/F03/Auth e chegou ao browser Admin F; falhou governance.spec.ts59 porque allTextContents juntava reserva/visual/sr-only (000 vs0). App e métricas corretos, nenhuma mudança de backend. Teste agora compara valor acessível e visual final com a API real; fixture COMMERCIAL legítima garante animação não nula.
+PASS4/4 jornadas, TSC/lint/diff. Sem build/reinstalação/PG generate repetido porque aplicação e dependências intactas. Evidência /tmp/pap-unified-tests-1dTu97/browser.log; relatório CI-ADMIN-F-REMEDIATION.md. Próximo passo: commit seletivo e CI do novo SHA; gates posteriores, imagens e Trivy ainda obrigatórios.
+
 ## Gate E — consolidado para versionamento
 
 Run40931996563/e0f2baf falhou no E por contrato visual anterior. Corrigidos contratos Premium e defeitos reais de contraste/labels/resize/rolagem sr-only; RSC s é static siblings, whitelist estrita somente pacientes além de null/[]. Nenhum guard/backend alterado. Relatório CI-E-REMEDIATION.md detalha evidências, alterações e limites.

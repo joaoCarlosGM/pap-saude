@@ -2,11 +2,12 @@
   "branch": "feature/p0-premium-unified-rc",
   "base": "b8e900c2ca6f4b17375cc1fbe0ec397af0383a2a",
   "functionalCodeSha": "5fea9363b21dbf0b9db1833b4c2369ae62054b69",
-  "count": 115,
+  "count": 117,
   "paths": [
     ".github/workflows/ci.yml",
     "docs/release/p0-premium-unified/ARCHITECTURE.md",
     "docs/release/p0-premium-unified/CHECKPOINT.md",
+    "docs/release/p0-premium-unified/CI-ADMIN-F-REMEDIATION.md",
     "docs/release/p0-premium-unified/CI-E-REMEDIATION.md",
     "docs/release/p0-premium-unified/DEPENDENCY-AUDIT.json",
     "docs/release/p0-premium-unified/EVIDENCE.md",
@@ -117,19 +118,21 @@
     "tests/premium-unified/run-ci.mjs",
     "tests/premium-unified/run-isolated.mjs",
     "tests/premium-unified/seed-isolated.mjs",
+    "tests/release/governance.spec.ts",
     "tests/vitrine-premium/components.test.mjs",
     "tests/vitrine-premium/isolation.test.mjs"
   ],
   "sha256": {
     ".github/workflows/ci.yml": "8db19ed9afaab7b541f5ceb48fb9ff097e1f2a501953e9499d333ae7459c00dc",
     "docs/release/p0-premium-unified/ARCHITECTURE.md": "554afd0d8e1cf534939d2e6394c600814d2b1ee650e1ce1d2cdae1a2b51af52d",
-    "docs/release/p0-premium-unified/CHECKPOINT.md": "1346914cae94d0a9d5ad84a4666ae7e3b9ae5005c01f332256ced92f8532e85f",
+    "docs/release/p0-premium-unified/CHECKPOINT.md": "ac8a72559914098450e090d667518a84c69095b683059fb622e2859904b0156e",
+    "docs/release/p0-premium-unified/CI-ADMIN-F-REMEDIATION.md": "58d397803316cec160bbb940a4cf795d846ef189fc0508266b863c32c00e69b8",
     "docs/release/p0-premium-unified/CI-E-REMEDIATION.md": "1a5a2a614033ad91f0b281abd076b06ec3791a83ded357519a8350cba73b2937",
     "docs/release/p0-premium-unified/DEPENDENCY-AUDIT.json": "5f6a51caf102dd6651f344d32853d35ad1696c772e33c7b0ee2bf8b055b491b0",
-    "docs/release/p0-premium-unified/EVIDENCE.md": "57f8ab350880fc1c3846135e9bf1b12a4d20ad19899e4420e08baad238ae3734",
-    "docs/release/p0-premium-unified/GO-NO-GO.md": "399645692d96036d5837aabf911b58e98a1cb6501488e0527b81d479d550c1ce",
+    "docs/release/p0-premium-unified/EVIDENCE.md": "112809e30d67118c414bcddc5aa7d8f2773f1a1a5b40e3becf41248e63c0e2f0",
+    "docs/release/p0-premium-unified/GO-NO-GO.md": "4c0f233696c4d8323e8787010fcfd3b5d64df3f97b695701d1996b7ae4c01f5d",
     "docs/release/p0-premium-unified/LOCAL-HOMOLOGATION.md": "edd5b8fed54c36df41529b235f9c7355c03fb2a3a46c3d076f82e55f0d8f158b",
-    "docs/release/p0-premium-unified/VALIDATION.json": "570cda40ce8da94e82acc2171cb50599c543953a85838df90bfcc51eb51005f6",
+    "docs/release/p0-premium-unified/VALIDATION.json": "f812d07357dbd97bd78155f0657957b52e99974890347ac7c34c3c1ccdf20b22",
     "docs/release/p0-premium-unified/VPS-STAGING-PLAN.md": "90a6d429298ea015d872cc2638c197ccc287752feff066f87b6087bc6b256689",
     "docs/release/p0-premium-unified/evidence/admin-1440.png": "868b4f3e8090a5f79754e9c62dbf7eda5ee85cd3040cdc5dc1e91f9b6c944dfd",
     "docs/release/p0-premium-unified/evidence/admin-320.png": "e4564e73e1d0f8a68b1f6fde197ac73624cdf3d73fb381e7a210be1be93b14ac",
@@ -233,6 +236,7 @@
     "tests/premium-unified/run-ci.mjs": "84fee0bc89c624b7d5602df1be1838d9cb4c91862119f45dff63971de5a33200",
     "tests/premium-unified/run-isolated.mjs": "7dc21354fec6a21eeab50197a351dc59b1ff21a4c83c7aa298ea4b0f8de2b402",
     "tests/premium-unified/seed-isolated.mjs": "ebc645043e1afdf5b06d555872cce321f2af94388097007e96d452cd86b14dfb",
+    "tests/release/governance.spec.ts": "bef95572a99068395cced7d0a206ab3ea4b3a08d767bb7dc425ee75e7d612f51",
     "tests/vitrine-premium/components.test.mjs": "6d5d3c5b2eeb7d67fc8f43550ecb22dfc041ee1775a1fbe3a78ec23ce4c47f2e",
     "tests/vitrine-premium/isolation.test.mjs": "5854d3001750902e46fc1d3070224f5257561cfeee6074d7572e5e598a9dd7fe"
   },
@@ -274,5 +278,5 @@
     "prisma/migrations/20261026194000_p0_clinical_registration_operation/migration.sql": "d576aa338114a847166d00de8cda96a64bfbd2c79c433a7261dcfd0656e4487f",
     "prisma/migrations/20261028010000_p0_pending_access_notifications/migration.sql": "6e2e02fcf24ec381f289b02cebcd3c4fd2216119c1f41a967b9879815a6db105"
   },
-  "validationParentSha": "e0f2bafb7cb4eb24e080acc860a3a594d43799b0"
+  "validationParentSha": "47b46e449aedbf61963f33b667007dd12b1c591b"
 }
