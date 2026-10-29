@@ -1,10 +1,12 @@
 import {execFileSync,spawnSync} from 'node:child_process';
 import {randomBytes,randomUUID} from 'node:crypto';
-import {mkdtempSync,writeFileSync} from 'node:fs';
+import {mkdtempSync,writeFileSync,cpSync,mkdirSync,readFileSync} from 'node:fs';
 import {tmpdir} from 'node:os';
 import {join} from 'node:path';
 import {assertDockerEndpoint} from '../../scripts/local/policy.mjs';
 const groups={
+ browser:[],
+ auth:[],
  dashboard:['tests/p0-full/operational-data.test.ts'],
  security:['tests/p0-full/security.test.ts','tests/p0-full/pending.test.ts','tests/p0-full/demo-boundaries.test.ts'],
  clinical:['tests/p0-remediation/clinical-finalization-race.integration.test.ts','tests/release/clinical-error-privacy.test.ts','tests/release/p0-meows-operational-state.test.ts'],
@@ -23,7 +25,16 @@ try{
  const port=JSON.parse(docker(['inspect','--format','{{json .NetworkSettings.Ports}}',cid]))['5432/tcp'][0].HostPort;
  const env={...process.env,DATABASE_URL:`postgresql://pap_user:${password}@127.0.0.1:${port}/${dbName}?schema=public`,MFA_SECRET_ENCRYPTION_KEY:randomBytes(32).toString('base64'),MFA_SECRET_ENCRYPTION_KEY_ID:'unified-disposable',AUTH_ALLOWED_ORIGINS:'http://127.0.0.1:3110',PAP_PUBLIC_URL:'http://127.0.0.1:3110',PAP_EMAIL_PROVIDER:'disabled',PAP_EMAIL_EXTERNAL_ENABLED:'0',RESEND_API_KEY:'',AUTH_TRUSTED_CLIENT_IP_HEADER:''};
  log('migrate',['node_modules/.bin/prisma','migrate','deploy'],env);
- log(selected,['node_modules/.bin/tsx','--test','--test-concurrency=1',...groups[selected]],env);
+ if(selected==='auth'){
+   let script=readFileSync('scripts/test-auth-session.sh','utf8').replace('DB_CONTAINER="pap_saude_db"',`DB_CONTAINER="${cid}"`).replace('TEST_URL="postgresql://pap_user:pap_password@localhost:5432/pap_saude_f02b_test?schema=public"',`TEST_URL="postgresql://pap_user:${password}@127.0.0.1:${port}/pap_saude_f02b_test?schema=public"`);
+   const file=join(dir,'auth-owned.sh');writeFileSync(file,script,{mode:0o700});
+   log('auth-crypto',['node_modules/.bin/tsx','--test','tests/auth/crypto-core.test.ts','tests/auth/mfa-secret-encryption.test.ts'],env);
+   log(selected,['bash',file],env);
+ }else if(selected==='browser'){
+   cpSync('public','.next/standalone/public',{recursive:true});cpSync('.next/static','.next/standalone/.next/static',{recursive:true});
+   const browserEnv={...env,NODE_ENV:'development',PAP_UNIFIED_ARTIFACTS:join(dir,'browser'),PAP_UNIFIED_SCREENSHOTS:process.env.PAP_UNIFIED_SCREENSHOTS||join(dir,'screenshots')};mkdirSync(browserEnv.PAP_UNIFIED_ARTIFACTS,{recursive:true});
+   log(selected,['node_modules/.bin/playwright','test','--config','tests/premium-unified/playwright.config.ts',...(process.env.PAP_UNIFIED_TEST_GREP?['--grep',process.env.PAP_UNIFIED_TEST_GREP]:[])],browserEnv);
+ }else log(selected,['node_modules/.bin/tsx','--test','--test-concurrency=1',...groups[selected]],env);
  console.log(`PASS ${selected}; private evidence ${dir}`);
 }finally{
  if(cid){const info=JSON.parse(docker(['inspect',cid]))[0];if(info.Config.Labels['pap.owner']!==owner||info.Config.Labels['pap.disposable']!=='unified-premium')throw Error('Cleanup ownership mismatch');docker(['rm','-f',cid]);}

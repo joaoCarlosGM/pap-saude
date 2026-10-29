@@ -74,7 +74,7 @@ export default function Sidebar({ open, onClose, demo = false, displayName, prof
             const Icon = item.icon;
             return <Link key={href} href={href} prefetch={demo ? false : undefined} onClick={onClose} data-tour={`clinical-${item.href.slice(1)}`} aria-label={item.label} title={item.label} aria-current={(pathname === href || pathname.startsWith(href+"/")) ? "page" : undefined} className={`flex items-center gap-3 rounded-md px-3 py-2.5 text-sm ${pathname === href ? "bg-pink-50 font-medium text-pink-600" : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"}`}><Icon size={18} aria-hidden="true"/><span className={mode==="compact"?"md:sr-only":undefined}>{item.label}</span></Link>;
         })}</div></nav>
-      <div className="shrink-0 border-t border-gray-100 p-3"><Link href={demo ? "/vitrine/ajuda" : "/configuracoes"} prefetch={demo ? false : undefined} onClick={onClose} className="flex items-center gap-3 rounded-md px-3 py-2.5 text-sm text-gray-600"><Settings size={18} aria-hidden="true"/><span className={mode==="compact"?"md:sr-only":undefined}>{demo ? "Sobre a demonstração" : "Configurações"}</span></Link></div>
+      <div className="shrink-0 border-t border-gray-100 p-3"><Link data-tour="clinical-configuracoes" href={demo ? "/vitrine/ajuda" : "/configuracoes"} prefetch={demo ? false : undefined} onClick={onClose} className="flex items-center gap-3 rounded-md px-3 py-2.5 text-sm text-gray-600"><Settings size={18} aria-hidden="true"/><span className={mode==="compact"?"md:sr-only":undefined}>{demo ? "Sobre a demonstração" : "Configurações"}</span></Link></div>
     </aside>
   </>;
 }
