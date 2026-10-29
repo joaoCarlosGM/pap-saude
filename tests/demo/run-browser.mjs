@@ -11,9 +11,10 @@ try{
  await handle.writeFile(String(process.pid))
  const response=await fetch(base+'/dashboard');if(response.status!==200)throw Error(`Demo server health: HTTP ${response.status}`)
  const navigation=process.argv.includes('--navigation')
- const files=navigation?['tests/demo/premium.browser.mjs']:['tests/demo/premium.browser.mjs','tests/demo/browser.mjs']
+ const meows=process.argv.includes('--meows'),visual=process.argv.includes('--visual')
+ const files=navigation?['tests/demo/premium.browser.mjs']:meows?['tests/demo/browser.mjs']:visual?['tests/demo/premium-visual.browser.mjs']:['tests/demo/premium.browser.mjs','tests/demo/browser.mjs']
  for(const file of files){
-  const args=['--test','--test-concurrency=1',...(navigation?['--test-name-pattern=^(B |D |E/F |F mobile)']:[]),file]
+  const args=['--test','--test-concurrency=1',...(navigation?['--test-name-pattern=^(B |D |E/F |F mobile)']:meows?['--test-name-pattern=^MEOWS']:[]),file]
   const status=await new Promise((resolve,reject)=>{const child=spawn(process.execPath,args,{stdio:'inherit',env:{...process.env,PAP_DEMO_BASE_URL:base}});child.on('error',reject);child.on('exit',(code,signal)=>resolve(signal?1:code??1))})
   if(status!==0){process.exitCode=Number(status);break}
  }

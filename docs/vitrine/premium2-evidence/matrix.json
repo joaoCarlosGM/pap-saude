@@ -1,0 +1,272 @@
+[
+  {
+    "width": 320,
+    "surface": "welcome",
+    "overflow": false
+  },
+  {
+    "width": 320,
+    "surface": "dashboard",
+    "overflow": false
+  },
+  {
+    "width": 320,
+    "surface": "pacientes",
+    "overflow": false
+  },
+  {
+    "width": 320,
+    "surface": "atendimentos",
+    "overflow": false
+  },
+  {
+    "width": 320,
+    "surface": "chat",
+    "overflow": false
+  },
+  {
+    "width": 320,
+    "surface": "configuracoes",
+    "overflow": false
+  },
+  {
+    "width": 320,
+    "surface": "registro",
+    "overflow": false
+  },
+  {
+    "width": 320,
+    "surface": "meows-result",
+    "overflow": false
+  },
+  {
+    "width": 320,
+    "surface": "tutorial",
+    "overflow": false
+  },
+  {
+    "width": 375,
+    "surface": "welcome",
+    "overflow": false
+  },
+  {
+    "width": 375,
+    "surface": "dashboard",
+    "overflow": false
+  },
+  {
+    "width": 375,
+    "surface": "pacientes",
+    "overflow": false
+  },
+  {
+    "width": 375,
+    "surface": "atendimentos",
+    "overflow": false
+  },
+  {
+    "width": 375,
+    "surface": "chat",
+    "overflow": false
+  },
+  {
+    "width": 375,
+    "surface": "configuracoes",
+    "overflow": false
+  },
+  {
+    "width": 375,
+    "surface": "registro",
+    "overflow": false
+  },
+  {
+    "width": 375,
+    "surface": "meows-result",
+    "overflow": false
+  },
+  {
+    "width": 375,
+    "surface": "tutorial",
+    "overflow": false
+  },
+  {
+    "width": 390,
+    "surface": "welcome",
+    "overflow": false
+  },
+  {
+    "width": 390,
+    "surface": "dashboard",
+    "overflow": false
+  },
+  {
+    "width": 390,
+    "surface": "pacientes",
+    "overflow": false
+  },
+  {
+    "width": 390,
+    "surface": "atendimentos",
+    "overflow": false
+  },
+  {
+    "width": 390,
+    "surface": "chat",
+    "overflow": false
+  },
+  {
+    "width": 390,
+    "surface": "configuracoes",
+    "overflow": false
+  },
+  {
+    "width": 390,
+    "surface": "registro",
+    "overflow": false
+  },
+  {
+    "width": 390,
+    "surface": "meows-result",
+    "overflow": false
+  },
+  {
+    "width": 390,
+    "surface": "tutorial",
+    "overflow": false
+  },
+  {
+    "width": 430,
+    "surface": "welcome",
+    "overflow": false
+  },
+  {
+    "width": 430,
+    "surface": "dashboard",
+    "overflow": false
+  },
+  {
+    "width": 430,
+    "surface": "pacientes",
+    "overflow": false
+  },
+  {
+    "width": 430,
+    "surface": "atendimentos",
+    "overflow": false
+  },
+  {
+    "width": 430,
+    "surface": "chat",
+    "overflow": false
+  },
+  {
+    "width": 430,
+    "surface": "configuracoes",
+    "overflow": false
+  },
+  {
+    "width": 430,
+    "surface": "registro",
+    "overflow": false
+  },
+  {
+    "width": 430,
+    "surface": "meows-result",
+    "overflow": false
+  },
+  {
+    "width": 430,
+    "surface": "tutorial",
+    "overflow": false
+  },
+  {
+    "width": 768,
+    "surface": "welcome",
+    "overflow": false
+  },
+  {
+    "width": 768,
+    "surface": "dashboard",
+    "overflow": false
+  },
+  {
+    "width": 768,
+    "surface": "pacientes",
+    "overflow": false
+  },
+  {
+    "width": 768,
+    "surface": "atendimentos",
+    "overflow": false
+  },
+  {
+    "width": 768,
+    "surface": "chat",
+    "overflow": false
+  },
+  {
+    "width": 768,
+    "surface": "configuracoes",
+    "overflow": false
+  },
+  {
+    "width": 768,
+    "surface": "registro",
+    "overflow": false
+  },
+  {
+    "width": 768,
+    "surface": "meows-result",
+    "overflow": false
+  },
+  {
+    "width": 768,
+    "surface": "tutorial",
+    "overflow": false
+  },
+  {
+    "width": 1440,
+    "surface": "welcome",
+    "overflow": false
+  },
+  {
+    "width": 1440,
+    "surface": "dashboard",
+    "overflow": false
+  },
+  {
+    "width": 1440,
+    "surface": "pacientes",
+    "overflow": false
+  },
+  {
+    "width": 1440,
+    "surface": "atendimentos",
+    "overflow": false
+  },
+  {
+    "width": 1440,
+    "surface": "chat",
+    "overflow": false
+  },
+  {
+    "width": 1440,
+    "surface": "configuracoes",
+    "overflow": false
+  },
+  {
+    "width": 1440,
+    "surface": "registro",
+    "overflow": false
+  },
+  {
+    "width": 1440,
+    "surface": "meows-result",
+    "overflow": false
+  },
+  {
+    "width": 1440,
+    "surface": "tutorial",
+    "overflow": false
+  }
+]

@@ -1,0 +1,145 @@
+{
+  "base": "41d55534615de612164fef7df398724e80678e2b",
+  "branch": "feature/prod-vitrine-ui-refresh",
+  "logs": [
+    {
+      "private_path": "/tmp/pap-prod-vitrine-private-evidence/premium2-final-run/premium2/meows-integrated-node.log",
+      "sha256": "0d2dc231ec0aeea5343648bbcf505cac72f6fc979f13d515dc9881014be968f9",
+      "result": "PASS 76/76 (includes unchanged engine55 and integration6)"
+    },
+    {
+      "private_path": "/tmp/pap-prod-vitrine-private-evidence/premium2-final-run/premium2/consolidated-browser.log",
+      "sha256": "c1391a2090880a21161fb8e5aa0fd01f3a96df73861817d4c6ac8982df3590d0",
+      "result": "PASS 6+4/10 serial; source after drawer fix, before copy-only refinements"
+    },
+    {
+      "private_path": "/tmp/pap-prod-vitrine-private-evidence/premium2-final-run/premium2/meows-final-content.log",
+      "sha256": "bfaa78391a7e27f138e888e0e8edda0d0ada08cfa342222b5a10dfa8f2f5db69",
+      "result": "PASS 1/1 on final source"
+    },
+    {
+      "private_path": "/tmp/pap-prod-vitrine-private-evidence/premium2-final-run/premium2/visual-final-content.log",
+      "sha256": "5e40a98aff7329a3ba064b8db70ce7101ab0e0a153f761fb696a7552c63a76b7",
+      "result": "PASS 1/1,54 surfaces on final source; zero pageerror/console.error/API calls"
+    },
+    {
+      "private_path": "/tmp/pap-prod-vitrine-private-evidence/premium2-final-run/premium2/last-ts.log",
+      "sha256": "45342ca54fc3787657ce6eb4dbe6d4510cbf68d24318d44416c0176ab31ebf4b",
+      "result": "PASS"
+    },
+    {
+      "private_path": "/tmp/pap-prod-vitrine-private-evidence/premium2-final-run/premium2/last-lint.log",
+      "sha256": "6776ca8b5caa97180a9cc908fe219366e4fb0b59dbda2702f82fffe8ae30246b",
+      "result": "PASS"
+    },
+    {
+      "private_path": "/tmp/pap-prod-vitrine-private-evidence/premium2-final-run/premium2/production-build.log",
+      "sha256": "0db110bdb3f47274377609aac684e068ea23eea2df3a2c1efd22e37c5898d406",
+      "result": "BLOCKED external Google Fonts; command exit1"
+    },
+    {
+      "private_path": "/tmp/pap-prod-vitrine-private-evidence/premium2-final-run/premium2/fonts-connectivity.log",
+      "sha256": "7a04a367ff3ee1b23ed57eb9b63269524e865e3d623e667369d7892ae86ade0e",
+      "result": "BLOCKED CONNECT403"
+    },
+    {
+      "private_path": "/tmp/pap-prod-vitrine-private-evidence/premium2-final-run/premium2/final-visual.log",
+      "sha256": "7e4e36d0672ff46c07466cdafd5d786b4ea68e89586bed9394890935605c8b6b",
+      "result": "FAIL before drawer fix; retained private"
+    },
+    {
+      "private_path": "/tmp/pap-prod-vitrine-private-evidence/premium2-final-run/premium2/meows-all-node.log",
+      "sha256": "f5ada5a15ed315e65d512988b2a2b25723436bd35a7b51875be27591a385764c",
+      "result": "FAIL obsolete expectation before integration test update"
+    }
+  ],
+  "source": {
+    "src/components/atendimentos/AtendimentoDetailsModal.tsx": "a5ce74c2772646e3fc42feb9e6f15df10d229b5b11878d9f52670a60217583c6",
+    "src/components/atendimentos/AtendimentoFilters.tsx": "79f5a431b625bccf54338d5d51061cf2222b8eaaeb4eef4d77a64ef09d2375ca",
+    "src/components/atendimentos/AtendimentoTable.tsx": "16f5bdf905155002ecff3b444a5fd663f4662b5837757a35b49035e76fd48498",
+    "src/components/dashboard/RecentAttendances.tsx": "3ab53474b3d93046e3eb3d02ccd5624b14ac7f89a096006ecc46f3dce1b252b4",
+    "src/components/dashboard/RiskDistribution.tsx": "11d103a6b9e15f5734f5225e34df4497eba2b94155ee9cbfe0717c87445ce4a2",
+    "src/components/demo/AssessmentDetails.tsx": "dd82d05655939360fb09c33dc5278cd625afbd2124cb367d3bcc3e6d98e31099",
+    "src/components/layout/DashboardShell.tsx": "993b10ef91c181809f1ab0a773658bf7ae83412a1806136d310b3c66407154f4",
+    "src/components/pacientes/PatientCard.tsx": "2abbf81b7aab051f2dbc025f96b60983836c8365243c591cc220d9afd694d6b8",
+    "src/components/pacientes/PatientEvolution.tsx": "fd6efc8095c1f429e559ecccf7345a3559b2690d09c35b7436a775180a9a845d",
+    "src/components/pacientes/PatientHeader.tsx": "65d77493d208d8aa0dc58a48d8658afec08d829c82440813095967b1444d31d7",
+    "src/components/pacientes/PatientSummary.tsx": "2401cd4f511f06bf5ee6694c975a458f36ac4b1695654adc92e50083b5308992",
+    "src/components/registro/RegistrationWizard.tsx": "fbd3c0ae46beba52c246973277911152bab3db389a702df23659d2fd979b6438",
+    "src/components/registro/steps/ResultStep.tsx": "1d1b6a77bf92de3696a110d588f018bbe0bd04710c37eb1b1192eaeab4f2637c",
+    "src/components/registro/steps/VitalSignsStep.tsx": "f6ac45176c9c91e5ba8870d413ed6e6840e60e35c7ab67c4c56c8577cda2d997",
+    "src/lib/demo/assessment-presentation.ts": "f6c02d4fd1259ae89cfd00a2f3a1dec06839d821e6a52a6f388ca9b8677e3bbd",
+    "src/lib/demo/data.ts": "461a13567ff3a1372d4d6f679450ee083ea5c4dde76ead7f6c3d841ea8432121",
+    "src/lib/meows.ts": "28d57a8873592a5ebf56b263e233a6e12d0d5bac7bee0636afb84d1260e0781d",
+    "src/types/atendimento.ts": "25f48a5520b3b6089b9c318ca939df986347c77eda75efdb1bd91b8265ac3911",
+    "src/types/dashboard.ts": "ed0e3e2d3e23e77fa91c7375e1792b909809740678479017960f03fef4257e5d",
+    "src/types/paciente.ts": "bce91051ad311a762a7a98a878c63f0e090ef4e87fa35190e7c51ec78876c6a2",
+    "src/types/registration.ts": "bb1fbc6cc945352699a96ba0b0e873dc913757a3d2b8502644b1dc97e652ac60",
+    "tests/demo/browser.mjs": "c6f35e4e30517e2ae28451ae1cde54cbb8ba3ca3c45ccbfb6db41a6e9de86297",
+    "tests/demo/meows-integration.test.mjs": "cd47ec01f22820570d6a9fea1c2bbc37b6e4c20098e45dc225ddb8a8a94d5ef6",
+    "tests/demo/premium-visual.browser.mjs": "d7205cf86861f18cac2e51c80fef9c8cf867ca92d1f57a8dc4e10eb79dc2ed74",
+    "tests/demo/registration-journey.mjs": "7700b9973f9c0198be59a0a48916b8e0f7c57b07a391f8f1f348c0292a8b55d8",
+    "tests/demo/registration.test.mjs": "1021b9d702454ff69194797013db3f9b17d2daffedff6cb2f8631c977c22328d",
+    "tests/demo/run-browser.mjs": "74930dee252d06c36de778330f1d6f1be9ec63db5a3e31e06e619804ee946768"
+  },
+  "images": {
+    "atendimentos-1440.png": "c4970d1897b029cb5d6b4a1505e5aa0b925b89d613a3f153882111ecf5fda3a4",
+    "atendimentos-320.png": "6437ea165973ef284626b98021068e88e3edf6eba4f80a4d5f97547098612ada",
+    "atendimentos-375.png": "54d39facf797d6d5cb82ad0ab66f6681b8802133af1527ad8ff6a61acd6be326",
+    "atendimentos-390.png": "663f804e06fb457b3fc78906f1d9be0debb44e008f8e9770661c303d29f42ab8",
+    "atendimentos-430.png": "c749641b8f8ce1999990c8a60794a874c48be3c2d312bdcf63a0f58fdd14d834",
+    "atendimentos-768.png": "6930e3181aef9306f29079d77f6a576fac92a56b5c41d60742ad43ca32f9f5b4",
+    "chat-1440.png": "b26b364e9c23eb44e9d4aaf68f4ac4055836eac7de5291f6cdbc7c6ce2349881",
+    "chat-320.png": "056503b1b8eb5b8f073072488ea40bbaf41a5620baef6c1d6edbe813ae78558d",
+    "chat-375.png": "21a91f84c873b62d71aadf606fc00bdb7579e6ed8cdc957ab912cb1012cd21a1",
+    "chat-390.png": "b25e038d1a2eac3c48f0f6a1471117a970ad104a010527a33afe91fdce0b4830",
+    "chat-430.png": "18a7f7f5de3144ccbc70727e23c08f6415a1c37ce56a1709716c20f19d073fe0",
+    "chat-768.png": "f39b9843295a420d2202343f06f3bb7f30d67d83dc77a1a7ef67fbec3b3bf7b9",
+    "configuracoes-1440.png": "d2a060811391794069b3f0b9cc9fab0adb9b07fe6fe38615ec6af612ad4aa132",
+    "configuracoes-320.png": "5b726033a3427ece2c06cf8383c74972c3268ef89ee42562b3646477b7af03c9",
+    "configuracoes-375.png": "49b70bf807b61c75c5bd09d27609aca75265110e6e8f811e9c183b83a7f3f573",
+    "configuracoes-390.png": "308015edab1dca5e3e8fc44cb056a7532cc731c138f12fae8a555f0e3c4719a0",
+    "configuracoes-430.png": "05ebb1f1483c09fbd629cc9a5d802f560a3368f2325c71b67d42bad8905e4e93",
+    "configuracoes-768.png": "3d7c42004de7c55716233424f0d767e3b291e6efb7a5d1f7967f81a54faf9d88",
+    "dashboard-1440.png": "b08e6ef0406740402b385a44c17dabd53bc6026286f68f5a074165df7e3a6e1f",
+    "dashboard-320.png": "53ad02ee29101766936a5eff542348532c170ed50a8e8a4b1b14147e01058f53",
+    "dashboard-375.png": "130c0e6179f21e696d637e6e8bf506c61881bf1752976c7f9e5f728d57e208b8",
+    "dashboard-390.png": "39f008f9ec2ed8b660529d1dbb2b5e5a66f55f1e60c672baa262c2f18ced820c",
+    "dashboard-430.png": "a98172d8c0d16bcd6eed94c92b1b922cb90fc551e70c1861cb3a249b040448e8",
+    "dashboard-768.png": "e0180b1d83fa7dc2617564cc87a78116c71afd309a7f4998416f9a5acd1eeae4",
+    "meows-result-1440.png": "b9ad1bf9e89e6266134ad5511d41b7bc6dcf6bfe1203d100d325fb6249f9359e",
+    "meows-result-320.png": "0447485c3da0120f76802dfb28ce5eb41cf399f8127b73889a6db85b7207bc11",
+    "meows-result-375.png": "8731d8dad066f4bcc3dc602602605dff865c0324d9232bff280594bb9e8fd680",
+    "meows-result-390.png": "1c5e7b00464f5f23cdaac6c739ea3af82ba1d64fd981c481b39d48bbf611dcb0",
+    "meows-result-430.png": "f7eaae6ea07b5d163ba5d55880913dec3da08c6d885845ab01fedfc806de92d3",
+    "meows-result-768.png": "87b8370d00b27e0173239f8085402cc94dc79d5031e05383302a2f8f54f9101d",
+    "pacientes-1440.png": "b058f5e913510c958da645bdbc6ee3ba851daf5cb52724b0a87e7e0179bed2fb",
+    "pacientes-320.png": "1380a166fe3e85c8c400956cf0f095b190060baf5582e384a4972dcc19bd705c",
+    "pacientes-375.png": "8a5d32b5ea418275a319f86b00072c9692bfc0ee22750d568e22461fa3d19616",
+    "pacientes-390.png": "032c07883657ae81d5e6b9921c36860786ad963d5f694494bdee084b15d758c2",
+    "pacientes-430.png": "d9a18b319141298d72a0d0f21d751a3b36bbc34645175e095822c63b4f4ae050",
+    "pacientes-768.png": "f42ad212f214328d87f7e387cf8b98ece03d422263b13ef543ee5c6d920ce44c",
+    "registro-1440.png": "93d35d2445c4973ed6cf3b769886b734ea4afeabd1efb5ae6f9e4c901e5e5bc8",
+    "registro-320.png": "725b95871ae4433d28ef17fb377557252231be2b1819c06673b207bd6a06c458",
+    "registro-375.png": "eb8f3d1c254293a207cb919056b9ce7abec42551bdbae2b4199a810dd2a50894",
+    "registro-390.png": "b9c33f473c492e0efa10594dc5acfcebaead87ae6ee0881a941b69ceaabc2361",
+    "registro-430.png": "993f9eddbec669250680ea83747b2264c1aa7a3b08620d3df8843c1f6c45d508",
+    "registro-768.png": "51e132267eca2fc97ead05c43546bd2bf95ebd10162cf033852999e03effa87e",
+    "tutorial-1440.png": "2293b8735a1940c8af48d3d97a4814f7135598a1f8867777206669b94e51036f",
+    "tutorial-320.png": "551bb83485d59a7adcffcb90bf82762b1caa7db0753b3eae5a154349facdd5f0",
+    "tutorial-375.png": "c996262aef376ee6dbd2df5b8e692c3b614219c244cc7caf17f4b4147b4d26f5",
+    "tutorial-390.png": "ac1a218604f92ce895624e17c4c7292206a5ac0aaeeae1eed79c8de1f633feb2",
+    "tutorial-430.png": "7bc95f3d1da39c0111f4cff782662a98c6a342bcb46513d6fa7669dfac8d156c",
+    "tutorial-768.png": "6272107e46a8ffcf5a3abb653d0eaa62ca8373565d55a0dd631f633c4948650c",
+    "welcome-1440.png": "3d7726ed1c2bb1576bddf703c1a9039c688ec7a188368aed87ab5dfd40aebbcd",
+    "welcome-320.png": "2f848dc123880e235001f0f1ea44d3d56190929026533c7f8d170a71c3544c22",
+    "welcome-375.png": "3f78d30764fcf1667b5ccebb1b84a25a8b5a57a45626168caff6300de1e0cdac",
+    "welcome-390.png": "3f23f5273b328c2454a3c95553095b85212e706afeb8a5de9a290d6c11def774",
+    "welcome-430.png": "06e2df372286a81c37d8abc5faef4ebd6b8e0ad7d7477aff4e183abbc2887b55",
+    "welcome-768.png": "c6eec459a9dc90dc4eeda8389e28e1e03ce0756432ab3927a43273d0658a051c"
+  },
+  "production_approved": false,
+  "code_commit": "66c12c01dc15fad4cd948264df9f7b4608949559",
+  "unchanged_engine_sha256": "2a824a7be376a8a03bd92caf32192c72af379c4ea7befdb780a984e6b0649440",
+  "unchanged_engine_tests_sha256": "a9a542708c96ed7c66a93ed1979758f007c22ca3b7afa273fca1fb873cb761d0"
+}
