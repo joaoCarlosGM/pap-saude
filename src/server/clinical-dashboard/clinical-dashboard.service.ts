@@ -4,7 +4,7 @@ import { validateSession } from "@/server/auth/session.service";
 import { requireOperationalMfa } from "@/server/auth/operational-mfa.service";
 import { getEffectiveAccessProfile } from "@/server/iam/effective-access-profile.service";
 import { AccessDeniedError } from "@/server/iam/authorization.errors";
-import type { DashboardData } from "@/lib/demo/types";
+import type { DashboardData } from "@/types/dashboard";
 /** Fixed query count, distinct patients, live effective health-unit grants only.
  * UTC calendar months; no inferred risk, MEOWS score, author or comparison. */
 export async function clinicalDashboard(token: string, now=new Date()):Promise<DashboardData> {

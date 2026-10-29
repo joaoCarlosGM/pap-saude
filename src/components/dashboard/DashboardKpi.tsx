@@ -1,3 +1,4 @@
+import AnimatedMetric from "@/components/premium/AnimatedMetric"
 import type { ElementType } from "react"
 
 import {
@@ -86,7 +87,7 @@ export default function DashboardKpi({
           </p>
 
           <p className="mt-2 text-2xl font-semibold tracking-tight text-slate-900 sm:text-3xl">
-            {kpi.value}
+            <AnimatedMetric value={kpi.value}/>
           </p>
         </div>
 

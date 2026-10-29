@@ -63,3 +63,5 @@ export type UpcomingDelivery = {
   dpp: string
   remainingDays: number
 }
+/** Shared presentation contract, independent of the synthetic Vitrine. */
+export type DashboardData = {kpis:DashboardKpi[];monthly:MonthlyAttendance[];risks:RiskDistributionItem[];recent:DashboardAttendance[];deliveries:UpcomingDelivery[]};

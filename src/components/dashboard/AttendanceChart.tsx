@@ -52,6 +52,7 @@ export default function AttendanceChart({
             >
               <div className="flex flex-1 items-end justify-center">
                 <div
+                  data-chart-bar data-total={item.total}
                   className="group relative w-full max-w-12 rounded-t-lg bg-pink-500 transition hover:bg-pink-600"
                   style={{
                     height: `${height}%`,

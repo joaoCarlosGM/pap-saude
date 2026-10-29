@@ -78,9 +78,11 @@ export default function RecentAttendances({
             )
 
           return (
-            <div
+            <Link
+              href={demo ? `/vitrine/atendimentos` : `/atendimentos#encounter-${encodeURIComponent(attendance.id)}`}
+              aria-label={`Consultar atendimento de ${attendance.patient}`}
               key={attendance.id}
-              className="flex flex-col gap-3 p-4 sm:flex-row sm:items-center sm:justify-between sm:p-5"
+              className="flex flex-col gap-3 p-4 hover:bg-pink-50/40 focus-visible:outline-2 focus-visible:outline-pink-700 sm:flex-row sm:items-center sm:justify-between sm:p-5"
             >
               <div className="flex min-w-0 items-center gap-3">
                 <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-pink-50 text-xs font-semibold text-pink-600">
@@ -112,7 +114,7 @@ export default function RecentAttendances({
                   {attendance.statusLabel ?? <>{attendance.score} · {classification.label}</>}
                 </span>
               </div>
-            </div>
+            </Link>
           )
         })}
       </div>
