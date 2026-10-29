@@ -1,0 +1,404 @@
+{
+  "base": "a45110832513014537b22c9415d2ebfe042220bf",
+  "source": "64fc7a9317159436c36c801051ed2065d29547af",
+  "tested_code_commit": "0a007755294fec581c5e9ea0cfbbdfb49a6810fa",
+  "records": [
+    {
+      "label": "Premium adaptado+isolamento",
+      "log": "/tmp/premium-p0-evidence/node-delivery.log",
+      "sha256": "5475db00c8e65bde042a4a3c6d6cdd57609f5ea4d410c2be34330376db8177b7",
+      "tests": 80,
+      "pass": 80,
+      "fail": 0
+    },
+    {
+      "label": "P0 fronteiras/política operacional MEOWS",
+      "log": "/tmp/premium-p0-evidence/p0-boundaries-and-operational-meows.log",
+      "sha256": "dcd5156499c09f4b51d916d3f16779c595b0fba8f9f9000edb95997696808172",
+      "tests": 22,
+      "pass": 22,
+      "fail": 0
+    },
+    {
+      "label": "COMMERCIAL/IAM legado",
+      "log": "/tmp/premium-p0-evidence/legacy-commercial-iam.log",
+      "sha256": "1e94506fec3ccbd16105f0595be6dba48fabe6bc890847d99b83b33805daf1d1",
+      "tests": 8,
+      "pass": 8,
+      "fail": 0
+    },
+    {
+      "label": "IAM delegado B",
+      "log": "/tmp/premium-p0-evidence/delegated-iam-regression.log",
+      "sha256": "0ea17b8694f632a9401952f7e02b817967069032a3f6e20f889d8870ad1948fb",
+      "tests": 27,
+      "pass": 27,
+      "fail": 0
+    },
+    {
+      "label": "Auth crypto",
+      "log": "/tmp/premium-p0-evidence/operational-regressions/auth-crypto.log",
+      "sha256": "a1eaa1bd917d5fd2e23444eab6458d26b82225163fa9e37c5142a251a77cd026",
+      "tests": 18,
+      "pass": 18,
+      "fail": 0
+    },
+    {
+      "label": "Auth integração",
+      "log": "/tmp/premium-p0-evidence/operational-regressions/auth-full.log",
+      "sha256": "d6a4dabefc997815797020329942d3b2ec94af68716613eb5834daff07a67d6c",
+      "tests": 186,
+      "pass": 186,
+      "fail": 0
+    },
+    {
+      "label": "MEOWS clínico integração",
+      "log": "/tmp/premium-p0-evidence/operational-regressions/clinical-meows-integration.log",
+      "sha256": "a83fde3243da4b142344748edf0b6341b39ac875995b4a1c337ed134ee98e814",
+      "tests": 8,
+      "pass": 8,
+      "fail": 0
+    },
+    {
+      "label": "Clínico/integridade (execução inicial)",
+      "log": "/tmp/premium-p0-evidence/operational-regressions/clinical-runtime.log",
+      "sha256": "fe47a91dd68e80186eade254d274a8ba6243f6a5ddb861cba76a321712f15f96",
+      "tests": 39,
+      "pass": 38,
+      "fail": 1
+    },
+    {
+      "label": "Runtime registro: guard da porta preservado",
+      "log": "/tmp/premium-p0-evidence/runtime-fixed-port/clinical-registration-runtime.log",
+      "sha256": "5b4fd220fe2b681b0745798648e6b8c04566e5d0f42195026e7133cb1939f50f",
+      "tests": 1,
+      "pass": 1,
+      "fail": 0
+    },
+    {
+      "label": "Jornada autêntica/runtime sem SELECT clínico ou organizacional,60 rotas/seis larguras",
+      "log": "/tmp/premium-p0-evidence/browser-final/browser-readonly.log",
+      "sha256": "ecb09f2c9697c4e7ba0b92b7c6ea82dab5062ddd6e683b4bfa1cb43d3e89c566",
+      "expected": 1,
+      "unexpected": 0,
+      "skipped": 0,
+      "flaky": 0
+    },
+    {
+      "label": "Negativas HTML/RSC/API/MFA/COMMERCIAL/revogação/404",
+      "log": "/tmp/premium-p0-evidence/browser-final/browser-boundaries.log",
+      "sha256": "0cae823403ec31cca103df2a2ef37205d6d48c787d4ac419652ffb847d915830",
+      "expected": 1,
+      "unexpected": 0,
+      "skipped": 0,
+      "flaky": 0
+    },
+    {
+      "label": "Cartões/linhas/recentes: teclado/foco/escape",
+      "log": "/tmp/premium-p0-evidence/keyboard-final/browser-readonly.log",
+      "sha256": "48d350ede6eec7346e759d65b5bc99afdd6b8f2e9443b7c3c4982ee49bc90a48",
+      "expected": 1,
+      "unexpected": 0,
+      "skipped": 0,
+      "flaky": 0
+    },
+    {
+      "label": "INCOMPLETO no Resultado/ficha/histórico/Dashboard",
+      "log": "/tmp/premium-p0-evidence/incomplete-final/browser-readonly.log",
+      "sha256": "786296e8aa3a47921cd57b811d78434ffb5f9d0a25ae9e502f11f939496ed27c",
+      "expected": 1,
+      "unexpected": 0,
+      "skipped": 0,
+      "flaky": 0
+    },
+    {
+      "label": "Capturas com dimensões auditadas",
+      "log": "/tmp/premium-p0-evidence/capture-final/browser-readonly.log",
+      "sha256": "648102235ac6961eff05ff25dff1170294e1013b5008a1ee9d061182a94aa624",
+      "expected": 1,
+      "unexpected": 0,
+      "skipped": 0,
+      "flaky": 0
+    },
+    {
+      "label": "typescript-latest.log",
+      "log": "/tmp/premium-p0-evidence/typescript-latest.log",
+      "sha256": "45342ca54fc3787657ce6eb4dbe6d4510cbf68d24318d44416c0176ab31ebf4b"
+    },
+    {
+      "label": "lint-global.log",
+      "log": "/tmp/premium-p0-evidence/lint-global.log",
+      "sha256": "42767e09a73299bc3c93861819ec458264dd969f0b86efd769a840a440e08490"
+    },
+    {
+      "label": "lint-tests-latest.log",
+      "log": "/tmp/premium-p0-evidence/lint-tests-latest.log",
+      "sha256": "45342ca54fc3787657ce6eb4dbe6d4510cbf68d24318d44416c0176ab31ebf4b"
+    },
+    {
+      "label": "build-integrated.log",
+      "log": "/tmp/premium-p0-evidence/build-integrated.log",
+      "sha256": "48c343135c036c68beb41031def98e4704017db28b8a72ada4076253bcfc817b"
+    },
+    {
+      "label": "fonts-connectivity.log",
+      "log": "/tmp/premium-p0-evidence/fonts-connectivity.log",
+      "sha256": "6bfb4a2a4335591e5c253752f32b888ecf8c5cb2f45cd56aa01ff09a2d685d9b"
+    },
+    {
+      "label": "preview-final-run.log",
+      "log": "/tmp/premium-p0-evidence/preview-final-run.log",
+      "sha256": "5d5d4c305aaad6bf2947a1b80e8529449fbbb032a79987b4e213a595a7c996be"
+    },
+    {
+      "label": "runner-negative.log",
+      "log": "/tmp/premium-p0-evidence/runner-negative.log",
+      "sha256": "152990fca6f8c74e86fd52f1d851c216f7caa4494dd84ebb87dec08873b35d4f"
+    }
+  ],
+  "runtime_guard_remediation": "Initial clinical run39:38PASS and1FAIL due mandatory25441/25445 guard on random port. Only failing case rerun under own25445:1PASS; guard unchanged. No case excluded from required coverage.",
+  "build": {
+    "exit": 1,
+    "status": "BLOCKED",
+    "observed": "next/font Google Fonts CONNECT403; no TLS/font changes"
+  },
+  "preview_smoke": {
+    "login_http": 200,
+    "anonymous_vitrine_http": 307,
+    "credentials_permissions": "0600",
+    "owned_resources_cleaned": true
+  },
+  "code_sha256": {
+    "src/app/(showcase)/vitrine/[section]/page.tsx": "79a8f8e94bb6b51031cc5e2bc901ca472b009b5cb13002b92fcf89c7c7857639",
+    "src/app/(showcase)/vitrine/layout.tsx": "20a67600bab52eccbdec1434b22a71d01c7bc532d09bc54cf46fceaaf8bba25d",
+    "src/app/(showcase)/vitrine/pacientes/[id]/page.tsx": "c26bf847cebd19dacafe2f5430f6f465b0740ff57afe9c325a45ccc4f18c6b43",
+    "src/app/(showcase)/vitrine/page.tsx": "5a3b3e8fa542c4ea8bdb28258f05ba57e9fa8c023461410e372b2c1f818af4f0",
+    "src/features/vitrine-premium/SectionView.tsx": "7d9bfd24f9bc0eed7e4e51f6f86c3f340e6c983de0f3cdf45d6cd1fd83c0e6ac",
+    "src/features/vitrine-premium/components/atendimentos/AtendimentoDetailsModal.tsx": "f25034b1254063bad9867f53d36531b866b387d277f6adf1a7ddf4d089813eb9",
+    "src/features/vitrine-premium/components/atendimentos/AtendimentoFilters.tsx": "1965b818f1e6ee4096c071feaf6c4b520c09b954bfc832834ce84568b8b02e82",
+    "src/features/vitrine-premium/components/atendimentos/AtendimentoTable.tsx": "5d47274530b935669d72f41cc5b70e112a8af1d6656d824786e0a0cb4a18be66",
+    "src/features/vitrine-premium/components/chat/AnimatedChatIcon.tsx": "50c14807078947547d4d9a3619ea5f8ce3c4c8e28b6e6aa6e15b1b8b66cbc274",
+    "src/features/vitrine-premium/components/chat/ChatComposer.tsx": "d0d9043760313e459dfb84b65002a7fd58f6a0a0c2b9f9abc33e0396cd81545e",
+    "src/features/vitrine-premium/components/chat/ChatEmptyState.tsx": "0e38c6cf851604a7b519563cc1b616cce6009878a7565eb8c9de90f845222eaa",
+    "src/features/vitrine-premium/components/chat/ChatHeader.tsx": "a32dbf22e3a2619ccee3b65417a42c2879317be1749815fae04f994ffbb0acad",
+    "src/features/vitrine-premium/components/chat/ChatLayout.tsx": "b4468826a86cb5f0aee2efd9bf95762fbd77634a08160dd166051612dcf4fcfd",
+    "src/features/vitrine-premium/components/chat/ChatMessage.tsx": "4f7579ba654311ff362441ef379ff49aa13ead43ca56432e2aef44fe6c9980ce",
+    "src/features/vitrine-premium/components/chat/ChatMessages.tsx": "f05e6fa22e16b62b76b89cf8c02974fc3a7de6946f60cadaec927c33e498fb49",
+    "src/features/vitrine-premium/components/chat/ChatSidebar.tsx": "fd9e4958b39d2f29a9b6c3931a9662d72b60327ced05a8b07e168d1d540a10bc",
+    "src/features/vitrine-premium/components/chat/animated-chat-icon.module.css": "1cbe22ceb328526b347833be5020c7941e7af6f3a37f3d2f37ec4b213a409264",
+    "src/features/vitrine-premium/components/configuracoes/NotificationsSettings.tsx": "6483f84bb40f69d8923fd369f4d1507a29c2dd606d2c816e7e035a9c5087f7c0",
+    "src/features/vitrine-premium/components/configuracoes/PreferencesSettings.tsx": "b3a62d9e25fb446c0bacc9cc10a96b740a5ede43b4d5fcd8e523f70cc8846c54",
+    "src/features/vitrine-premium/components/configuracoes/ProfileSettings.tsx": "39c6676885fcf9051574db813a51cb17e69d80dea11805f4c81261bb53cf818a",
+    "src/features/vitrine-premium/components/configuracoes/SecuritySettings.tsx": "ed0c464d0b853ce491eaf5052a7b9893d358e2aa8f545d4de49729c03400ad01",
+    "src/features/vitrine-premium/components/configuracoes/SettingSwitch.tsx": "5a636d31b7260e3bb25523311db910249dc03e837aefac3216a4ca9841c176e3",
+    "src/features/vitrine-premium/components/configuracoes/SettingsLayout.tsx": "61aa4696592ee0546f6237670eb3500ae47c58314366f60a6f40767b1e9087ff",
+    "src/features/vitrine-premium/components/configuracoes/SettingsTabs.tsx": "9e191f67723da4ede83c23493052482e06dda14d6a842683b046e69f43f6aa3f",
+    "src/features/vitrine-premium/components/cursos/CourseCard.tsx": "3c008df519f588ba1eaec3c9cc9e779d7eb263723c8e6e8db15ea6441c37eeed",
+    "src/features/vitrine-premium/components/cursos/CourseDetailsModal.tsx": "f59d75b4f50621e4cb1d9891a51ac774e480923e0f049246ae5ba7603fd2dec7",
+    "src/features/vitrine-premium/components/cursos/CourseList.tsx": "655e553e5147124b71ca36544fdbde020e3d074fd3847953874bd031f7000190",
+    "src/features/vitrine-premium/components/dashboard/AttendanceChart.tsx": "b5e96eb92b7498b43dbc5ddf47e4318de618a41c030ec15af7a9214eb3904a2a",
+    "src/features/vitrine-premium/components/dashboard/DashboardKpi.tsx": "763368c8690dff1fcdc8c5899de80a0f5ad7f848ccb1251ce6f8b2f8949575ed",
+    "src/features/vitrine-premium/components/dashboard/QuickActions.tsx": "46844fc28e237082041f1cbbda276cce6bc54b3dd89e2cc03ea11ab0df5fe958",
+    "src/features/vitrine-premium/components/dashboard/RecentAttendances.tsx": "97d1a90054dcb58c0b45e3473d8625c79c1fc98160d8dcf6aae3961d09873e1f",
+    "src/features/vitrine-premium/components/dashboard/RiskDistribution.tsx": "84585b1f3c5bf553ab00baf2a86761a610624a5117105d7e60ae03b1ad001e8c",
+    "src/features/vitrine-premium/components/dashboard/UpcomingDeliveries.tsx": "467bd6362c7952aa339e7c7646c33cf3d6e59e790a0e9e127e0a87d34e7cc2ff",
+    "src/features/vitrine-premium/components/demo/AssessmentDetails.tsx": "a3145852a43b32e48077ce05e0f0f6c20f5e87f8b83841425b079985b77221f3",
+    "src/features/vitrine-premium/components/demo/DemoAttendancesView.tsx": "95cb15e87e27d217eaee1b0982d6bb11c735c2f95e3438b3e38e11ce9a93b263",
+    "src/features/vitrine-premium/components/demo/DemoDashboardView.tsx": "e447d8f769a144ea0547f6947c57c1a4798b8ad1ff6dec61e27611e17909415b",
+    "src/features/vitrine-premium/components/demo/DemoDialogs.tsx": "fc45dc01c9c66df74bcfac247f313c3f3658d82d6847a05dac35b98c8c53c835",
+    "src/features/vitrine-premium/components/demo/DemoOnboarding.tsx": "fdda92ebbcfb9447092be368d0795f4137aad248b7e2681e81c5c2bd3a9ac639",
+    "src/features/vitrine-premium/components/demo/DemoPatientsView.tsx": "acd1b37ab430d1d3789c21fd0a85e1500982b4b4f4011149681b279d3db08e6d",
+    "src/features/vitrine-premium/components/demo/DemoProvider.tsx": "a5691f9a7395faddb993c249c9fcf1cec07e582ff89383b00aaa900f41abaf97",
+    "src/features/vitrine-premium/components/ferramentas/GestationalCalculatorModal.tsx": "e31f3c29716ec827be20f1fe1556be3f71bc6f2f8c33d718c8e14354c8bcd9e7",
+    "src/features/vitrine-premium/components/ferramentas/ToolCard.tsx": "b215f08e543bdebe497be3bf93b0f555d424793debf601c7a4672762979cc869",
+    "src/features/vitrine-premium/components/ferramentas/ToolsGrid.tsx": "4e675f318dad8f0ab5571e10466a827d7c48a952b60c6c5e016948ffb843d1fe",
+    "src/features/vitrine-premium/components/layout/DashboardShell.tsx": "99a1898c0a7abd62232b0407db8a43b77232606154b60cef4398f0f776f392bc",
+    "src/features/vitrine-premium/components/layout/Sidebar.tsx": "fe6cbb71ae34ad068b3aa9c7912c371faa0f7768c283a08626dcee4cdab8c556",
+    "src/features/vitrine-premium/components/layout/sidebar.module.css": "018a8fcc4c75c4dffd57cba5493361d037d2c73b72e9e787ee354b4a0c76d8a4",
+    "src/features/vitrine-premium/components/motion/AnimatedMetric.tsx": "6fdbe57326d0f147e49c88b7ed2540a8998f8374b642731412213e558f5dbcec",
+    "src/features/vitrine-premium/components/motion/PageMotion.tsx": "bba174d6ebe20b55fb21052c7351a10aeb1a1aa4e5b12d4195c50fd8759d1745",
+    "src/features/vitrine-premium/components/motion/demo-motion.module.css": "77a6ffa9d6538107ba2a1bfddcaa66449bc3089466392d5208654e0713c03f3f",
+    "src/features/vitrine-premium/components/motion/useReducedMotion.ts": "e94d6003c0d9c7f217baf6e4c9efda30747bf90d8117787f3a1b1a442933bbca",
+    "src/features/vitrine-premium/components/onboarding/GuidedTour.tsx": "6345aa1ad5c98697dc6e1ecd8bfae7e7e58a3accdd515bc2bbc56b38a3ae03b0",
+    "src/features/vitrine-premium/components/onboarding/guided-tour.module.css": "2c8e880e2f88901045abdc0d8c2831669f1ee06c701ad6e234bae77e220e230e",
+    "src/features/vitrine-premium/components/pacientes/AnimatedLineChart.tsx": "985337b18fcbeca91260951e613db2a073ea5bf6ace155f08300f0792e4001ae",
+    "src/features/vitrine-premium/components/pacientes/DemoPatientView.tsx": "5cc1d4f89f03fd9e3f55760d7ca40c2df35a57bcd9f5b7d1ddc1dfbfc9bef45d",
+    "src/features/vitrine-premium/components/pacientes/PatientCard.tsx": "9cc8a99054e5dd94e6de66c306edae8735586303666be61f884bcd9b5a5c751c",
+    "src/features/vitrine-premium/components/pacientes/PatientDocuments.tsx": "7f0a5cab8d6c8f654ce5d7674a0a19148733c4515b3d46b321443604dce0ddd1",
+    "src/features/vitrine-premium/components/pacientes/PatientEvolution.tsx": "c18a6d36129ea02c4cae432c60e22eb63a99fd88e977cc96187748c32113e3b5",
+    "src/features/vitrine-premium/components/pacientes/PatientExams.tsx": "6e6a69adf54d1b3c2335065f4527f1a9e910956096594ca0ded971991e8d9a78",
+    "src/features/vitrine-premium/components/pacientes/PatientHeader.tsx": "3d59e0491b6a6c2953ae4d0346bdbbb6cacb149dbd691a453dde97ce80eb073f",
+    "src/features/vitrine-premium/components/pacientes/PatientList.tsx": "d0c13621829f70a68da0ceb337ccbbc09b72e08af2e81e585d77270aaa6bef0f",
+    "src/features/vitrine-premium/components/pacientes/PatientMedications.tsx": "70272541216ef2d5af1433af341cb5b67e529208d6faf8e8ceb34da018f27adb",
+    "src/features/vitrine-premium/components/pacientes/PatientPreviousNotes.tsx": "fc41bec05d77ea976e3d6a2a5ff3b64f3f2f739da74154bf10fea99628a77ea6",
+    "src/features/vitrine-premium/components/pacientes/PatientSummary.tsx": "de310f2b7e6260dddbe0056c5ab02eec863758d79ac5e472486529de8c251e46",
+    "src/features/vitrine-premium/components/pacientes/PatientTabs.tsx": "29320111ea65fc2ff086fbdda99ca935c3f7dc17b53c493267e389c0245af2f4",
+    "src/features/vitrine-premium/components/pacientes/PatientTimeline.tsx": "9f9927c745ee1b3910b7e4d24d7eb50f5900e5275986cd3e92f810a7cc791d89",
+    "src/features/vitrine-premium/components/pacientes/PatientVaccines.tsx": "ac8b5c33200f97cd9d619981139cd58344a057e26775cd170ba1736da89571e0",
+    "src/features/vitrine-premium/components/protocolos/AddProtocolModal.tsx": "493106ab964bc537763e276bb88834f5a4b8ef2e553496c0f5687c5bf8b7d03b",
+    "src/features/vitrine-premium/components/protocolos/ProtocolCard.tsx": "b433db637afa1f2af39cee1f2822b9ae27754071d5991f7a13e568fb4956c05c",
+    "src/features/vitrine-premium/components/protocolos/ProtocolList.tsx": "0789d8e479e450e905eef083bf827ad7655500e824f86066ab856484da4e83aa",
+    "src/features/vitrine-premium/components/protocolos/ProtocolPreviewModal.tsx": "af26a25c07afeb6a4f998564d9f3cf2c47a5b306386fbb90f3815091d6a4c3e7",
+    "src/features/vitrine-premium/components/registro/ClinicalHistory.tsx": "64d495b031447d135bcf3949f390953bcadceb8e3719d5611254095700a847a4",
+    "src/features/vitrine-premium/components/registro/RegistrationWizard.tsx": "aa6d12bff62eea3d4c90c95317f2153ba069b3f22f5427870f4ee580a1c805eb",
+    "src/features/vitrine-premium/components/registro/Stepper.tsx": "c1bd66572fe146e7ab900337f83c5e12c2b24d25038d3c49ef7f06b3aa06bb68",
+    "src/features/vitrine-premium/components/registro/steps/IdentificationStep.tsx": "b7102cd7044ca09944195f868e7af08ba402947c063277da88d5d4fd5eff66d9",
+    "src/features/vitrine-premium/components/registro/steps/ObstetricStep.tsx": "e2eb6ee6feeb4db35000b354e33c834e03eba2f71a0ce56bcf78924de7ffe29e",
+    "src/features/vitrine-premium/components/registro/steps/PregnancyStep.tsx": "fae2b9b5dbd6f07b7b6052129629ea1408d3d7755d8ba004276aa57baf7999c6",
+    "src/features/vitrine-premium/components/registro/steps/ResultStep.tsx": "d06eb0bb3d4a1e5d5d17f44e950b8d17f3681edd78779545d9007b5f0f8d5182",
+    "src/features/vitrine-premium/components/registro/steps/VitalSignsStep.tsx": "0a7f141405cef97dff8f0beb7d8c1ed8d21f5232cdbc8b7f9cebf4492ea49d62",
+    "src/features/vitrine-premium/components/ui/Card.tsx": "b23329d8eeeeba1e3e8043fed1a9f8271d38fa39f82c37be68405925d739220c",
+    "src/features/vitrine-premium/components/ui/Input.tsx": "cfe8139273c3285c53d589ea19e47628b1acd69d57023f762f5426ad5ce70fd0",
+    "src/features/vitrine-premium/components/ui/Modal.tsx": "bf74d4c30d7e92c92d03f185c3a18e84c387a4284d5aba05aad4a923aaa1d996",
+    "src/features/vitrine-premium/components/ui/Select.tsx": "d649f2df38820c6d9ba4ef1fbc8a9cfe22136a6460f65983a95ed63992bfa093",
+    "src/features/vitrine-premium/components/ui/button.tsx": "82539b5621301d68b34b4e8cda698e7cb80a1011069ab209733434adab5457ce",
+    "src/features/vitrine-premium/lib/demo/assessment-presentation.ts": "f6c02d4fd1259ae89cfd00a2f3a1dec06839d821e6a52a6f388ca9b8677e3bbd",
+    "src/features/vitrine-premium/lib/demo/data.ts": "461a13567ff3a1372d4d6f679450ee083ea5c4dde76ead7f6c3d841ea8432121",
+    "src/features/vitrine-premium/lib/demo/fixtures.ts": "ef18ec40f319063f1480f1c8f1916fae2bdc2d43ce231a25c06a31f11dd5bd2e",
+    "src/features/vitrine-premium/lib/demo/meows.ts": "2a824a7be376a8a03bd92caf32192c72af379c4ea7befdb780a984e6b0649440",
+    "src/features/vitrine-premium/lib/demo/motion.ts": "f4bbcec0dbe7b86aed88c21f05b6bc0b768d7d9ea4dc42086a1df48c70d000aa",
+    "src/features/vitrine-premium/lib/demo/profile.ts": "f3af2715033a876ff821f124842c0d1e66244ca24feca439538900ab0f005fe2",
+    "src/features/vitrine-premium/lib/demo/tour.ts": "24ea4123b91680b2c81527c831c95e19c26515ea20e6fe667ab45b4ae866e4c8",
+    "src/features/vitrine-premium/lib/demo/validation.ts": "7b035aa593a0437cc536a27c7a033574ad31560afd8c0d7827c48ce5f61794cf",
+    "src/features/vitrine-premium/lib/demo/welcome-session.ts": "e8849f724dac0079ff52ff4211fbceda35e13c2ec9d7aac84604524c87a72b11",
+    "src/features/vitrine-premium/lib/meows.ts": "28d57a8873592a5ebf56b263e233a6e12d0d5bac7bee0636afb84d1260e0781d",
+    "src/features/vitrine-premium/lib/mock-chat.ts": "2e9067571217cc138e453592e504c4660e61e11d502169e97ebeabd3278c99a8",
+    "src/features/vitrine-premium/lib/mock-configuracao.ts": "2622b39ff4e81597bf87eaf2e4c6fc053f6e38a64ae07d33383e6a2a18202f30",
+    "src/features/vitrine-premium/lib/mock-cursos.ts": "1fdc440c963ea1cd58ed5546b57e9197a5f276ab24dcec643ee5a7fa5ef96623",
+    "src/features/vitrine-premium/lib/mock-ferramentas.ts": "953bf955aac1fad267f86ff5ba1e5e87c112a2bc435a8d8534239276d45031a3",
+    "src/features/vitrine-premium/lib/mock-protocolos.ts": "5bea2d84425ecc26ae221d75e0c1e69decc7c6dbe6f2e57bbd99b4f33ac5083f",
+    "src/features/vitrine-premium/lib/onboarding/tour.ts": "f7ae3eb8a5ff1ed13c4df70edc3a3541ebf884c14fc4d598674b05c4942a5475",
+    "src/features/vitrine-premium/lib/routes.ts": "56f557493028059ab11937494ae284ef87602595463faa8c001fc2b8af2be656",
+    "src/features/vitrine-premium/types/atendimento.ts": "25f48a5520b3b6089b9c318ca939df986347c77eda75efdb1bd91b8265ac3911",
+    "src/features/vitrine-premium/types/chat.ts": "1f7486195649d1b90612a29e44ce5f347d619ebe7196fe1a306579b5cb1e9427",
+    "src/features/vitrine-premium/types/configuracao.ts": "cdb4464d9db2649d825270daa8e5f5eb17ab6a4ad2535bb583d6fd278845ae8a",
+    "src/features/vitrine-premium/types/curso.ts": "d768ebc315409c06e5ce038239d3a19a544d5c4ef22fdb19a8dab982394b94ff",
+    "src/features/vitrine-premium/types/dashboard.ts": "ed0e3e2d3e23e77fa91c7375e1792b909809740678479017960f03fef4257e5d",
+    "src/features/vitrine-premium/types/ferramenta.ts": "04ed7250276f9ce6a843b5eb8ea13c6e76f4af32b80478f004fcebe4d653c5ef",
+    "src/features/vitrine-premium/types/meows.ts": "329f3f295db009250493bf76e1fbcda4d0d4189bd37e09c28753b8fa7bb5a230",
+    "src/features/vitrine-premium/types/paciente.ts": "bce91051ad311a762a7a98a878c63f0e090ef4e87fa35190e7c51ec78876c6a2",
+    "src/features/vitrine-premium/types/protocolo.ts": "8b1f25d87c49a86eda325f6f745650378ac5595275a1d6561ebdc31a820f6c2d",
+    "src/features/vitrine-premium/types/registration.ts": "bb1fbc6cc945352699a96ba0b0e873dc913757a3d2b8502644b1dc97e652ac60",
+    "src/features/vitrine-premium/types/tour.ts": "a3a2e528012ad9fc8ca3f26cb9f84904950dfb4da33ceb2b4286eff2a21040f9",
+    "src/features/vitrine-premium/views/ajuda.tsx": "aed2e39e533d5bd4516d0814ca1e9c14d94700f5e8590ae3e53083b8a53f2701",
+    "src/features/vitrine-premium/views/atendimentos.tsx": "9ff976bd317709b83f36be7f837531f8c2b8d15a2010b1b277634b35c3ae2ca4",
+    "src/features/vitrine-premium/views/chat.tsx": "f2cfd17d8bda8e1acf66b353e542f5213888da11a6098b0c05c10a9005d29c24",
+    "src/features/vitrine-premium/views/configuracoes.tsx": "e11efcae29328cce723e22167923f82b5f582830deff6ec4d3001e66f166f07c",
+    "src/features/vitrine-premium/views/cursos.tsx": "f39f3ac154524e9fe178a09f94f22a2de71c586458d082566a9e82966020e043",
+    "src/features/vitrine-premium/views/dashboard.tsx": "2de59262820b91855fd222827716029f828b95752a6ea52f0202e2878f77a94e",
+    "src/features/vitrine-premium/views/ferramentas.tsx": "1d3a1aa8866572dec8bad13f664d7e307bf26e4ef160630dabff4f4869c68bee",
+    "src/features/vitrine-premium/views/pacientes.tsx": "e05ff1764b7bf8e336e9c91147e9e4e36aa07e7bea2c2cf8f5c6380970f5908e",
+    "src/features/vitrine-premium/views/protocolos.tsx": "8193d723d944d10f82ad5c1baf378687557ae8f9e81af27c64ac8c7136ad4d7f",
+    "src/features/vitrine-premium/views/registro.tsx": "66645e1144c89a1d4351e112fd8bbaf053cee8becccb6869e801454463001316"
+  },
+  "screenshots": {
+    "docs/vitrine/p0-premium2-evidence/atendimentos-1440.png": {
+      "sha256": "533f69addbb042295d944bcf41dfc102ea50e3dfce56062c5baa45dc0646d0b7",
+      "width": 1440,
+      "height": 960
+    },
+    "docs/vitrine/p0-premium2-evidence/atendimentos-390.png": {
+      "sha256": "3827d4e44362e2540a8f278f52bfc67bae408109c3a197c30ec4bb0b9eaa34cf",
+      "width": 390,
+      "height": 960
+    },
+    "docs/vitrine/p0-premium2-evidence/chat-1440.png": {
+      "sha256": "b31b0c1d677964ccecf9c141cf4ccf063685ff34dd9f475acbf2055d6ffe934e",
+      "width": 1440,
+      "height": 960
+    },
+    "docs/vitrine/p0-premium2-evidence/chat-390.png": {
+      "sha256": "20100a814e136963e91f205f9e7b692dda28e1a415138e1f987bdc497d6f27d5",
+      "width": 390,
+      "height": 960
+    },
+    "docs/vitrine/p0-premium2-evidence/configuracoes-1440.png": {
+      "sha256": "2f323a4f41d6d6da72f76023d8bb417bc22ffe642de7fc2c847b08f87630a6d2",
+      "width": 1440,
+      "height": 960
+    },
+    "docs/vitrine/p0-premium2-evidence/configuracoes-390.png": {
+      "sha256": "fd40ac229fd635012d77476f69780d4c0d4eaae47b1f2c7d85e2ee1d1f0bba65",
+      "width": 390,
+      "height": 960
+    },
+    "docs/vitrine/p0-premium2-evidence/dashboard-1440.png": {
+      "sha256": "15151e325c3111919686642b9694b1347a49d48c701492cacb93f9dd747667cc",
+      "width": 1440,
+      "height": 960
+    },
+    "docs/vitrine/p0-premium2-evidence/dashboard-390.png": {
+      "sha256": "59ac8e7853ebc02a3142d6a81c68d28fd0281c427076a191c34f06d9cdfa9eb8",
+      "width": 390,
+      "height": 1433
+    },
+    "docs/vitrine/p0-premium2-evidence/meows-result-1440.png": {
+      "sha256": "58c9cd75a4dc2d64b897ef0baf11631aae593ce1e253d265840c36ac7f64c4f0",
+      "width": 1440,
+      "height": 960
+    },
+    "docs/vitrine/p0-premium2-evidence/meows-result-390.png": {
+      "sha256": "c29926c990348c1ebd2bb7d78f4df20e2e7cb90c3b432753efef809c56fc98fc",
+      "width": 390,
+      "height": 960
+    },
+    "docs/vitrine/p0-premium2-evidence/pacientes-1440.png": {
+      "sha256": "49df61fb45dfb5ff6f97e8ecc1fc0b1a8c3db6c3d49b5beb16e738d2322c701a",
+      "width": 1440,
+      "height": 960
+    },
+    "docs/vitrine/p0-premium2-evidence/pacientes-390.png": {
+      "sha256": "155d7727aa850a9cc94baacbb80778b022bde3acb4f3e54cb581a45bf9c7d4d6",
+      "width": 390,
+      "height": 960
+    },
+    "docs/vitrine/p0-premium2-evidence/registro-1440.png": {
+      "sha256": "37fcb9b37a220874f8959d9928f56bd0c428fafc2dcbf297937b0ff734cdd592",
+      "width": 1440,
+      "height": 960
+    },
+    "docs/vitrine/p0-premium2-evidence/registro-390.png": {
+      "sha256": "7c22f3bddbae69ab3855592ce95d44dae6e66c6ca9c319b579f173512a700adc",
+      "width": 390,
+      "height": 960
+    },
+    "docs/vitrine/p0-premium2-evidence/tutorial-1440.png": {
+      "sha256": "cc14730058c12f0f8c30b1af2d58975aabfeef263cf22789950a14e10199fbcf",
+      "width": 1440,
+      "height": 960
+    },
+    "docs/vitrine/p0-premium2-evidence/tutorial-390.png": {
+      "sha256": "3dc6baa135ed2487614a92139356e73d6d705d8ee1102518bea125811b70bcc6",
+      "width": 390,
+      "height": 960
+    },
+    "docs/vitrine/p0-premium2-evidence/welcome-1440.png": {
+      "sha256": "6648c56b031367ef162618f1fb5f9742efa6c0881d59d340ae9213cee3c7bd29",
+      "width": 1440,
+      "height": 960
+    },
+    "docs/vitrine/p0-premium2-evidence/welcome-390.png": {
+      "sha256": "8316a7bc83d0f6eff13da511f18edab7804ed6074554b45ce173603417c8a927",
+      "width": 390,
+      "height": 960
+    }
+  },
+  "production_approved": false,
+  "tests_commit": "0b3649fec83b35eecff08d334395e2092dfba787",
+  "tests_sha256": {
+    "tests/vitrine-premium/components.test.mjs": "23fe2a40faffdc2a86727141811b65b59ca25053fb86080a73fc1e8a26ba1fbc",
+    "tests/vitrine-premium/data.test.mjs": "bdcec00596775a8eae32943ff9c2dbcb190539ab89e949cbcc8706b8e0115154",
+    "tests/vitrine-premium/integrated.spec.ts": "0634472671fedb69a68e07d5f7dc161f735c4c24e0903ffb5a4af8c1c054c08a",
+    "tests/vitrine-premium/isolation.test.mjs": "42f790b92868e0917901feb8afb369688466d98baf5557e3e931a23911ffea8c",
+    "tests/vitrine-premium/load.mjs": "955dfea451674c1d3031753909b331750575e1ff77843460b04949f4311ee7ef",
+    "tests/vitrine-premium/meows-integration.test.mjs": "5195eb7161d0569ebb4e4a6be08e9a96edd37417ad8406f58be22d1c5ee86a95",
+    "tests/vitrine-premium/meows.test.mjs": "6ae90a02a88d2becae0fb85e7c8777dc42cc554c36d9bb7689a94d6b537aa969",
+    "tests/vitrine-premium/motion.test.mjs": "affda2347ef2e101fdfab984112d67ab48e763685c96327e092d1e634842f6dd",
+    "tests/vitrine-premium/playwright.config.ts": "c04483cb227b53a73b7a951a414da331a8d03ccff66f09b265ee0792884e393c",
+    "tests/vitrine-premium/preview-account.ts": "8a0671daac2fcab9f6d789494ba5b4c4ee09fa5aed20d987652c14ed58c84605",
+    "tests/vitrine-premium/profile.test.mjs": "c5316ef696c10508e13c00ea662f983ad2ada7807ea6d0b53ace56aa58199cb5",
+    "tests/vitrine-premium/registration.test.mjs": "be2b86b523f171a4467b4fc1be5d9d898d00145b877d755d42572301fe353485",
+    "tests/vitrine-premium/run-integration.mjs": "ada804f8fa46b4d06e5a459911182f0f40deec3e11d23226ac068176de15f27a",
+    "tests/vitrine-premium/tour.test.mjs": "4da041d99fa4d04eeaab9d7e4cebd5bc96ebfd3e040c23e0b2819a16a9151378"
+  }
+}

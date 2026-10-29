@@ -1,0 +1,710 @@
+{
+  "base": "a45110832513014537b22c9415d2ebfe042220bf",
+  "P0_comparison": "7526cb95454017ede8a77113f91ce3b43e2dc7df",
+  "source": "64fc7a9317159436c36c801051ed2065d29547af",
+  "count": 117,
+  "files": [
+    {
+      "path": "src/features/vitrine-premium/SectionView.tsx",
+      "sha256": "7d9bfd24f9bc0eed7e4e51f6f86c3f340e6c983de0f3cdf45d6cd1fd83c0e6ac",
+      "origin": null,
+      "origin_sha256": null
+    },
+    {
+      "path": "src/features/vitrine-premium/components/atendimentos/AtendimentoDetailsModal.tsx",
+      "sha256": "f25034b1254063bad9867f53d36531b866b387d277f6adf1a7ddf4d089813eb9",
+      "origin": "src/components/atendimentos/AtendimentoDetailsModal.tsx",
+      "origin_sha256": "a5ce74c2772646e3fc42feb9e6f15df10d229b5b11878d9f52670a60217583c6"
+    },
+    {
+      "path": "src/features/vitrine-premium/components/atendimentos/AtendimentoFilters.tsx",
+      "sha256": "1965b818f1e6ee4096c071feaf6c4b520c09b954bfc832834ce84568b8b02e82",
+      "origin": "src/components/atendimentos/AtendimentoFilters.tsx",
+      "origin_sha256": "79f5a431b625bccf54338d5d51061cf2222b8eaaeb4eef4d77a64ef09d2375ca"
+    },
+    {
+      "path": "src/features/vitrine-premium/components/atendimentos/AtendimentoTable.tsx",
+      "sha256": "5d47274530b935669d72f41cc5b70e112a8af1d6656d824786e0a0cb4a18be66",
+      "origin": "src/components/atendimentos/AtendimentoTable.tsx",
+      "origin_sha256": "16f5bdf905155002ecff3b444a5fd663f4662b5837757a35b49035e76fd48498"
+    },
+    {
+      "path": "src/features/vitrine-premium/components/chat/AnimatedChatIcon.tsx",
+      "sha256": "50c14807078947547d4d9a3619ea5f8ce3c4c8e28b6e6aa6e15b1b8b66cbc274",
+      "origin": "src/components/chat/AnimatedChatIcon.tsx",
+      "origin_sha256": "50c14807078947547d4d9a3619ea5f8ce3c4c8e28b6e6aa6e15b1b8b66cbc274"
+    },
+    {
+      "path": "src/features/vitrine-premium/components/chat/ChatComposer.tsx",
+      "sha256": "d0d9043760313e459dfb84b65002a7fd58f6a0a0c2b9f9abc33e0396cd81545e",
+      "origin": "src/components/chat/ChatComposer.tsx",
+      "origin_sha256": "147b969cfdc032101e81e3fb1795a4f61066a63aa4cf695491ea3bce5582cd52"
+    },
+    {
+      "path": "src/features/vitrine-premium/components/chat/ChatEmptyState.tsx",
+      "sha256": "0e38c6cf851604a7b519563cc1b616cce6009878a7565eb8c9de90f845222eaa",
+      "origin": "src/components/chat/ChatEmptyState.tsx",
+      "origin_sha256": "0e38c6cf851604a7b519563cc1b616cce6009878a7565eb8c9de90f845222eaa"
+    },
+    {
+      "path": "src/features/vitrine-premium/components/chat/ChatHeader.tsx",
+      "sha256": "a32dbf22e3a2619ccee3b65417a42c2879317be1749815fae04f994ffbb0acad",
+      "origin": "src/components/chat/ChatHeader.tsx",
+      "origin_sha256": "a32dbf22e3a2619ccee3b65417a42c2879317be1749815fae04f994ffbb0acad"
+    },
+    {
+      "path": "src/features/vitrine-premium/components/chat/ChatLayout.tsx",
+      "sha256": "b4468826a86cb5f0aee2efd9bf95762fbd77634a08160dd166051612dcf4fcfd",
+      "origin": "src/components/chat/ChatLayout.tsx",
+      "origin_sha256": "a3fda75ddd5adaa10b6bc6c553bcfda8b8006f893dce950e5bea083237e3290f"
+    },
+    {
+      "path": "src/features/vitrine-premium/components/chat/ChatMessage.tsx",
+      "sha256": "4f7579ba654311ff362441ef379ff49aa13ead43ca56432e2aef44fe6c9980ce",
+      "origin": "src/components/chat/ChatMessage.tsx",
+      "origin_sha256": "eacc691877b57c5700be6011ccdcb74b5e4ac64044588227e83e6cfd4470180a"
+    },
+    {
+      "path": "src/features/vitrine-premium/components/chat/ChatMessages.tsx",
+      "sha256": "f05e6fa22e16b62b76b89cf8c02974fc3a7de6946f60cadaec927c33e498fb49",
+      "origin": "src/components/chat/ChatMessages.tsx",
+      "origin_sha256": "f8fd632a92a5cc36b611857f0ee6b2b03bf412a03c1ea0e8483afba81f459a8c"
+    },
+    {
+      "path": "src/features/vitrine-premium/components/chat/ChatSidebar.tsx",
+      "sha256": "fd9e4958b39d2f29a9b6c3931a9662d72b60327ced05a8b07e168d1d540a10bc",
+      "origin": "src/components/chat/ChatSidebar.tsx",
+      "origin_sha256": "33f7bca59359fc488f5723cce6bea3886935c76f7a34280dcaf8ec8f2d1ff497"
+    },
+    {
+      "path": "src/features/vitrine-premium/components/chat/animated-chat-icon.module.css",
+      "sha256": "1cbe22ceb328526b347833be5020c7941e7af6f3a37f3d2f37ec4b213a409264",
+      "origin": "src/components/chat/animated-chat-icon.module.css",
+      "origin_sha256": "1cbe22ceb328526b347833be5020c7941e7af6f3a37f3d2f37ec4b213a409264"
+    },
+    {
+      "path": "src/features/vitrine-premium/components/configuracoes/NotificationsSettings.tsx",
+      "sha256": "6483f84bb40f69d8923fd369f4d1507a29c2dd606d2c816e7e035a9c5087f7c0",
+      "origin": "src/components/configuracoes/NotificationsSettings.tsx",
+      "origin_sha256": "f939d5e9519f638d2131ac2eede0f77d2a41a4a5d090a99dd6ac6b551cb2e06a"
+    },
+    {
+      "path": "src/features/vitrine-premium/components/configuracoes/PreferencesSettings.tsx",
+      "sha256": "b3a62d9e25fb446c0bacc9cc10a96b740a5ede43b4d5fcd8e523f70cc8846c54",
+      "origin": "src/components/configuracoes/PreferencesSettings.tsx",
+      "origin_sha256": "40e6129a6f3913ac61c0ec59d698cd5e10b10216f2a64575949ddcba80f77e05"
+    },
+    {
+      "path": "src/features/vitrine-premium/components/configuracoes/ProfileSettings.tsx",
+      "sha256": "39c6676885fcf9051574db813a51cb17e69d80dea11805f4c81261bb53cf818a",
+      "origin": "src/components/configuracoes/ProfileSettings.tsx",
+      "origin_sha256": "44debeca6a682b94165b7d1c9550363204d1adac1900cfde9bf5455a4efdff1a"
+    },
+    {
+      "path": "src/features/vitrine-premium/components/configuracoes/SecuritySettings.tsx",
+      "sha256": "ed0c464d0b853ce491eaf5052a7b9893d358e2aa8f545d4de49729c03400ad01",
+      "origin": "src/components/configuracoes/SecuritySettings.tsx",
+      "origin_sha256": "585c55a2e835c0f1b23de67ce00cb7b6e2711aa17e5ead8c0a11077b5e2c2718"
+    },
+    {
+      "path": "src/features/vitrine-premium/components/configuracoes/SettingSwitch.tsx",
+      "sha256": "5a636d31b7260e3bb25523311db910249dc03e837aefac3216a4ca9841c176e3",
+      "origin": "src/components/configuracoes/SettingSwitch.tsx",
+      "origin_sha256": "5a636d31b7260e3bb25523311db910249dc03e837aefac3216a4ca9841c176e3"
+    },
+    {
+      "path": "src/features/vitrine-premium/components/configuracoes/SettingsLayout.tsx",
+      "sha256": "61aa4696592ee0546f6237670eb3500ae47c58314366f60a6f40767b1e9087ff",
+      "origin": "src/components/configuracoes/SettingsLayout.tsx",
+      "origin_sha256": "328642ede2dfd608f0a0c1d282abebce35a3b0fa7ae138f56287002eda8ab836"
+    },
+    {
+      "path": "src/features/vitrine-premium/components/configuracoes/SettingsTabs.tsx",
+      "sha256": "9e191f67723da4ede83c23493052482e06dda14d6a842683b046e69f43f6aa3f",
+      "origin": "src/components/configuracoes/SettingsTabs.tsx",
+      "origin_sha256": "4351926b7da1a15e1594aee4d504cfb936a5699a4d090cd4eaec851422be35f4"
+    },
+    {
+      "path": "src/features/vitrine-premium/components/cursos/CourseCard.tsx",
+      "sha256": "3c008df519f588ba1eaec3c9cc9e779d7eb263723c8e6e8db15ea6441c37eeed",
+      "origin": "src/components/cursos/CourseCard.tsx",
+      "origin_sha256": "13745bdc549c2ec2c4c0e189ea45bdd6613b0343323235a294c65acc66c79ee0"
+    },
+    {
+      "path": "src/features/vitrine-premium/components/cursos/CourseDetailsModal.tsx",
+      "sha256": "f59d75b4f50621e4cb1d9891a51ac774e480923e0f049246ae5ba7603fd2dec7",
+      "origin": "src/components/cursos/CourseDetailsModal.tsx",
+      "origin_sha256": "e2c29e13d82dbddea2b80787355a602073e22509d7c2ffda0a3bc85bf324eda5"
+    },
+    {
+      "path": "src/features/vitrine-premium/components/cursos/CourseList.tsx",
+      "sha256": "655e553e5147124b71ca36544fdbde020e3d074fd3847953874bd031f7000190",
+      "origin": "src/components/cursos/CourseList.tsx",
+      "origin_sha256": "e409c4577a1e177b627b0a89e43332e0c3e5338820f9907388b029d2fcce38d1"
+    },
+    {
+      "path": "src/features/vitrine-premium/components/dashboard/AttendanceChart.tsx",
+      "sha256": "b5e96eb92b7498b43dbc5ddf47e4318de618a41c030ec15af7a9214eb3904a2a",
+      "origin": "src/components/dashboard/AttendanceChart.tsx",
+      "origin_sha256": "e155228653690bf34157bc43337afa32d5e2d82aa9932e9a242f25bb4e107708"
+    },
+    {
+      "path": "src/features/vitrine-premium/components/dashboard/DashboardKpi.tsx",
+      "sha256": "763368c8690dff1fcdc8c5899de80a0f5ad7f848ccb1251ce6f8b2f8949575ed",
+      "origin": "src/components/dashboard/DashboardKpi.tsx",
+      "origin_sha256": "88adf17853af788e454566468223acc48816af87384257648d83d5ede19a481b"
+    },
+    {
+      "path": "src/features/vitrine-premium/components/dashboard/QuickActions.tsx",
+      "sha256": "46844fc28e237082041f1cbbda276cce6bc54b3dd89e2cc03ea11ab0df5fe958",
+      "origin": "src/components/dashboard/QuickActions.tsx",
+      "origin_sha256": "c03d540138f7c4a079923562aca00b3d15c758a13778959997606606e71990d4"
+    },
+    {
+      "path": "src/features/vitrine-premium/components/dashboard/RecentAttendances.tsx",
+      "sha256": "97d1a90054dcb58c0b45e3473d8625c79c1fc98160d8dcf6aae3961d09873e1f",
+      "origin": "src/components/dashboard/RecentAttendances.tsx",
+      "origin_sha256": "3ab53474b3d93046e3eb3d02ccd5624b14ac7f89a096006ecc46f3dce1b252b4"
+    },
+    {
+      "path": "src/features/vitrine-premium/components/dashboard/RiskDistribution.tsx",
+      "sha256": "84585b1f3c5bf553ab00baf2a86761a610624a5117105d7e60ae03b1ad001e8c",
+      "origin": "src/components/dashboard/RiskDistribution.tsx",
+      "origin_sha256": "11d103a6b9e15f5734f5225e34df4497eba2b94155ee9cbfe0717c87445ce4a2"
+    },
+    {
+      "path": "src/features/vitrine-premium/components/dashboard/UpcomingDeliveries.tsx",
+      "sha256": "467bd6362c7952aa339e7c7646c33cf3d6e59e790a0e9e127e0a87d34e7cc2ff",
+      "origin": "src/components/dashboard/UpcomingDeliveries.tsx",
+      "origin_sha256": "8cfbd45fcc7f5528a360fb077fbade43b495b16d06af2b48993ab300a0094201"
+    },
+    {
+      "path": "src/features/vitrine-premium/components/demo/AssessmentDetails.tsx",
+      "sha256": "a3145852a43b32e48077ce05e0f0f6c20f5e87f8b83841425b079985b77221f3",
+      "origin": "src/components/demo/AssessmentDetails.tsx",
+      "origin_sha256": "dd82d05655939360fb09c33dc5278cd625afbd2124cb367d3bcc3e6d98e31099"
+    },
+    {
+      "path": "src/features/vitrine-premium/components/demo/DemoAttendancesView.tsx",
+      "sha256": "95cb15e87e27d217eaee1b0982d6bb11c735c2f95e3438b3e38e11ce9a93b263",
+      "origin": "src/components/demo/DemoAttendancesView.tsx",
+      "origin_sha256": "bac38930e81d62a028b7ce03e1483d475e77d2bfa07b792b99dd35f8ff396b0b"
+    },
+    {
+      "path": "src/features/vitrine-premium/components/demo/DemoDashboardView.tsx",
+      "sha256": "e447d8f769a144ea0547f6947c57c1a4798b8ad1ff6dec61e27611e17909415b",
+      "origin": "src/components/demo/DemoDashboardView.tsx",
+      "origin_sha256": "7c1cf63e53e5ef91393fd3bea0ac9f1cbab533ce3a8a95b49de78c8122ded6dd"
+    },
+    {
+      "path": "src/features/vitrine-premium/components/demo/DemoDialogs.tsx",
+      "sha256": "fc45dc01c9c66df74bcfac247f313c3f3658d82d6847a05dac35b98c8c53c835",
+      "origin": "src/components/demo/DemoDialogs.tsx",
+      "origin_sha256": "f7277ddf8022fbe18e84d0a011ebce44c40b6934bdafd01cc868720e43bc2a74"
+    },
+    {
+      "path": "src/features/vitrine-premium/components/demo/DemoOnboarding.tsx",
+      "sha256": "fdda92ebbcfb9447092be368d0795f4137aad248b7e2681e81c5c2bd3a9ac639",
+      "origin": "src/components/demo/DemoOnboarding.tsx",
+      "origin_sha256": "75276e58a5a51bd24e3b07c4f526a8c2cf73ad008d98238fd314dad7f824ee1b"
+    },
+    {
+      "path": "src/features/vitrine-premium/components/demo/DemoPatientsView.tsx",
+      "sha256": "acd1b37ab430d1d3789c21fd0a85e1500982b4b4f4011149681b279d3db08e6d",
+      "origin": "src/components/demo/DemoPatientsView.tsx",
+      "origin_sha256": "323f95f1360acc56e94afd57e09bd33eef0e527f54b06984831a3ab1d7d5c28a"
+    },
+    {
+      "path": "src/features/vitrine-premium/components/demo/DemoProvider.tsx",
+      "sha256": "a5691f9a7395faddb993c249c9fcf1cec07e582ff89383b00aaa900f41abaf97",
+      "origin": "src/components/demo/DemoProvider.tsx",
+      "origin_sha256": "a7a32e6024e84faf55fac2ab9d0c0c30288143a7c3ab5490e99b4f76805f4522"
+    },
+    {
+      "path": "src/features/vitrine-premium/components/ferramentas/GestationalCalculatorModal.tsx",
+      "sha256": "e31f3c29716ec827be20f1fe1556be3f71bc6f2f8c33d718c8e14354c8bcd9e7",
+      "origin": "src/components/ferramentas/GestationalCalculatorModal.tsx",
+      "origin_sha256": "359c0019e78d5ddf6f7e74fd51f48a1aaa13b5f0da29f4c90699adf46491cda3"
+    },
+    {
+      "path": "src/features/vitrine-premium/components/ferramentas/ToolCard.tsx",
+      "sha256": "b215f08e543bdebe497be3bf93b0f555d424793debf601c7a4672762979cc869",
+      "origin": "src/components/ferramentas/ToolCard.tsx",
+      "origin_sha256": "bd5309f73d2f64be70e3bb0e5316f2e3e33c257f6402b8a1f7db4c24e96086b7"
+    },
+    {
+      "path": "src/features/vitrine-premium/components/ferramentas/ToolsGrid.tsx",
+      "sha256": "4e675f318dad8f0ab5571e10466a827d7c48a952b60c6c5e016948ffb843d1fe",
+      "origin": "src/components/ferramentas/ToolsGrid.tsx",
+      "origin_sha256": "79da79ce037f9a99f6a4b2867dcc8ce737e9cc60eef9a8aed6937b5a2e4b3f0a"
+    },
+    {
+      "path": "src/features/vitrine-premium/components/layout/DashboardShell.tsx",
+      "sha256": "99a1898c0a7abd62232b0407db8a43b77232606154b60cef4398f0f776f392bc",
+      "origin": "src/components/layout/DashboardShell.tsx",
+      "origin_sha256": "993b10ef91c181809f1ab0a773658bf7ae83412a1806136d310b3c66407154f4"
+    },
+    {
+      "path": "src/features/vitrine-premium/components/layout/Sidebar.tsx",
+      "sha256": "fe6cbb71ae34ad068b3aa9c7912c371faa0f7768c283a08626dcee4cdab8c556",
+      "origin": "src/components/layout/Sidebar.tsx",
+      "origin_sha256": "da051204c50d3d834e77507d5cee756b53fe18f7cd2f2c81601e0e2b6272a691"
+    },
+    {
+      "path": "src/features/vitrine-premium/components/layout/sidebar.module.css",
+      "sha256": "018a8fcc4c75c4dffd57cba5493361d037d2c73b72e9e787ee354b4a0c76d8a4",
+      "origin": "src/components/layout/sidebar.module.css",
+      "origin_sha256": "018a8fcc4c75c4dffd57cba5493361d037d2c73b72e9e787ee354b4a0c76d8a4"
+    },
+    {
+      "path": "src/features/vitrine-premium/components/motion/AnimatedMetric.tsx",
+      "sha256": "6fdbe57326d0f147e49c88b7ed2540a8998f8374b642731412213e558f5dbcec",
+      "origin": "src/components/motion/AnimatedMetric.tsx",
+      "origin_sha256": "93fc19f1f365e31681dc99f9ee4b6f6d28ddacb0f8f052f852e3f8c477000916"
+    },
+    {
+      "path": "src/features/vitrine-premium/components/motion/PageMotion.tsx",
+      "sha256": "bba174d6ebe20b55fb21052c7351a10aeb1a1aa4e5b12d4195c50fd8759d1745",
+      "origin": "src/components/motion/PageMotion.tsx",
+      "origin_sha256": "bba174d6ebe20b55fb21052c7351a10aeb1a1aa4e5b12d4195c50fd8759d1745"
+    },
+    {
+      "path": "src/features/vitrine-premium/components/motion/demo-motion.module.css",
+      "sha256": "77a6ffa9d6538107ba2a1bfddcaa66449bc3089466392d5208654e0713c03f3f",
+      "origin": "src/components/motion/demo-motion.module.css",
+      "origin_sha256": "a5390502c45ebfb8010f6e48fe7cd03cef357103b40eab936e603ab24bd6a7b2"
+    },
+    {
+      "path": "src/features/vitrine-premium/components/motion/useReducedMotion.ts",
+      "sha256": "e94d6003c0d9c7f217baf6e4c9efda30747bf90d8117787f3a1b1a442933bbca",
+      "origin": "src/components/motion/useReducedMotion.ts",
+      "origin_sha256": "e94d6003c0d9c7f217baf6e4c9efda30747bf90d8117787f3a1b1a442933bbca"
+    },
+    {
+      "path": "src/features/vitrine-premium/components/onboarding/GuidedTour.tsx",
+      "sha256": "6345aa1ad5c98697dc6e1ecd8bfae7e7e58a3accdd515bc2bbc56b38a3ae03b0",
+      "origin": "src/components/onboarding/GuidedTour.tsx",
+      "origin_sha256": "00f748e46b007a37be7a7983e4f953e914ffe85b3c7b0aa14794d3051434285f"
+    },
+    {
+      "path": "src/features/vitrine-premium/components/onboarding/guided-tour.module.css",
+      "sha256": "2c8e880e2f88901045abdc0d8c2831669f1ee06c701ad6e234bae77e220e230e",
+      "origin": "src/components/onboarding/guided-tour.module.css",
+      "origin_sha256": "2c8e880e2f88901045abdc0d8c2831669f1ee06c701ad6e234bae77e220e230e"
+    },
+    {
+      "path": "src/features/vitrine-premium/components/pacientes/AnimatedLineChart.tsx",
+      "sha256": "985337b18fcbeca91260951e613db2a073ea5bf6ace155f08300f0792e4001ae",
+      "origin": "src/components/pacientes/AnimatedLineChart.tsx",
+      "origin_sha256": "88bbb5bd1f5a63c47bd6ab89f3a7d4b0be60ca3d7ce20c62d80baf15b14b7f73"
+    },
+    {
+      "path": "src/features/vitrine-premium/components/pacientes/DemoPatientView.tsx",
+      "sha256": "5cc1d4f89f03fd9e3f55760d7ca40c2df35a57bcd9f5b7d1ddc1dfbfc9bef45d",
+      "origin": "src/components/pacientes/DemoPatientView.tsx",
+      "origin_sha256": "ab108e62dd7b02bd98454468206df37e0d922bf0b8d975fd7a7f772ecbe99c54"
+    },
+    {
+      "path": "src/features/vitrine-premium/components/pacientes/PatientCard.tsx",
+      "sha256": "9cc8a99054e5dd94e6de66c306edae8735586303666be61f884bcd9b5a5c751c",
+      "origin": "src/components/pacientes/PatientCard.tsx",
+      "origin_sha256": "2abbf81b7aab051f2dbc025f96b60983836c8365243c591cc220d9afd694d6b8"
+    },
+    {
+      "path": "src/features/vitrine-premium/components/pacientes/PatientDocuments.tsx",
+      "sha256": "7f0a5cab8d6c8f654ce5d7674a0a19148733c4515b3d46b321443604dce0ddd1",
+      "origin": "src/components/pacientes/PatientDocuments.tsx",
+      "origin_sha256": "b31ed0564350ccf17e114e4190411f107155b88fd15e2d09519af83dd7d7314e"
+    },
+    {
+      "path": "src/features/vitrine-premium/components/pacientes/PatientEvolution.tsx",
+      "sha256": "c18a6d36129ea02c4cae432c60e22eb63a99fd88e977cc96187748c32113e3b5",
+      "origin": "src/components/pacientes/PatientEvolution.tsx",
+      "origin_sha256": "fd6efc8095c1f429e559ecccf7345a3559b2690d09c35b7436a775180a9a845d"
+    },
+    {
+      "path": "src/features/vitrine-premium/components/pacientes/PatientExams.tsx",
+      "sha256": "6e6a69adf54d1b3c2335065f4527f1a9e910956096594ca0ded971991e8d9a78",
+      "origin": "src/components/pacientes/PatientExams.tsx",
+      "origin_sha256": "778c1d41e156b1a7884076c79dc91fa4b5ba9a143a0fc0d8f5e414ee47ab7226"
+    },
+    {
+      "path": "src/features/vitrine-premium/components/pacientes/PatientHeader.tsx",
+      "sha256": "3d59e0491b6a6c2953ae4d0346bdbbb6cacb149dbd691a453dde97ce80eb073f",
+      "origin": "src/components/pacientes/PatientHeader.tsx",
+      "origin_sha256": "65d77493d208d8aa0dc58a48d8658afec08d829c82440813095967b1444d31d7"
+    },
+    {
+      "path": "src/features/vitrine-premium/components/pacientes/PatientList.tsx",
+      "sha256": "d0c13621829f70a68da0ceb337ccbbc09b72e08af2e81e585d77270aaa6bef0f",
+      "origin": "src/components/pacientes/PatientList.tsx",
+      "origin_sha256": "f7b4b70f5615b9318dc2677384d862208e51c455c7ca4361b47fffa0371fc5dd"
+    },
+    {
+      "path": "src/features/vitrine-premium/components/pacientes/PatientMedications.tsx",
+      "sha256": "70272541216ef2d5af1433af341cb5b67e529208d6faf8e8ceb34da018f27adb",
+      "origin": "src/components/pacientes/PatientMedications.tsx",
+      "origin_sha256": "e70b3ddeeb748d4179909fa25cdadc1e10a46f4ac64a6bae61407ae7a10c135e"
+    },
+    {
+      "path": "src/features/vitrine-premium/components/pacientes/PatientPreviousNotes.tsx",
+      "sha256": "fc41bec05d77ea976e3d6a2a5ff3b64f3f2f739da74154bf10fea99628a77ea6",
+      "origin": "src/components/pacientes/PatientPreviousNotes.tsx",
+      "origin_sha256": "455cb43d02a2d5e6ebe226f8c94d8a55fc3d1287a34af26e1c01f61636e53219"
+    },
+    {
+      "path": "src/features/vitrine-premium/components/pacientes/PatientSummary.tsx",
+      "sha256": "de310f2b7e6260dddbe0056c5ab02eec863758d79ac5e472486529de8c251e46",
+      "origin": "src/components/pacientes/PatientSummary.tsx",
+      "origin_sha256": "2401cd4f511f06bf5ee6694c975a458f36ac4b1695654adc92e50083b5308992"
+    },
+    {
+      "path": "src/features/vitrine-premium/components/pacientes/PatientTabs.tsx",
+      "sha256": "29320111ea65fc2ff086fbdda99ca935c3f7dc17b53c493267e389c0245af2f4",
+      "origin": "src/components/pacientes/PatientTabs.tsx",
+      "origin_sha256": "58b3a207718de0bf3a31d72da3195ffaa67e70d421ed46130cbbab6c745009cf"
+    },
+    {
+      "path": "src/features/vitrine-premium/components/pacientes/PatientTimeline.tsx",
+      "sha256": "9f9927c745ee1b3910b7e4d24d7eb50f5900e5275986cd3e92f810a7cc791d89",
+      "origin": "src/components/pacientes/PatientTimeline.tsx",
+      "origin_sha256": "497f7bf4b5ad772679102986ea875b5552e87033476aae6d8362b5a79fcdcf51"
+    },
+    {
+      "path": "src/features/vitrine-premium/components/pacientes/PatientVaccines.tsx",
+      "sha256": "ac8b5c33200f97cd9d619981139cd58344a057e26775cd170ba1736da89571e0",
+      "origin": "src/components/pacientes/PatientVaccines.tsx",
+      "origin_sha256": "0f04e1971f0f3f72b6b0de3d95f8270bd824853cdff86b84d3d7a0f1e0a8f19f"
+    },
+    {
+      "path": "src/features/vitrine-premium/components/protocolos/AddProtocolModal.tsx",
+      "sha256": "493106ab964bc537763e276bb88834f5a4b8ef2e553496c0f5687c5bf8b7d03b",
+      "origin": "src/components/protocolos/AddProtocolModal.tsx",
+      "origin_sha256": "58ddbe17cc0e1d0dea2b1dfd05ad10e4c2103946c2b08f8085e1849421efec72"
+    },
+    {
+      "path": "src/features/vitrine-premium/components/protocolos/ProtocolCard.tsx",
+      "sha256": "b433db637afa1f2af39cee1f2822b9ae27754071d5991f7a13e568fb4956c05c",
+      "origin": "src/components/protocolos/ProtocolCard.tsx",
+      "origin_sha256": "9b848657889d165a0c485de8ce5b5e13ab28e1b6c70922c9dbac513e58e9113b"
+    },
+    {
+      "path": "src/features/vitrine-premium/components/protocolos/ProtocolList.tsx",
+      "sha256": "0789d8e479e450e905eef083bf827ad7655500e824f86066ab856484da4e83aa",
+      "origin": "src/components/protocolos/ProtocolList.tsx",
+      "origin_sha256": "07239a96205e232b3ea0602160ad5cd812fce80511f768ddb2f5a2a7a69ad6f2"
+    },
+    {
+      "path": "src/features/vitrine-premium/components/protocolos/ProtocolPreviewModal.tsx",
+      "sha256": "af26a25c07afeb6a4f998564d9f3cf2c47a5b306386fbb90f3815091d6a4c3e7",
+      "origin": "src/components/protocolos/ProtocolPreviewModal.tsx",
+      "origin_sha256": "e9328e2a93c89d2b7cde2ba8872025ebfe186c09e4a960e6112c052b48d1565f"
+    },
+    {
+      "path": "src/features/vitrine-premium/components/registro/ClinicalHistory.tsx",
+      "sha256": "64d495b031447d135bcf3949f390953bcadceb8e3719d5611254095700a847a4",
+      "origin": "src/components/registro/ClinicalHistory.tsx",
+      "origin_sha256": "5ac3b1ea1960a2ce084c53d1f268c5ade852f3864876e4a34d3264d42d2949a5"
+    },
+    {
+      "path": "src/features/vitrine-premium/components/registro/RegistrationWizard.tsx",
+      "sha256": "aa6d12bff62eea3d4c90c95317f2153ba069b3f22f5427870f4ee580a1c805eb",
+      "origin": "src/components/registro/RegistrationWizard.tsx",
+      "origin_sha256": "fbd3c0ae46beba52c246973277911152bab3db389a702df23659d2fd979b6438"
+    },
+    {
+      "path": "src/features/vitrine-premium/components/registro/Stepper.tsx",
+      "sha256": "c1bd66572fe146e7ab900337f83c5e12c2b24d25038d3c49ef7f06b3aa06bb68",
+      "origin": "src/components/registro/Stepper.tsx",
+      "origin_sha256": "c1bd66572fe146e7ab900337f83c5e12c2b24d25038d3c49ef7f06b3aa06bb68"
+    },
+    {
+      "path": "src/features/vitrine-premium/components/registro/steps/IdentificationStep.tsx",
+      "sha256": "b7102cd7044ca09944195f868e7af08ba402947c063277da88d5d4fd5eff66d9",
+      "origin": "src/components/registro/steps/IdentificationStep.tsx",
+      "origin_sha256": "7b3eac6afb50ea99c5d2079b8108cb2c4487f01166e6bede4baecb1f182bcbb1"
+    },
+    {
+      "path": "src/features/vitrine-premium/components/registro/steps/ObstetricStep.tsx",
+      "sha256": "e2eb6ee6feeb4db35000b354e33c834e03eba2f71a0ce56bcf78924de7ffe29e",
+      "origin": "src/components/registro/steps/ObstetricStep.tsx",
+      "origin_sha256": "1a7aec22a809033909eebd7c504e17eec3780173be974ddb3e9777a022a986ee"
+    },
+    {
+      "path": "src/features/vitrine-premium/components/registro/steps/PregnancyStep.tsx",
+      "sha256": "fae2b9b5dbd6f07b7b6052129629ea1408d3d7755d8ba004276aa57baf7999c6",
+      "origin": "src/components/registro/steps/PregnancyStep.tsx",
+      "origin_sha256": "66e84fbb0b9a128fe3b1669dadc295f9f8bd8af79429049f3f7496244a2bf9a3"
+    },
+    {
+      "path": "src/features/vitrine-premium/components/registro/steps/ResultStep.tsx",
+      "sha256": "d06eb0bb3d4a1e5d5d17f44e950b8d17f3681edd78779545d9007b5f0f8d5182",
+      "origin": "src/components/registro/steps/ResultStep.tsx",
+      "origin_sha256": "1d1b6a77bf92de3696a110d588f018bbe0bd04710c37eb1b1192eaeab4f2637c"
+    },
+    {
+      "path": "src/features/vitrine-premium/components/registro/steps/VitalSignsStep.tsx",
+      "sha256": "0a7f141405cef97dff8f0beb7d8c1ed8d21f5232cdbc8b7f9cebf4492ea49d62",
+      "origin": "src/components/registro/steps/VitalSignsStep.tsx",
+      "origin_sha256": "f6ac45176c9c91e5ba8870d413ed6e6840e60e35c7ab67c4c56c8577cda2d997"
+    },
+    {
+      "path": "src/features/vitrine-premium/components/ui/Card.tsx",
+      "sha256": "b23329d8eeeeba1e3e8043fed1a9f8271d38fa39f82c37be68405925d739220c",
+      "origin": "src/components/ui/Card.tsx",
+      "origin_sha256": "43d4312ea16d1f2f03de50d13a036add9c06649f6b8b032dead50471ceaa8681"
+    },
+    {
+      "path": "src/features/vitrine-premium/components/ui/Input.tsx",
+      "sha256": "cfe8139273c3285c53d589ea19e47628b1acd69d57023f762f5426ad5ce70fd0",
+      "origin": "src/components/ui/Input.tsx",
+      "origin_sha256": "ac31d24444ac5be03efca3652abff375a76060a6ef330f650eb9d74bdbcdba5b"
+    },
+    {
+      "path": "src/features/vitrine-premium/components/ui/Modal.tsx",
+      "sha256": "bf74d4c30d7e92c92d03f185c3a18e84c387a4284d5aba05aad4a923aaa1d996",
+      "origin": "src/components/ui/Modal.tsx",
+      "origin_sha256": "bf74d4c30d7e92c92d03f185c3a18e84c387a4284d5aba05aad4a923aaa1d996"
+    },
+    {
+      "path": "src/features/vitrine-premium/components/ui/Select.tsx",
+      "sha256": "d649f2df38820c6d9ba4ef1fbc8a9cfe22136a6460f65983a95ed63992bfa093",
+      "origin": "src/components/ui/Select.tsx",
+      "origin_sha256": "48bd00fee7fd3e6394f2ffa4f5f4480cb582e9a09e3b851dfcc39ab508b241dd"
+    },
+    {
+      "path": "src/features/vitrine-premium/components/ui/button.tsx",
+      "sha256": "82539b5621301d68b34b4e8cda698e7cb80a1011069ab209733434adab5457ce",
+      "origin": "src/components/ui/button.tsx",
+      "origin_sha256": "82539b5621301d68b34b4e8cda698e7cb80a1011069ab209733434adab5457ce"
+    },
+    {
+      "path": "src/features/vitrine-premium/lib/demo/assessment-presentation.ts",
+      "sha256": "f6c02d4fd1259ae89cfd00a2f3a1dec06839d821e6a52a6f388ca9b8677e3bbd",
+      "origin": "src/lib/demo/assessment-presentation.ts",
+      "origin_sha256": "f6c02d4fd1259ae89cfd00a2f3a1dec06839d821e6a52a6f388ca9b8677e3bbd"
+    },
+    {
+      "path": "src/features/vitrine-premium/lib/demo/data.ts",
+      "sha256": "461a13567ff3a1372d4d6f679450ee083ea5c4dde76ead7f6c3d841ea8432121",
+      "origin": "src/lib/demo/data.ts",
+      "origin_sha256": "461a13567ff3a1372d4d6f679450ee083ea5c4dde76ead7f6c3d841ea8432121"
+    },
+    {
+      "path": "src/features/vitrine-premium/lib/demo/fixtures.ts",
+      "sha256": "ef18ec40f319063f1480f1c8f1916fae2bdc2d43ce231a25c06a31f11dd5bd2e",
+      "origin": "src/lib/demo/fixtures.ts",
+      "origin_sha256": "ef18ec40f319063f1480f1c8f1916fae2bdc2d43ce231a25c06a31f11dd5bd2e"
+    },
+    {
+      "path": "src/features/vitrine-premium/lib/demo/meows.ts",
+      "sha256": "2a824a7be376a8a03bd92caf32192c72af379c4ea7befdb780a984e6b0649440",
+      "origin": "src/lib/demo/meows.ts",
+      "origin_sha256": "2a824a7be376a8a03bd92caf32192c72af379c4ea7befdb780a984e6b0649440"
+    },
+    {
+      "path": "src/features/vitrine-premium/lib/demo/motion.ts",
+      "sha256": "f4bbcec0dbe7b86aed88c21f05b6bc0b768d7d9ea4dc42086a1df48c70d000aa",
+      "origin": "src/lib/demo/motion.ts",
+      "origin_sha256": "f4bbcec0dbe7b86aed88c21f05b6bc0b768d7d9ea4dc42086a1df48c70d000aa"
+    },
+    {
+      "path": "src/features/vitrine-premium/lib/demo/profile.ts",
+      "sha256": "f3af2715033a876ff821f124842c0d1e66244ca24feca439538900ab0f005fe2",
+      "origin": "src/lib/demo/profile.ts",
+      "origin_sha256": "f3af2715033a876ff821f124842c0d1e66244ca24feca439538900ab0f005fe2"
+    },
+    {
+      "path": "src/features/vitrine-premium/lib/demo/tour.ts",
+      "sha256": "24ea4123b91680b2c81527c831c95e19c26515ea20e6fe667ab45b4ae866e4c8",
+      "origin": "src/lib/demo/tour.ts",
+      "origin_sha256": "a94a2efbacb5e5c0761dbd5ef923b8ec226be18477fdf0d42681e2c79f29dd85"
+    },
+    {
+      "path": "src/features/vitrine-premium/lib/demo/validation.ts",
+      "sha256": "7b035aa593a0437cc536a27c7a033574ad31560afd8c0d7827c48ce5f61794cf",
+      "origin": "src/lib/demo/validation.ts",
+      "origin_sha256": "7b035aa593a0437cc536a27c7a033574ad31560afd8c0d7827c48ce5f61794cf"
+    },
+    {
+      "path": "src/features/vitrine-premium/lib/demo/welcome-session.ts",
+      "sha256": "e8849f724dac0079ff52ff4211fbceda35e13c2ec9d7aac84604524c87a72b11",
+      "origin": "src/lib/demo/welcome-session.ts",
+      "origin_sha256": "e561270415b5a2a68942063ead7dc3c900cc76b049529fe74468859649b299cc"
+    },
+    {
+      "path": "src/features/vitrine-premium/lib/meows.ts",
+      "sha256": "28d57a8873592a5ebf56b263e233a6e12d0d5bac7bee0636afb84d1260e0781d",
+      "origin": "src/lib/meows.ts",
+      "origin_sha256": "28d57a8873592a5ebf56b263e233a6e12d0d5bac7bee0636afb84d1260e0781d"
+    },
+    {
+      "path": "src/features/vitrine-premium/lib/mock-chat.ts",
+      "sha256": "2e9067571217cc138e453592e504c4660e61e11d502169e97ebeabd3278c99a8",
+      "origin": "src/lib/mock-chat.ts",
+      "origin_sha256": "15228853634cd32b708ef031008ded2dd18534c4d073d9cab4af83dd61e4035c"
+    },
+    {
+      "path": "src/features/vitrine-premium/lib/mock-configuracao.ts",
+      "sha256": "2622b39ff4e81597bf87eaf2e4c6fc053f6e38a64ae07d33383e6a2a18202f30",
+      "origin": "src/lib/mock-configuracao.ts",
+      "origin_sha256": "dd39029c06f64c17bae2eed1319f08a30a042ba9d16978756df03647a9f7e568"
+    },
+    {
+      "path": "src/features/vitrine-premium/lib/mock-cursos.ts",
+      "sha256": "1fdc440c963ea1cd58ed5546b57e9197a5f276ab24dcec643ee5a7fa5ef96623",
+      "origin": "src/lib/mock-cursos.ts",
+      "origin_sha256": "f9c9def399d895a63104bed17dffb7bb04df5c8bd18d743ac97938d81bc9c1dd"
+    },
+    {
+      "path": "src/features/vitrine-premium/lib/mock-ferramentas.ts",
+      "sha256": "953bf955aac1fad267f86ff5ba1e5e87c112a2bc435a8d8534239276d45031a3",
+      "origin": "src/lib/mock-ferramentas.ts",
+      "origin_sha256": "171b19e961eb231fcf388b8e524a8cea3a9e25c1be1366338ec23cc37a244010"
+    },
+    {
+      "path": "src/features/vitrine-premium/lib/mock-protocolos.ts",
+      "sha256": "5bea2d84425ecc26ae221d75e0c1e69decc7c6dbe6f2e57bbd99b4f33ac5083f",
+      "origin": "src/lib/mock-protocolos.ts",
+      "origin_sha256": "f7366bbe6dee8aa159eef8fe804b27c9fd4b7ba0e5f58912ae7022e3a624c0cf"
+    },
+    {
+      "path": "src/features/vitrine-premium/lib/onboarding/tour.ts",
+      "sha256": "f7ae3eb8a5ff1ed13c4df70edc3a3541ebf884c14fc4d598674b05c4942a5475",
+      "origin": "src/lib/onboarding/tour.ts",
+      "origin_sha256": "f7ae3eb8a5ff1ed13c4df70edc3a3541ebf884c14fc4d598674b05c4942a5475"
+    },
+    {
+      "path": "src/features/vitrine-premium/lib/routes.ts",
+      "sha256": "56f557493028059ab11937494ae284ef87602595463faa8c001fc2b8af2be656",
+      "origin": null,
+      "origin_sha256": null
+    },
+    {
+      "path": "src/features/vitrine-premium/types/atendimento.ts",
+      "sha256": "25f48a5520b3b6089b9c318ca939df986347c77eda75efdb1bd91b8265ac3911",
+      "origin": "src/types/atendimento.ts",
+      "origin_sha256": "25f48a5520b3b6089b9c318ca939df986347c77eda75efdb1bd91b8265ac3911"
+    },
+    {
+      "path": "src/features/vitrine-premium/types/chat.ts",
+      "sha256": "1f7486195649d1b90612a29e44ce5f347d619ebe7196fe1a306579b5cb1e9427",
+      "origin": "src/types/chat.ts",
+      "origin_sha256": "f7fc00457b34e39846fb619bda8cdab0d92ebab5c3b48b15cbfa573db991a4c5"
+    },
+    {
+      "path": "src/features/vitrine-premium/types/configuracao.ts",
+      "sha256": "cdb4464d9db2649d825270daa8e5f5eb17ab6a4ad2535bb583d6fd278845ae8a",
+      "origin": "src/types/configuracao.ts",
+      "origin_sha256": "5b1814bcc7ce6160b8c6ce056a6d5e81a6399d7c62e01ac20c4c6f79a4a9d77a"
+    },
+    {
+      "path": "src/features/vitrine-premium/types/curso.ts",
+      "sha256": "d768ebc315409c06e5ce038239d3a19a544d5c4ef22fdb19a8dab982394b94ff",
+      "origin": "src/types/curso.ts",
+      "origin_sha256": "23d8d251653484ef7c6575455adfcb551475e721cc044734c098e62209f3c3fe"
+    },
+    {
+      "path": "src/features/vitrine-premium/types/dashboard.ts",
+      "sha256": "ed0e3e2d3e23e77fa91c7375e1792b909809740678479017960f03fef4257e5d",
+      "origin": "src/types/dashboard.ts",
+      "origin_sha256": "ed0e3e2d3e23e77fa91c7375e1792b909809740678479017960f03fef4257e5d"
+    },
+    {
+      "path": "src/features/vitrine-premium/types/ferramenta.ts",
+      "sha256": "04ed7250276f9ce6a843b5eb8ea13c6e76f4af32b80478f004fcebe4d653c5ef",
+      "origin": "src/types/ferramenta.ts",
+      "origin_sha256": "957004ebed83582284a8c1292b7e1a120a4a33030241fc36d7f6661e39e37f24"
+    },
+    {
+      "path": "src/features/vitrine-premium/types/meows.ts",
+      "sha256": "329f3f295db009250493bf76e1fbcda4d0d4189bd37e09c28753b8fa7bb5a230",
+      "origin": "src/types/meows.ts",
+      "origin_sha256": "329f3f295db009250493bf76e1fbcda4d0d4189bd37e09c28753b8fa7bb5a230"
+    },
+    {
+      "path": "src/features/vitrine-premium/types/paciente.ts",
+      "sha256": "bce91051ad311a762a7a98a878c63f0e090ef4e87fa35190e7c51ec78876c6a2",
+      "origin": "src/types/paciente.ts",
+      "origin_sha256": "bce91051ad311a762a7a98a878c63f0e090ef4e87fa35190e7c51ec78876c6a2"
+    },
+    {
+      "path": "src/features/vitrine-premium/types/protocolo.ts",
+      "sha256": "8b1f25d87c49a86eda325f6f745650378ac5595275a1d6561ebdc31a820f6c2d",
+      "origin": "src/types/protocolo.ts",
+      "origin_sha256": "5773deb3e6f0f56ca2fdb3475f106da63bf48fb2187cc117b272f7afea6d46fd"
+    },
+    {
+      "path": "src/features/vitrine-premium/types/registration.ts",
+      "sha256": "bb1fbc6cc945352699a96ba0b0e873dc913757a3d2b8502644b1dc97e652ac60",
+      "origin": "src/types/registration.ts",
+      "origin_sha256": "bb1fbc6cc945352699a96ba0b0e873dc913757a3d2b8502644b1dc97e652ac60"
+    },
+    {
+      "path": "src/features/vitrine-premium/types/tour.ts",
+      "sha256": "a3a2e528012ad9fc8ca3f26cb9f84904950dfb4da33ceb2b4286eff2a21040f9",
+      "origin": "src/types/tour.ts",
+      "origin_sha256": "a3a2e528012ad9fc8ca3f26cb9f84904950dfb4da33ceb2b4286eff2a21040f9"
+    },
+    {
+      "path": "src/features/vitrine-premium/views/ajuda.tsx",
+      "sha256": "aed2e39e533d5bd4516d0814ca1e9c14d94700f5e8590ae3e53083b8a53f2701",
+      "origin": null,
+      "origin_sha256": null
+    },
+    {
+      "path": "src/features/vitrine-premium/views/atendimentos.tsx",
+      "sha256": "9ff976bd317709b83f36be7f837531f8c2b8d15a2010b1b277634b35c3ae2ca4",
+      "origin": "src/app/(dashboard)/atendimentos/page.tsx",
+      "origin_sha256": "db22a218f3469f95716e7701e57c9e2b5eafb5ea394439dc7875aced3117ebcc"
+    },
+    {
+      "path": "src/features/vitrine-premium/views/chat.tsx",
+      "sha256": "f2cfd17d8bda8e1acf66b353e542f5213888da11a6098b0c05c10a9005d29c24",
+      "origin": "src/app/(dashboard)/chat/page.tsx",
+      "origin_sha256": "b33ddbcef1d364cdd1498d14615633073f2156883e80b5e662815aae0ac786f1"
+    },
+    {
+      "path": "src/features/vitrine-premium/views/configuracoes.tsx",
+      "sha256": "e11efcae29328cce723e22167923f82b5f582830deff6ec4d3001e66f166f07c",
+      "origin": "src/app/(dashboard)/configuracoes/page.tsx",
+      "origin_sha256": "6937f7d0a09522c0e20c66ca995acf4278ce5f4f0d3f0d2362b34eb001867b27"
+    },
+    {
+      "path": "src/features/vitrine-premium/views/cursos.tsx",
+      "sha256": "f39f3ac154524e9fe178a09f94f22a2de71c586458d082566a9e82966020e043",
+      "origin": "src/app/(dashboard)/cursos/page.tsx",
+      "origin_sha256": "079b25d6c3a0bea0af3bf1233ea2cdcf4fb84f3c5db3fbc40a5fec3e15dd109e"
+    },
+    {
+      "path": "src/features/vitrine-premium/views/dashboard.tsx",
+      "sha256": "2de59262820b91855fd222827716029f828b95752a6ea52f0202e2878f77a94e",
+      "origin": "src/app/(dashboard)/dashboard/page.tsx",
+      "origin_sha256": "2582bdc07d04b283e207e767cd4fe1058a2c7792785ffd9d6ceaa4d922f208c0"
+    },
+    {
+      "path": "src/features/vitrine-premium/views/ferramentas.tsx",
+      "sha256": "1d3a1aa8866572dec8bad13f664d7e307bf26e4ef160630dabff4f4869c68bee",
+      "origin": "src/app/(dashboard)/ferramentas/page.tsx",
+      "origin_sha256": "9b17ae20aa1fd21d41994b85f7261a178783b57301fc49e70a7cf75db3555f94"
+    },
+    {
+      "path": "src/features/vitrine-premium/views/pacientes.tsx",
+      "sha256": "e05ff1764b7bf8e336e9c91147e9e4e36aa07e7bea2c2cf8f5c6380970f5908e",
+      "origin": "src/app/(dashboard)/pacientes/page.tsx",
+      "origin_sha256": "4d65de1ea0ffa2865362f053bf465af786029a361ea0fce770eeae1bc6fb07de"
+    },
+    {
+      "path": "src/features/vitrine-premium/views/protocolos.tsx",
+      "sha256": "8193d723d944d10f82ad5c1baf378687557ae8f9e81af27c64ac8c7136ad4d7f",
+      "origin": "src/app/(dashboard)/protocolos/page.tsx",
+      "origin_sha256": "2fb1c96ede0c1f9dd2c0fe4a50341c27b39731d138c3047a5c2f33bf33fd7489"
+    },
+    {
+      "path": "src/features/vitrine-premium/views/registro.tsx",
+      "sha256": "66645e1144c89a1d4351e112fd8bbaf053cee8becccb6869e801454463001316",
+      "origin": "src/app/(dashboard)/registro/page.tsx",
+      "origin_sha256": "b6e9754e5ac1211ac8b677e2ebc531f76af513055486d44ede18f687ad5bedf3"
+    }
+  ]
+}
