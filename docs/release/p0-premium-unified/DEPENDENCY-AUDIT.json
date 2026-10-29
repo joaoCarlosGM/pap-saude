@@ -1,0 +1,881 @@
+{
+  "lockfileSha256": "d0af879df1aaec55f585c3e86aa64e99f8a0980cf3944d58e4abe79e3990d472",
+  "groups": {
+    "production": {
+      "totals": {
+        "info": 0,
+        "low": 0,
+        "moderate": 6,
+        "high": 0,
+        "critical": 0,
+        "total": 6
+      },
+      "evidenceSha256": "9ad5f5b729bfb25b95380841fc35328459c47677ec41195de7b40d12139cef59",
+      "packages": [
+        {
+          "name": "@prisma/client",
+          "severity": "moderate",
+          "direct": true,
+          "range": "",
+          "locations": [
+            "node_modules/@prisma/client"
+          ],
+          "installedVersions": [
+            "7.10.0"
+          ],
+          "via": [
+            "prisma"
+          ],
+          "effects": [],
+          "fixAvailable": false
+        },
+        {
+          "name": "@prisma/dev",
+          "severity": "moderate",
+          "direct": false,
+          "range": "",
+          "locations": [
+            "node_modules/@prisma/dev"
+          ],
+          "installedVersions": [
+            "0.24.17"
+          ],
+          "via": [
+            "@prisma/streams-local"
+          ],
+          "effects": [
+            "prisma"
+          ],
+          "fixAvailable": false
+        },
+        {
+          "name": "@prisma/streams-local",
+          "severity": "moderate",
+          "direct": false,
+          "range": "",
+          "locations": [
+            "node_modules/@prisma/streams-local"
+          ],
+          "installedVersions": [
+            "0.1.11"
+          ],
+          "via": [
+            "ajv"
+          ],
+          "effects": [
+            "@prisma/dev"
+          ],
+          "fixAvailable": false
+        },
+        {
+          "name": "ajv",
+          "severity": "moderate",
+          "direct": false,
+          "range": "",
+          "locations": [
+            "node_modules/@prisma/streams-local/node_modules/ajv"
+          ],
+          "installedVersions": [
+            "8.20.0"
+          ],
+          "via": [
+            "fast-uri"
+          ],
+          "effects": [
+            "@prisma/streams-local"
+          ],
+          "fixAvailable": false
+        },
+        {
+          "name": "fast-uri",
+          "severity": "moderate",
+          "direct": false,
+          "range": "",
+          "locations": [
+            "node_modules/fast-uri"
+          ],
+          "installedVersions": [
+            "3.1.8"
+          ],
+          "via": [
+            {
+              "name": "fast-uri",
+              "title": "fast-uri vulnerable to URI scheme spoofing via percent-encoded scheme decoding",
+              "url": "https://github.com/advisories/GHSA-w74x-v6f9-j3xg",
+              "range": ">=3.0.0 <3.1.9"
+            },
+            {
+              "name": "fast-uri",
+              "title": "fast-uri vulnerable to improper path equivalence in relative reference normalization",
+              "url": "https://github.com/advisories/GHSA-xhq7-xmqj-769h",
+              "range": ">=3.0.0 <3.1.9"
+            },
+            {
+              "name": "fast-uri",
+              "title": "fast-uri vulnerable to host confusion via unchecked WHATWG host canonicalization",
+              "url": "https://github.com/advisories/GHSA-wjr9-j795-jxcr",
+              "range": ">=3.1.3 <3.1.9"
+            },
+            {
+              "name": "fast-uri",
+              "title": "fast-uri vulnerable to scheme injection via an unescaped first-segment colon in suffix references",
+              "url": "https://github.com/advisories/GHSA-333x-w4r6-6crp",
+              "range": ">=3.0.0 <3.1.9"
+            }
+          ],
+          "effects": [
+            "ajv"
+          ],
+          "fixAvailable": false
+        },
+        {
+          "name": "prisma",
+          "severity": "moderate",
+          "direct": true,
+          "range": "",
+          "locations": [
+            "node_modules/prisma"
+          ],
+          "installedVersions": [
+            "7.10.1"
+          ],
+          "via": [
+            "@prisma/dev"
+          ],
+          "effects": [
+            "@prisma/client"
+          ],
+          "fixAvailable": false
+        }
+      ]
+    },
+    "full": {
+      "totals": {
+        "info": 0,
+        "low": 1,
+        "moderate": 10,
+        "high": 14,
+        "critical": 0,
+        "total": 25
+      },
+      "evidenceSha256": "2867f49f26a9232b1115be9b9a737d7e5ff884e99cdee76907998f4191db9c43",
+      "packages": [
+        {
+          "name": "@dotenvx/dotenvx",
+          "severity": "high",
+          "direct": false,
+          "range": "",
+          "locations": [
+            "node_modules/@dotenvx/dotenvx"
+          ],
+          "installedVersions": [
+            "1.75.1"
+          ],
+          "via": [
+            "conf",
+            "systeminformation",
+            "undici"
+          ],
+          "effects": [],
+          "fixAvailable": true
+        },
+        {
+          "name": "@modelcontextprotocol/sdk",
+          "severity": "high",
+          "direct": false,
+          "range": "",
+          "locations": [
+            "node_modules/@modelcontextprotocol/sdk"
+          ],
+          "installedVersions": [
+            "1.32.1"
+          ],
+          "via": [
+            "ajv",
+            "ajv-formats",
+            "express",
+            "express-rate-limit",
+            "zod",
+            "zod-to-json-schema"
+          ],
+          "effects": [],
+          "fixAvailable": true
+        },
+        {
+          "name": "@prisma/client",
+          "severity": "moderate",
+          "direct": true,
+          "range": "",
+          "locations": [
+            "node_modules/@prisma/client"
+          ],
+          "installedVersions": [
+            "7.10.0"
+          ],
+          "via": [
+            "prisma"
+          ],
+          "effects": [],
+          "fixAvailable": false
+        },
+        {
+          "name": "@prisma/dev",
+          "severity": "moderate",
+          "direct": false,
+          "range": "",
+          "locations": [
+            "node_modules/@prisma/dev"
+          ],
+          "installedVersions": [
+            "0.24.17"
+          ],
+          "via": [
+            "@prisma/streams-local"
+          ],
+          "effects": [
+            "prisma"
+          ],
+          "fixAvailable": false
+        },
+        {
+          "name": "@prisma/streams-local",
+          "severity": "moderate",
+          "direct": false,
+          "range": "",
+          "locations": [
+            "node_modules/@prisma/streams-local"
+          ],
+          "installedVersions": [
+            "0.1.11"
+          ],
+          "via": [
+            "ajv"
+          ],
+          "effects": [
+            "@prisma/dev"
+          ],
+          "fixAvailable": false
+        },
+        {
+          "name": "@shadcn/registry",
+          "severity": "high",
+          "direct": false,
+          "range": "",
+          "locations": [
+            "node_modules/@shadcn/registry"
+          ],
+          "installedVersions": [
+            "0.2.0"
+          ],
+          "via": [
+            "@dotenvx/dotenvx",
+            "deepmerge",
+            "socks",
+            "undici",
+            "zod"
+          ],
+          "effects": [],
+          "fixAvailable": true
+        },
+        {
+          "name": "ajv",
+          "severity": "moderate",
+          "direct": false,
+          "range": "",
+          "locations": [
+            "node_modules/@modelcontextprotocol/sdk/node_modules/ajv",
+            "node_modules/@prisma/streams-local/node_modules/ajv",
+            "node_modules/ajv-formats/node_modules/ajv",
+            "node_modules/conf/node_modules/ajv"
+          ],
+          "installedVersions": [
+            "8.20.0"
+          ],
+          "via": [
+            "fast-uri"
+          ],
+          "effects": [
+            "@prisma/streams-local",
+            "ajv-formats",
+            "conf"
+          ],
+          "fixAvailable": false
+        },
+        {
+          "name": "ajv-formats",
+          "severity": "moderate",
+          "direct": false,
+          "range": "",
+          "locations": [
+            "node_modules/ajv-formats",
+            "node_modules/conf/node_modules/ajv-formats"
+          ],
+          "installedVersions": [
+            "2.1.1",
+            "3.0.1"
+          ],
+          "via": [
+            "ajv"
+          ],
+          "effects": [],
+          "fixAvailable": true
+        },
+        {
+          "name": "body-parser",
+          "severity": "high",
+          "direct": false,
+          "range": "",
+          "locations": [
+            "node_modules/body-parser"
+          ],
+          "installedVersions": [
+            "2.3.0"
+          ],
+          "via": [
+            {
+              "name": "body-parser",
+              "title": "body-parser vulnerable to Denial of Service via trailing bytes after a compressed request body",
+              "url": "https://github.com/advisories/GHSA-27r3-jxmh-p828",
+              "range": ">=2.0.0 <2.4.0"
+            }
+          ],
+          "effects": [
+            "express"
+          ],
+          "fixAvailable": true
+        },
+        {
+          "name": "conf",
+          "severity": "moderate",
+          "direct": false,
+          "range": "",
+          "locations": [
+            "node_modules/conf"
+          ],
+          "installedVersions": [
+            "10.2.0"
+          ],
+          "via": [
+            "ajv",
+            "ajv-formats"
+          ],
+          "effects": [],
+          "fixAvailable": true
+        },
+        {
+          "name": "deepmerge",
+          "severity": "low",
+          "direct": false,
+          "range": "",
+          "locations": [
+            "node_modules/deepmerge"
+          ],
+          "installedVersions": [
+            "4.3.1"
+          ],
+          "via": [
+            {
+              "name": "deepmerge",
+              "title": "deepmerge mergeObject() allows prototype poisoning of returned objects",
+              "url": "https://github.com/advisories/GHSA-gcqx-w48m-w2h4",
+              "range": ">=4.2.0 <=4.3.1"
+            }
+          ],
+          "effects": [
+            "@shadcn/registry",
+            "shadcn"
+          ],
+          "fixAvailable": false
+        },
+        {
+          "name": "eslint-config-next",
+          "severity": "high",
+          "direct": true,
+          "range": "",
+          "locations": [
+            "node_modules/eslint-config-next"
+          ],
+          "installedVersions": [
+            "16.4.2"
+          ],
+          "via": [
+            "eslint-plugin-react-hooks"
+          ],
+          "effects": [],
+          "fixAvailable": false
+        },
+        {
+          "name": "eslint-plugin-react-hooks",
+          "severity": "high",
+          "direct": false,
+          "range": "",
+          "locations": [
+            "node_modules/eslint-plugin-react-hooks"
+          ],
+          "installedVersions": [
+            "7.1.1"
+          ],
+          "via": [
+            "zod",
+            "zod-validation-error"
+          ],
+          "effects": [
+            "eslint-config-next"
+          ],
+          "fixAvailable": false
+        },
+        {
+          "name": "express",
+          "severity": "high",
+          "direct": false,
+          "range": "",
+          "locations": [
+            "node_modules/express"
+          ],
+          "installedVersions": [
+            "5.3.0"
+          ],
+          "via": [
+            "body-parser"
+          ],
+          "effects": [],
+          "fixAvailable": true
+        },
+        {
+          "name": "express-rate-limit",
+          "severity": "high",
+          "direct": false,
+          "range": "",
+          "locations": [
+            "node_modules/express-rate-limit"
+          ],
+          "installedVersions": [
+            "8.7.1"
+          ],
+          "via": [
+            "express",
+            "ip-address"
+          ],
+          "effects": [],
+          "fixAvailable": true
+        },
+        {
+          "name": "fast-uri",
+          "severity": "moderate",
+          "direct": false,
+          "range": "",
+          "locations": [
+            "node_modules/fast-uri"
+          ],
+          "installedVersions": [
+            "3.1.8"
+          ],
+          "via": [
+            {
+              "name": "fast-uri",
+              "title": "fast-uri vulnerable to URI scheme spoofing via percent-encoded scheme decoding",
+              "url": "https://github.com/advisories/GHSA-w74x-v6f9-j3xg",
+              "range": ">=3.0.0 <3.1.9"
+            },
+            {
+              "name": "fast-uri",
+              "title": "fast-uri vulnerable to improper path equivalence in relative reference normalization",
+              "url": "https://github.com/advisories/GHSA-xhq7-xmqj-769h",
+              "range": ">=3.0.0 <3.1.9"
+            },
+            {
+              "name": "fast-uri",
+              "title": "fast-uri vulnerable to host confusion via unchecked WHATWG host canonicalization",
+              "url": "https://github.com/advisories/GHSA-wjr9-j795-jxcr",
+              "range": ">=3.1.3 <3.1.9"
+            },
+            {
+              "name": "fast-uri",
+              "title": "fast-uri vulnerable to scheme injection via an unescaped first-segment colon in suffix references",
+              "url": "https://github.com/advisories/GHSA-333x-w4r6-6crp",
+              "range": ">=3.0.0 <3.1.9"
+            }
+          ],
+          "effects": [
+            "ajv"
+          ],
+          "fixAvailable": false
+        },
+        {
+          "name": "ip-address",
+          "severity": "moderate",
+          "direct": false,
+          "range": "",
+          "locations": [
+            "node_modules/ip-address"
+          ],
+          "installedVersions": [
+            "10.7.3"
+          ],
+          "via": [
+            {
+              "name": "ip-address",
+              "title": "ip-address: Address6 matches a zone identifier in quadratic time ahead of its length limit, allowing a single long string to stall the process",
+              "url": "https://github.com/advisories/GHSA-rxp7-6hxx-x8q5",
+              "range": "<=10.7.3"
+            }
+          ],
+          "effects": [
+            "express-rate-limit",
+            "socks"
+          ],
+          "fixAvailable": true
+        },
+        {
+          "name": "prisma",
+          "severity": "moderate",
+          "direct": true,
+          "range": "",
+          "locations": [
+            "node_modules/prisma"
+          ],
+          "installedVersions": [
+            "7.10.1"
+          ],
+          "via": [
+            "@prisma/dev"
+          ],
+          "effects": [
+            "@prisma/client"
+          ],
+          "fixAvailable": false
+        },
+        {
+          "name": "shadcn",
+          "severity": "high",
+          "direct": true,
+          "range": "",
+          "locations": [
+            "node_modules/shadcn"
+          ],
+          "installedVersions": [
+            "4.22.0"
+          ],
+          "via": [
+            "@dotenvx/dotenvx",
+            "@modelcontextprotocol/sdk",
+            "@shadcn/registry",
+            "deepmerge",
+            "socks",
+            "undici",
+            "zod"
+          ],
+          "effects": [],
+          "fixAvailable": false
+        },
+        {
+          "name": "socks",
+          "severity": "moderate",
+          "direct": false,
+          "range": "",
+          "locations": [
+            "node_modules/socks"
+          ],
+          "installedVersions": [
+            "2.8.10"
+          ],
+          "via": [
+            "ip-address"
+          ],
+          "effects": [],
+          "fixAvailable": true
+        },
+        {
+          "name": "systeminformation",
+          "severity": "high",
+          "direct": false,
+          "range": "",
+          "locations": [
+            "node_modules/systeminformation"
+          ],
+          "installedVersions": [
+            "5.33.10"
+          ],
+          "via": [
+            {
+              "name": "systeminformation",
+              "title": "systeminformation has path traversal in Linux networkStats() that allows symlink-based file disclosure outside /sys/class/net",
+              "url": "https://github.com/advisories/GHSA-4vjg-vx72-qq4g",
+              "range": "<5.33.14"
+            },
+            {
+              "name": "systeminformation",
+              "title": "systeminformation has prototype pollution in `networkStats()` via the interface name",
+              "url": "https://github.com/advisories/GHSA-7648-jmwf-vw7j",
+              "range": "<5.33.13"
+            },
+            {
+              "name": "systeminformation",
+              "title": "systeminformation vulnerable to Windows command injection in services() through Unicode quotation marks",
+              "url": "https://github.com/advisories/GHSA-3f7j-7jwc-fxfj",
+              "range": "<5.33.16"
+            }
+          ],
+          "effects": [
+            "@dotenvx/dotenvx"
+          ],
+          "fixAvailable": true
+        },
+        {
+          "name": "undici",
+          "severity": "high",
+          "direct": false,
+          "range": "",
+          "locations": [
+            "node_modules/undici"
+          ],
+          "installedVersions": [
+            "7.29.1"
+          ],
+          "via": [
+            {
+              "name": "undici",
+              "title": "undici vulnerable to Denial of Service via unbounded memory in the EventSource parser",
+              "url": "https://github.com/advisories/GHSA-4qv8-2p9j-2685",
+              "range": ">=7.0.0 <7.30.1"
+            },
+            {
+              "name": "undici",
+              "title": "undici vulnerable to Subresource Integrity bypass via non-lowercase algorithm tokens",
+              "url": "https://github.com/advisories/GHSA-f72v-6w45-q472",
+              "range": ">=7.15.0 <7.30.1"
+            },
+            {
+              "name": "undici",
+              "title": "undici vulnerable to Denial of Service via unhandled error on excessive content-encodings",
+              "url": "https://github.com/advisories/GHSA-xjj6-f33q-929c",
+              "range": ">=7.18.0 <7.30.1"
+            },
+            {
+              "name": "undici",
+              "title": "undici vulnerable to cache poisoning and cross-user disclosure via cross-origin redirects",
+              "url": "https://github.com/advisories/GHSA-4w7w-5xrc-9h26",
+              "range": ">=7.0.0 <7.30.1"
+            },
+            {
+              "name": "undici",
+              "title": "undici vulnerable to TLS certificate validation bypass via dropped tls options in Agent",
+              "url": "https://github.com/advisories/GHSA-2m5v-pch6-74hx",
+              "range": ">=7.0.0 <7.30.1"
+            },
+            {
+              "name": "undici",
+              "title": "undici vulnerable to Denial of Service via TLS 1.2 certificate-changing renegotiation",
+              "url": "https://github.com/advisories/GHSA-qrxm-fqhp-jwvm",
+              "range": ">=7.0.0 <7.30.1"
+            },
+            {
+              "name": "undici",
+              "title": "undici WebSocket client vulnerable to Denial of Service via unbounded automatic PONG buffering",
+              "url": "https://github.com/advisories/GHSA-9fm3-97px-rjf6",
+              "range": ">=7.0.0 <7.30.1"
+            },
+            {
+              "name": "undici",
+              "title": "undici vulnerable to Denial of Service via unhandled exception in the decompress interceptor",
+              "url": "https://github.com/advisories/GHSA-55wc-3pg8-jfw6",
+              "range": ">=7.15.0 <7.30.1"
+            }
+          ],
+          "effects": [],
+          "fixAvailable": true
+        },
+        {
+          "name": "zod",
+          "severity": "high",
+          "direct": false,
+          "range": "",
+          "locations": [
+            "node_modules/zod"
+          ],
+          "installedVersions": [
+            "4.5.4"
+          ],
+          "via": [
+            {
+              "name": "zod",
+              "title": "Zod can exhaust memory while validating oversized constrained collections",
+              "url": "https://github.com/advisories/GHSA-mrhx-c7xc-m3w5",
+              "range": "<4.6.6"
+            }
+          ],
+          "effects": [
+            "@modelcontextprotocol/sdk",
+            "eslint-plugin-react-hooks",
+            "zod-to-json-schema",
+            "zod-validation-error"
+          ],
+          "fixAvailable": false
+        },
+        {
+          "name": "zod-to-json-schema",
+          "severity": "high",
+          "direct": false,
+          "range": "",
+          "locations": [
+            "node_modules/zod-to-json-schema"
+          ],
+          "installedVersions": [
+            "3.25.2"
+          ],
+          "via": [
+            "zod"
+          ],
+          "effects": [],
+          "fixAvailable": true
+        },
+        {
+          "name": "zod-validation-error",
+          "severity": "high",
+          "direct": false,
+          "range": "",
+          "locations": [
+            "node_modules/zod-validation-error"
+          ],
+          "installedVersions": [
+            "4.0.2"
+          ],
+          "via": [
+            "zod"
+          ],
+          "effects": [],
+          "fixAvailable": true
+        }
+      ]
+    },
+    "migrator": {
+      "totals": {
+        "info": 0,
+        "low": 0,
+        "moderate": 5,
+        "high": 0,
+        "critical": 0,
+        "total": 5
+      },
+      "evidenceSha256": "94adcef5fb2d367ce731e64a3d0776fceb5d8fbc6f9cfa1453eac38ad1bc9d71",
+      "packages": [
+        {
+          "name": "@prisma/dev",
+          "severity": "moderate",
+          "direct": false,
+          "range": "",
+          "locations": [
+            "node_modules/@prisma/dev"
+          ],
+          "installedVersions": [
+            "0.24.17"
+          ],
+          "via": [
+            "@prisma/streams-local"
+          ],
+          "effects": [
+            "prisma"
+          ],
+          "fixAvailable": false
+        },
+        {
+          "name": "@prisma/streams-local",
+          "severity": "moderate",
+          "direct": false,
+          "range": "",
+          "locations": [
+            "node_modules/@prisma/streams-local"
+          ],
+          "installedVersions": [
+            "0.1.11"
+          ],
+          "via": [
+            "ajv"
+          ],
+          "effects": [
+            "@prisma/dev"
+          ],
+          "fixAvailable": false
+        },
+        {
+          "name": "ajv",
+          "severity": "moderate",
+          "direct": false,
+          "range": "",
+          "locations": [
+            "node_modules/ajv"
+          ],
+          "installedVersions": [
+            "8.20.0"
+          ],
+          "via": [
+            "fast-uri"
+          ],
+          "effects": [
+            "@prisma/streams-local"
+          ],
+          "fixAvailable": false
+        },
+        {
+          "name": "fast-uri",
+          "severity": "moderate",
+          "direct": false,
+          "range": "",
+          "locations": [
+            "node_modules/fast-uri"
+          ],
+          "installedVersions": [
+            "3.1.8"
+          ],
+          "via": [
+            {
+              "name": "fast-uri",
+              "title": "fast-uri vulnerable to URI scheme spoofing via percent-encoded scheme decoding",
+              "url": "https://github.com/advisories/GHSA-w74x-v6f9-j3xg",
+              "range": ">=3.0.0 <3.1.9"
+            },
+            {
+              "name": "fast-uri",
+              "title": "fast-uri vulnerable to improper path equivalence in relative reference normalization",
+              "url": "https://github.com/advisories/GHSA-xhq7-xmqj-769h",
+              "range": ">=3.0.0 <3.1.9"
+            },
+            {
+              "name": "fast-uri",
+              "title": "fast-uri vulnerable to host confusion via unchecked WHATWG host canonicalization",
+              "url": "https://github.com/advisories/GHSA-wjr9-j795-jxcr",
+              "range": ">=3.1.3 <3.1.9"
+            },
+            {
+              "name": "fast-uri",
+              "title": "fast-uri vulnerable to scheme injection via an unescaped first-segment colon in suffix references",
+              "url": "https://github.com/advisories/GHSA-333x-w4r6-6crp",
+              "range": ">=3.0.0 <3.1.9"
+            }
+          ],
+          "effects": [
+            "ajv"
+          ],
+          "fixAvailable": false
+        },
+        {
+          "name": "prisma",
+          "severity": "moderate",
+          "direct": true,
+          "range": "",
+          "locations": [
+            "node_modules/prisma"
+          ],
+          "installedVersions": [
+            "7.10.1"
+          ],
+          "via": [
+            "@prisma/dev"
+          ],
+          "effects": [],
+          "fixAvailable": false
+        }
+      ]
+    }
+  }
+}

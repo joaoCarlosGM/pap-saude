@@ -17,9 +17,17 @@ test('no root operational route literal in synthetic components; only explicit C
  assert.ok(readFileSync(root+'components/layout/Sidebar.tsx','utf8').includes('href="/comercial"'))
  assert.ok(readFileSync(root+'components/layout/DashboardShell.tsx','utf8').includes("next.pathname.startsWith('/vitrine/')"))
 })
-test('operational security, clinical pages, MEOWS, Prisma and API remain byte-for-byte identical to approved P0',()=>{
- const paths=['src/server','prisma','src/app/(dashboard)','src/app/api','src/components/layout','src/components/registro','src/lib/meows.ts','src/app/globals.css','src/app/layout.tsx','package-lock.json','package.json','src/types','next.config.ts','tsconfig.json','src/app/(auth)','.github','Dockerfile','scripts/local']
- for(const path of paths)assert.equal(execFileSync('git',['diff','7526cb95454017ede8a77113f91ce3b43e2dc7df','--',path],{encoding:'utf8'}),'',path)
+test('operational security, clinical services, MEOWS, Prisma and APIs remain unchanged by the authorized visual unification',()=>{
+ const paths=['prisma','src/app/api','src/server/auth','src/server/iam','src/server/clinical','src/server/clinical-registration','src/server/vital-signs','src/server/obstetric-data','src/server/clinical-revision','src/server/meows','src/lib/clinical-api','src/lib/meows.ts','src/app/globals.css','package-lock.json','tsconfig.json','src/app/(auth)','Dockerfile','src/features/vitrine-premium','src/app/(showcase)']
+ for(const path of paths)assert.equal(execFileSync('git',['diff','b8e900c2ca6f4b17375cc1fbe0ec397af0383a2a','--',path],{encoding:'utf8'}),'',path)
+ const errorPaths=['src/server/encounters/encounter.errors.ts','src/server/patients/patient.errors.ts','src/server/patients/patient-organization.errors.ts','src/server/pregnancies/pregnancy.errors.ts']
+ const encounterFiles=execFileSync('git',['ls-files','src/server/encounters','src/server/patients','src/server/pregnancies'],{encoding:'utf8'}).trim().split('\n').filter(p=>p&&!errorPaths.includes(p))
+ for(const path of encounterFiles)assert.equal(execFileSync('git',['diff','b8e900c2ca6f4b17375cc1fbe0ec397af0383a2a','--',path],{encoding:'utf8'}),'',path)
+ for(const path of errorPaths){const before=execFileSync('git',['show',`b8e900c2ca6f4b17375cc1fbe0ec397af0383a2a:${path}`],{encoding:'utf8'});const after=readFileSync(path,'utf8');const normalize=s=>s.replace(/^    this.name = (?:new.target.name|"[^"]+");\n/gm,'');assert.equal(normalize(after),normalize(before),'only stable error names may change: '+path)}
+ const originalDashboard=execFileSync('git',['show','b8e900c2ca6f4b17375cc1fbe0ec397af0383a2a:src/server/clinical-dashboard/clinical-dashboard.service.ts'],{encoding:'utf8'}).replace('@/lib/demo/types','@/types/dashboard')
+ assert.equal(readFileSync('src/server/clinical-dashboard/clinical-dashboard.service.ts','utf8'),originalDashboard,'dashboard queries and authorization must be unchanged')
+ const changed=execFileSync('git',['diff','--name-only','b8e900c2ca6f4b17375cc1fbe0ec397af0383a2a','--','src/server'],{encoding:'utf8'}).trim().split('\n').filter(Boolean)
+ for(const path of changed)assert.ok(['src/server/clinical-dashboard/clinical-dashboard.service.ts','src/server/email/email-config.ts','src/server/email/local-demo-mail.ts','src/server/http/clinical-api-response.ts',...errorPaths].includes(path),path)
 })
 test('all showcase server leaves retain explicit commercial guard before mounting Premium and query rejection',()=>{
  for(const path of ['src/app/(showcase)/vitrine/layout.tsx','src/app/(showcase)/vitrine/page.tsx','src/app/(showcase)/vitrine/[section]/page.tsx','src/app/(showcase)/vitrine/pacientes/[id]/page.tsx']){

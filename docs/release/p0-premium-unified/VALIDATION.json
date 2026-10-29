@@ -1,0 +1,202 @@
+{
+  "branch": "feature/p0-premium-unified-rc",
+  "base": "b8e900c2ca6f4b17375cc1fbe0ec397af0383a2a",
+  "functional_parent": "5fea9363b21dbf0b9db1833b4c2369ae62054b69",
+  "logs": {
+    "dashboard_4": {
+      "private_path": "/tmp/pap-unified-tests-91IEA9/dashboard.log",
+      "sha256": "3fe4865e1b18561a9b248afb30846f1217e3b6546c038049bf8e6c114ddcb6d6"
+    },
+    "clinical_concurrency_32": {
+      "private_path": "/tmp/pap-unified-tests-9Nf4JW/clinical.log",
+      "sha256": "9e8c17a06c7b3668b1512613c0caab98eaeb8239eadb5565bf47f0a6d868aa28"
+    },
+    "iam_27": {
+      "private_path": "/tmp/pap-unified-tests-UyzL01/iam.log",
+      "sha256": "b29ddb6f88e3c6d1ab844646f9d9b34242beb9c0cb63bf0aeacaf8b4cb672a8b"
+    },
+    "auth_186": {
+      "private_path": "/tmp/pap-unified-tests-w3GxM8/auth.log",
+      "sha256": "f28304170785c4ffba0b083841473f07e765b0aede6e85e1a92dc5787c1a5056"
+    },
+    "crypto_18": {
+      "private_path": "/tmp/pap-unified-tests-w3GxM8/auth-crypto.log",
+      "sha256": "f89dab8b33727adf4141280e71f561a6a25eea5e444f1b525fc3eed37fac49d5"
+    },
+    "runtime_26_plus_1_and_privacy_12": {
+      "private_path": "/tmp/pap-unified-evidence/runtime-acl.log",
+      "sha256": "4b164f0634b444f8c2861307e21d6f19786ff23db3cf0c4fcc8fdef5619d11e4"
+    },
+    "mfa_ui_2": {
+      "private_path": "/tmp/pap-unified-evidence/mfa-ui-fixed.log",
+      "sha256": "80d291a26cbee5a219a4e0360047607c357da6df289b1d9f7d09e5b3cf63680d"
+    },
+    "operational_ui_13": {
+      "private_path": "/tmp/pap-unified-evidence/p0-ui-delivery.log",
+      "sha256": "6a3a0669fd5a26bbd9bf1e4250b935047f51cfaa2b10b90dc735e38a4d5dfaf5"
+    },
+    "premium_units_8": {
+      "private_path": "/tmp/pap-unified-evidence/premium-unit-delivery.log",
+      "sha256": "5600160881622e5a7b88b248582ea8aa8497e1d5272a46a0c279feb72b016cbe"
+    },
+    "namespace_and_node_groups": {
+      "private_path": "/tmp/pap-unified-evidence/unified-gate-final.log",
+      "sha256": "a3862ee15634243a4ed6959942676c98f7e20df69f00b35cdddc90c7791a9873"
+    },
+    "production_browser_5": {
+      "private_path": "/tmp/pap-unified-tests-o1oLwL/browser.log",
+      "sha256": "2e0ebac39da650535d1dd6209fc078a3485298c55bf8521588088fdbec88ee72"
+    },
+    "sql_auth_guards_4": {
+      "private_path": "/tmp/pap-unified-evidence/invariants-transport.log",
+      "sha256": "5e6535ef97135e7b7257cd91f789fe997f69f901b745e8a64c75a62a501a2387"
+    },
+    "build": {
+      "private_path": "/tmp/pap-unified-evidence/build-tour-final.log",
+      "sha256": "6461a6716969578fa2ca65e96ab9ba68f5518a1dea458cdad4f5c44db2b00b45"
+    },
+    "typescript": {
+      "private_path": "/tmp/pap-unified-evidence/typescript-delivery.log",
+      "sha256": "45342ca54fc3787657ce6eb4dbe6d4510cbf68d24318d44416c0176ab31ebf4b"
+    },
+    "lint": {
+      "private_path": "/tmp/pap-unified-evidence/lint-delivery.log",
+      "sha256": "1c774451a4ab622dc0fa168b146f2bb975f6c21e38edbe2f6ef678b179ffc8ba"
+    },
+    "release_artifact_and_ci_4": {
+      "private_path": "/tmp/pap-unified-evidence/release-gates-delivery.log",
+      "sha256": "905e20615edd09bc51439acd8b7af6b9fe4a1c2bbea20395948cf9f43e7233c2"
+    },
+    "start_smoke": {
+      "private_path": "/tmp/pap-unified-evidence/start-smoke.json",
+      "sha256": "ebb487ef59287006b8d26fe69e7706556eb20be350a1ee00e9c180784d263b57"
+    },
+    "docker_web": {
+      "private_path": "/tmp/pap-unified-evidence/docker-web-isolated-config.log",
+      "sha256": "b70d172a2361ea3870f68c3f9f580a7be78f3d7624c33b5f8beed65a74f2a635"
+    },
+    "docker_migrator": {
+      "private_path": "/tmp/pap-unified-evidence/docker-migrator-isolated-config.log",
+      "sha256": "2e0e9c9d516ca02a1d6057fdc0e6a72695fec810487febd009e5185e47781d38"
+    },
+    "persistent_lab": {
+      "private_path": "/tmp/pap-unified-evidence/local-start-after-own-cleanup.log",
+      "sha256": "0e2f08f0ec8c2d7a15157688cb81e6a426827e616e055f2b45f8ffb73c94727e"
+    },
+    "clinical_tour_and_keyboard": {
+      "private_path": "/tmp/pap-unified-tests-xn76I6/browser.log",
+      "sha256": "563defc83da7033e111595fbb17c36c01061e57245ac19598314b562cee2dc88"
+    },
+    "http_conflict_and_privacy": {
+      "private_path": "/tmp/pap-unified-evidence/domain-response-final.log",
+      "sha256": "bc419e01d6137c9be7c66185c2fd50500c59e89596bdab67130931de13833baf"
+    }
+  },
+  "screenshots": {
+    "admin-1440.png": {
+      "sha256": "868b4f3e8090a5f79754e9c62dbf7eda5ee85cd3040cdc5dc1e91f9b6c944dfd",
+      "width": 1440,
+      "height": 1903
+    },
+    "admin-320.png": {
+      "sha256": "e4564e73e1d0f8a68b1f6fde197ac73624cdf3d73fb381e7a210be1be93b14ac",
+      "width": 320,
+      "height": 3338
+    },
+    "admin-390.png": {
+      "sha256": "c8a468b1f6d2af241c0b9501b949ed312fe49746e0b664ffca4ecc1335046db0",
+      "width": 390,
+      "height": 3134
+    },
+    "admin-768.png": {
+      "sha256": "5bf721e591bd617c386c8c73c36d56166609c2a6b38167c11468ac3df4dfd0b1",
+      "width": 768,
+      "height": 2543
+    },
+    "clinical-1440.png": {
+      "sha256": "3a569a01ccfb662ed47716cb1245583fb6221bedccbcd7b42885db41c7b5c6ab",
+      "width": 1440,
+      "height": 1122
+    },
+    "clinical-320.png": {
+      "sha256": "232f40ddc2dcda0c1df530f3aa9c84349286af98e6c285ed853a13c53d27a7dd",
+      "width": 320,
+      "height": 2168
+    },
+    "clinical-390.png": {
+      "sha256": "32ce9c0230f9234605e1cc2b68d4d7329998f5dc281aae7a287779faa883302f",
+      "width": 390,
+      "height": 1987
+    },
+    "clinical-768.png": {
+      "sha256": "febb16401843f68e024f9b01bf2cab3d73c2c1564dd33e68a5ba1fedd039cf6d",
+      "width": 768,
+      "height": 1674
+    },
+    "login-1440.png": {
+      "sha256": "c510d3df91d41bf3188b3e3e814e0d37153f6e888e6b52c3bf602b9774c1f704",
+      "width": 1440,
+      "height": 1000
+    },
+    "login-320.png": {
+      "sha256": "e2a123af379096a199ca17b98f936efb407bb0eff82721ee89d6e18d0ebc26b5",
+      "width": 320,
+      "height": 1000
+    },
+    "login-390.png": {
+      "sha256": "95ef0af16dcfb6dc42334c8cc5e2283d0116c77d0e5e2fb1d1ed41c7a4d7f600",
+      "width": 390,
+      "height": 1000
+    },
+    "login-768.png": {
+      "sha256": "0f535a2fefbe9334ede5c01fae233aae809787914aaf0d33d50e642b5bae990a",
+      "width": 768,
+      "height": 1000
+    },
+    "registro-real-1440.png": {
+      "sha256": "7806106b116397049e042bc8c76ba3d3f027c0b591c8308922e32cf2eb11c94e",
+      "width": 1440,
+      "height": 1000
+    },
+    "registro-real-320.png": {
+      "sha256": "e5ff6a8fcb47cf0d7928ffa28573fb947131376a84d213d2288ef693a6efd7bc",
+      "width": 320,
+      "height": 1249
+    },
+    "registro-real-390.png": {
+      "sha256": "8be59f00381052d05a6fbfaa12b38dfc9aaf6b2dbc600b3ec662d9591dae8047",
+      "width": 390,
+      "height": 1111
+    },
+    "registro-real-768.png": {
+      "sha256": "850f22538b4712bd3f02d9c31cb610bb4bbcf5ab170b3ebfc7b5c5cd07dbca4f",
+      "width": 768,
+      "height": 1000
+    }
+  },
+  "productionApproved": false,
+  "prismaUnchanged": true,
+  "migrationCount": 35,
+  "backupRestore": {
+    "status": "PASS",
+    "dumpSha256": "a16b91c192d311820975420220463b42dc24cad3ac57654b0c2a6e75bf9c94df",
+    "migrations": 35,
+    "users": 7,
+    "patients": 3,
+    "encounters": 3,
+    "mfaFactors": 0,
+    "private_evidence_path": "/tmp/pap-unified-seed-aL2FQJ/backup-restore-evidence.json"
+  },
+  "versions": {
+    "node": "v24.19.0",
+    "packages": {
+      "next": "16.4.2",
+      "react": "19.2.8",
+      "react-dom": "19.2.8",
+      "prisma": "7.10.1",
+      "@prisma/client": "7.10.0",
+      "pg": "8.23.0",
+      "eslint-config-next": "16.4.2"
+    }
+  }
+}

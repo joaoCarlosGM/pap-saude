@@ -11,6 +11,7 @@ on:
       - codex/pap-admin-beta1
       - codex/p0-remediation-review-20261026
       - codex/p0-full-implementation
+      - feature/p0-premium-unified-rc
   pull_request:
     branches:
       - develop
@@ -35,6 +36,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          fetch-depth: 0
 
       - name: Setup Node.js
         uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
@@ -115,6 +118,9 @@ jobs:
 
       - name: Install isolated browser for first-access regression
         run: npx playwright install --with-deps chromium
+
+      - name: Unified Premium production UI, isolated lab and synthetic boundary
+        run: npm run test:premium:unified
 
       - name: P0 post-acceptance shared UI and accessibility
         run: npm run test:p0:full:ui
