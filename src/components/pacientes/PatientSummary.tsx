@@ -1,3 +1,5 @@
+import AssessmentDetails from "@/components/demo/AssessmentDetails"
+import {assessmentPresentation} from "@/lib/demo/assessment-presentation"
 import {formatDemoDate} from "@/lib/demo/validation"
 import AnimatedLineChart from "./AnimatedLineChart"
 
@@ -11,31 +13,8 @@ type Props = {
 }
 
 function scoreText(risk: PatientRisk) {
-  if(risk === "NAO_AVALIADO") return {title:"Não avaliado",text:"Avaliação MEOWS não disponível nesta demonstração",classes:"border-slate-100 bg-slate-50 text-slate-600"}
-  if (risk === "URGENCIA") {
-    return {
-      title: "URGÊNCIA",
-      text: "Classificação ilustrativa da fixture; sem conduta clínica.",
-      classes:
-        "border-red-100 bg-red-50 text-red-600",
-    }
-  }
-
-  if (risk === "ATENCAO") {
-    return {
-      title: "ATENÇÃO",
-      text: "Classificação ilustrativa da fixture; sem conduta clínica.",
-      classes:
-        "border-amber-100 bg-amber-50 text-amber-600",
-    }
-  }
-
-  return {
-    title: "BAIXO RISCO",
-    text: "Classificação ilustrativa da fixture; sem conduta clínica.",
-    classes:
-      "border-emerald-100 bg-emerald-50 text-emerald-600",
-  }
+ const presentation=assessmentPresentation(risk)
+ return {title:presentation.label,classes:presentation.className,text:"Resultado demonstrativo. Protocolo ainda não homologado para uso assistencial nesta plataforma."}
 }
 
 export default function PatientSummary({
@@ -47,6 +26,7 @@ export default function PatientSummary({
 
   return (
     <div className="space-y-5">
+{patient.encounters?.at(-1)?.assessment&&<AssessmentDetails result={patient.encounters.at(-1)!.assessment!}/>}
       <div className="grid grid-cols-1 gap-4 xl:grid-cols-[360px_minmax(0,1fr)]">
         <section className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
           <h2 className="text-sm font-semibold text-slate-900">
@@ -97,7 +77,7 @@ export default function PatientSummary({
             <AnimatedLineChart
               data={patient.meowsTrend}
               min={0}
-              max={7}
+              max={21}
               height={210}
             />
           </div>

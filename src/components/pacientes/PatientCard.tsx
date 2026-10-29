@@ -1,3 +1,4 @@
+import {assessmentPresentation} from "@/lib/demo/assessment-presentation"
 import {formatDemoDate} from "@/lib/demo/validation"
 import Link from "next/link"
 import {
@@ -15,24 +16,11 @@ type Props = {
 }
 
 function riskLabel(risk: PatientRisk) {
-  if(risk === "NAO_AVALIADO") return "Não avaliado"
-  if (risk === "URGENCIA") return "URGÊNCIA"
-  if (risk === "ATENCAO") return "ATENÇÃO"
-
-  return "BAIXO RISCO"
+ return assessmentPresentation(risk).label
 }
 
 function riskClasses(risk: PatientRisk) {
-  if(risk === "NAO_AVALIADO") return "bg-slate-50 text-slate-600 border-slate-100"
-  if (risk === "URGENCIA") {
-    return "bg-red-50 text-red-600 border-red-100"
-  }
-
-  if (risk === "ATENCAO") {
-    return "bg-amber-50 text-amber-600 border-amber-100"
-  }
-
-  return "bg-emerald-50 text-emerald-600 border-emerald-100"
+ return assessmentPresentation(risk).className
 }
 
 export default function PatientCard({
@@ -53,12 +41,7 @@ export default function PatientCard({
               </h2>
 
               <span className="text-xs text-slate-400">
-                {patient.latestScore.classification === "NAO_AVALIADO" ? "Não avaliado" : patient.latestScore.classification === "URGENCIA"
-                  ? "Urgência"
-                  : patient.latestScore.classification ===
-                      "ATENCAO"
-                    ? "Atenção"
-                    : "Baixo Risco"}
+                {assessmentPresentation(patient.latestScore.classification).label}
               </span>
             </div>
 

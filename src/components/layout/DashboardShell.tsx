@@ -28,7 +28,7 @@ function Workspace({children}:{children:React.ReactNode}) {
   }
   return <div onClickCapture={navigate} className="flex h-dvh overflow-hidden bg-gray-50">
     <Sidebar open={demo.mainMenuOpen} onClose={demo.closeMainMenu}/>
-    <button type="button" aria-label="Abrir menu" aria-expanded={demo.mainMenuOpen} onClick={demo.openMainMenu} className="fixed left-2 top-2 z-30 flex h-9 w-9 items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-700 shadow-sm focus-visible:outline-2 focus-visible:outline-pink-500 md:hidden"><Menu size={21}/></button>
+    <button type="button" aria-label="Abrir menu" aria-expanded={demo.mainMenuOpen} onClick={demo.openMainMenu} className={`fixed left-2 top-2 ${demo.conversationMenuOpen?'z-[60]':'z-30'} flex h-9 w-9 items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-700 shadow-sm focus-visible:outline-2 focus-visible:outline-pink-500 md:hidden`}><Menu size={21}/></button>
     <main ref={main} className="min-h-0 min-w-0 flex-1 overflow-y-auto p-4 pt-12 sm:p-5 sm:pt-12 md:pt-5 lg:p-6"><PageMotion>{children}</PageMotion></main>
     <DemoDialogs/>
     <DemoOnboarding/>

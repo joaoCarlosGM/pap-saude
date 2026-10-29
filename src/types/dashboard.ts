@@ -49,11 +49,7 @@ export type DashboardAttendance = {
   professional: string
   time: string
   score: number | null
-  classification:
-    | "BAIXO_RISCO"
-    | "ATENCAO"
-    | "URGENCIA"
-    | "NAO_AVALIADO"
+  classification: import("./atendimento").ClassificacaoAtendimento
 }
 
 export type UpcomingDelivery = {

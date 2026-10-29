@@ -1,3 +1,4 @@
+import {assessmentPresentation} from "@/lib/demo/assessment-presentation"
 import AnimatedLineChart from "./AnimatedLineChart"
 
 import type { Patient } from "@/types/paciente"
@@ -19,7 +20,7 @@ export default function PatientEvolution({
             </h2>
 
             <p className="mt-1 text-xs text-slate-400">
-              Histórico das avaliações
+              Somente cálculos demonstrativos; fixtures ilustrativas excluídas do gráfico
             </p>
           </div>
 
@@ -33,7 +34,7 @@ export default function PatientEvolution({
           <AnimatedLineChart
             data={patient.meowsTrend}
             min={0}
-            max={7}
+            max={21}
             height={280}
           />
         </div>
@@ -51,8 +52,8 @@ export default function PatientEvolution({
         <div className="mt-4 overflow-x-auto">
           <AnimatedLineChart
             data={patient.systolicTrend}
-            min={90}
-            max={170}
+            min={Math.min(90,...patient.systolicTrend.map(p=>p.value))}
+            max={Math.max(170,...patient.systolicTrend.map(p=>p.value))}
             height={280}
           />
         </div>
@@ -109,18 +110,10 @@ export default function PatientEvolution({
                       <span
                         className={[
                           "rounded-full px-2.5 py-1 text-[11px] font-medium",
-                          item.classificacao === "URGENCIA"
-                            ? "bg-red-50 text-red-600"
-                            : item.classificacao === "ATENCAO"
-                              ? "bg-amber-50 text-amber-600"
-                              : "bg-emerald-50 text-emerald-600",
+                          assessmentPresentation(item.classificacao).className,
                         ].join(" ")}
                       >
-                        {item.classificacao === "URGENCIA"
-                          ? "URGÊNCIA"
-                          : item.classificacao === "ATENCAO"
-                            ? "ATENÇÃO"
-                            : item.classificacao === "NAO_AVALIADO" ? "Não avaliado" : "BAIXO RISCO"}
+                        {assessmentPresentation(item.classificacao).label}
                       </span>
                     </td>
 

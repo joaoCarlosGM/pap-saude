@@ -25,7 +25,7 @@ export default function VitalSignsStep({
         </h2>
 
         <p className="mt-1 text-sm text-slate-500">
-          Informe dados demonstrativos. Avaliação MEOWS indisponível, sem classificação automática.
+          Informe somente dados demonstrativos. PAP-MEOWS não homologado para uso assistencial; sem conduta automática.
         </p>
       </div>
 
@@ -208,6 +208,7 @@ export default function VitalSignsStep({
             </div>
           </div>
 
+          <div><label htmlFor="oxygen-mode" className="mb-2 block text-sm font-medium text-slate-700">Situação de oxigenação</label><select id="oxygen-mode" value={data.oxygenMode||'unknown'} onChange={e=>onChange({oxygenMode:e.target.value as RegistrationData['oxygenMode'],oxygenFlow:''})} className="h-11 w-full rounded-lg border border-slate-300 bg-white px-4 text-sm"><option value="unknown">Desconhecido / não aferido</option><option value="air">Ar ambiente</option><option value="supplemental">Oxigênio suplementar</option></select>{data.oxygenMode==='supplemental'&&<label className="mt-3 block text-sm" htmlFor="oxygen-flow">Fluxo de O₂ (L/min)<input id="oxygen-flow" inputMode="decimal" value={data.oxygenFlow||''} onChange={e=>onChange({oxygenFlow:e.target.value})} className="mt-1 h-11 w-full rounded-lg border border-slate-300 px-4"/><span className="text-xs text-slate-500">Informe fluxo maior que zero. Ausência mantém a avaliação incompleta; valores não são arredondados.</span></label>}</div>
           {/* Nível de Consciência */}
           <div>
             <label

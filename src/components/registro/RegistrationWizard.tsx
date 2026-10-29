@@ -25,6 +25,8 @@ const initialRegistration: RegistrationData = {
   primeiroAtendimento: null,
   dum: "",
 
+  oxygenMode: "unknown",
+  oxygenFlow: "",
   paSistolica: "",
   paDiastolica: "",
   frequenciaCardiaca: "",

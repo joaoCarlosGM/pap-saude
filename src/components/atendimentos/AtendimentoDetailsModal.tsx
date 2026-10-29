@@ -1,4 +1,7 @@
 "use client"
+import AssessmentDetails from "@/components/demo/AssessmentDetails"
+import {assessmentPresentation} from "@/lib/demo/assessment-presentation"
+
 
 import Modal from "@/components/ui/Modal"
 import { Button } from "@/components/ui/button"
@@ -15,33 +18,13 @@ type AtendimentoDetailsModalProps = {
 function getClassificationLabel(
   classificacao: Atendimento["classificacao"],
 ) {
-  switch (classificacao) {
-    case "NAO_AVALIADO": return "Não avaliado"
-    case "URGENCIA":
-      return "Urgência"
-
-    case "ATENCAO":
-      return "Atenção"
-
-    case "BAIXO_RISCO":
-      return "Baixo Risco"
-  }
+ return assessmentPresentation(classificacao).label
 }
 
 function getClassificationClasses(
   classificacao: Atendimento["classificacao"],
 ) {
-  switch (classificacao) {
-    case "NAO_AVALIADO": return "bg-slate-50 text-slate-600"
-    case "URGENCIA":
-      return "bg-red-50 text-red-600"
-
-    case "ATENCAO":
-      return "bg-amber-50 text-amber-600"
-
-    case "BAIXO_RISCO":
-      return "bg-emerald-50 text-emerald-600"
-  }
+ return assessmentPresentation(classificacao).className
 }
 
 function formatDateTime(date: string) {
@@ -180,6 +163,7 @@ export default function AtendimentoDetailsModal({
           </div>
         </section>
       </div>
-    </Modal>
+    {atendimento.assessment?<AssessmentDetails result={atendimento.assessment}/>:<p className="mt-4 text-sm text-slate-500">Fixture histórica ilustrativa, sem sinais vitais verificáveis ou cálculo retrospectivo.</p>}
+</Modal>
   )
 }

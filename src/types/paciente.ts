@@ -1,9 +1,5 @@
 import type { Atendimento } from "./atendimento"
-export type PatientRisk =
-  | "BAIXO_RISCO"
-  | "ATENCAO"
-  | "URGENCIA"
-  | "NAO_AVALIADO"
+export type PatientRisk = Atendimento["classificacao"]
 
 export type ClinicalScore = {
   value: number | null

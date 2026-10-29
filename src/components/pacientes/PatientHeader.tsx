@@ -1,3 +1,4 @@
+import {assessmentPresentation} from "@/lib/demo/assessment-presentation"
 import {formatDemoDate} from "@/lib/demo/validation"
 import {
   AlertTriangle,
@@ -30,12 +31,7 @@ export default function PatientHeader({
               </h1>
 
               <span className="text-xs text-slate-400">
-                {patient.latestScore.classification === "NAO_AVALIADO" ? "Não avaliado" : patient.latestScore.classification === "URGENCIA"
-                  ? "Urgência"
-                  : patient.latestScore.classification ===
-                      "ATENCAO"
-                    ? "Atenção"
-                    : "Baixo Risco"}
+                {assessmentPresentation(patient.latestScore.classification).label}
               </span>
             </div>
 

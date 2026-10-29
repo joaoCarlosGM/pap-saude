@@ -1,4 +1,6 @@
 "use client"
+import {assessmentPresentation} from "@/lib/demo/assessment-presentation"
+
 import {useState} from "react"
 import {useDemo} from "@/components/demo/DemoProvider"
 import AtendimentoDetailsModal from "@/components/atendimentos/AtendimentoDetailsModal"
@@ -20,29 +22,7 @@ function classificationStyle(
   classification:
     DashboardAttendance["classification"],
 ) {
-  switch (classification) {
-    case "NAO_AVALIADO": return {label:"Não avaliado",className:"bg-slate-50 text-slate-600"}
-    case "URGENCIA":
-      return {
-        label: "Urgência",
-        className:
-          "bg-red-50 text-red-600",
-      }
-
-    case "ATENCAO":
-      return {
-        label: "Atenção",
-        className:
-          "bg-amber-50 text-amber-600",
-      }
-
-    default:
-      return {
-        label: "Baixo risco",
-        className:
-          "bg-emerald-50 text-emerald-600",
-      }
-  }
+ return assessmentPresentation(classification)
 }
 
 export default function RecentAttendances({

@@ -1,4 +1,6 @@
 "use client"
+import {assessmentPresentation} from "@/lib/demo/assessment-presentation"
+
 
 import { useState } from "react"
 import { Eye, Sparkles } from "lucide-react"
@@ -29,33 +31,13 @@ function formatDateTime(date: string) {
 function getClassificationLabel(
   classificacao: Atendimento["classificacao"],
 ) {
-  switch (classificacao) {
-    case "NAO_AVALIADO": return "Não avaliado"
-    case "URGENCIA":
-      return "Urgência"
-
-    case "ATENCAO":
-      return "Atenção"
-
-    case "BAIXO_RISCO":
-      return "Baixo Risco"
-  }
+ return assessmentPresentation(classificacao).label
 }
 
 function getClassificationClasses(
   classificacao: Atendimento["classificacao"],
 ) {
-  switch (classificacao) {
-    case "NAO_AVALIADO": return "bg-slate-50 text-slate-600"
-    case "URGENCIA":
-      return "bg-red-50 text-red-600"
-
-    case "ATENCAO":
-      return "bg-amber-50 text-amber-600"
-
-    case "BAIXO_RISCO":
-      return "bg-emerald-50 text-emerald-600"
-  }
+ return assessmentPresentation(classificacao).className
 }
 
 export default function AtendimentoTable({

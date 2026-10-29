@@ -39,7 +39,7 @@ export default function RiskDistribution({
       </h2>
 
       <p className="mt-1 text-xs text-slate-400">
-        Classificações ilustrativas; não avaliadas ficam fora deste total
+        Agrupamento demonstrativo; incompletos e inválidos ficam fora deste total
       </p>
 
       <div className="mt-6 space-y-5">
@@ -97,7 +97,7 @@ export default function RiskDistribution({
 
       <div className="mt-7 rounded-lg bg-slate-50 p-4">
         <p className="text-xs text-slate-400">
-          Total classificado (fixtures)
+          Total com categoria demonstrativa
         </p>
 
         <p className="mt-1 text-2xl font-semibold text-slate-900">

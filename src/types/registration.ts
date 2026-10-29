@@ -20,6 +20,8 @@ export type RegistrationData = {
   primeiroAtendimento: boolean | null
   dum: string
 
+  oxygenMode?: "air" | "supplemental" | "unknown"
+  oxygenFlow?: string
   // Sinais vitais
   paSistolica: string
   paDiastolica: string

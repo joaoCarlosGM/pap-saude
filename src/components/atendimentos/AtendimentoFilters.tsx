@@ -58,16 +58,16 @@ export default function AtendimentoFilters({value,onChange}:{value:AttendanceFil
         </option>
 
         <option value="low">
-          Baixo Risco
+          Sem alerta / ilustrativo
         </option>
 
         <option value="attention">
-          Atenção
+          Atenção demonstrativa
         </option>
 
-        <option value="unknown">Não avaliado</option>
+        <option value="unknown">Incompleto / não avaliado</option>
         <option value="urgent">
-          Urgência
+          Alertas demonstrativos
         </option>
       </Select>
 
