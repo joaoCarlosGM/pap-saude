@@ -1,5 +1,11 @@
 # Continuidade — P0 Premium unificado
 
+## Gate E — consolidado para versionamento
+
+Run40931996563/e0f2baf falhou no E por contrato visual anterior. Corrigidos contratos Premium e defeitos reais de contraste/labels/resize/rolagem sr-only; RSC s é static siblings, whitelist estrita somente pacientes além de null/[]. Nenhum guard/backend alterado. Relatório CI-E-REMEDIATION.md detalha evidências, alterações e limites.
+
+PASS10 Node E+3 jornadas readonly+3 fronteiras na mesma DB descartável própria; PASS7 componentes/invariantes; TypeScript/lint/build real Node22/artefato2 PASS. Evidência privada /tmp/pap-unified-tests-v50x68. Screenshots1440 light e320 dark fullPage revisadas, sem espaço externo indevido. Oito adições de apresentação normalizadas exatamente na invariante; modelos, fixtures, MEOWS e rotas ainda byte-protegidos. Próximo passo: commit seletivo/push desta feature e CI do novo SHA, sem repetir gates locais não afetados. NO-GO permanece até CI e homologação/infra necessárias.
+
 ## Gate Premium — contraste durante a animação
 
 Run40929820653/SHA6acb324 FAIL no caso WCAG (operational.spec.ts:77); operador forneceu a linha sanitizada, localizando a asserção. Reprodução controlada: congelar o primeiro frame das animações de entrada via CDP provocou color-contrast3,81–3,99:1 (mínimo4,5:1), sem alterar dados/guards/preferência de movimento. A opacidade.85 do contêiner e dos KPIs reduzia o contraste durante a entrada e o escalonamento.

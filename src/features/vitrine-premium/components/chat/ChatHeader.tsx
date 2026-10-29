@@ -71,6 +71,9 @@ export default function ChatHeader({
 
       <button
         type="button"
+        disabled
+        aria-label="Opções extras indisponíveis na demonstração"
+        title="Recurso demonstrativo indisponível"
         className="
           flex
           h-9

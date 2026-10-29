@@ -29,6 +29,12 @@ export default function Sidebar({open,onClose}:{open:boolean;onClose:()=>void}) 
     drawer.current?.querySelector<HTMLElement>('button')?.focus()
     return () => previous?.focus()
   },[open,tourIndex])
+  useEffect(()=>{
+    const desktop=matchMedia('(min-width:768px)')
+    const closeOnDesktop=()=>{if(desktop.matches&&open)onClose()}
+    closeOnDesktop();desktop.addEventListener('change',closeOnDesktop)
+    return()=>desktop.removeEventListener('change',closeOnDesktop)
+  },[open,onClose])
   return <>
     {open && <button type="button" aria-label="Fechar menu" onClick={onClose} className="fixed inset-0 z-40 bg-slate-900/40 md:hidden" />}
     <aside ref={drawer} role={open&&tourIndex===null?'dialog':undefined} aria-modal={open&&tourIndex===null?true:undefined} aria-label="Navegação principal"

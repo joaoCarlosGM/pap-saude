@@ -1,0 +1,40 @@
+/* Isolated synthetic presentation; no operational theme or data contract. */
+:is([data-vitrine-premium],[data-vitrine-dialog]){
+ --demo-surface:#fff;--demo-bg:#f9fafb;--demo-fg:#172033;--demo-muted:#5e6a7e;
+ --demo-neutral:#f1f5f9;--demo-pink:#be186a;--demo-pink-tint:#fdf2f8;
+ --demo-green:#047857;--demo-green-tint:#ecfdf5;--demo-red:#b91c1c;--demo-red-tint:#fef2f2;
+ --demo-amber:#92400e;--demo-amber-tint:#fffbeb;color:var(--demo-fg)
+}
+.dark :is([data-vitrine-premium],[data-vitrine-dialog]){
+ --demo-surface:#211b26;--demo-bg:#15121a;--demo-fg:#eee7ed;--demo-muted:#c2b8c5;
+ --demo-neutral:#2b2230;--demo-pink:#f9b6dc;--demo-pink-tint:#452337;
+ --demo-green:#6ee7b7;--demo-green-tint:#052e16;--demo-red:#fca5a5;--demo-red-tint:#450a0a;
+ --demo-amber:#fde68a;--demo-amber-tint:#451a03
+}
+@media(prefers-color-scheme:dark){
+ :is([data-vitrine-premium],[data-vitrine-dialog]){
+  --demo-surface:#211b26;--demo-bg:#15121a;--demo-fg:#eee7ed;--demo-muted:#c2b8c5;
+  --demo-neutral:#2b2230;--demo-pink:#f9b6dc;--demo-pink-tint:#452337;
+  --demo-green:#6ee7b7;--demo-green-tint:#052e16;--demo-red:#fca5a5;--demo-red-tint:#450a0a;
+  --demo-amber:#fde68a;--demo-amber-tint:#451a03
+ }
+}
+:is([data-vitrine-premium],[data-vitrine-dialog]) [class~="bg-white"]{background-color:var(--demo-surface)}
+[data-vitrine-premium][class~="bg-gray-50"],:is([data-vitrine-premium],[data-vitrine-dialog]) [class~="bg-gray-50"]{background-color:var(--demo-bg)}
+:is([data-vitrine-premium],[data-vitrine-dialog]) :is([class~="bg-slate-50"],[class~="bg-slate-100"],[class~="bg-gray-100"]){background-color:var(--demo-neutral)}
+:is([data-vitrine-premium],[data-vitrine-dialog]) :is([class~="text-slate-700"],[class~="text-slate-800"],[class~="text-slate-900"],[class~="text-gray-700"],[class~="text-gray-800"],[class~="text-gray-900"]){color:var(--demo-fg)}
+:is([data-vitrine-premium],[data-vitrine-dialog]) :is([class~="text-slate-400"],[class~="text-slate-500"],[class~="text-slate-600"],[class~="text-gray-400"],[class~="text-gray-500"],[class~="text-gray-600"]){color:var(--demo-muted)}
+:is([data-vitrine-premium],[data-vitrine-dialog]) :is([class~="text-pink-500"],[class~="text-pink-600"],[class~="text-pink-700"]){color:var(--demo-pink)}
+:is([data-vitrine-premium],[data-vitrine-dialog]) [class~="bg-pink-500"]{background-color:#be186a}
+:is([data-vitrine-premium],[data-vitrine-dialog]) :is([class~="bg-pink-50"],[class~="bg-pink-100"]){background-color:var(--demo-pink-tint)}
+:is([data-vitrine-premium],[data-vitrine-dialog]) :is([class~="text-emerald-500"],[class~="text-emerald-600"]){color:var(--demo-green)}
+:is([data-vitrine-premium],[data-vitrine-dialog]) [class~="bg-emerald-50"]{background-color:var(--demo-green-tint)}
+:is([data-vitrine-premium],[data-vitrine-dialog]) :is([class~="text-red-500"],[class~="text-red-600"]){color:var(--demo-red)}
+:is([data-vitrine-premium],[data-vitrine-dialog]) [class~="bg-red-50"]{background-color:var(--demo-red-tint)}
+:is([data-vitrine-premium],[data-vitrine-dialog]) [class~="text-amber-600"]{color:var(--demo-amber)}
+:is([data-vitrine-premium],[data-vitrine-dialog]) [class~="bg-amber-50"]{background-color:var(--demo-amber-tint)}
+:is([data-vitrine-premium],[data-vitrine-dialog]) [class~="bg-slate-900"] [class~="text-slate-400"]{color:#c2b8c5}
+[data-vitrine-premium] [data-sidebar-indicator]{background:var(--demo-pink-tint)}
+[data-vitrine-premium] [data-metric-final]{position:relative}
+:is([data-vitrine-premium],[data-vitrine-dialog]) [class~="text-rose-600"]{color:var(--demo-pink)}
+:is([data-vitrine-premium],[data-vitrine-dialog]) [class~="bg-rose-50"]{background-color:var(--demo-pink-tint)}

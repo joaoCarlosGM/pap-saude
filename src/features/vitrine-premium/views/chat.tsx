@@ -6,10 +6,10 @@ import {
 
 export default function ChatPage() {
   return (
-    <ChatLayout
+    <><h1 className="sr-only">Chat IA demonstrativo</h1><ChatLayout
       initialConversations={
         mockChatConversations
       }
-    />
+    /></>
   )
 }

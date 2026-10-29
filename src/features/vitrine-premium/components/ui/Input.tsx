@@ -1,5 +1,6 @@
 import {
   forwardRef,
+  useId,
   type InputHTMLAttributes,
   type ReactNode,
 } from "react"
@@ -24,11 +25,12 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
     },
     ref,
   ) => {
+    const generatedId = useId(), inputId = id ?? generatedId
     return (
       <div className="w-full">
         {label && (
           <label
-            htmlFor={id}
+            htmlFor={inputId}
             className="mb-1.5 block text-sm font-medium text-slate-700"
           >
             {label}
@@ -44,7 +46,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
 
           <input
             ref={ref}
-            id={id}
+            id={inputId}
             className={[
               "h-10 w-full rounded-lg border bg-white text-sm text-slate-900 outline-none transition",
               "placeholder:text-slate-400",

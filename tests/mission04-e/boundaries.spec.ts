@@ -10,6 +10,7 @@ import { createSession } from "../../src/server/auth/session.service";
 import { bootstrapSystemIam } from "../../src/server/iam/bootstrap.service";
 import { actor, origin } from "../mission04-b/fixtures";
 import { isDynamicRouteMetadata } from "./rsc-dynamic-metadata";
+import {welcome,incompleteDraft} from './premium-ui';
 test.beforeAll(async () => { expect(new URL(process.env.DATABASE_URL!).pathname).toBe("/pap_saude_m04_e_test"); await bootstrapSystemIam(); });
 test.afterAll(() => db.$disconnect());
 test.afterEach(async ({}, info) => { for (const e of info.errors) {
@@ -35,7 +36,7 @@ async function boundaryRequest(page: Page, path: string, headers: Record<string,
 // Reject anything beyond this closed transport-tree shape (no rendered data).
 const reportedMetadataShapes = new Set<string>();
 function diagnoseDynamicMetadata(segment: Record<string, unknown>, expectedKey: string) {
-    const suffix = segment.s;
+    const siblings = segment.s;
     // Closed projection: never serialize unknown property names or string values,
     // response bodies, request headers, identities or credentials.
     const safe = {
@@ -43,9 +44,10 @@ function diagnoseDynamicMetadata(segment: Record<string, unknown>, expectedKey: 
         keys: Object.keys(segment).map(k => ["n", "t", "k", "s"].includes(k) ? k : "<unexpected>").sort(),
         nameMatches: segment.n === "section", typeMatches: segment.t === "d",
         routeKeyMatches: segment.k === expectedKey,
-        suffixKind: suffix === null ? "null" : Array.isArray(suffix) ? "array" : typeof suffix,
-        suffixArrayLength: Array.isArray(suffix) ? suffix.length : null,
-        suffixArrayKinds: Array.isArray(suffix) ? [...new Set(suffix.map(item => item === null ? "null" : Array.isArray(item) ? "array" : typeof item))].sort() : [],
+        siblingsKind: siblings === null ? "null" : Array.isArray(siblings) ? "array" : typeof siblings,
+        siblingsArrayLength: Array.isArray(siblings) ? siblings.length : null,
+        knownPatientSibling: Array.isArray(siblings) && siblings.length===1 && siblings[0]==='pacientes',
+        siblingsArrayKinds: Array.isArray(siblings) ? [...new Set(siblings.map(item => item === null ? "null" : Array.isArray(item) ? "array" : typeof item))].sort() : [],
     };
     const line = JSON.stringify(safe);
     if (reportedMetadataShapes.has(line)) return;
@@ -76,7 +78,7 @@ function assertMetadataPrefetch(body: string, path: string) {
             expect(path.startsWith("/vitrine/")).toBe(true);
             diagnoseDynamicMetadata(value.s as Record<string, unknown>, path.split("/")[2]);
             expect(isDynamicRouteMetadata(value.s, path.split("/")[2]),
-                "RSC dynamic segment must contain only the exact route metadata and an empty suffix").toBe(true);
+                "RSC dynamic segment must contain only the exact route metadata and known static siblings").toBe(true);
         } else expect([...segments]).toContain(value.s);
         if (value.h !== undefined) expect(typeof value.h).toBe("number");
         if (value.c !== undefined) {
@@ -156,14 +158,16 @@ test("direct HTML/RSC/API and URL changes never grant clinical/admin access; rev
     }
     await cookie(context, f.token);
     await page.goto("/vitrine/registro");
-    for (let step = 0; step < 4; step++)
-        await page.getByRole("button", { name: "Próxima etapa demonstrativa", exact: true }).click();
+    await welcome(page,true);await incompleteDraft(page,'Pessoa Sintética Revogação');
+    const encountersBefore=await db.encounter.count();
     await db.roleAssignment.deleteMany({ where: { userId: f.user.id } });
     expect((await page.request.get("/api/vitrine/pacientes")).status()).toBe(403);
-    const deniedWrite = page.waitForResponse(r => new URL(r.url()).pathname === "/api/vitrine/registro" && r.request().method() === "POST");
-    await page.getByRole("button", { name: "Simular registro sem salvar", exact: true }).click();
-    expect((await deniedWrite).status()).toBe(403);
-    await expect(page.getByRole("status")).toContainText("Nada foi confirmado");
+    // Premium edits synthetic state in memory. The next actual server request
+    // must reject the revoked grant; it cannot confirm an API or clinical write.
+    const deniedWrite=await page.request.post('/api/vitrine/registro',{headers:{origin},data:{patientId:'demo-patient-aurora',kind:'RETORNO'}});
+    expect(deniedWrite.status()).toBe(403);
+    expect((await page.request.get('/api/clinical/patients',{headers:{'x-organization-id':f.unit.id}})).status()).toBe(403);
+    expect(await db.encounter.count()).toBe(encountersBefore);
     await page.reload();
     await expect(page).toHaveURL(/\/login$/);
     await writeFile("docs/evidence/missao-04-e/rsc-boundaries.json",JSON.stringify(receipts,null,2)+"\n");
@@ -182,11 +186,13 @@ test("commercial mobile navigation, CTA, back link and logout preserve session b
     await page.getByRole("link", { name: "Abrir vitrine demonstrativa", exact: true }).focus();
     await page.keyboard.press("Enter");
     await expect(page).toHaveURL(/\/vitrine$/);
-    await expect(page.getByRole("heading", { name: "Dashboard demonstrativo", exact: true })).toBeVisible();
+    await welcome(page,true);
+    await expect(page.getByRole("heading", { name: "Dashboard", exact: true })).toBeVisible();
     await page.getByRole("button", { name: "Abrir menu", exact: true }).click();
     await page.getByRole("link", { name: "Registro", exact: true }).click();
     await expect(page).toHaveURL(/\/vitrine\/registro$/);
-    await expect(page.getByRole("heading", { name: "Simular um registro", exact: true })).toBeVisible();
+    await expect(page.getByRole("heading", { name: "Registro", exact: true })).toBeVisible();
+    await page.getByRole("button", { name: "Abrir menu", exact: true }).click();
     await page.getByRole("link", { name: "Voltar ao Comercial", exact: true }).first().click();
     await expect(page).toHaveURL(/\/comercial$/);
     await menu.click();

@@ -7,6 +7,7 @@ import { bootstrapSystemIam } from "../../src/server/iam/bootstrap.service";
 import { actor, origin } from "../mission04-b/fixtures";
 import { DEMO_SECTIONS } from "../../src/lib/demo/types";
 import { navigationFingerprint } from "../first-access/login-fixtures";
+import {welcome,incompleteDraft} from './premium-ui';
 test.beforeAll(async () => { expect(new URL(process.env.DATABASE_URL!).pathname).toBe("/pap_saude_m04_e_test"); await bootstrapSystemIam(); });
 test.afterAll(() => db.$disconnect());
 test.afterEach(async ({}, info) => { for (const e of info.errors) {
@@ -15,8 +16,11 @@ test.afterEach(async ({}, info) => { for (const e of info.errors) {
     e.stack = location;
 } });
 async function cookie(context: BrowserContext, token: string) { await context.clearCookies(); await context.addCookies([{ name: "pap_session", value: token, url: origin, httpOnly: true, sameSite: "Lax" }]); }
-async function a11y(page: Page, label: string) { const r = await new AxeBuilder({ page }).withTags(["wcag2a", "wcag2aa", "wcag21aa"]).analyze(); if (r.violations.length)
-    await writeFile(`.test-audit/mission04-e/axe-${label}.json`, JSON.stringify(r.violations.map(v => ({ id: v.id, nodes: v.nodes.map(n => ({ target: n.target, failure: n.failureSummary })) })), null, 2)); expect(r.violations.map(v => v.id), label).toEqual([]); expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), label).toBe(true); }
+async function a11y(page: Page, label: string) { const r = await new AxeBuilder({ page }).withTags(["wcag2a", "wcag2aa", "wcag21aa"]).analyze(); if (r.violations.length) {
+    await mkdir('.test-audit/mission04-e', {recursive:true,mode:0o700});
+    await writeFile(`.test-audit/mission04-e/axe-${label}.json`, JSON.stringify(r.violations.map(v => ({ id: v.id, nodes: v.nodes.map(n => ({ target: n.target, failure: n.failureSummary })) })), null, 2), {mode:0o600});
+} expect(r.violations.map(v => v.id), label).toEqual([]); expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), label).toBe(true);
+if(await page.locator('[data-vitrine-premium]').count())expect(await page.evaluate(()=>document.documentElement.scrollHeight<=innerHeight),`${label}: only the application content should scroll`).toBe(true); }
 async function capture(page: Page, label: string) { await mkdir("docs/evidence/missao-04-e", { recursive: true }); await page.screenshot({ path: `docs/evidence/missao-04-e/${label}.png`, fullPage: true, mask: [page.locator("input,textarea,[data-sensitive]")], maskColor: "#475569" }); }
 async function metricsReady(page: Page) { await page.evaluate(async () => { await document.fonts.ready; await Promise.all([...document.images].filter(i => i.getClientRects().length && (i.complete || i.loading !== "lazy")).map(i => i.decode().catch(() => { }))); await new Promise<void>(r => requestAnimationFrame(() => requestAnimationFrame(() => r()))); }); }
 test("database runtime cannot read organizations or clinical tables; all showcase sections still work", async ({ page, context }) => {
@@ -35,12 +39,14 @@ test("database runtime cannot read organizations or clinical tables; all showcas
     await db.membership.create({ data: { userId: f.user.id, organizationId: f.unit.id, status: "ACTIVE" } });
     const before = await navigationFingerprint(f.user.id);
     await cookie(context, f.token);
+    let first=true;
     for (const section of DEMO_SECTIONS) {
         const r = await page.request.get(`/api/vitrine/${section}`);
         expect(r.status()).toBe(200);
         expect((await r.json()).scope).toBe("SYNTHETIC");
         await page.goto(section === "dashboard" ? "/vitrine" : `/vitrine/${section}`);
-        await expect(page.getByText("DEMONSTRAÇÃO · Dados simulados", { exact: true })).toBeVisible();
+        await welcome(page,first);first=false;
+        await expect(page.getByText("Modo demonstração · vínculo fictício", { exact: true })).toBeVisible();
         await expect(page.locator("main h1")).toBeVisible();
     }
     const r = await page.request.post("/api/vitrine/registro", { headers: { origin }, data: { patientId: "demo-patient-aurora", kind: "RETORNO" } });
@@ -65,13 +71,14 @@ test("premium Commercial and pink showcase at desktop/tablet/mobile, light/dark,
         if (!s.hadRecentInput)
             metrics.cls += s.value;
     } }).observe({ type: "layout-shift", buffered: true }); });
-    const rows = [];
+    const rows = [];let first=true;
     for (const width of [1440, 768, 320])
         for (const colorScheme of ["light", "dark"] as const)
             for (const path of ["/comercial", "/vitrine"]) {
                 await page.setViewportSize({ width, height: 900 });
                 await page.emulateMedia({ colorScheme, reducedMotion: "reduce" });
                 await page.goto(path);
+                if(path==='/vitrine'){await welcome(page,first);first=false;}
                 await metricsReady(page);
                 await expect(page.locator("main h1")).toBeVisible();
                 if (path === "/comercial")
@@ -89,63 +96,55 @@ test("premium Commercial and pink showcase at desktop/tablet/mobile, light/dark,
             }
     await writeFile("docs/evidence/missao-04-e/performance.json", JSON.stringify({ environment: "single local Next dev run; diagnostic, not production p75 or SLA", rows }, null, 2) + "\n");
     expect(external).toBe(false);
+    await page.goto('/comercial');
     await page.getByRole("button", { name: "Alternar tema claro e escuro" }).click();
     await a11y(page, "theme-toggle");
 });
 test("all demo interactions are labeled, keyboard accessible and reset without persistence", async ({ page, context }) => {
-    const f = await actor("COMMERCIAL");
-    await cookie(context, f.token);
-    await page.setViewportSize({ width: 1440, height: 900 });
-    await page.emulateMedia({ colorScheme: "dark" });
-    for (const section of ["pacientes", "atendimentos", "protocolos", "ferramentas", "cursos", "registro", "chat", "ajuda"]) {
-        await page.goto(`/vitrine/${section}`);
-        await a11y(page, section);
+    const f=await actor("COMMERCIAL");await cookie(context,f.token);
+    const before=await navigationFingerprint(f.user.id);const forbidden:string[]=[];
+    page.on('request',r=>{const path=new URL(r.url()).pathname;if(/^\/api\/(clinical|admin)(?:\/|$)/.test(path))forbidden.push(path);});
+    await page.setViewportSize({width:1440,height:900});await page.emulateMedia({colorScheme:'dark',reducedMotion:'reduce'});
+    await page.goto('/vitrine/pacientes');await welcome(page,true);
+    for(const section of ['pacientes','atendimentos','protocolos','ferramentas','cursos','registro','chat','ajuda','configuracoes']){
+        await page.goto(`/vitrine/${section}`);await welcome(page,false);await a11y(page,section);
     }
-    await page.goto("/vitrine/pacientes");
-    const search = page.getByLabel("Buscar entre as personagens");
-    await search.fill("sem resultado");
-    await expect(page.getByRole("status")).toContainText("Nenhuma personagem encontrada");
-    await search.fill("");
-    const button = page.getByRole("button", { name: "Ver ficha de Aurora" });
-    await button.click();
-    await expect(page.getByRole("dialog")).toBeVisible();
-    await a11y(page, "patient-dialog");
-    await page.keyboard.press("Escape");
-    await expect(button).toBeFocused();
-    await page.goto("/vitrine/registro");
-    await expect(page.locator("#patient-name")).toBeDisabled();
-    for (let step = 0; step < 4; step++)
-        await page.getByRole("button", { name: "Próxima etapa demonstrativa", exact: true }).click();
-    await page.getByRole("button", { name: "Simular registro sem salvar", exact: true }).click();
-    await expect(page.getByRole("status")).toContainText("Nenhum registro foi salvo");
-    await capture(page, "registro-simulado-dark");
-    await page.getByRole("button", { name: "Reiniciar simulação" }).click();
-    await expect(page.getByRole("status")).toHaveCount(0);
-    await expect(page.getByRole("heading", { name: "Identifique a paciente", exact: true })).toBeVisible();
-    await page.goto("/vitrine/cursos");
-    await page.getByRole("button").filter({ hasText: /Iniciar curso|Continuar/ }).first().click();
-    await expect(page.getByRole("dialog")).toBeVisible();
-    await page.getByRole("button", { name: "Simular início da aula" }).click();
-    await expect(page.getByRole("dialog").getByRole("status")).toContainText("25%");
-    await a11y(page, "course-dialog");
-    await capture(page, "curso-simulado-dark");
-    await page.keyboard.press("Escape");
-    await page.reload();
-    await expect(page.getByText("25%", { exact: true })).toHaveCount(0);
-    await page.goto("/vitrine/chat");
-    await page.getByRole("button", { name: "Simular conversa" }).click();
-    await expect(page.getByRole("status")).toContainText("nenhuma IA foi consultada");
-    await page.getByRole("button", { name: "Limpar exemplo" }).click();
-    await expect(page.getByRole("status")).toHaveCount(0);
-    await page.setViewportSize({ width: 320, height: 900 });
-    await page.goto("/vitrine");
-    const menu = page.getByRole("button", { name: "Abrir menu", exact: true });
-    await menu.click();
-    await expect(page.getByRole("dialog")).toBeVisible();
-    await a11y(page, "mobile-menu");
-    await page.keyboard.press("Escape");
-    await expect(menu).toBeFocused();
-    await menu.click();
-    await page.setViewportSize({ width: 1440, height: 900 });
-    await expect(page.getByRole("dialog")).toHaveCount(0);
+    await page.goto('/vitrine/pacientes');
+    const search=page.getByRole('searchbox',{name:'Buscar pacientes demonstrativos'});await search.fill('sem resultado');
+    await expect(page.getByRole('status')).toContainText('Nenhuma paciente encontrada');await search.fill('');
+    const card=page.locator('[data-patient-id]').first(),patientId=await card.getAttribute('data-patient-id'),patientName=await card.getByRole('heading').innerText();
+    await card.focus();await page.keyboard.press('Enter');await expect(page).toHaveURL(new RegExp('/vitrine/pacientes/'+patientId+'$'));
+    await expect(page.getByRole('heading',{name:patientName,exact:true})).toBeVisible();await a11y(page,'patient-record');
+    await page.goto('/vitrine/registro');
+    await expect(page.locator('#patient-name')).toBeEditable();await incompleteDraft(page,'Pessoa Sintética Slice E');
+    await expect(page.locator('[data-meows-status]')).toHaveAttribute('data-meows-status','INCOMPLETO');
+    await expect(page.locator('[data-meows-score]')).toHaveAttribute('data-meows-score','—');
+    await page.getByRole('button',{name:'Salvar Registro',exact:true}).click();
+    await expect(page.getByRole('button',{name:'Registro demonstrativo salvo',exact:true})).toBeDisabled();
+    await capture(page,'registro-simulado-dark');await page.getByRole('link',{name:'Abrir ficha da paciente'}).click();
+    await expect(page.getByRole('heading',{name:'Pessoa Sintética Slice E',exact:true})).toBeVisible();
+    await page.getByRole('link',{name:'Dashboard',exact:true}).click();
+    await expect(page.getByText('Pacientes ativas',{exact:true}).locator('..')).toContainText('4');
+    expect((await navigationFingerprint(f.user.id))===before).toBe(true);
+    await page.getByRole('link',{name:'Configurações',exact:true}).click();
+    await page.getByRole('button',{name:'Restaurar demonstração',exact:true}).click();
+    await page.getByRole('button',{name:'Restaurar dados sintéticos',exact:true}).click();
+    await page.getByRole('link',{name:'Dashboard',exact:true}).click();
+    await expect(page.getByText('Pacientes ativas',{exact:true}).locator('..')).toContainText('3');
+    await page.reload();await expect(page.getByRole('dialog',{name:'Bem-vindo ao PAP Saúde'})).not.toBeVisible();
+    await page.goto('/vitrine/cursos');await page.getByRole('button').filter({hasText:/Iniciar curso|Continuar/}).first().click();
+    const course=page.getByRole('dialog');await expect(course).toBeVisible();
+    await expect(course.getByText('Nenhuma aula é reproduzida. Catálogo e progresso são ilustrativos.',{exact:true})).toBeVisible();
+    await expect(course.getByRole('button',{name:/^(Iniciar curso|Continuar curso)$/})).toBeDisabled();
+    await a11y(page,'course-dialog');await capture(page,'curso-simulado-dark');await page.keyboard.press('Escape');
+    await page.goto('/vitrine/chat');await page.getByPlaceholder('Digite sua mensagem...').fill('Mensagem sintética Slice E');
+    await page.getByRole('button',{name:'Enviar mensagem',exact:true}).click();
+    await expect(page.getByText('Simulação: nenhuma IA externa foi consultada. Este texto ilustrativo não avalia dados nem orienta condutas clínicas.',{exact:true})).toBeVisible();
+    await page.reload();await expect(page.getByText('Mensagem sintética Slice E',{exact:true})).toHaveCount(0);
+    await page.setViewportSize({width:320,height:900});await page.goto('/vitrine');
+    const menu=page.getByRole('button',{name:'Abrir menu',exact:true});await menu.click();
+    await expect(page.getByRole('dialog',{name:'Navegação principal'})).toBeVisible();await a11y(page,'mobile-menu');
+    await page.keyboard.press('Escape');await expect(menu).toBeFocused();await menu.click();
+    await page.setViewportSize({width:1440,height:900});await expect(page.getByRole('dialog',{name:'Navegação principal'})).toHaveCount(0);
+    expect((await navigationFingerprint(f.user.id))===before).toBe(true);expect(forbidden).toEqual([]);
 });

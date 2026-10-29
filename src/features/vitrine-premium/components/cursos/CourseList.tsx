@@ -123,6 +123,7 @@ export default function CourseList({
         </div>
 
         <select
+          aria-label="Status dos cursos demonstrativos"
           value={status}
           onChange={(event) =>
             setStatus(

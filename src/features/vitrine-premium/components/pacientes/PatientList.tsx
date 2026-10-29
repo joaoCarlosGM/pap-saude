@@ -56,6 +56,7 @@ export default function PatientList({
 
         <input
           type="search"
+          aria-label="Buscar pacientes demonstrativos"
           value={search}
           onChange={(event) =>
             setSearch(event.target.value)
@@ -100,7 +101,7 @@ export default function PatientList({
         </div>
       ) : (
         <div className="mt-4 rounded-xl border border-dashed border-slate-200 bg-white px-4 py-10 text-center">
-          <p className="text-sm font-medium text-slate-600">
+          <p role="status" className="text-sm font-medium text-slate-600">
             Nenhuma paciente encontrada
           </p>
 

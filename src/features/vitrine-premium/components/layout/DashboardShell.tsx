@@ -1,4 +1,5 @@
 'use client'
+import '@/features/vitrine-premium/accessibility.css'
 import {useEffect,useRef} from 'react'
 import {useRouter,usePathname} from 'next/navigation'
 import PageMotion from '@/features/vitrine-premium/components/motion/PageMotion'

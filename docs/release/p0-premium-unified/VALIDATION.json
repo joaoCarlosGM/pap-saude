@@ -261,5 +261,88 @@
     },
     "managedChromium156": "BLOCKED: official CDN HTTP403 Domain forbidden; local Chromium154",
     "remoteCi": "PENDING"
+  },
+  "sliceERemediation": {
+    "parent": "e0f2bafb7cb4eb24e080acc860a3a594d43799b0",
+    "failedRun": "https://github.com/joaoCarlosGM/pap-saude/actions/runs/40931996563",
+    "local": {
+      "node": 10,
+      "browserReadonly": 3,
+      "browserBoundaries": 3,
+      "componentsAndIsolation": 7,
+      "artifact": 2,
+      "typescript": "PASS",
+      "lint": "PASS",
+      "build": "PASS"
+    },
+    "rsc": {
+      "definition": "Next16.4.2 TransportDynamicSegment.s = static siblings",
+      "allowedSiblings": [
+        null,
+        [],
+        [
+          "pacientes"
+        ]
+      ],
+      "closedPayloadTreePreserved": true
+    },
+    "scrolling": {
+      "viewport": 900,
+      "beforeDocument": 1453,
+      "afterDocument": 900,
+      "fix": "relative containing block for screen-reader-only metric value"
+    },
+    "logs": {
+      "eNode": {
+        "privatePath": "/tmp/pap-unified-tests-v50x68/e-backend.log",
+        "sha256": "7888ad691ad1f2927f42655e3037f6a3b77440f0327cb99cc8f037f5ac9ee51a"
+      },
+      "eBrowserReadonly": {
+        "privatePath": "/tmp/pap-unified-tests-v50x68/browser.log",
+        "sha256": "59c81d9bb4964f7f3b00731962e30857c6bfe48fc8c0f82bb9602092ddede8c1"
+      },
+      "eBrowserBoundaries": {
+        "privatePath": "/tmp/pap-unified-tests-v50x68/e-boundaries.log",
+        "sha256": "27b93ccf88b5877cd0dcd6684935597055d16d8b9e114ed176f6b1133710f460"
+      },
+      "componentsIsolation": {
+        "privatePath": "/tmp/pap-unified-evidence/e-components-scope-final.log",
+        "sha256": "fb6e67cb655f2d0d54db4c405fc9ab69af1b943f1af489395cc808ac5ce0ec4d"
+      },
+      "typescript": {
+        "privatePath": "/tmp/pap-unified-evidence/e-final-typescript.log",
+        "sha256": "377de7d896506376a8a039487f5f1a2d071010819947c8dbbc2a1f825e574c6d"
+      },
+      "lint": {
+        "privatePath": "/tmp/pap-unified-evidence/e-final-eslint.log",
+        "sha256": "377de7d896506376a8a039487f5f1a2d071010819947c8dbbc2a1f825e574c6d"
+      },
+      "build": {
+        "privatePath": "/tmp/pap-unified-evidence/e-release-build.log",
+        "sha256": "ee65fcc1b0130ae7d76a41051567e070cce3078653a3225a7d7898b3874f8591"
+      },
+      "artifact": {
+        "privatePath": "/tmp/pap-unified-evidence/e-release-artifact.log",
+        "sha256": "6cb5e201a4199befd1912ae6151fdae73ccd970e79b74dd3e6298a705122e482"
+      },
+      "controlledLayout": {
+        "privatePath": "/tmp/pap-unified-evidence/e-mobile-layout-controlled.json",
+        "sha256": "94ef29c9b9341fbd7ee6843ed3780019c3452d6b64c76442f553d1027938a557"
+      }
+    },
+    "screenshots": {
+      "docs/release/p0-premium-unified/evidence/vitrine-aa-1440-light.png": {
+        "sha256": "8f9cedf7097fd5e1f9b9be10766c2bbb9ba39ea59a8dd9f0c2cd935e51fcfd57",
+        "width": 1440,
+        "height": 900
+      },
+      "docs/release/p0-premium-unified/evidence/vitrine-aa-320-dark.png": {
+        "sha256": "1bd62688f88dc4ef15ded28bc9c7f29a6b8e96954cfc8d10a5433e1ce002f24e",
+        "width": 320,
+        "height": 900
+      }
+    },
+    "remoteCi": "PENDING",
+    "productionApproved": false
   }
 }

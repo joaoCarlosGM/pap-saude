@@ -40,7 +40,7 @@ export default function Modal({
   if (!open||!client) return null
 
   return createPortal(
-    <div className="fixed inset-0 z-50">
+    <div data-vitrine-dialog className="fixed inset-0 z-50">
       <button
         type="button"
         aria-label="Fechar modal"
