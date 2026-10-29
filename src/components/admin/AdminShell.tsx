@@ -8,6 +8,8 @@ import type {
   EffectiveAccessProfile,
 } from "@/lib/admin/types"
 
+import PageMotion from "@/components/premium/PageMotion"
+import "@/components/premium/premium.css"
 import AdminSidebar from "./AdminSidebar"
 import AdminTopbar from "./AdminTopbar"
 
@@ -108,7 +110,7 @@ export default function AdminShell({
     useState(false)
 
   return (
-    <div className="pap-admin flex min-h-screen bg-[#09282c]">
+    <div className="premium-workspace pap-admin flex min-h-screen">
       <AdminSidebar
         open={
           sidebarOpen
@@ -123,7 +125,7 @@ export default function AdminShell({
         }
       />
 
-      <div className="flex min-w-0 flex-1 flex-col overflow-hidden bg-[#f5f7f6] md:mt-2 md:rounded-tl-3xl">
+      <div className="flex min-w-0 flex-1 flex-col overflow-hidden bg-[#fbf8fa]">
         <AdminTopbar
           onMenuClick={() =>
             setSidebarOpen(
@@ -136,7 +138,7 @@ export default function AdminShell({
         />
 
         <main className="min-h-0 flex-1 overflow-auto p-4 sm:p-6 lg:p-8">
-          {children}
+          <PageMotion>{children}</PageMotion>
         </main>
       </div>
 

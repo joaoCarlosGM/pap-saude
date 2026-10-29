@@ -25,3 +25,5 @@
 @keyframes premium-enter{from{opacity:.85;transform:translateY(4px)}to{opacity:1;transform:none}}
 @keyframes premium-bar{from{transform:scaleY(0)}to{transform:scaleY(1)}}
 @media(prefers-reduced-motion:reduce){.premium-workspace *{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+
+.premium-workspace [class~="bg-[#064f50]"]{background-color:#be186a}.premium-workspace [class~="text-[#064f50]"]{color:#9d1759}

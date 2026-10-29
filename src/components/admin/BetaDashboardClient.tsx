@@ -1,5 +1,6 @@
 "use client";
 
+import AnimatedMetric from "@/components/premium/AnimatedMetric";
 import GovernanceSummaryCards from "./GovernanceSummaryCards";
 import type { GovernanceSummary } from "@/lib/admin/governance-metrics";
 import { emailDeliveryLabel } from "@/lib/email-delivery";
@@ -64,7 +65,7 @@ function MetricArea({ query }: { query: string }) {
             Consulta: {new Date(m.generatedAt).toLocaleString("pt-BR")} ·
             janelas UTC
           </p>
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <div data-motion-kpis className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {[
               [
                 "UBS aprovadas / ativas",
@@ -93,8 +94,8 @@ function MetricArea({ query }: { query: string }) {
                 key={String(label)}
               >
                 <h3 className="text-sm text-slate-600">{label}</h3>
-                <p className="mt-3 break-words text-xl font-semibold text-[#064f50]">
-                  {value}
+                <p className="mt-3 break-words text-xl font-semibold text-pink-800">
+                  <AnimatedMetric value={String(value)}/>
                 </p>
               </article>
             ))}

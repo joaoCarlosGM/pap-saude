@@ -80,7 +80,7 @@ export default function AdminTopbar({
           aria-label="Minha segurança e perfil"
           className="ml-1 flex items-center gap-2 rounded-lg px-1.5 py-1.5 hover:bg-slate-100 dark:hover:bg-[#28484b] sm:ml-2 sm:px-2"
         >
-          <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#064f50] text-white text-xs font-semibold">
+          <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-pink-700 text-white text-xs font-semibold">
             {initials(profile.user.displayName)}
           </span>
 

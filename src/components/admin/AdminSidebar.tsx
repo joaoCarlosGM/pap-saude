@@ -1,6 +1,8 @@
 "use client";
 
 import Link from "next/link";
+import ActiveIndicator from "@/components/premium/ActiveIndicator";
+import AreaLinks from "@/components/premium/AreaLinks";
 import { useState, useEffect, useRef } from "react";
 
 import {
@@ -204,15 +206,15 @@ export default function AdminSidebar({
         role={open ? "dialog" : undefined}
         aria-modal={open || undefined}
         className={[
-          "group fixed inset-y-0 left-0 z-50 flex w-72 shrink-0 flex-col bg-gradient-to-b from-[#09282c] to-[#10363a] text-white transition-all duration-200 motion-reduce:transition-none md:sticky md:top-0 md:h-screen md:translate-x-0 md:visible",
+          "group fixed inset-y-0 left-0 z-50 flex w-72 shrink-0 flex-col premium-sidebar bg-white text-slate-700 transition-all duration-200 motion-reduce:transition-none md:sticky md:top-0 md:h-screen md:translate-x-0 md:visible",
           compact ? "md:w-20 md:hover:w-64 md:focus-within:w-64" : "md:w-64",
           open ? "visible translate-x-0" : "invisible -translate-x-full",
         ].join(" ")}
       >
-        <div className="flex h-20 shrink-0 items-center gap-3 border-b border-white/10 px-5">
+        <div className="flex h-20 shrink-0 items-center gap-3 border-b border-pink-100 px-5">
           <span
             aria-hidden="true"
-            className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-[#d9f5ea] text-xl font-bold text-[#064f50]"
+            className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-pink-50 text-xl font-bold text-pink-800"
           >
             ✚
           </span>
@@ -224,7 +226,7 @@ export default function AdminSidebar({
             }
           >
             <p className="whitespace-nowrap text-lg font-semibold">PAP Saúde</p>
-            <p className="text-[10px] uppercase tracking-widest text-teal-100">
+            <p className="text-[10px] uppercase tracking-widest text-slate-600">
               Gestão e inteligência
             </p>
           </div>
@@ -239,7 +241,7 @@ export default function AdminSidebar({
         </div>
         <div className="space-y-3 p-3">
           <button
-            className="hidden rounded-lg border border-white/20 px-2 py-1 text-xs md:block"
+            className="hidden rounded-lg border border-slate-200 px-2 py-1 text-xs md:block"
             aria-label="Alternar menu compacto"
             aria-pressed={compact}
             onClick={() => setCompact((v) => !v)}
@@ -253,10 +255,10 @@ export default function AdminSidebar({
                 : ""
             }
           >
-            <p className="rounded-xl border border-white/10 bg-white/5 p-3 text-xs text-teal-50">
-              Workspace PAP
-              <br />
-              <strong>Administração da rede</strong>
+            <p className="rounded-xl border border-pink-100 bg-pink-50/40 p-3 text-xs text-slate-700">
+              <strong>{profile.user.displayName}</strong><br/>
+              {profile.roles.map(r=>r.name).filter((v,i,a)=>a.indexOf(v)===i).join(" · ")}<br/>
+              {profile.organizations.map(o=>o.name).join(" · ") || "Escopo global autorizado"}
             </p>
             <label className="mt-3 block">
               <span className="sr-only">Buscar páginas</span>
@@ -265,17 +267,17 @@ export default function AdminSidebar({
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 placeholder="Buscar no menu…"
-                className="w-full rounded-xl border border-white/20 bg-white/5 p-2 text-sm text-white placeholder:text-teal-100"
+                className="w-full rounded-xl border border-slate-200 bg-pink-50/40 p-2 text-sm text-slate-800 placeholder:text-slate-500"
               />
             </label>
           </div>
         </div>
-        <nav aria-label="Administração" className="pap-scroll-hidden flex-1 overflow-y-auto px-3">
+        <nav aria-label="Administração" className="pap-scroll-hidden relative min-h-0 flex-1 overflow-y-auto px-3"><ActiveIndicator/>
           {groups
             .filter((g) => g.items.length)
             .map((g) => (
               <details open key={g.label} className="mb-3">
-                <summary className="cursor-pointer py-3 text-[10px] font-semibold uppercase tracking-widest text-teal-100">
+                <summary className="cursor-pointer py-3 text-[10px] font-semibold uppercase tracking-widest text-slate-600">
                   <span
                     className={
                       compact
@@ -303,10 +305,10 @@ export default function AdminSidebar({
                       data-tour={item.tourId}
                       onClick={onClose}
                       className={[
-                        "my-1 flex items-center gap-3 whitespace-nowrap rounded-xl p-3 text-sm focus-visible:outline-2 focus-visible:outline-white",
+                        "my-1 flex items-center gap-3 whitespace-nowrap rounded-xl p-3 text-sm focus-visible:outline-2 focus-visible:outline-pink-700",
                         active
-                          ? "bg-[#d9f5ea] font-semibold text-[#064f50]"
-                          : "text-teal-50 hover:bg-white/10",
+                          ? "bg-pink-50 font-semibold text-pink-800"
+                          : "text-slate-700 hover:bg-pink-50",
                       ].join(" ")}
                     >
                       <Icon size={18} strokeWidth={1.8} className="shrink-0" />
@@ -325,7 +327,7 @@ export default function AdminSidebar({
               </details>
             ))}
         </nav>
-        <div className="border-t border-white/10 p-4">
+        <div className="border-t border-pink-100 p-4">
           <div
             className={
               compact
@@ -333,12 +335,8 @@ export default function AdminSidebar({
                 : ""
             }
           >
-            <p className="truncate text-sm font-medium">
-              {profile.user.displayName}
-            </p>
-            <p className="mt-1 truncate text-xs text-teal-100">
-              {profile.roles[0]?.name ?? "Usuário PAP"}
-            </p>
+            <AreaLinks profile={profile} current="/admin"/>
+            <Link className="mt-2 block rounded-lg px-3 py-2 text-sm" href="/admin/minha-seguranca">Segurança da minha conta</Link>
           </div>
         </div>
       </aside>
