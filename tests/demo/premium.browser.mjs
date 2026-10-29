@@ -76,7 +76,7 @@ test('E/F welcome is session-only, direct routes work, guided tour uses real anc
 test('F mobile tour navigates six real routes, swaps menu/content, repositions and exits by keyboard',async()=>{
  for(const width of [320,390]){
   const p=await browser.newPage({viewport:{width,height:844},reducedMotion:'reduce'})
-  await p.goto(base+'/chat');await p.getByRole('button',{name:'Iniciar tutorial guiado'}).click()
+  p.on('console',m=>{if(m.text().startsWith('tour-escape'))console.log(m.text())});await p.addInitScript(()=>window.addEventListener('keydown',e=>{if(e.key==='Escape')console.log('tour-escape',JSON.stringify({inside:!!document.activeElement?.closest('[data-tour-step]'),tag:document.activeElement?.tagName}))},true));await p.goto(base+'/chat');await p.getByRole('button',{name:'Iniciar tutorial guiado'}).click()
   for(const [i,path]of ['/dashboard','/registro','/pacientes','/atendimentos','/protocolos','/chat'].entries()){
    await expect(p).toHaveURL(base+path,{timeout:20000});const dialog=p.locator('[data-tour-step]');await expect(dialog).toContainText(`Etapa ${i+1} de 6`);await expect(dialog).toHaveAttribute('data-tour-ready','true')
    await dialog.getByRole('button',{name:'Ver conteúdo',exact:true}).click();await expect(p.locator('[data-guided-target=true]')).toHaveCount(1)

@@ -1,5 +1,5 @@
 'use client'
-import { useEffect, useRef, useState, useId, useSyncExternalStore } from 'react'
+import { useEffect, useLayoutEffect, useRef, useState, useId, useSyncExternalStore } from 'react'
 import { createPortal } from 'react-dom'
 import { usePathname } from 'next/navigation'
 import { X } from 'lucide-react'
@@ -52,7 +52,8 @@ export default function GuidedTour({steps,index,onIndexChange,onClose,menuOpen=f
     const observer=new ResizeObserver(schedule);if(document.querySelector('main'))observer.observe(document.querySelector('main')!)
     return()=>{cancelAnimationFrame(frame);window.removeEventListener('resize',schedule);window.removeEventListener('scroll',schedule,true);observer.disconnect();for(const el of highlighted)el.classList.remove(styles.target);if(primary){primary.classList.remove(styles.target);primary.removeAttribute('data-guided-target')}}
   },[client,step,pathname,menuOpen])
-  useEffect(()=>{const previous=document.activeElement as HTMLElement|null;panel.current?.querySelector<HTMLElement>('button:not([disabled])')?.focus({preventScroll:true});return()=>{if(previous?.isConnected)previous.focus({preventScroll:true})}},[client,index])
+  useLayoutEffect(()=>{if(!client)return;const previous=document.activeElement as HTMLElement|null;panel.current?.querySelector<HTMLElement>('button:not([disabled])')?.focus({preventScroll:true});return()=>{if(previous?.isConnected)previous.focus({preventScroll:true})}},[client,index])
+  useEffect(()=>{if(!client)return;const escape=(e:KeyboardEvent)=>{if(e.key==='Escape'){e.preventDefault();e.stopPropagation();onClose()}};window.addEventListener('keydown',escape,true);return()=>window.removeEventListener('keydown',escape,true)},[client,onClose])
   if(!client||!step)return null
   const geometry=layout?.id===step.id&&pathname===step.path?layout:null
   const viewport=geometry?.viewport||{width:320,height:600}

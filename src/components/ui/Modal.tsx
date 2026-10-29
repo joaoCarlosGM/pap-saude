@@ -36,7 +36,7 @@ export default function Modal({
 }: ModalProps) {
   const client=useSyncExternalStore(subscribeToClient,clientSnapshot,serverSnapshot)
   const dialog=useRef<HTMLDivElement>(null), titleId=useId()
-  useEffect(()=>{if(!open||!client)return;const previous=document.activeElement as HTMLElement|null;const el=dialog.current;el?.querySelector<HTMLElement>('button:not([disabled]),input:not([disabled]),select:not([disabled]),textarea:not([disabled]),a[href]')?.focus();return()=>previous?.focus()},[open,client])
+  useEffect(()=>{if(!open||!client)return;const previous=document.activeElement as HTMLElement|null;const el=dialog.current;el?.querySelector<HTMLElement>('button:not([disabled]),input:not([disabled]),select:not([disabled]),textarea:not([disabled]),a[href]')?.focus();return()=>{if(previous?.isConnected&&previous.getClientRects().length&&(el?.contains(document.activeElement)||document.activeElement===document.body))previous.focus()}},[open,client])
   if (!open||!client) return null
 
   return createPortal(

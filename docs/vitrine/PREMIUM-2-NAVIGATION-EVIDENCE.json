@@ -1,0 +1,59 @@
+{
+  "base": "50dddba43edecc8e669051aadb1129aca5537fb6",
+  "evidence": [
+    {
+      "local_log": ".test-audit/premium2/navigation-fixed-1.log",
+      "sha256": "141aa242ff7d46c41f5143c8fc9a7563456c1c0cf887842407aca8af24e857ae",
+      "result": "PASS 4/4"
+    },
+    {
+      "local_log": ".test-audit/premium2/navigation-fixed-2.log",
+      "sha256": "08fc386685b13f34dd1fb944f6f906cccf7d78354ee9068f51ea6131dd54ba13",
+      "result": "PASS 4/4"
+    },
+    {
+      "local_log": ".test-audit/premium2/a-focus-regression.log",
+      "sha256": "e4893ed7bbfbdebb231eeec191df16cd49b3cb34abdad2f38d275a2b13d31e9b",
+      "result": "PASS 1/1"
+    },
+    {
+      "local_log": ".test-audit/premium2/navigation-fixed-ts.log",
+      "sha256": "45342ca54fc3787657ce6eb4dbe6d4510cbf68d24318d44416c0176ab31ebf4b",
+      "result": "PASS"
+    },
+    {
+      "local_log": ".test-audit/premium2/navigation-fixed-lint.log",
+      "sha256": "45342ca54fc3787657ce6eb4dbe6d4510cbf68d24318d44416c0176ab31ebf4b",
+      "result": "PASS"
+    },
+    {
+      "local_log": ".test-audit/premium2/navigation-final-1.log",
+      "sha256": "60932bf301d8a3fe59f8bd6ebc2f425f9c78393ac4c652608faf172284ff4805",
+      "result": "FAIL mobile Escape; before fix"
+    },
+    {
+      "local_log": ".test-audit/premium2/reproduction-turbopack.log",
+      "sha256": "ef617929219bc158d19e66af8778862687470dc329035d71e451c5a6173792a0",
+      "result": "single RSC response; before focus fix"
+    },
+    {
+      "local_log": ".test-audit/premium2/reproduction-healthy.log",
+      "sha256": "ec7f65d5221518a50dcf43b450de790554bf5e7047663f8e93f2123b556cef56",
+      "result": "repeated RSC; Webpack"
+    }
+  ],
+  "source_sha256": {
+    "src/components/onboarding/GuidedTour.tsx": "00f748e46b007a37be7a7983e4f953e914ffe85b3c7b0aa14794d3051434285f",
+    "src/components/ui/Modal.tsx": "bf74d4c30d7e92c92d03f185c3a18e84c387a4284d5aba05aad4a923aaa1d996",
+    "tests/demo/premium.browser.mjs": "292117884d7e021b3c6b8e3b360bba2c071fe4f0c942ec5d8b8b0aa4eb24bb0c",
+    "tests/demo/run-browser.mjs": "64de12b30bd195754902fbae83e0ad863f97a020ac5bf84b7c8db0c41c477452"
+  },
+  "remaining": [
+    "MEOWS UI integration",
+    "Node/registration after integration",
+    "responsive final matrix/screenshots",
+    "real build",
+    "manual acceptance"
+  ],
+  "release_approved": false
+}
