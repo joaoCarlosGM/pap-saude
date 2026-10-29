@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { mkdtempSync, mkdirSync, readFileSync, writeFileSync, symlinkSync, rmSync, existsSync } from "node:fs";
+import { mkdtempSync, mkdirSync, chmodSync, readFileSync, writeFileSync, symlinkSync, rmSync, existsSync } from "node:fs";
 import { join, resolve } from "node:path";
 import { tmpdir } from "node:os";
 import { spawnSync } from "node:child_process";
@@ -89,4 +89,8 @@ test("independent P0 setups generate new random secrets and never inherit produc
   assert.equal(a.cli("init",{MFA_SECRET_ENCRYPTION_KEY:"DO_NOT_REUSE",RESEND_API_KEY:"DO_NOT_REUSE"}).status,0);assert.equal(b.cli("init").status,0);
   const c1=JSON.parse(readFileSync(join(a.dir,p0.privateDir,"config.json"))),c2=JSON.parse(readFileSync(join(b.dir,p0.privateDir,"config.json")));assert.ok(c1.mfaKey!==c2.mfaKey&&c1.mfaKey!=="DO_NOT_REUSE");assert.ok(new URL(c1.databaseUrl).password!==new URL(c2.databaseUrl).password);assert.equal(Buffer.from(c1.mfaKey,"base64url").length,32);
  }finally{a.close();b.close();}
+});
+
+test("unified profile rejects readable private configuration before any Docker operation",()=>{
+ const f=fixture();try{assert.equal(f.cli("init").status,0);const path=join(f.dir,p0.privateDir,"config.json");chmodSync(path,0o644);assert.notEqual(f.cli("start").status,0);assert.equal(f.events().length,0);}finally{f.close();}
 });

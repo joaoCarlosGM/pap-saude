@@ -28,7 +28,10 @@ function privatePaths() {
   assertSeparateCheckout(profile.name, path => existsSync(resolve(root, path)));
   for (const path of [resolve(root, ".local"), privateDir, configFile, resolve(privateDir, "postgres.env"), resolve(privateDir, "mail")]) {
     try {
-      if (lstatSync(path).isSymbolicLink()) throw new Error("LOCAL_PRIVATE_PATH_SYMLINK");
+      const entry=lstatSync(path);
+      if (entry.isSymbolicLink()) throw new Error("LOCAL_PRIVATE_PATH_SYMLINK");
+      if (profile.name === "p0-unified-rc" && ((entry.mode & 0o077) !== 0 ||
+          (process.getuid && entry.uid !== process.getuid()))) throw new Error("LOCAL_PRIVATE_PERMISSIONS_REQUIRED");
     } catch (error) { if (error.code !== "ENOENT") throw error; }
   }
 }
