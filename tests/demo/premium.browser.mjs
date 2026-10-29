@@ -1,7 +1,7 @@
 import {before,after,test} from 'node:test'
 import assert from 'node:assert/strict'
 import {createRequire} from 'node:module'
-import {mkdirSync,writeFileSync} from 'node:fs'
+import {mkdirSync} from 'node:fs'
 const load=createRequire(import.meta.url)
 const {chromium,expect}=load(process.env.PAP_PLAYWRIGHT_MODULE||'@playwright/test')
 const base=process.env.PAP_DEMO_BASE_URL||'http://127.0.0.1:3400'
@@ -31,7 +31,7 @@ test('A institution updates sidebar immediately, restoration is confirmed, no to
 test('B patient surfaces, encounter rows/cards and recent entries activate exactly once with independent child links',async()=>{
  const p=await browser.newPage({viewport:{width:1440,height:960},reducedMotion:'reduce'})
  await visit(p,'/pacientes');const card=p.locator('[data-patient-id="maria-gracas"]');assert.equal(await card.locator('a,button').count(),0)
- await card.focus();await p.keyboard.press('Enter');await expect(p).toHaveURL(base+'/pacientes/maria-gracas')
+ for(let i=0;i<35&&!await card.evaluate(el=>el===document.activeElement);i++)await p.keyboard.press('Tab');await expect(card).toBeFocused();await p.keyboard.press('Enter');await expect(p).toHaveURL(base+'/pacientes/maria-gracas')
  await visit(p,'/atendimentos');const row=p.locator('tr[data-encounter-id]').first();await row.click({position:{x:10,y:10}});await expect(p.getByRole('dialog')).toHaveCount(1);await expect(p.getByRole('dialog')).toContainText('Maria das Graças Silva');await p.keyboard.press('Escape')
  await row.focus();await p.keyboard.press('Enter');await expect(p.getByRole('dialog')).toHaveCount(1);await p.keyboard.press('Escape')
  await row.getByRole('link',{name:'Maria das Graças Silva'}).click();await expect(p).toHaveURL(base+'/pacientes/maria-gracas');await expect(p.getByRole('dialog')).toHaveCount(0)
@@ -44,4 +44,14 @@ test('C stars stay pink and stationary in reduced motion',async()=>{
  const stars=p.locator('svg.lucide-star');assert.equal(await stars.count(),6)
  for(const star of await stars.all()){assert.equal(await star.evaluate(el=>getComputedStyle(el).color),'rgb(236, 38, 143)');assert.equal(await star.evaluate(el=>getComputedStyle(el).animationName),'none')}
  await p.close()
+})
+
+test('D progressive motion preserves exact data, zero bars, state and does not restart counters for dialogs',async()=>{
+ const p=await browser.newPage({viewport:{width:1440,height:960},reducedMotion:'no-preference'})
+ await visit(p,'/dashboard');const metric=p.locator('[data-metric-final]').first();await expect(metric).toHaveAttribute('data-counter-starts',/\d+/)
+ await p.waitForTimeout(1000);const before=await metric.getAttribute('data-counter-starts');await p.getByRole('button',{name:'Avisos',exact:true}).click();await p.getByRole('dialog').getByRole('button',{name:'Fechar',exact:true}).click();assert.equal(await metric.getAttribute('data-counter-starts'),before)
+ for(const bar of await p.locator('[data-demo-total="0"]').all())assert.equal(await bar.evaluate(el=>el.style.height),'0%')
+ const indicator=p.locator('[data-sidebar-indicator]');const old=await indicator.evaluate(el=>getComputedStyle(el).transform)
+ await p.getByRole('link',{name:'Pacientes',exact:true}).click();await expect(p).toHaveURL(base+'/pacientes');await expect(p.getByRole('link',{name:'Pacientes',exact:true})).toHaveAttribute('aria-current','page');await p.waitForTimeout(350);assert.notEqual(await indicator.evaluate(el=>getComputedStyle(el).transform),old)
+ await expect(p.locator('[data-patient-id]')).toHaveCount(3);await p.locator('[data-patient-id]').first().focus();await p.keyboard.press('Enter');await expect(p).toHaveURL(base+'/pacientes/maria-gracas');await p.close()
 })

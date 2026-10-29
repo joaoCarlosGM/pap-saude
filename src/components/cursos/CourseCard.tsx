@@ -70,7 +70,7 @@ export default function CourseCard({
     course.status === "IN_PROGRESS"
 
   return (
-    <article
+    <article data-motion-item
       className="
         flex
         min-h-[285px]

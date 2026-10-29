@@ -83,6 +83,7 @@ export default function RecentAttendances({
           return (
             <div
               key={attendance.id}
+              data-motion-item
               role="button" tabIndex={0} aria-label={`Ver atendimento de ${attendance.patient}`} data-recent-encounter={attendance.id}
               onClick={()=>setSelectedId(attendance.id)}
               onKeyDown={e=>{if(e.target===e.currentTarget&&['Enter',' '].includes(e.key)){e.preventDefault();setSelectedId(attendance.id)}}}

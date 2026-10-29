@@ -1,6 +1,7 @@
 "use client"
 
-import {useEffect,useRef,useId,type ReactNode} from "react"
+import {useEffect,useRef,useId,useSyncExternalStore,type ReactNode} from "react"
+import {createPortal} from "react-dom"
 import { X } from "lucide-react"
 
 type ModalProps = {
@@ -12,6 +13,10 @@ type ModalProps = {
   footer?: ReactNode
   maxWidth?: "sm" | "md" | "lg" | "xl"
 }
+
+const subscribeToClient = () => () => {}
+const clientSnapshot = () => true
+const serverSnapshot = () => false
 
 const widthClasses = {
   sm: "sm:max-w-md",
@@ -29,11 +34,12 @@ export default function Modal({
   footer,
   maxWidth = "lg",
 }: ModalProps) {
+  const client=useSyncExternalStore(subscribeToClient,clientSnapshot,serverSnapshot)
   const dialog=useRef<HTMLDivElement>(null), titleId=useId()
-  useEffect(()=>{if(!open)return;const previous=document.activeElement as HTMLElement|null;const el=dialog.current;el?.querySelector<HTMLElement>('button:not([disabled]),input:not([disabled]),select:not([disabled]),textarea:not([disabled]),a[href]')?.focus();return()=>previous?.focus()},[open])
-  if (!open) return null
+  useEffect(()=>{if(!open||!client)return;const previous=document.activeElement as HTMLElement|null;const el=dialog.current;el?.querySelector<HTMLElement>('button:not([disabled]),input:not([disabled]),select:not([disabled]),textarea:not([disabled]),a[href]')?.focus();return()=>previous?.focus()},[open,client])
+  if (!open||!client) return null
 
-  return (
+  return createPortal(
     <div className="fixed inset-0 z-50">
       <button
         type="button"
@@ -95,6 +101,6 @@ export default function Modal({
           )}
         </div>
       </div>
-    </div>
+    </div>, document.body
   )
 }

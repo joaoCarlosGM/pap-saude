@@ -15,7 +15,7 @@ export default function ChatHeader({
   onOpenSidebar,
 }: Props) {
   return (
-    <header
+    <header data-motion-title data-tour="chat"
       className="
         flex
         h-16

@@ -46,7 +46,7 @@ export default function ProtocolCard({
   }
 
   return (
-    <article
+    <article data-motion-item
       className="
         flex
         min-h-[186px]

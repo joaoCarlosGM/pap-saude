@@ -59,7 +59,7 @@ export default function ProtocolList({
 
   return (
     <>
-      <div>
+      <div data-tour="resources">
         {/* BUSCA + BOTÃO */}
         <div
           className="

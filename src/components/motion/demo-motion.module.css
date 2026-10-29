@@ -1,0 +1,25 @@
+.page{min-width:0;animation:page-in 260ms cubic-bezier(.22,.7,.3,1) both}
+:global(html[data-demo-leaving=true]) .page{animation:page-out 100ms ease-out both}
+.page :global(h1),.page :global([data-motion-title]){animation:title-in 260ms ease-out both}
+.page :global([data-motion-kpis]>article){animation:item-in 360ms cubic-bezier(.22,.7,.3,1) both}
+.page :global([data-motion-kpis]>article:nth-child(2)){animation-delay:65ms}
+.page :global([data-motion-kpis]>article:nth-child(3)){animation-delay:130ms}
+.page :global([data-motion-kpis]>article:nth-child(4)){animation-delay:195ms}
+.page :global([data-motion-kpis]>article:nth-child(5)){animation-delay:260ms}
+.page :global([data-motion-kpis]>article:nth-child(6)){animation-delay:325ms}
+.page :global([data-motion-kpis]>article:nth-child(7)){animation-delay:390ms}
+.page :global([data-motion-kpis]>article:nth-child(8)){animation-delay:455ms}
+.page :global([data-motion-item]){animation:item-in 320ms ease-out both}
+.page :global([data-motion-item]:nth-child(2)){animation-delay:50ms}
+.page :global([data-motion-item]:nth-child(3)){animation-delay:100ms}
+.page :global([data-motion-item]:nth-child(4)){animation-delay:150ms}
+.page :global([data-motion-item]:nth-child(n+5)){animation-delay:200ms}
+.page :global([data-motion-step]){animation:step-in 230ms ease-out both}
+.page :global([data-demo-total]){transform-origin:bottom;animation:bar-in 850ms cubic-bezier(.22,.7,.3,1) both;animation-delay:200ms}
+@keyframes page-in{from{opacity:.75;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+@keyframes page-out{to{opacity:.7;transform:translateY(-4px)}}
+@keyframes title-in{from{opacity:.6;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+@keyframes item-in{from{opacity:.45;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+@keyframes step-in{from{opacity:.75;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+@keyframes bar-in{from{transform:scaleY(0)}to{transform:scaleY(1)}}
+@media(prefers-reduced-motion:reduce){.page,.page :global(*){animation:none!important;transition:none!important;scroll-behavior:auto!important}}

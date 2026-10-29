@@ -19,7 +19,7 @@ export default function Stepper({
   const progress = (currentStep / steps.length) * 100
 
   return (
-    <div className="mb-6 sm:mb-8">
+    <div data-tour="registration" className="mb-6 sm:mb-8">
       {/* MOBILE */}
       <div className="sm:hidden">
         <div className="flex items-center justify-between gap-3">

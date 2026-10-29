@@ -93,6 +93,7 @@ export default function RegistrationWizard() {
         {saved && <p role="status" className="mb-4 text-sm text-emerald-700">Registro demonstrativo salvo na memória desta aba. <Link prefetch={false} className="underline" href={"/pacientes/"+patients.find(p=>normalizeIdentifier(p.cpf)===normalizeIdentifier(registration.cpf))?.id}>Abrir ficha da paciente</Link></p>}
         <Stepper currentStep={currentStep} />
 
+        <div key={currentStep} data-motion-step>
         {currentStep === 1 && (
           <IdentificationStep
             onNew={restart}
@@ -139,6 +140,7 @@ export default function RegistrationWizard() {
             onSave={saveRegistration}
           />
         )}
+        </div>
       </CardContent>
     </Card>
   )

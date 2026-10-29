@@ -92,7 +92,7 @@ export default function AtendimentoTable({
       {/* MOBILE */}
       <div className="space-y-3 md:hidden">
         {atendimentos.map((atendimento) => (
-          <article
+          <article data-motion-item
             key={atendimento.id}
             data-encounter-id={atendimento.id} tabIndex={0} aria-describedby="attendance-row-help"
             onClick={e=>surfaceClick(e,atendimento)} onKeyDown={e=>surfaceKey(e,atendimento)}
@@ -226,7 +226,7 @@ export default function AtendimentoTable({
 
             <tbody className="divide-y divide-slate-100 bg-white">
               {atendimentos.map((atendimento) => (
-                <tr
+                <tr data-motion-item
                   key={atendimento.id}
                   data-encounter-id={atendimento.id} tabIndex={0} aria-describedby="attendance-row-help"
                   onClick={e=>surfaceClick(e,atendimento)} onKeyDown={e=>surfaceKey(e,atendimento)}

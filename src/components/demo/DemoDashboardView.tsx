@@ -38,7 +38,7 @@ export default function DashboardPage() {
         </div>
       </header>
 
-      <section
+      <section data-motion-kpis data-tour="dashboard-kpis"
         className="
           grid
           grid-cols-1
