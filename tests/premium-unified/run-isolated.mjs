@@ -11,16 +11,17 @@ const groups={
  iam:['tests/mission04-b/governance.test.ts'],
 };
 const selected=process.argv[2];if(process.argv.length!==3||!Object.hasOwn(groups,selected))throw Error('Choose an explicit isolated test group');
+const dbName=selected==='clinical'?'pap_release_clinical_backend_test':selected==='iam'?'pap_saude_m04_b_test':'pap_p0_full_tests';
 const dir=mkdtempSync(join(tmpdir(),'pap-unified-tests-')),owner=randomUUID(),name=`pap-unified-tests-${owner}`;
 const password=randomBytes(24).toString('hex');let cid;
 function docker(args,input){return execFileSync('docker',args,{input,encoding:'utf8',stdio:['pipe','pipe','pipe']}).trim();}
 assertDockerEndpoint(process.env.DOCKER_HOST||JSON.parse(docker(['context','inspect']))[0].Endpoints.docker.Host);
 const log=(label,args,env)=>{const r=spawnSync(args[0],args.slice(1),{env,encoding:'utf8'});writeFileSync(join(dir,label+'.log'),(r.stdout||'')+(r.stderr||''),{mode:0o600});if(r.status!==0)throw Error(`${label} FAIL (private log ${dir}/${label}.log)`);};
 try{
- cid=execFileSync('docker',['run','--rm','-d','--name',name,'--label','pap.disposable=unified-premium','--label',`pap.owner=${owner}`,'--tmpfs','/var/lib/postgresql/data:rw,size=536870912','-e','POSTGRES_USER=pap_user','-e','POSTGRES_PASSWORD','-e','POSTGRES_DB=pap_p0_full_tests','-p','127.0.0.1::5432','postgres:16-alpine'],{env:{...process.env,POSTGRES_PASSWORD:password},encoding:'utf8',stdio:['pipe','pipe','pipe']}).trim();
- let ready=false;for(let i=0;i<40;i++){try{if(docker(['exec',cid,'psql','-h','127.0.0.1','-U','pap_user','-d','pap_p0_full_tests','-Atqc','SELECT 1'])==='1'){ready=true;break;}}catch{}await new Promise(r=>setTimeout(r,500));}if(!ready)throw Error('Owned PostgreSQL not ready');
+ cid=execFileSync('docker',['run','--rm','-d','--name',name,'--label','pap.disposable=unified-premium','--label',`pap.owner=${owner}`,'--tmpfs','/var/lib/postgresql/data:rw,size=536870912','-e','POSTGRES_USER=pap_user','-e','POSTGRES_PASSWORD','-e',`POSTGRES_DB=${dbName}`,'-p','127.0.0.1::5432','postgres:16-alpine'],{env:{...process.env,POSTGRES_PASSWORD:password},encoding:'utf8',stdio:['pipe','pipe','pipe']}).trim();
+ let ready=false;for(let i=0;i<40;i++){try{if(docker(['exec',cid,'psql','-h','127.0.0.1','-U','pap_user','-d',dbName,'-Atqc','SELECT 1'])==='1'){ready=true;break;}}catch{}await new Promise(r=>setTimeout(r,500));}if(!ready)throw Error('Owned PostgreSQL not ready');
  const port=JSON.parse(docker(['inspect','--format','{{json .NetworkSettings.Ports}}',cid]))['5432/tcp'][0].HostPort;
- const env={...process.env,DATABASE_URL:`postgresql://pap_user:${password}@127.0.0.1:${port}/pap_p0_full_tests?schema=public`,MFA_SECRET_ENCRYPTION_KEY:randomBytes(32).toString('base64'),MFA_SECRET_ENCRYPTION_KEY_ID:'unified-disposable',AUTH_ALLOWED_ORIGINS:'http://127.0.0.1:3110',PAP_PUBLIC_URL:'http://127.0.0.1:3110',PAP_EMAIL_PROVIDER:'disabled',PAP_EMAIL_EXTERNAL_ENABLED:'0',RESEND_API_KEY:'',AUTH_TRUSTED_CLIENT_IP_HEADER:''};
+ const env={...process.env,DATABASE_URL:`postgresql://pap_user:${password}@127.0.0.1:${port}/${dbName}?schema=public`,MFA_SECRET_ENCRYPTION_KEY:randomBytes(32).toString('base64'),MFA_SECRET_ENCRYPTION_KEY_ID:'unified-disposable',AUTH_ALLOWED_ORIGINS:'http://127.0.0.1:3110',PAP_PUBLIC_URL:'http://127.0.0.1:3110',PAP_EMAIL_PROVIDER:'disabled',PAP_EMAIL_EXTERNAL_ENABLED:'0',RESEND_API_KEY:'',AUTH_TRUSTED_CLIENT_IP_HEADER:''};
  log('migrate',['node_modules/.bin/prisma','migrate','deploy'],env);
  log(selected,['node_modules/.bin/tsx','--test','--test-concurrency=1',...groups[selected]],env);
  console.log(`PASS ${selected}; private evidence ${dir}`);

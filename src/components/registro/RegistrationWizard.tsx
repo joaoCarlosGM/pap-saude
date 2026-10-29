@@ -154,6 +154,7 @@ export default function RegistrationWizard() {
         </section>}
         {checking && <p role="status">Consultando a operação anterior…</p>}
         <Stepper currentStep={currentStep} />
+        <div key={currentStep} data-operational-step={currentStep} className="premium-page">
 
         {currentStep === 1 && (
           <IdentificationStep
@@ -200,6 +201,7 @@ export default function RegistrationWizard() {
             savedEvaluation={savedEvaluation}
           />
         )}
+        </div>
       </CardContent>
     </Card>
   );

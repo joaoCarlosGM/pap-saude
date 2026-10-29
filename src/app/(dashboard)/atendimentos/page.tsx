@@ -2,7 +2,7 @@ import { requireClinicalPageSession } from "@/server/clinical/clinical-page-sess
 import ClinicalEncounterList from "@/components/clinical/ClinicalEncounterList";
 
 export default async function AtendimentosPage() {
-  await requireClinicalPageSession();
+  const actor=await requireClinicalPageSession();
   return (
     <div className="mx-auto w-full max-w-[1600px] space-y-4 sm:space-y-6">
       <header>
@@ -15,7 +15,7 @@ export default async function AtendimentosPage() {
         </p>
       </header>
 
-      <ClinicalEncounterList />
+      <ClinicalEncounterList canManage={actor.profile.permissions.includes("encounter.update")} />
     </div>
   );
 }
