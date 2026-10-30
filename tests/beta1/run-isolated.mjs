@@ -1,6 +1,6 @@
 import {execFileSync,spawnSync} from 'node:child_process';
 import {randomBytes,randomUUID} from 'node:crypto';
-import {mkdtempSync,writeFileSync,readFileSync,mkdirSync,cpSync} from 'node:fs';
+import {mkdtempSync,writeFileSync,readFileSync,appendFileSync,mkdirSync,cpSync} from 'node:fs';
 import {tmpdir} from 'node:os';
 import {join} from 'node:path';
 import {assertDockerEndpoint} from '../../scripts/local/policy.mjs';
@@ -18,7 +18,16 @@ function runtimeAcl(){
  const sql=`SET ROLE pap_beta_runtime; DO $$ DECLARE t text; BEGIN FOR t IN SELECT tablename FROM pg_tables WHERE schemaname='public' AND (tablename='courses' OR tablename LIKE 'course_%') LOOP IF NOT (has_table_privilege(current_user,t,'SELECT') AND has_table_privilege(current_user,t,'INSERT') AND has_table_privilege(current_user,t,'UPDATE') AND has_table_privilege(current_user,t,'DELETE')) THEN RAISE EXCEPTION 'LMS_RUNTIME_ACL_MISSING'; END IF; END LOOP; IF has_schema_privilege(current_user,'public','CREATE') OR has_table_privilege(current_user,'_prisma_migrations','SELECT') OR has_table_privilege(current_user,'audit_events','UPDATE,DELETE') OR has_table_privilege(current_user,'clinical_provenance_events','UPDATE,DELETE') OR has_column_privilege(current_user,'clinical_registration_operations','keyHash','UPDATE') THEN RAISE EXCEPTION 'RUNTIME_PRIVILEGE_ESCALATION'; END IF; END $$; RESET ROLE;`;
  docker(['exec','-i',cid,'psql','-U','pap_user','-d',dbName,'-v','ON_ERROR_STOP=1'],sql);writeFileSync(join(dir,'runtime-acl.json'),JSON.stringify({status:'PASS',lmsTables:13,schemaCreate:false,migrationRead:false,auditRewrite:false,clinicalLedgerRewrite:false,operationIdentityRewrite:false})+'\n',{mode:0o600});
 }
-const log=(label,args,env)=>{const r=spawnSync(args[0],args.slice(1),{env,encoding:'utf8'});const output=(r.stdout||'')+(r.stderr||'');writeFileSync(join(dir,label+'.log'),output,{mode:0o600});if(r.status!==0){if(label==='browser')console.error('Sanitized browser failure:',JSON.stringify(publicBetaDiagnostics(output)));throw Error(`${label} FAIL (private log ${dir}/${label}.log)`);}};
+const log=(label,args,env)=>{
+ const r=spawnSync(args[0],args.slice(1),{env,encoding:'utf8'}),output=(r.stdout||'')+(r.stderr||'');writeFileSync(join(dir,label+'.log'),output,{mode:0o600});
+ if(r.status!==0){
+  const diagnostics=label==='browser'?publicBetaDiagnostics(output):[];
+  if(label==='browser')console.error('Sanitized browser failure:',JSON.stringify(diagnostics));
+  // Summary exposes only the static substep and allowlisted diagnostics, never raw logs.
+  if(process.env.GITHUB_STEP_SUMMARY)try{appendFileSync(process.env.GITHUB_STEP_SUMMARY,`\n### Beta1: failed substep ${label}\n\n\`\`\`json\n${JSON.stringify({substep:label,status:'FAIL',diagnostics},null,2)}\n\`\`\`\n`);}catch{console.error('Sanitized CI summary unavailable; private logs retained.');}
+  throw Error(`${label} FAIL (private log ${dir}/${label}.log)`);
+ }
+};
 try{
  cid=execFileSync('docker',['run',...(selected==='upgrade'?[]:['--rm']),'-d','--name',name,'--label','pap.disposable=beta1-disposable','--label',`pap.owner=${owner}`,...(selected==='upgrade'?['--tmpfs','/var/lib/postgresql/data:rw,size=16777216','-e','PGDATA=/var/lib/postgresql/beta1-continuity']:['--tmpfs','/var/lib/postgresql/data:rw,size=536870912']),'-e','POSTGRES_USER=pap_user','-e','POSTGRES_PASSWORD','-e',`POSTGRES_DB=${dbName}`,'-p','127.0.0.1::5432','postgres:16-alpine'],{env:{...process.env,POSTGRES_PASSWORD:password},encoding:'utf8',stdio:['pipe','pipe','pipe']}).trim();
  let ready=false;for(let i=0;i<40;i++){try{if(docker(['exec',cid,'psql','-h','127.0.0.1','-U','pap_user','-d',dbName,'-Atqc','SELECT 1'])==='1'){ready=true;break;}}catch{}await new Promise(r=>setTimeout(r,500));}if(!ready)throw Error('Owned PostgreSQL not ready');

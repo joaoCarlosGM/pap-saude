@@ -423,7 +423,7 @@
       },
       {
         "path": "tests/beta1/learning.spec.ts",
-        "sha256": "add2973ff0b7a9539e327206c756835c0adee121d8000f71829e4aedfa0106c1"
+        "sha256": "3e01345df3945c0ed2285fca998578dfa8b63829b25bc55bb828d7b7aca630ce"
       },
       {
         "path": "tests/beta1/lms-fixtures.ts",
@@ -451,7 +451,7 @@
       },
       {
         "path": "tests/beta1/run-isolated.mjs",
-        "sha256": "0c081be666b4f0716b2e3386c70da525eaa1dbb61ab500e5915b1da415a9a465"
+        "sha256": "c5b032b806d3a425e6b7153ef52897a9fa806ccb99e5aa5e5bb0d1a496b63255"
       },
       {
         "path": "tests/beta1/safe-reporter.ts",
@@ -502,7 +502,7 @@
         "sha256": "685d7fcb4fd9ec083e6e399569ed625294e814ced32621fbe29deaa26e7ea377"
       }
     ],
-    "effectiveSourceFingerprint": "1c4b269f1bcfd3de9fb6b87c299eb895f182155090d0f14956c1a08290f95ba1"
+    "effectiveSourceFingerprint": "0eaa7bd79c76cbfc3bb8430fc90968345b1f98907d7c4dd6eaab8d2fceffaa52"
   },
   "nextCI": "PENDING on correction SHA",
   "productionPublishDeploy": "SKIPPED; feature branch conditions unchanged",
@@ -550,5 +550,31 @@
     "applicationPath": "src/app/api/admin/manager/municipalities/route.ts",
     "nextCI": "PENDING on correction SHA",
     "operatorLab": "NOT ACCESSED OR ALTERED"
+  },
+  "learningNavigationCorrection": {
+    "failedCI": "https://github.com/joaoCarlosGM/pap-saude/actions/runs/41056667160",
+    "firstFailedGate": "Beta 1 real LMS, delegated inclusion, continuity and isolated showcase",
+    "localReproduction": {
+      "unitTests": 28,
+      "backendTests": 12,
+      "upgradeReplayDriftRestoreRestartCopyHelper": "PASS",
+      "browser": {
+        "pass": 8,
+        "fail": 1
+      }
+    },
+    "cause": "learning.spec.ts global /^Cursos/ locator matches the newly authorized area shortcut and the actual module menu. Strict locator ambiguity at learning.spec.ts:16; no authorization failure.",
+    "correction": "Scope to the clinical module navigation, require exactly one matching course link, retain the full accept/assign/response-loss/F5/server-assessment/foreign HTML-RSC-API/MFA assertions. Application unchanged.",
+    "targetedValidation": {
+      "browser": "PASS1 complete learning journey",
+      "sanitizer": "PASS1",
+      "typeScript": "PASS",
+      "lint": "PASS",
+      "diffCheck": "PASS",
+      "privateEvidence": "/tmp/pap-beta1-tests-n1wJq9/browser.log"
+    },
+    "diagnostics": "Failed Beta1 substeps now also write only the static phase and allowlisted diagnostics to the public Actions summary; raw logs remain private. Gates unchanged.",
+    "nextCI": "PENDING on correction SHA",
+    "remoteResultAuthority": "GitHub Actions attached to the exact final SHA. Local receipts and earlier failures remain historical evidence, not substitutes for a green candidate CI."
   }
 }
