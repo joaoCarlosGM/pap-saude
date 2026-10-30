@@ -102,6 +102,16 @@ secret mounts e0644 aos arquivos públicos, mantendo diretórios0700/credencial 
 Teste unitário força umask077 e confere as permissões. Nenhuma mudança em IAM/MFA/migrations.
 O próximo CI deve validar o conjunto; não atribuir PASS aos gates anteriormente pendentes.
 
+CI `41143584849`, SHA `99f7bf22946371e4b025ab45de4ea688aeeb43e5`:
+gates iniciais, imagens e Nginx **PASS**; integração **FAIL** na subetapa `verify`;
+scanners/publicação **NOT RUN**. Em PostgreSQL16 descartável, a consulta do marcador
+com `format(...,$1)` reproduziu SQLSTATE **42P18**; `format(...,$1::text)` passou.
+Corrigida apenas a tipagem do parâmetro e acrescentado diagnóstico estático de fase/código,
+sem imprimir queries, connection strings ou valores. Evidência privada:
+`/tmp/admin-beta-verifier-sql.log`. Inicialização real do PG preparado e os dois papéis
+sem privilégios também passaram sob umask077: `/tmp/admin-beta-prepared-pg.log`.
+O terceiro CI continua obrigatório antes de publicar/ativar.
+
 ## Operação, limites e preservação
 
 Procedimento completo de ativação, preparação de segredos, provisionamento, smoke e rollback:
