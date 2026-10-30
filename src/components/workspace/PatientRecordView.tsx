@@ -5,7 +5,7 @@ function date(value: string | null) {
     return "—";
   }
 
-  return new Intl.DateTimeFormat("pt-BR").format(new Date(value));
+  return new Intl.DateTimeFormat("pt-BR",{timeZone:"UTC"}).format(new Date(value));
 }
 
 /** Pure shared record presentation; never imports a data-fetching module. */
@@ -63,9 +63,12 @@ export default function PatientRecordView({data,demo=false}:{data:PatientRecordP
         </div>
       </div>
 
+      <nav aria-label="Seções do prontuário" className="flex flex-wrap gap-2 rounded-xl border bg-white p-3 text-sm">
+        {[['record-pregnancy','Gestação'],['record-alerts','Alertas'],['record-allergies','Alergias'],['record-encounters','Atendimentos'],['record-revisions','Histórico']].map(([id,label])=><a key={id} href={`#${id}`} className="rounded-lg px-3 py-2 font-medium text-pink-800 hover:bg-pink-50">{label}</a>)}
+      </nav>
       <div className="grid gap-4 lg:grid-cols-2">
         <section className="rounded-xl border border-slate-200 bg-white p-5">
-          <h2 className="font-semibold text-slate-900">Gestação</h2>
+          <h2 className="font-semibold text-slate-900" id="record-pregnancy">Gestação</h2>
 
           {activePregnancy ? (
             <div className="mt-3 space-y-1 text-sm text-slate-600">
@@ -85,7 +88,7 @@ export default function PatientRecordView({data,demo=false}:{data:PatientRecordP
         </section>
 
         <section className="rounded-xl border border-slate-200 bg-white p-5">
-          <h2 className="font-semibold text-slate-900">
+          <h2 id="record-alerts" className="font-semibold text-slate-900">
             Alertas clínicos explícitos
           </h2>
 
@@ -111,7 +114,7 @@ export default function PatientRecordView({data,demo=false}:{data:PatientRecordP
       </div>
 
       <section className="rounded-xl border border-slate-200 bg-white p-5">
-        <h2 className="font-semibold text-slate-900">Alergias</h2>
+        <h2 className="font-semibold text-slate-900" id="record-allergies">Alergias</h2>
 
         <div className="mt-3 space-y-2">
           {allergies.length === 0 ? (
@@ -136,7 +139,7 @@ export default function PatientRecordView({data,demo=false}:{data:PatientRecordP
       </section>
 
       <section className="rounded-xl border border-slate-200 bg-white p-5">
-        <h2 className="font-semibold text-slate-900">Atendimentos</h2>
+        <h2 className="font-semibold text-slate-900" id="record-encounters">Atendimentos</h2>
 
         <div className="mt-3 space-y-2">
           {encounters.length === 0 ? (
@@ -167,7 +170,7 @@ export default function PatientRecordView({data,demo=false}:{data:PatientRecordP
       </section>
 
       <section className="rounded-xl border border-slate-200 bg-white p-5">
-        <h2 className="font-semibold text-slate-900">Histórico de revisões</h2>
+        <h2 id="record-revisions" className="font-semibold text-slate-900">Histórico de revisões</h2>
 
         <div className="mt-3 space-y-2">
           {revisions.length === 0 ? (

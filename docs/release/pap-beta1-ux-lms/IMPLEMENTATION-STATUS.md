@@ -6,7 +6,7 @@ Baseline funcional: d247020, CI40962511599 SUCCESS. Pacote completo lido:00/PROM
 | Slice | Dependências e aceite | Estado / evidência |
 |---|---|---|
 | A | Shell/sidebar/hero abstrato/ajuda; preservar identidade e dados; responsivo/teclado | PASS dirigido:4 Node,5 invariantes,1 browser (7 larguras/2 temas/teclado/WCAG);10 capturas |
-| B | Cards/ficha/atendimentos/registro com dados autorizados; KPIs byte-idênticos | NOT RUN |
+| B | Cards/ficha/atendimentos/registro com dados autorizados; KPIs byte-idênticos | PASS dirigido:2 Node +1 browser (card/ficha/teclado/tenant); APIs e registro preservados |
 | C | Admin teal; rede→município→UBS→equipe; grants anteriores intactos | NOT RUN |
 | D | Domínio LMS aditivo, IAM dedicado, editor seguro, versões imutáveis/release | NOT RUN |
 | E | Unidade/município: distribuição/ancestry, membros ativos, idempotência e inbox | NOT RUN |
@@ -24,3 +24,5 @@ Atualização do laboratório: somente operador, após backup/restore válido e 
 Próximo: validar sliceA com testes dirigidos/TypeScript/lint e browser isolado, commit seletivo/push. Continuar B→G sem recomeçar auditoria nem repetir suites aprovadas sem alteração relevante. PASS sempre com execução, fingerprint e evidência; aceites manuais não executados permanecem NOT RUN.
 
 SliceA: logs privados /tmp/pap-beta1-mission-20261030/slice-a-*.log; browser final /tmp/pap-beta1-tests-ANXAGw/browser.log. TypeScript/ESLint/diff PASS, zero warnings novos. Duas falhas de contraste2.21:1/3.7:1 corrigidas sem remover asserts. Harness inicial precisou corrigir import relativo/DB descartável/cwd de webServer.10 capturas sintéticas revisadas. Bootstrap/configuradores/MFA não modificados. Próximo:B paridade de cards/ficha, depoisC Admin eD domínioLMS. CI integral somente no candidato consolidado; pushes intermediários podem acionar o workflow existente, sem desativá-lo.
+
+SliceB: dois testes de apresentação/idade PASS; jornada com paciente vinculada à UBS real descartável, navegação teclado/ficha/seções/negativa outra UBS PASS (/tmp/pap-beta1-tests-7F8iBa/browser.log). TypeScript/lint/diff PASS. Sem inferir IG/DPP/alergia quando API de lista não fornece; ficha reutiliza APIs autorizadas. Ajuste adicional do hero de layout para texto rotulado preserva H1 original único; teste SSR cobre unicidade sem remover o texto DOM. Registro/atendimentos existentes reutilizados; regressão integral ainda NOT RUN no novo candidato.

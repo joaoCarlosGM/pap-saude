@@ -1,5 +1,6 @@
 "use client";
 
+import {patientAge} from "@/lib/patient-age";
 import PatientCollection from "@/components/workspace/PatientCollection";
 
 import { useEffect, useState } from "react";
@@ -9,7 +10,7 @@ import { listPatients } from "@/lib/clinical-api";
 import type { ClinicalPatient } from "@/lib/clinical-api";
 
 function formatDate(value: string) {
-  return new Intl.DateTimeFormat("pt-BR").format(new Date(value));
+  return new Intl.DateTimeFormat("pt-BR",{timeZone:"UTC"}).format(new Date(value));
 }
 
 export default function ClinicalPatientList() {
@@ -84,7 +85,7 @@ export default function ClinicalPatientList() {
         </div>
       )}
 
-      <PatientCollection items={patients.map(p=>({id:p.id,name:p.fullName,description:`Nascimento: ${formatDate(p.birthDate)}`,detail:p.cpf?`CPF: ${p.cpf}`:undefined,active:p.isActive,href:`/pacientes/${p.id}`}))}/>
+      <PatientCollection items={patients.map(p=>({id:p.id,name:p.fullName,description:`${patientAge(p.birthDate)!==null?`${patientAge(p.birthDate)} anos · `:""}Nascimento: ${formatDate(p.birthDate)}`,detail:p.cpf?`CPF: ${p.cpf}`:undefined,active:p.isActive,href:`/pacientes/${p.id}`}))}/>
 
     </div>
   );

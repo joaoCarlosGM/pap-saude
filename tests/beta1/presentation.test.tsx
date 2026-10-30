@@ -22,3 +22,8 @@ test('approved operational dashboard and synthetic KPI engine remain byte-identi
   const baseline=execFileSync('git',['show',`c7b1d755:${p}`],{encoding:'utf8',stdio:['ignore','pipe','ignore']});assert.equal(readFileSync(p,'utf8'),baseline,p);
  }
 });
+
+test('layout hero preserves a unique original page heading for navigation and screen readers',()=>{
+ const h=renderToStaticMarkup(<><SectionHero title="Pacientes" subtitle="Escopo autorizado" visual="pacientes" headingAs="p"/><h1>Pacientes</h1></>);
+ assert.equal((h.match(/<h[1-6]\b/g)||[]).length,1);assert.match(h,/aria-labelledby/);
+});
