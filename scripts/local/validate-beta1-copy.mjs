@@ -1,0 +1,30 @@
+// Opt-in only. Reads a private dump; never discovers or connects to the source lab.
+import {execFileSync,spawnSync} from 'node:child_process';
+import {lstatSync,realpathSync,mkdtempSync,readFileSync,writeFileSync,openSync,closeSync} from 'node:fs';
+import {createHash,randomBytes,randomUUID} from 'node:crypto';import {join,resolve} from 'node:path';import {tmpdir} from 'node:os';
+import {assertDockerEndpoint} from './policy.mjs';
+const args=process.argv.slice(2);let cid,owner,dir;
+const docker=(argv,options={})=>execFileSync('docker',argv,{encoding:'utf8',stdio:['pipe','pipe','pipe'],...options}).trim();
+function sql(query){return docker(['exec',cid,'psql','-X','-U','pap_user','-d','pap_beta1_upgrade_copy','-Atqc',query]);}
+const tables=['users','password_credentials','mfa_factors','mfa_recovery_codes','mfa_challenges','sessions','memberships','role_assignments','organizations','patients','patient_organizations','user_onboarding_progress','user_notifications','audit_events','clinical_provenance_events','clinical_registration_operations'];
+function snapshot(){return Object.fromEntries(tables.map(table=>{const result=sql(`SELECT count(*)::text || ':' || encode(sha256(convert_to(COALESCE(jsonb_agg(to_jsonb(t) - ARRAY['courseEnrollmentId','coursePublicationId'] ORDER BY id)::text,'[]'),'UTF8')),'hex') FROM "${table}" t`);if(!/^\d+:[a-f0-9]{64}$/.test(result))throw Error('COPY_SNAPSHOT_FAILED');return [table,result];}));}
+try{
+ if(args.length!==3||args[0]!=='--backup'||args[2]!=='--validate-isolated-copy')throw Error('EXPLICIT_COPY_ARGUMENTS_REQUIRED');
+ const file=resolve(args[1]),entry=lstatSync(file);if(!entry.isFile()||entry.isSymbolicLink()||realpathSync(file)!==file||(entry.mode&0o077)!==0||(process.getuid&&entry.uid!==process.getuid())||entry.size<256)throw Error('PRIVATE_DUMP_REQUIRED');
+ // Context policy accepts only a local Unix Docker socket. No source DB URL is read.
+ const context=JSON.parse(docker(['context','inspect']))[0];assertDockerEndpoint(process.env.DOCKER_HOST||context.Endpoints.docker.Host);
+ dir=mkdtempSync(join(tmpdir(),'pap-beta1-upgrade-copy-'));owner=randomUUID();const password=randomBytes(24).toString('hex');
+ cid=execFileSync('docker',['run','--rm','-d','--name',`pap-beta1-upgrade-copy-${owner}`,'--label','pap.disposable=beta1-upgrade-copy','--label',`pap.owner=${owner}`,'--tmpfs','/var/lib/postgresql/data:rw,size=1073741824','-e','POSTGRES_USER=pap_user','-e','POSTGRES_PASSWORD','-e','POSTGRES_DB=pap_beta1_upgrade_copy','-p','127.0.0.1::5432','postgres:16-alpine'],{env:{...process.env,POSTGRES_PASSWORD:password},encoding:'utf8',stdio:['pipe','pipe','pipe']}).trim();
+ let ready=false;for(let i=0;i<60;i++){try{if(sql('SELECT 1')==='1'){ready=true;break;}}catch{}await new Promise(r=>setTimeout(r,500));}if(!ready)throw Error('OWNED_COPY_NOT_READY');
+ const fd=openSync(file,'r');try{const result=spawnSync('docker',['exec','-i',cid,'pg_restore','-U','pap_user','-d','pap_beta1_upgrade_copy','--exit-on-error','--single-transaction','--no-owner','--no-privileges'],{stdio:[fd,'pipe','pipe'],encoding:'utf8'});writeFileSync(join(dir,'private-restore.log'),(result.stdout||'')+(result.stderr||''),{mode:0o600});if(result.status!==0)throw Error('COPY_RESTORE_FAILED');}finally{closeSync(fd);}
+ const applied=JSON.parse(sql(`SELECT COALESCE(jsonb_agg(jsonb_build_object('name',migration_name,'checksum',checksum)),'[]'::jsonb)::text FROM _prisma_migrations WHERE finished_at IS NOT NULL AND rolled_back_at IS NULL`));for(const row of applied){if(!/^\d{14}_[a-z0-9_]+$/.test(row.name))throw Error('UNKNOWN_MIGRATION_NAME');const path=resolve(import.meta.dirname,'../../prisma/migrations',row.name,'migration.sql');if(createHash('sha256').update(readFileSync(path)).digest('hex')!==row.checksum)throw Error('COPY_MIGRATION_CHECKSUM_MISMATCH');}
+ const before=snapshot(),beforeMigrations=Number(sql('SELECT count(*) FROM _prisma_migrations WHERE finished_at IS NOT NULL AND rolled_back_at IS NULL'));if(![35,36].includes(beforeMigrations))throw Error('UNEXPECTED_COPY_BASELINE');
+ const port=JSON.parse(docker(['inspect','--format','{{json .NetworkSettings.Ports}}',cid]))['5432/tcp'][0].HostPort;
+ const env={...process.env,DATABASE_URL:`postgresql://pap_user:${password}@127.0.0.1:${port}/pap_beta1_upgrade_copy?schema=public`,PAP_EMAIL_PROVIDER:'disabled',PAP_EMAIL_EXTERNAL_ENABLED:'0',RESEND_API_KEY:''};
+ function prisma(label,args){const result=spawnSync(process.execPath,['node_modules/prisma/build/index.js',...args],{cwd:resolve(import.meta.dirname,'../..'),env,encoding:'utf8'});writeFileSync(join(dir,`private-${label}.log`),(result.stdout||'')+(result.stderr||''),{mode:0o600});if(result.status!==0)throw Error('COPY_MIGRATION_OR_DRIFT_FAILED');}
+ prisma('migrate',['migrate','deploy']);prisma('replay',['migrate','deploy']);prisma('drift',['migrate','diff','--from-config-datasource','--to-schema','prisma/schema.prisma','--exit-code']);
+ const after=snapshot();if(JSON.stringify(before)!==JSON.stringify(after))throw Error('COPY_CONTINUITY_FAILED');if(Number(sql('SELECT count(*) FROM _prisma_migrations WHERE finished_at IS NOT NULL AND rolled_back_at IS NULL'))!==36)throw Error('COPY_TARGET_NOT_36');
+ writeFileSync(join(dir,'continuity.json'),JSON.stringify({status:'PASS',sourceDatabaseAccessed:false,beforeMigrations,afterMigrations:36,before,after})+'\n',{mode:0o600});
+ console.log(`PASS isolated backup restore, migration/replay/drift and identity/MFA/session/clinical continuity. Private evidence: ${dir}. Original lab was not accessed. This does not authorize its migration.`);
+}catch{console.error(`STOP: isolated-copy validation failed. Original lab was not accessed. ${dir?'Private evidence retained: '+dir:'Check explicit arguments, private dump and local Docker.'}`);process.exitCode=1;}
+finally{if(cid){const info=JSON.parse(docker(['inspect',cid]))[0];if(info.Config.Labels['pap.owner']!==owner||info.Config.Labels['pap.disposable']!=='beta1-upgrade-copy')throw Error('OWNED_COPY_CLEANUP_REFUSED');docker(['rm','-f',cid]);}}

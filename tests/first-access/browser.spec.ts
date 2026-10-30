@@ -261,11 +261,11 @@ for (const role of ["PAP_ADMIN", "HEALTH_UNIT_ADMIN", "PROFESSIONAL"] as const)
       .getByRole("button", { name: "Concluir e acessar minha área" })
       .click();
     await expect(page).toHaveURL(
-      role === "PROFESSIONAL" ? /\/dashboard$/ : /\/admin$/,
+      role === "PROFESSIONAL" ? /\/dashboard$/ : role === "HEALTH_UNIT_ADMIN" ? /\/cursos$/ : /\/admin$/,
     );
     await page.goto("/primeiros-passos");
     await expect(page).toHaveURL(
-      role === "PROFESSIONAL" ? /\/dashboard$/ : /\/admin$/,
+      role === "PROFESSIONAL" ? /\/dashboard$/ : role === "HEALTH_UNIT_ADMIN" ? /\/cursos$/ : /\/admin$/,
     );
     await page.goto("/primeiros-passos?ajuda=1");
     await expect(page).toHaveURL(/\/ajuda\/seguranca$/);

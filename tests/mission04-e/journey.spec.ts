@@ -132,11 +132,12 @@ test("all demo interactions are labeled, keyboard accessible and reset without p
     await page.getByRole('link',{name:'Dashboard',exact:true}).click();
     await expect(page.getByText('Pacientes ativas',{exact:true}).locator('..')).toContainText('3');
     await page.reload();await expect(page.getByRole('dialog',{name:'Bem-vindo ao PAP Saúde'})).not.toBeVisible();
-    await page.goto('/vitrine/cursos');await page.getByRole('button').filter({hasText:/Iniciar curso|Continuar/}).first().click();
-    const course=page.getByRole('dialog');await expect(course).toBeVisible();
-    await expect(course.getByText('Nenhuma aula é reproduzida. Catálogo e progresso são ilustrativos.',{exact:true})).toBeVisible();
-    await expect(course.getByRole('button',{name:/^(Iniciar curso|Continuar curso)$/})).toBeDisabled();
-    await a11y(page,'course-dialog');await capture(page,'curso-simulado-dark');await page.keyboard.press('Escape');
+    await page.goto('/vitrine/cursos');await page.getByRole('link',{name:'Explorar demonstração',exact:true}).first().click();
+    await expect(page).toHaveURL(/\/vitrine\/aprender\/pre-natal$/);
+    await expect(page.getByRole('heading',{name:'Explore a experiência de aprendizagem',exact:true})).toBeVisible();
+    await expect(page.getByRole('button',{name:'Concluir atividade demonstrativa',exact:true})).toBeDisabled();
+    await expect(page.getByText('Ambiente fictício.',{exact:false})).toBeVisible();
+    await a11y(page,'course-player');await capture(page,'curso-simulado-dark');
     await page.goto('/vitrine/chat');await page.getByPlaceholder('Digite sua mensagem...').fill('Mensagem sintética Slice E');
     await page.getByRole('button',{name:'Enviar mensagem',exact:true}).click();
     await expect(page.getByText('Simulação: nenhuma IA externa foi consultada. Este texto ilustrativo não avalia dados nem orienta condutas clínicas.',{exact:true})).toBeVisible();

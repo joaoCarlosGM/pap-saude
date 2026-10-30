@@ -18,7 +18,7 @@ test('accessibility styles stay inside synthetic surfaces and cannot import exte
 test('Premium runtime dependency graph never imports operational code, database or clinical APIs',()=>{
  for(const path of files(root)){
   const text=readFileSync(path,'utf8');assert.ok(!/\bfetch\s*\(|\/api\/|@\/server\/|@\/lib\/clinical|prisma|postgresql:\/\//i.test(text),path)
-  for(const match of text.matchAll(/(?:from\s*|import\s*)['"](@\/[^'"]+)/g))assert.ok(match[1].startsWith('@/features/vitrine-premium/')||['@/components/premium/HelpCard','@/components/premium/RouteHero','@/components/premium/premium.css'].includes(match[1]),`${path}: ${match[1]}`)
+  for(const match of text.matchAll(/(?:from\s*|import\s*)['"](@\/[^'"]+)/g))assert.ok(match[1].startsWith('@/features/vitrine-premium/')||['@/components/premium/HelpCard','@/components/premium/RouteHero','@/components/premium/premium.css','@/components/courses/CourseCatalog','@/components/courses/LessonBlockRenderer','@/lib/courses/schema','@/lib/courses/types'].includes(match[1]),`${path}: ${match[1]}`)
  }
 })
 test('no root operational route literal in synthetic components; only explicit Commercial return escapes namespace',()=>{
@@ -28,44 +28,35 @@ test('no root operational route literal in synthetic components; only explicit C
  assert.ok(readFileSync(root+'components/layout/Sidebar.tsx','utf8').includes('href="/comercial"'))
  assert.ok(readFileSync(root+'components/layout/DashboardShell.tsx','utf8').includes("next.pathname.startsWith('/vitrine/')"))
 })
-test('operational security, clinical services, MEOWS, Prisma and APIs remain unchanged by the authorized visual unification',()=>{
- const paths=['prisma','src/app/api','src/server/auth','src/server/iam','src/server/clinical','src/server/clinical-registration','src/server/vital-signs','src/server/obstetric-data','src/server/clinical-revision','src/server/meows','src/lib/clinical-api','src/lib/meows.ts','src/app/globals.css','package-lock.json','tsconfig.json','src/app/(auth)','Dockerfile','src/app/(showcase)']
- for(const path of paths)assert.equal(execFileSync('git',['diff','b8e900c2ca6f4b17375cc1fbe0ec397af0383a2a','--',path],{encoding:'utf8'}),'',path)
- // Beta1 authorizes only shell/banner/help/sidebar presentation changes in these three files.
- // Synthetic models, fixtures, scoring, views, route guards and all other behavior stay frozen.
- // Exact prior accessibility additions only. Synthetic models, fixtures, scoring,
- // routing and behavior remain byte-identical to the approved baseline.
- const additions=new Map([
-  [root+'components/layout/Sidebar.tsx',[["  useEffect(()=>{\n    const desktop=matchMedia('(min-width:768px)')\n    const closeOnDesktop=()=>{if(desktop.matches&&open)onClose()}\n    closeOnDesktop();desktop.addEventListener('change',closeOnDesktop)\n    return()=>desktop.removeEventListener('change',closeOnDesktop)\n  },[open,onClose])\n",'']]],
-  [root+'components/layout/DashboardShell.tsx',[["import '@/features/vitrine-premium/accessibility.css'\n",'']]],
-  [root+'components/ui/Modal.tsx',[[" data-vitrine-dialog",'']]],
-  [root+'components/pacientes/PatientList.tsx',[["          aria-label=\"Buscar pacientes demonstrativos\"\n",''],['<p role="status" className="text-sm font-medium text-slate-600">','<p className="text-sm font-medium text-slate-600">']]],
-  [root+'components/cursos/CourseList.tsx',[["          aria-label=\"Status dos cursos demonstrativos\"\n",'']]],
-  [root+'components/chat/ChatHeader.tsx',[["        disabled\n        aria-label=\"Opções extras indisponíveis na demonstração\"\n        title=\"Recurso demonstrativo indisponível\"\n",'']]],
-  [root+'components/ui/Input.tsx',[["  useId,\n",''],["    const generatedId = useId(), inputId = id ?? generatedId\n",''],['htmlFor={inputId}','htmlFor={id}'],['id={inputId}','id={id}']]],
-  [root+'views/chat.tsx',[["<><h1 className=\"sr-only\">Chat IA demonstrativo</h1><ChatLayout",'<ChatLayout'],['/></>','/>']]],
- ])
- const featureFiles=execFileSync('git',['ls-files',root],{encoding:'utf8'}).trim().split('\n').filter(Boolean)
- const newStyle=root+'accessibility.css',known=new Set([...featureFiles,newStyle])
- for(const path of files(root))assert.ok(known.has(path),'unexpected synthetic file: '+path)
- for(const path of featureFiles){
-  if(path===newStyle||[root+'components/layout/Sidebar.tsx',root+'components/layout/DashboardShell.tsx',root+'components/layout/sidebar.module.css'].includes(path))continue
-  const before=execFileSync('git',['show',`b8e900c2ca6f4b17375cc1fbe0ec397af0383a2a:${path}`],{encoding:'utf8'})
-  let after=readFileSync(path,'utf8')
-  for(const [added,original]of additions.get(path)||[])after=after.replace(added,original)
-  assert.equal(after,before,'unapproved synthetic change: '+path)
- }
- const errorPaths=['src/server/encounters/encounter.errors.ts','src/server/patients/patient.errors.ts','src/server/patients/patient-organization.errors.ts','src/server/pregnancies/pregnancy.errors.ts']
- const encounterFiles=execFileSync('git',['ls-files','src/server/encounters','src/server/patients','src/server/pregnancies'],{encoding:'utf8'}).trim().split('\n').filter(p=>p&&!errorPaths.includes(p))
- for(const path of encounterFiles)assert.equal(execFileSync('git',['diff','b8e900c2ca6f4b17375cc1fbe0ec397af0383a2a','--',path],{encoding:'utf8'}),'',path)
- for(const path of errorPaths){const before=execFileSync('git',['show',`b8e900c2ca6f4b17375cc1fbe0ec397af0383a2a:${path}`],{encoding:'utf8'});const after=readFileSync(path,'utf8');const normalize=s=>s.replace(/^    this.name = (?:new.target.name|"[^"]+");\n/gm,'');assert.equal(normalize(after),normalize(before),'only stable error names may change: '+path)}
- const originalDashboard=execFileSync('git',['show','b8e900c2ca6f4b17375cc1fbe0ec397af0383a2a:src/server/clinical-dashboard/clinical-dashboard.service.ts'],{encoding:'utf8'}).replace('@/lib/demo/types','@/types/dashboard')
- assert.equal(readFileSync('src/server/clinical-dashboard/clinical-dashboard.service.ts','utf8'),originalDashboard,'dashboard queries and authorization must be unchanged')
- const changed=execFileSync('git',['diff','--name-only','b8e900c2ca6f4b17375cc1fbe0ec397af0383a2a','--','src/server'],{encoding:'utf8'}).trim().split('\n').filter(Boolean)
- for(const path of changed)assert.ok(['src/server/clinical-dashboard/clinical-dashboard.service.ts','src/server/email/email-config.ts','src/server/email/local-demo-mail.ts','src/server/http/clinical-api-response.ts',...errorPaths].includes(path),path)
+test('Beta1 preserves authentication, clinical contracts, KPIs and all historical migrations; LMS additions are isolated',()=>{
+ const base='c7b1d755';
+ const before=path=>execFileSync('git',['show',`${base}:${path}`],{encoding:'utf8'});
+ const unchanged=['src/server/auth','src/server/clinical','src/server/clinical-registration','src/server/clinical-dashboard','src/server/vital-signs','src/server/obstetric-data','src/server/clinical-revision','src/server/encounters','src/server/patients','src/server/pregnancies','src/server/meows','src/lib/clinical-api','src/lib/meows.ts','src/app/globals.css','package-lock.json','tsconfig.json','Dockerfile','src/server/iam/authorization.service.ts','src/server/iam/effective-access-profile.service.ts','src/server/iam/bootstrap.service.ts','src/server/iam/role-assignment.service.ts','src/components/premium/ClinicalDashboardView.tsx'];
+ for(const path of unchanged)assert.equal(execFileSync('git',['diff',base,'--',path],{encoding:'utf8'}),'',path);
+ const historical=execFileSync('git',['ls-tree','-r','--name-only',base,'--','prisma/migrations'],{encoding:'utf8'}).trim().split('\n');assert.equal(historical.filter(p=>p.endsWith('/migration.sql')).length,35);
+ for(const path of historical)assert.equal(readFileSync(path,'utf8'),before(path),path);
+ for(const path of execFileSync('git',['ls-tree','-r','--name-only',base,'--','src/app/api'],{encoding:'utf8'}).trim().split('\n'))assert.equal(readFileSync(path,'utf8'),before(path),path);
+ const old=before('prisma/schema.prisma'),current=readFileSync('prisma/schema.prisma','utf8');
+ const blocks=text=>new Map([...text.matchAll(/^(model|enum) (\w+) \{[\s\S]*?^\}/gm)].map(m=>[m[2],m[0]]));
+ const baseline=blocks(old),updated=blocks(current),normalize=text=>text.replace(/^.*\b(?:Course|CourseVersion|CourseAsset|CoursePublication|CourseAudience|CourseAssignment|CourseEnrollment)\??(?:\[\])?.*$/gm,'').replace(/(invitationId String)\?/, '$1').replace(/(invitation AccessInvitation)\?/, '$1').replace(/^.*course(?:Enrollment|Publication)Id String\?.*$/gm,'').replace(/\s+/g,' ').trim();
+ for(const [name,block]of baseline)assert.equal(normalize(updated.get(name)||''),normalize(block),`existing schema ${name}`);
+ const newModels=[...updated.keys()].filter(n=>!baseline.has(n));assert.deepEqual(newModels.sort(),['Course','CourseVersion','CourseModule','CourseLesson','CourseAsset','CourseAssessment','CourseQuestion','CoursePublication','CourseAudience','CourseAssignment','CourseEnrollment','CourseProgress','CourseAttempt'].sort());
+ const sql=readFileSync('prisma/migrations/20261030090000_beta1_courses_lms/migration.sql','utf8');
+ for(const [,table]of sql.matchAll(/ALTER TABLE "?([a-z_]+)"?/g))assert.ok(table.startsWith('course_')||table==='courses'||table==='user_notifications',table);
+ assert.doesNotMatch(sql,/\b(?:UPDATE|DELETE FROM|INSERT INTO|TRUNCATE)\s+"?(?:users|sessions|mfa_factors|mfa_recovery_codes|patients|encounters|role_assignments)\b/i);
+ const clean=text=>text.replace(/^.*(?:PERMISSIONS\.COURSE_|COURSE_\w+:|ORGANIZATION_MUNICIPALITY_CREATE|\/\/ Narrow delegated inclusion|\/\/ LMS:).*$/gm,'').replace(/\s+/g,' ').trim();
+ for(const path of ['src/server/iam/permissions.ts','src/server/iam/system-role-catalog.ts'])assert.equal(clean(readFileSync(path,'utf8')),clean(before(path)),`existing IAM catalog ${path}`);
+ const invitation='src/server/access-invitations/access-invitation.service.ts';assert.equal(readFileSync(invitation,'utf8').replace('!notice.invitation || ',''),before(invitation));
+ const allowed=new Set(['src/server/iam/permissions.ts','src/server/iam/system-role-catalog.ts','src/server/notifications/notification.service.ts',invitation,'src/server/account/workspace-identity.service.ts','src/server/admin-beta/delegated-institutions.service.ts']);
+ const changed=execFileSync('git',['diff','--name-only',base,'--','src/server'],{encoding:'utf8'}).trim().split('\n').filter(Boolean);
+ for(const path of changed)assert.ok(path.startsWith('src/server/courses/')||allowed.has(path),path);
+ const syntheticCore=execFileSync('git',['ls-tree','-r','--name-only',base,'--',root+'lib/demo',root+'types'],{encoding:'utf8'}).trim().split('\n').filter(Boolean);
+ for(const path of syntheticCore)assert.equal(readFileSync(path,'utf8'),before(path),`synthetic core ${path}`);
+ // New shared components remain pure. A shared renderer never acquires an API/data provider.
+ for(const path of ['src/components/courses/CourseCatalog.tsx','src/components/courses/LessonBlockRenderer.tsx','src/lib/courses/types.ts','src/lib/courses/schema.ts'])assert.doesNotMatch(readFileSync(path,'utf8'),/\bfetch\s*\(|\/api\/|@\/server\/|@prisma|postgresql:\/\//i,path);
 })
 test('all showcase server leaves retain explicit commercial guard before mounting Premium and query rejection',()=>{
- for(const path of ['src/app/(showcase)/vitrine/layout.tsx','src/app/(showcase)/vitrine/page.tsx','src/app/(showcase)/vitrine/[section]/page.tsx','src/app/(showcase)/vitrine/pacientes/[id]/page.tsx']){
+ for(const path of ['src/app/(showcase)/vitrine/layout.tsx','src/app/(showcase)/vitrine/page.tsx','src/app/(showcase)/vitrine/[section]/page.tsx','src/app/(showcase)/vitrine/pacientes/[id]/page.tsx','src/app/(showcase)/vitrine/aprender/[id]/page.tsx']){
   const text=readFileSync(path,'utf8');assert.ok(text.includes('await requireCommercialPageSession()'),path);if(!path.endsWith('/layout.tsx'))assert.ok(text.includes('notFound()'),path)
  }
  assert.ok(readFileSync(root+'components/pacientes/DemoPatientView.tsx','utf8').includes('notFound()'))

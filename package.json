@@ -94,7 +94,13 @@
     "test:p0:full:ui": "tsx --test --test-concurrency=1 tests/p0-full/auth-ui.test.ts tests/p0-full/workspace-ui.test.ts",
     "test:p0:full": "bash scripts/test-p0-full.sh",
     "local:unified": "node scripts/local/dev.mjs --profile=p0-unified-rc",
-    "test:premium:unified": "node tests/premium-unified/run-ci.mjs"
+    "test:premium:unified": "node tests/premium-unified/run-ci.mjs",
+    "test:beta1:unit": "node tests/beta1/run-isolated.mjs unit && node --test tests/vitrine-premium/isolation.test.mjs && tsx --test tests/mission04-e/rsc-dynamic-metadata.test.ts",
+    "test:beta1:lms": "node tests/beta1/run-isolated.mjs integration",
+    "test:beta1:upgrade": "node tests/beta1/run-isolated.mjs upgrade",
+    "test:beta1:browser": "node tests/beta1/run-isolated.mjs browser",
+    "test:beta1": "npm run test:beta1:unit && npm run test:beta1:lms && npm run test:beta1:upgrade && npm run test:beta1:browser",
+    "test:beta1:build": "node tests/beta1/run-isolated.mjs build"
   },
   "dependencies": {
     "@capacitor/android": "^8.5.2",

@@ -70,7 +70,7 @@ function assertMetadataPrefetch(body: string, path: string) {
     const tree = root.t as { t: Record<string, unknown>; h: unknown };
     expect(Object.keys(tree).sort()).toEqual(["h","t"]);
     expect(tree.h).toEqual({ r: [null,null], p: true, v: null });
-    const segments = new Set(["", "__PAGE__", "(dashboard)", "(admin)", "(auth)", "(showcase)", ...path.split("/").filter(Boolean)]);
+    const segments = new Set(["", "__PAGE__", "(dashboard)", "(admin)", "(auth)", "(showcase)", "(courses)", ...path.split("/").filter(Boolean)]);
     const seen = new Set<string>();
     function node(value: Record<string, unknown>) {
         expect(Object.keys(value).every(k => ["s","c","h"].includes(k))).toBe(true);
@@ -121,7 +121,7 @@ test("direct HTML/RSC/API and URL changes never grant clinical/admin access; rev
     for (const identity of [
         {role:"COMMERCIAL",token:f.token,destination:"/comercial"},
         {role:"PAP_ADMIN",token:admin.token,destination:"/admin"},
-        {role:"PAP_MANAGER",token:manager.token,destination:"/admin"},
+        {role:"PAP_MANAGER",token:manager.token,destination:"/admin/manager"},
         {role:"MEMBERSHIP_WITHOUT_ROLE",token:unassigned.session.token,destination:"/login"},
         {role:"ANONYMOUS",token:undefined,destination:"/login"},
     ]) {

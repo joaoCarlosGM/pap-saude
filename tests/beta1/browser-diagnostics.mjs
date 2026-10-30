@@ -1,0 +1,6 @@
+import {summarizeBrowserError} from '../premium-unified/browser-diagnostics.mjs';
+const prefix='PAP_BETA1_DIAGNOSTIC ';
+const names=['shell.spec.ts','patients.spec.ts','admin.spec.ts','learning.spec.ts','learning-ui.spec.ts','rsc.spec.ts'];
+export function betaDiagnostic(error,file,line,status){const name=String(file||'').split(/[\\/]/).at(-1);const safe=summarizeBrowserError(error,line,status);return {...safe,file:names.includes(name)?name:'runner'};}
+export function betaDiagnosticLine(error,file,line,status){return prefix+JSON.stringify(betaDiagnostic(error,file,line,status));}
+export function publicBetaDiagnostics(output){const records=[];for(const line of String(output).split('\n')){const start=line.indexOf(prefix);if(start<0)continue;try{const item=JSON.parse(line.slice(start+prefix.length));const clean=betaDiagnostic({},item.file,item.testLine,item.status);if(['assertion','timeout','runner'].includes(item.kind))clean.kind=item.kind;if(['toBe','toEqual','toHaveCount','toBeVisible','toBeFocused','toBeDisabled','toHaveURL'].includes(item.matcher))clean.matcher=item.matcher;records.push(clean);}catch{}if(records.length===8)break;}return records.length?records:[{kind:'runner',detail:'Private evidence retained; no safe assertion diagnostic available'}];}

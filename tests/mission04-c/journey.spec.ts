@@ -358,9 +358,9 @@ test("Global appoints Manager and completed MFA identity returns to admin withou
   expect((await decide(admin.token, i.id, "PAP_MANAGER")).status).toBe(200);
   await cookie(context, recipient.token);
   await page.goto("/login");
-  await expect(page).toHaveURL(/\/admin(?:\/solicitacoes)?$/);
+  await expect(page).toHaveURL(/\/admin\/manager$/);
   await page.goto("/primeiros-passos");
-  await expect(page).toHaveURL(/\/admin(?:\/solicitacoes)?$/);
+  await expect(page).toHaveURL(/\/admin\/manager$/);
   await expect(
     page.getByRole("heading", { name: "Seu cuidado começa com segurança" }),
   ).toHaveCount(0);
@@ -425,15 +425,15 @@ test("newly approved Manager completes real QR/TOTP and new MFA login before pri
   await page
     .getByRole("button", { name: "Concluir e acessar minha área" })
     .click();
-  await expect(page).toHaveURL(/\/admin(?:\/solicitacoes)?$/);
+  await expect(page).toHaveURL(/\/admin\/manager$/);
   await page.reload();
-  await expect(page).toHaveURL(/\/admin(?:\/solicitacoes)?$/);
+  await expect(page).toHaveURL(/\/admin\/manager$/);
   const u = await db.user.findUniqueOrThrow({ where: { email: i.email } });
   expect(
     await db.mfaFactor.count({ where: { userId: u.id, status: "ACTIVE" } }),
   ).toBe(1);
   await page.goto("/primeiros-passos");
-  await expect(page).toHaveURL(/\/admin(?:\/solicitacoes)?$/);
+  await expect(page).toHaveURL(/\/admin\/manager$/);
 });
 
 test("pending, Admin, Manager and Commercial direct clinical HTML/RSC requests expose no clinical fixture or redirect loop", async ({
