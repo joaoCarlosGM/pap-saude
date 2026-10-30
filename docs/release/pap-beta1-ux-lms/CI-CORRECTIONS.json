@@ -200,7 +200,7 @@
       },
       {
         "path": "src/app/(courses)/aprender/[enrollmentId]/page.tsx",
-        "sha256": "269a427a9a19c13e78c4997c1b3c055533a8fbcb29c18e393263e5fab39caae6"
+        "sha256": "4d7ff1219a91741e850bc2e8cb5c89e3c04aaba6c57a7102209f0c98246b536b"
       },
       {
         "path": "src/app/(courses)/configuracoes/page.tsx",
@@ -268,7 +268,7 @@
       },
       {
         "path": "src/components/courses/LearningPlayer.tsx",
-        "sha256": "48079a1daa4d716ef199d5a81dce1edff5ebe651851e866ceb5a48dc21ee38bb"
+        "sha256": "ad742ae8ded5e07eb0d3e32553a7127ad75faec4d74b23efb0401948252eed89"
       },
       {
         "path": "src/components/courses/LessonBlockRenderer.tsx",
@@ -424,7 +424,7 @@
       },
       {
         "path": "tests/beta1/learning.spec.ts",
-        "sha256": "3e01345df3945c0ed2285fca998578dfa8b63829b25bc55bb828d7b7aca630ce"
+        "sha256": "546e96416be80c0ff394ce3222489737e7a5f9ffa77a0fccf9033a5d7ee6206a"
       },
       {
         "path": "tests/beta1/lms-fixtures.ts",
@@ -507,7 +507,7 @@
         "sha256": "685d7fcb4fd9ec083e6e399569ed625294e814ced32621fbe29deaa26e7ea377"
       }
     ],
-    "effectiveSourceFingerprint": "00958d69b03157ecd3cd6bfc757e4672ccf1ba850dad71d425968bda11079315"
+    "effectiveSourceFingerprint": "0e007edd576780a0ea50caf9925a73a3f55ec5459143885bdcd7a8b7a015419f"
   },
   "nextCI": "PENDING on correction SHA",
   "productionPublishDeploy": "SKIPPED; feature branch conditions unchanged",
@@ -608,5 +608,38 @@
     },
     "mfaIamDatabase": "UNCHANGED; no operator resources accessed",
     "nextCI": "PENDING on correction SHA"
+  },
+  "initialLearningRevisionRaceCorrection": {
+    "reference": "5fc6ce9d44eda29f6f9e2ecf204a3dfb0779ed20",
+    "failedCI": "https://github.com/joaoCarlosGM/pap-saude/actions/runs/41062434812",
+    "scope": "learning.spec.ts only, relevant player and resource boundary; no reanalysis of slices",
+    "verifiedRootCause": {
+      "initialVisitResponse": "held after its server transaction committed",
+      "completionWhileClientStillHadOlderRevision": 409,
+      "publicCode": "COURSE_REVISION_CONFLICT",
+      "actionsEnabledBeforeVisitAcknowledged": true,
+      "privateSanitizedEvidence": "initial-resume-race.json in owned disposable test artifacts"
+    },
+    "correction": "Initialize player busy; release actions only after initial GET/VISIT settles; ignore aborted initial responses; reject local overlapping handlers; key player by enrollment to reset initialization when resource changes. Server CAS, permissions and MFA unchanged.",
+    "regression": "Hold all initial VISIT acknowledgments, require completion controls disabled, release acknowledgment, then require HTTP200 and50% authoritative progress. Original full journey retains response-loss/F5/server-grade/foreign HTML-RSC-API/MFA assertions.",
+    "validation": {
+      "browser": {
+        "pass": 2,
+        "fail": 0,
+        "skipped": 0
+      },
+      "typeScript": "PASS",
+      "lint": "PASS",
+      "diffCheck": "PASS",
+      "privateBrowserLog": "/tmp/pap-beta1-tests-s8GEtZ/browser.log"
+    },
+    "affectedPaths": [
+      "src/components/courses/LearningPlayer.tsx",
+      "src/app/(courses)/aprender/[enrollmentId]/page.tsx",
+      "tests/beta1/learning.spec.ts"
+    ],
+    "notRepeated": "Unchanged approved suites, audits, migrations, dependency installation and Docker builds",
+    "operatorLabVpsAndProduction": "NOT ACCESSED OR ALTERED",
+    "nextCI": "PENDING on correction SHA; no GO before full green"
   }
 }
