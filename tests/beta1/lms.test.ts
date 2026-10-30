@@ -9,6 +9,9 @@ import {getEnrollment,myCourses,saveProgress,submitAttempt,courseBadge,markCours
 import {draftSchema} from '../../src/lib/courses/schema';
 before(async()=>{assert.equal(new URL(process.env.DATABASE_URL!).pathname,'/pap_beta1_test');assert.equal(new URL(process.env.DATABASE_URL!).hostname,'127.0.0.1');await bootstrapSystemIam();});after(()=>db.$disconnect());
 import {draft,scoped,graph} from './lms-fixtures';
+import {resolveLoginNavigation} from '../../src/server/auth/login-navigation.service';
+import {getEffectiveAccessProfile} from '../../src/server/iam/effective-access-profile.service';
+import {navigationFingerprint} from '../first-access/login-fixtures';
 const ctx=(path:string)=>({params:Promise.resolve({segments:path.split('/')})});
 test('dedicated course API denies primary-only MFA, Commercial and professional authors; CSRF and raw HTML are rejected',async()=>{
  const m=await actor('PAP_MANAGER'),p=await professional(),c=await actor('COMMERCIAL'),primary=await createSession({userId:m.user.id});
@@ -98,4 +101,37 @@ test('delegated municipal inclusion requires its own global grant and MFA, stays
  const [a,b]=await Promise.all([createDelegatedMunicipality(manager.token,body),createDelegatedMunicipality(manager.token,body)]);assert.equal(a.id,b.id);const org=await db.organization.findUniqueOrThrow({where:{id:a.id}});assert.equal(org.status,'PENDING_VERIFICATION');assert.equal(org.isActive,false);assert.equal(await db.auditEvent.count({where:{resourceId:org.id,action:'DELEGATED_MUNICIPALITY_CREATED'}}),1);assert.equal(await db.roleAssignment.count({where:{organizationId:org.id}}),0);
  for(const permission of ['organization.manage','organization.activate','organization.delete','patient.read'] as const)assert.equal((await authorize({userId:manager.user.id,permission,organizationId:org.id})).allowed,false);
  await assert.rejects(createDelegatedMunicipality(manager.token,{...body,name:'Changed retry'}));
+});
+
+test('course-only unit manager reaches its existing workspace without clinical or administrative grants',async()=>{
+ const g=await graph(),role=await db.role.findUniqueOrThrow({where:{key:'HEALTH_UNIT_ADMIN'}});
+ const grants=await db.rolePermission.findMany({where:{roleId:role.id}});
+ const assign=await db.permission.findUniqueOrThrow({where:{key:'course.assign'}});
+ try{
+  await db.rolePermission.deleteMany({where:{roleId:role.id,permissionId:{not:assign.id}}});
+  const profile=await getEffectiveAccessProfile(g.unit.user.id);
+  assert.deepEqual(profile?.permissions,['course.assign']);assert.equal(profile?.canAccessAdmin,false);
+  const before=await navigationFingerprint(g.unit.user.id);
+  assert.deepEqual(await resolveLoginNavigation(g.unit.token),{view:'REDIRECT',destination:'/cursos'});
+  assert.equal(await navigationFingerprint(g.unit.user.id),before);
+  const primary=await createSession({userId:g.unit.user.id});
+  assert.deepEqual(await resolveLoginNavigation(primary.token),{view:'REDIRECT',destination:'/primeiros-passos'});
+  const body={publicationId:g.pub.publicationId,organizationId:g.learner.unit.id,all:true,obligation:'RECOMMENDED',deadlineAt:null};
+  assert.equal((await http.POST(request('/api/courses/unit/assign',primary.token,body),ctx('unit/assign'))).status,403);
+  assert.equal((await assignCourse(g.unit.token,body)).assigned,1);
+  await assert.rejects(availableCourses(g.unit.token,g.learner.unit.id));
+  const clinical=await import('../../src/app/api/clinical/[[...path]]/route');
+  assert.equal((await clinical.GET(request('/api/clinical/patients',g.unit.token,undefined,'GET',{'x-organization-id':g.learner.unit.id}),{params:Promise.resolve({path:['patients']})})).status,403);
+  const {assignSystemRole}=await import('../../src/server/iam/role-assignment.service');
+  await assignSystemRole({userId:g.unit.user.id,roleKey:'PROFESSIONAL',organizationId:g.learner.unit.id});
+  assert.deepEqual(await resolveLoginNavigation(g.unit.token),{view:'REDIRECT',destination:'/dashboard'});
+  assert.equal((await clinical.GET(request('/api/clinical/patients',g.unit.token,undefined,'GET',{'x-organization-id':g.learner.unit.id}),{params:Promise.resolve({path:['patients']})})).status,200);
+  const foreign=await professional();
+  assert.equal((await clinical.GET(request('/api/clinical/patients',g.unit.token,undefined,'GET',{'x-organization-id':foreign.unit.id}),{params:Promise.resolve({path:['patients']})})).status,403);
+  await db.roleAssignment.deleteMany({where:{userId:g.unit.user.id,role:{key:'PROFESSIONAL'}}});
+  assert.deepEqual(await resolveLoginNavigation(g.unit.token),{view:'REDIRECT',destination:'/cursos'});
+  await db.rolePermission.deleteMany({where:{roleId:role.id}});
+  assert.deepEqual(await resolveLoginNavigation(g.unit.token),{view:'RESTRICTED'});
+  await assert.rejects(assignCourse(g.unit.token,body));
+ }finally{await db.rolePermission.createMany({data:grants,skipDuplicates:true});}
 });

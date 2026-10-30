@@ -65,12 +65,14 @@ export async function resolveLoginNavigation(
   if (!state.verified) return { view: "REDIRECT", destination: "/primeiros-passos" };
   if (accessDestination(profile) === "/comercial")
     return { view: "REDIRECT", destination: state.progress?.status === "COMPLETED" ? "/comercial" : "/primeiros-passos" };
+  const destination = accessDestination(profile);
   // Effective permissions already intersect the canonical role catalogue,
   // persisted grants, active memberships and available organizations.
   if (
     !profile ||
     (!profile.canAccessAdmin &&
-      !profile.permissions.includes(PERMISSIONS.PATIENT_READ))
+      !profile.permissions.includes(PERMISSIONS.PATIENT_READ) &&
+      destination !== "/cursos")
   )
     return await ownAccessStatus(session.user.id)
       ? { view: "REDIRECT", destination: state.progress?.status === "COMPLETED" ? "/aguardando-autorizacao" : "/primeiros-passos" }
@@ -82,7 +84,6 @@ export async function resolveLoginNavigation(
   )
     return { view: "REDIRECT", destination: "/primeiros-passos" };
 
-  const destination = accessDestination(profile);
   if (destination === "/login") return { view: "RESTRICTED" };
   return {
     view: "REDIRECT",

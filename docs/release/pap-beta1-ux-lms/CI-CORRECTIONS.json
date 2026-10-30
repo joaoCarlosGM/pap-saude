@@ -30,8 +30,8 @@
   },
   "effectiveInventory": {
     "initialManifest": "SOURCE-MANIFEST.json (historical initial receipt)",
-    "totalDistinctPaths": 109,
-    "sourcePaths": 94,
+    "totalDistinctPaths": 110,
+    "sourcePaths": 95,
     "documentationPaths": 15,
     "allPaths": [
       ".github/workflows/ci.yml",
@@ -114,6 +114,7 @@
       "src/server/iam/permissions.ts",
       "src/server/iam/system-role-catalog.ts",
       "src/server/notifications/notification.service.ts",
+      "tests/beta1/admin.spec.ts",
       "tests/beta1/browser-diagnostics.mjs",
       "tests/beta1/browser-diagnostics.test.mjs",
       "tests/beta1/copy-guard.test.mjs",
@@ -359,7 +360,7 @@
       },
       {
         "path": "src/server/auth/login-navigation.service.ts",
-        "sha256": "578222c6d759cacecdd55f481760402eb6f7621892ebdccd3a123f4e63524d6b"
+        "sha256": "d420865f4afdf2d6a9eebb982c7eda43c6c63ce5483e98576b2b6d2260c79a7d"
       },
       {
         "path": "src/server/courses/assignment.service.ts",
@@ -406,6 +407,10 @@
         "sha256": "bc5a4fb10c4c2635a1ad081532eb2cc4b3b0e602adceba456fd4c1ac360e9e5a"
       },
       {
+        "path": "tests/beta1/admin.spec.ts",
+        "sha256": "e5fc5fa106c390ca91afe59e4570a9ab5d96584ab7b686912e7cf3d1b8286723"
+      },
+      {
         "path": "tests/beta1/browser-diagnostics.mjs",
         "sha256": "65777316ec369220003c22976dcb79f473d21f2d19ed133416d82774d1c68082"
       },
@@ -439,7 +444,7 @@
       },
       {
         "path": "tests/beta1/lms.test.ts",
-        "sha256": "f48951272300fd84d0f3f006e78300a15d865b3130f7f366c1b41783909d2f4a"
+        "sha256": "9387d4c2d90682b513ae92817b610c4a1a0de0a557c9d499604a16cf5babd088"
       },
       {
         "path": "tests/beta1/playwright.config.ts",
@@ -519,10 +524,10 @@
       },
       {
         "path": "tests/vitrine-premium/isolation.test.mjs",
-        "sha256": "685d7fcb4fd9ec083e6e399569ed625294e814ced32621fbe29deaa26e7ea377"
+        "sha256": "afacd3dc2675c56097e47403c60c86719406a44d3363732eba4c893857850d1f"
       }
     ],
-    "effectiveSourceFingerprint": "7c6a1ce40684be1cc6786735d8084b0d20b2c33962bf98f6ad5ba4ee9c7e4b61",
+    "effectiveSourceFingerprint": "225d59ad3610f181b88ebe0929bc736cf490d2bbfacd865d0a84bdf1a5902abd",
     "fingerprintEncoding": "SHA256 of UTF-8 JSON.stringify(sourceHashes), compact separators, ensure_ascii=false"
   },
   "nextCI": "PENDING on correction SHA",
@@ -730,5 +735,103 @@
     ],
     "operatorResources": "NOT ACCESSED OR ALTERED",
     "nextCI": "PENDING on correction SHA; no GO before integral success"
+  },
+  "preventiveCIStabilization": {
+    "reference": "14653de7f104748bd53fe4af8258ff9f4f147e18",
+    "failedCI": "https://github.com/joaoCarlosGM/pap-saude/actions/runs/41091746185",
+    "baseline": "c7b1d755",
+    "confirmedFailures": [
+      {
+        "contract": "tests/vitrine-premium/isolation.test.mjs",
+        "cause": "Auth directory byte freeze rejects approved login destination change; second src/server allowlist also excludes that exact file. Local preflight reproduced 4 PASS/1 FAIL."
+      },
+      {
+        "contract": "verified HEALTH_UNIT_ADMIN with only course.assign",
+        "cause": "Identity has no admin-entry or patient.read grant, so old login gate returned RESTRICTED despite legitimate scoped course assignment. Real MFA fixture reproduced expected /cursos versus actual RESTRICTED."
+      }
+    ],
+    "minimalCorrection": "Keep established role destination selection. After unchanged verified-session guard, recognize only existing /cursos home from effective scoped HEALTH_UNIT_ADMIN/course.assign; do not require patient.read for course workspace. No permission grants or clinical authorization changes.",
+    "frozenContract": "Both invariant checks allow the single exact login-navigation path. Closed literal transformation admits only four reviewed destination edits relative to c7b1d755; auth inventory and every other auth byte stay frozen. Challenge priority/loading, session validation with updateLastSeen:false, MFA, onboarding completeness, permissions and Commercial/pending paths remain byte-identical. Nine negative mutations must be rejected.",
+    "regressions": {
+      "unitGate": {
+        "command": "npm run test:beta1:unit",
+        "parts": [
+          21,
+          6,
+          2
+        ],
+        "pass": 29,
+        "fail": 0,
+        "skipped": 0,
+        "privateLog": "/tmp/pap-beta1-mission-20261030/preventive-unit-gate.log"
+      },
+      "lmsDirected": {
+        "command": "PAP_BETA1_NODE_GREP=\"course-only unit manager|learner sequence|server counts assessment|unit assignment|dedicated course API|concurrent role revocation\" npm run test:beta1:lms",
+        "pass": 6,
+        "fail": 0,
+        "privateLog": "/tmp/pap-beta1-tests-QrSpCb/integration.log",
+        "followup": "After extending only the minimum-permission test with legitimate clinical role and foreign-unit denials, reran that test: 1 PASS, no skips. Other five test bodies and their dependencies remained identical.",
+        "followupLog": "/tmp/pap-beta1-tests-YjXH0K/integration.log"
+      },
+      "loginNavigation": {
+        "pass": 10,
+        "fail": 0,
+        "privateLog": "/tmp/pap-beta1-tests-YiFnEt/integration.log"
+      },
+      "managerInvitation": {
+        "pass": 1,
+        "fail": 0,
+        "privateLog": "/tmp/pap-m04-c-mail-auADwV/invitations.log",
+        "proof": "New Manager destination with original password, TOTP factor, session and completed onboarding fingerprint preserved."
+      },
+      "browser": {
+        "command": "PAP_BETA1_GREP=\"verified login respects delegated\" npm run test:beta1:browser",
+        "pass": 1,
+        "fail": 0,
+        "privateLog": "/tmp/pap-beta1-tests-fd2A73/browser.log",
+        "cases": [
+          "Admin -> /admin",
+          "Manager -> /admin/manager",
+          "Professional -> /dashboard",
+          "course.assign-only scoped unit manager -> /cursos; own assignment200, foreign403; clinical API403, HTML/RSC redirect",
+          "explicit additional PROFESSIONAL role -> own clinical200, foreign403",
+          "primary session -> setup and assignment403",
+          "revoked course grant -> restricted login and workspace redirect"
+        ]
+      },
+      "typeScript": "PASS",
+      "scopedLint": "PASS",
+      "diffCheck": "PASS",
+      "build": {
+        "command": "npm run test:beta1:build",
+        "status": "PASS",
+        "privateLog": "/tmp/pap-beta1-tests-he0zyd/production-build.log"
+      },
+      "notRepeated": "F03/F04, Docker builds and scanners locally; full remote pipeline remains mandatory. Legacy port5432 browser tests delegated to CI; the one C Node consumer ran in a private network namespace using an existing image without builds/installs."
+    },
+    "preventiveScopeReview": {
+      "B": "Exact nine-key Manager assertion reviewed; no new catalog or IAM changes. Existing escalation/clinical denials preserved; current minimum-role browser also denies implicit clinical access.",
+      "C": "Manager login and existing completed identity tested; pending/revoked/grantless paths retain original denial and waiting checks.",
+      "Vitrine": "Runtime graph/no API and route guards checked by invariant suite; shared Sidebar retains !demo notification gate. No synthetic provider moved to operations.",
+      "LMS": "Initial busy/abort protection, enrollment key and server CAS unchanged. Five targeted domain tests cover sequence, retries, assessment, replay and revocation; prior learning full-browser evidence retained without claiming new execution.",
+      "historical": "All 35 baseline migrations, protected clinical/KPI/MEOWS modules, existing APIs and protected IAM services remain byte-identical; approved additive LMS migration only."
+    },
+    "leastPrivilegeNote": "course.assign does not imply course.read: ungranted catalogue reading still denied; no silent read/admin/clinical grant added.",
+    "sourcePaths": [
+      "src/server/auth/login-navigation.service.ts",
+      "tests/vitrine-premium/isolation.test.mjs",
+      "tests/beta1/lms.test.ts",
+      "tests/beta1/admin.spec.ts"
+    ],
+    "stagingPaths": [
+      "src/server/auth/login-navigation.service.ts",
+      "tests/vitrine-premium/isolation.test.mjs",
+      "tests/beta1/lms.test.ts",
+      "tests/beta1/admin.spec.ts",
+      "docs/release/pap-beta1-ux-lms/CI-CORRECTIONS.json"
+    ],
+    "operatorResources": "NOT ACCESSED OR ALTERED: host5432, web3600/PG15436, seven existing accounts/passwords/MFA/sessions, .local and volumes; no VPS, production, PR, merge or deploy.",
+    "nextCI": "PENDING on selective correction commit; no release GO until integral success on exact SHA",
+    "homologationRisks": "Actual operator backup-copy migration/restore and continuity of seven real local accounts remain operator-controlled validation; assistential MEOWS stays disabled. No production approval."
   }
 }
