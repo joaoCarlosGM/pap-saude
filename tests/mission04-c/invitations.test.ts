@@ -231,7 +231,7 @@ test("Admin can appoint Manager; an existing MFA account, password, valid sessio
   assert.equal((await decide(admin.token, i.id, "PAP_MANAGER")).status, 200);
   assert.deepEqual(await resolveLoginNavigation(recipient.token), {
     view: "REDIRECT",
-    destination: "/admin",
+    destination: "/admin/manager",
   });
   const after = JSON.parse(await navigationFingerprint(recipient.user.id));
   const previous = JSON.parse(before);

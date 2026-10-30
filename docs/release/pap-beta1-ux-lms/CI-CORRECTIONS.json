@@ -30,8 +30,8 @@
   },
   "effectiveInventory": {
     "initialManifest": "SOURCE-MANIFEST.json (historical initial receipt)",
-    "totalDistinctPaths": 107,
-    "sourcePaths": 92,
+    "totalDistinctPaths": 109,
+    "sourcePaths": 94,
     "documentationPaths": 15,
     "allPaths": [
       ".github/workflows/ci.yml",
@@ -102,6 +102,7 @@
       "src/server/access-invitations/access-invitation.service.ts",
       "src/server/account/workspace-identity.service.ts",
       "src/server/admin-beta/delegated-institutions.service.ts",
+      "src/server/auth/login-navigation.service.ts",
       "src/server/courses/assignment.service.ts",
       "src/server/courses/authoring.service.ts",
       "src/server/courses/context.ts",
@@ -132,6 +133,7 @@
       "tests/beta1/upgrade-continuity.ts",
       "tests/first-access/browser.spec.ts",
       "tests/mission04-b/governance.test.ts",
+      "tests/mission04-c/invitations.test.ts",
       "tests/mission04-c/journey.spec.ts",
       "tests/mission04-e/boundaries.spec.ts",
       "tests/mission04-e/journey.spec.ts",
@@ -356,6 +358,10 @@
         "sha256": "aa9e1da6bd8ff91e54dcaf5e70716383fc266cced64398797df1e3bf26f28d5d"
       },
       {
+        "path": "src/server/auth/login-navigation.service.ts",
+        "sha256": "578222c6d759cacecdd55f481760402eb6f7621892ebdccd3a123f4e63524d6b"
+      },
+      {
         "path": "src/server/courses/assignment.service.ts",
         "sha256": "25087c0fe10ea3468d62cecd7f5fb5446e9598c00ddbca25a7e7da1ba185837a"
       },
@@ -476,6 +482,10 @@
         "sha256": "61abc7235eb9ed184e5e5067a599bb21a05df214e82378da6a1c77f85187d61d"
       },
       {
+        "path": "tests/mission04-c/invitations.test.ts",
+        "sha256": "ee8fe51a6d91cb4c3567d653c5bf910d191268123aff1079cd5b586932d8db99"
+      },
+      {
         "path": "tests/mission04-c/journey.spec.ts",
         "sha256": "19c765d974ee86605b3bb543eb5e36f13ea7e726eaa6eda9027417448d5d748c"
       },
@@ -512,7 +522,7 @@
         "sha256": "685d7fcb4fd9ec083e6e399569ed625294e814ced32621fbe29deaa26e7ea377"
       }
     ],
-    "effectiveSourceFingerprint": "ea8fa1692bae550273d6de89cb8eb2a4ec16bd86f55ebb80600008e2d94cda67",
+    "effectiveSourceFingerprint": "7c6a1ce40684be1cc6786735d8084b0d20b2c33962bf98f6ad5ba4ee9c7e4b61",
     "fingerprintEncoding": "SHA256 of UTF-8 JSON.stringify(sourceHashes), compact separators, ensure_ascii=false"
   },
   "nextCI": "PENDING on correction SHA",
@@ -681,6 +691,44 @@
     "sourceSha256": "61abc7235eb9ed184e5e5067a599bb21a05df214e82378da6a1c77f85187d61d",
     "operatorResources": "NOT ACCESSED OR ALTERED; owned disposable test resources only",
     "legacyUpgrade": "NOT REPEATED locally: exact original harness targets fixed CI disposable context; remote full gate mandatory",
+    "nextCI": "PENDING on correction SHA; no GO before integral success"
+  },
+  "delegatedManagerLoginDestinationCorrection": {
+    "reference": "767bf74cb97e3cd4584d2cd7aad0bf72ddbd1302",
+    "failedCI": "https://github.com/joaoCarlosGM/pap-saude/actions/runs/41069831964",
+    "failedGate": "Mission 04 global invitations, authorization queue and notifications",
+    "remoteFirstError": "Global appoints Manager and completed MFA identity returns to admin without restarting onboarding or rotating factor/session; journey.spec.ts:361:22 toHaveURL",
+    "verifiedCause": "resolveLoginNavigation hardcoded /admin for every administrator while the existing role destination and browser contract require /admin/manager. Updated Node expectation reproduces actual /admin before app fix.",
+    "correction": "After unchanged live-session/MFA/completed-onboarding/effective-permission checks, reuse accessDestination; restricted fallback prevents redirect loop. No authorization grants, factor/session rotation, cookie renewal or institution changes.",
+    "validation": {
+      "reproduction": {
+        "pass": 0,
+        "fail": 1,
+        "privateLog": "/tmp/pap-m04-c-mail-2FCuE7/invitations.log"
+      },
+      "sliceCNode": {
+        "pass": 40,
+        "fail": 0,
+        "skipped": 0,
+        "privateLog": "/tmp/pap-m04-c-mail-HZy2uw/invitations.log"
+      },
+      "loginNavigationRegression": {
+        "pass": 10,
+        "fail": 0,
+        "skipped": 0,
+        "privateLog": "/tmp/pap-beta1-tests-P31y1u/integration.log"
+      },
+      "typeScript": "PASS",
+      "scopedLint": "PASS",
+      "diffCheck": "PASS",
+      "sliceCBrowser": "NOT RUN locally; first remote failure supplied by operator. Exact browser journey must pass in new integral CI."
+    },
+    "disposableSetup": "Reused existing Node22 image without builds/installs; private PostgreSQL network namespace and 0700 local mail sink; no host port5432 or existing resources used. Fresh schema fixture from unchanged migrations only; no new migration validation claimed.",
+    "affectedPaths": [
+      "src/server/auth/login-navigation.service.ts",
+      "tests/mission04-c/invitations.test.ts"
+    ],
+    "operatorResources": "NOT ACCESSED OR ALTERED",
     "nextCI": "PENDING on correction SHA; no GO before integral success"
   }
 }

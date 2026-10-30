@@ -20,7 +20,7 @@ type LoginNavigation =
   | { view: "LOGIN" | "MFA" | "RESTRICTED" }
   | {
       view: "REDIRECT";
-      destination: "/admin" | "/dashboard" | "/primeiros-passos" | "/comercial" | "/aguardando-autorizacao";
+      destination: "/admin" | "/admin/manager" | "/dashboard" | "/cursos" | "/primeiros-passos" | "/comercial" | "/aguardando-autorizacao";
     };
 
 // Read-only navigation, never an access grant. IAM/MFA guards still protect
@@ -82,8 +82,10 @@ export async function resolveLoginNavigation(
   )
     return { view: "REDIRECT", destination: "/primeiros-passos" };
 
+  const destination = accessDestination(profile);
+  if (destination === "/login") return { view: "RESTRICTED" };
   return {
     view: "REDIRECT",
-    destination: profile.canAccessAdmin ? "/admin" : "/dashboard",
+    destination,
   };
 }
