@@ -87,6 +87,21 @@ backup/restauração das linhas de segurança, replay/drift/ACL, persistência a
 modo desligado. Usa recursos próprios com ownership, nunca o laboratório ou banco anterior.
 Se o CI revelar falha, interromper publicação e corrigir o primeiro gate sem reduzir as assertions.
 
+## CI inicial e correção dirigida
+
+CI `41142543592`, SHA `b7b30303c593fd65f59cc38dd75f11dffe3e32cc`:
+instalação, auditorias, tipos, testes/TypeScript/lint, builds das três imagens e Nginx **PASS**;
+integração **FAIL**; scanners e publicação **NOT RUN**. Não houve deploy.
+Reprodução isolada do stdin Docker: JSON14 bytes chega como0 sem `-i` e14 com `-i`.
+O harness omitia esse flag tanto no primeiro provisionamento como na recusa da repetição;
+correção mantém entrada privada via stdin e todas as assertions. Adicionado diagnóstico
+sanitizado da subetapa/códigos estáticos, nunca stderr bruto, URL ou credenciais.
+Também reproduzida falha de leitura sob umask077: arquivos de secret montados por UIDs
+diferentes e scripts públicos precisam chmod explícito. Preparação agora impõe0444 aos
+secret mounts e0644 aos arquivos públicos, mantendo diretórios0700/credencial de proxy0600.
+Teste unitário força umask077 e confere as permissões. Nenhuma mudança em IAM/MFA/migrations.
+O próximo CI deve validar o conjunto; não atribuir PASS aos gates anteriormente pendentes.
+
 ## Operação, limites e preservação
 
 Procedimento completo de ativação, preparação de segredos, provisionamento, smoke e rollback:

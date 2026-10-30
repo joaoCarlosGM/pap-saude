@@ -42,6 +42,7 @@ Não operar com Docker context/DOCKER_HOST remoto inadvertido; conferir contexto
 No terminal **do operador na VPS**, depois de autorização de ativação:
 
 ```bash
+# Executar em shell root do operador: sudo -i (não pelo agente).
 set -euo pipefail
 BETA_SHA=COLE_O_SHA_COMPLETO_APROVADO
 # Registrar os digests obtidos no CI/GHCR; preferir image@sha256 no .env após conferir labels.

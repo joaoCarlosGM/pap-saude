@@ -14,9 +14,9 @@ export function prepareBetaDirectory(directory,sha){
  const secrets={owner_password:owner,runtime_password:runtime,migrator_password:migrator,runtime_url:`postgresql://pap_beta_runtime:${runtime}@beta-db:5432/pap_admin_beta?schema=public`,migrator_url:`postgresql://pap_beta_migrator:${migrator}@beta-db:5432/pap_admin_beta?schema=public`,mfa_key:randomBytes(32).toString('base64url'),proxy_token:proxy,resend_api_key:'',resend_webhook_secret:''};
  // Files are Docker secrets, mounted separately. The host parent is private0700;
  // readable mounts support PostgreSQL70 / Node1000 / web1001 without changing users.
- for(const [name,value]of Object.entries(secrets))writeFileSync(join(target,'secrets',name),value+'\n',{flag:'wx',mode:0o444});
- for(const name of ['compose.yml','entrypoint.mjs','init-db.sh','migration-manifest.json','runtime-acl.psql'])copyFileSync(join(source,name),join(target,name));
- for(const name of ['nginx.conf','routes.map.conf'])copyFileSync(join(source,name),join(target,'nginx',name));
+ for(const [name,value]of Object.entries(secrets)){const file=join(target,'secrets',name);writeFileSync(file,value+'\n',{flag:'wx',mode:0o444});chmodSync(file,0o444);}
+ for(const name of ['compose.yml','entrypoint.mjs','init-db.sh','migration-manifest.json','runtime-acl.psql']){copyFileSync(join(source,name),join(target,name));chmodSync(join(target,name),0o644);}
+ for(const name of ['nginx.conf','routes.map.conf']){copyFileSync(join(source,name),join(target,'nginx',name));chmodSync(join(target,'nginx',name),0o644);}
  writeFileSync(join(target,'nginx/proxy-secret.conf'),`proxy_set_header X-PAP-Beta-Proxy-Token "${proxy}";\n`,{flag:'wx',mode:0o600});
  writeFileSync(join(target,'.env'),`BETA_SHA=${sha}\nBETA_WEB_IMAGE=ghcr.io/joaocarlosgm/pap-saude-admin-beta:sha-${sha}\nBETA_MIGRATOR_IMAGE=ghcr.io/joaocarlosgm/pap-saude-admin-beta-migrator:sha-${sha}\nBETA_TOOLS_IMAGE=ghcr.io/joaocarlosgm/pap-saude-admin-beta-tools:sha-${sha}\nPAP_EMAIL_PROVIDER=disabled\nPAP_EMAIL_EXTERNAL_ENABLED=0\nPAP_BETA_EMAIL_APPROVED=0\nPAP_EMAIL_FROM=\nPAP_EMAIL_ALLOWED_SENDERS=\n`,{flag:'wx',mode:0o600});
  return {directory:target,sha};

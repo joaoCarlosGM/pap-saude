@@ -6,7 +6,7 @@ import {betaConfiguration} from '../../deploy/admin-beta/entrypoint.mjs';
 import {nginxRouteMap} from '../../scripts/admin-beta/render-nginx';
 test('preparation generates independent secrets once; existing directories and symlinks are never overwritten',()=>{
  const parent=mkdtempSync('/tmp/pap-admin-beta-unit-'),target=join(parent,'pap-saude-beta');
- try{prepareBetaDirectory(target,'a'.repeat(40));const key=readFileSync(join(target,'secrets/mfa_key'),'utf8');assert.equal(Buffer.from(key.trim(),'base64url').length,32);assert.equal(lstatSync(target).mode&0o777,0o700);assert.equal(lstatSync(join(target,'secrets')).mode&0o777,0o700);
+ try{const previousUmask=process.umask(0o077);try{prepareBetaDirectory(target,'a'.repeat(40));}finally{process.umask(previousUmask);}assert.equal(lstatSync(join(target,'secrets/owner_password')).mode&0o777,0o444);assert.equal(lstatSync(join(target,'init-db.sh')).mode&0o777,0o644);assert.equal(lstatSync(join(target,'entrypoint.mjs')).mode&0o777,0o644);const key=readFileSync(join(target,'secrets/mfa_key'),'utf8');assert.equal(Buffer.from(key.trim(),'base64url').length,32);assert.equal(lstatSync(target).mode&0o777,0o700);assert.equal(lstatSync(join(target,'secrets')).mode&0o777,0o700);
  assert.throws(()=>prepareBetaDirectory(target,'b'.repeat(40)));assert.equal(readFileSync(join(target,'secrets/mfa_key'),'utf8'),key);
  assert.notEqual(readFileSync(join(target,'secrets/runtime_password'),'utf8'),readFileSync(join(target,'secrets/migrator_password'),'utf8'));
  const outside=join(parent,'outside');writeFileSync(outside,'preserved');const link=join(parent,'link');symlinkSync(parent,link);assert.throws(()=>prepareBetaDirectory(join(link,'pap-saude-beta'),'a'.repeat(40)));assert.equal(readFileSync(outside,'utf8'),'preserved');
