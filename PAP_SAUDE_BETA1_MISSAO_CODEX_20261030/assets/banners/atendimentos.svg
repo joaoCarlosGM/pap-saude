@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="220" viewBox="0 0 960 220" role="img" aria-label="Arte geométrica decorativa Atendimentos">
+<defs><linearGradient id="g" x1="0" x2="1"><stop offset="0" stop-color="#FFF0F7"/><stop offset="1" stop-color="#F6CBE0"/></linearGradient><linearGradient id="shade" x1="0" x2="1"><stop offset="0" stop-color="#C41469" stop-opacity="0"/><stop offset="1" stop-color="#C41469" stop-opacity=".16"/></linearGradient></defs>
+<rect width="960" height="220" rx="20" fill="url(#g)"/><circle cx="825" cy="47" r="141" fill="white" opacity=".28"/><circle cx="450" cy="195" r="95" fill="white" opacity=".22"/>
+<path d="M350 140C460 90 520 178 610 110T785 122" fill="none" stroke="#C41469" opacity=".17" stroke-width="48" stroke-linecap="round"/>
+<path d="M385 179C520 85 660 210 954 96" fill="none" stroke="white" stroke-width="2" opacity=".56"/>
+<g transform="translate(95,-6)" stroke="#C41469" stroke-width="4.5" fill="url(#shade)" stroke-linejoin="round" stroke-linecap="round" opacity=".67"><rect x="614" y="53" width="106" height="106" rx="14"/><path d="M614 81h106M640 45v17M693 45v17M638 103h12M662 103h12M686 103h12M638 125h12M662 125h12"/></g>
+<g fill="#C41469" opacity=".35"><circle cx="845" cy="167" r="6"/><circle cx="788" cy="48" r="4"/><circle cx="916" cy="64" r="3"/></g>
+</svg>

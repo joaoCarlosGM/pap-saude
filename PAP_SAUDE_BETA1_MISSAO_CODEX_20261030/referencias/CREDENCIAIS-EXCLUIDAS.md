@@ -1,0 +1,1 @@
+A captura de terminal contendo os sete perfis, e-mails e respectivas senhas foi EXCLUÍDA intencionalmente. Use apenas os nomes de perfis sanitizados no docs/02-ROLES-FLUXOS.md. Preserve as contas existentes do WSL sem ler ou registrar suas senhas.
