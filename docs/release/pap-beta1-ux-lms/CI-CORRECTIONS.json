@@ -231,7 +231,7 @@
       },
       {
         "path": "src/app/api/admin/manager/municipalities/route.ts",
-        "sha256": "71d4719ad2511fe7bbdf50b314edaa4636f5bc44c7038e7c973f63d03ecd2dca"
+        "sha256": "bf47222872b1cf561bbbab3c2c02606d30b1ef00eb6b60843dd77ef090e5b7d2"
       },
       {
         "path": "src/app/api/courses/[...segments]/route.ts",
@@ -502,7 +502,7 @@
         "sha256": "685d7fcb4fd9ec083e6e399569ed625294e814ced32621fbe29deaa26e7ea377"
       }
     ],
-    "effectiveSourceFingerprint": "c54ae32821099a66edcb681ab0217926041d49bf28bba1431520932ece3c1253"
+    "effectiveSourceFingerprint": "1c4b269f1bcfd3de9fb6b87c299eb895f182155090d0f14956c1a08290f95ba1"
   },
   "nextCI": "PENDING on correction SHA",
   "productionPublishDeploy": "SKIPPED; feature branch conditions unchanged",
@@ -526,5 +526,29 @@
     "workflow": "UNCHANGED; original SQL guard and all gates remain enabled",
     "operatorLab": "NOT ACCESSED OR ALTERED",
     "nextCI": "PENDING on correction SHA"
+  },
+  "adminMfaInventoryCorrection": {
+    "failedCI": "https://github.com/joaoCarlosGM/pap-saude/actions/runs/41055201940",
+    "firstFailedGate": "PAP Admin Beta 1 institutional and adversarial journey",
+    "reproducedCause": "New municipality route exported aliases; existing AST inventory requires explicit exported functions with awaited shared MFA gate. The aliased handler already checked MFA but was not inventoried.",
+    "correction": "Explicit GET/POST each await requireAdminSession, pass the verified identity to the private handler, preserve error/audit behavior, CSRF and transaction checks. The inventory itself is unchanged.",
+    "tests": {
+      "adminMfaInventory": {
+        "pass": 2,
+        "fail": 0,
+        "skipped": 0
+      },
+      "municipalityHTTPAndTransactionSecurity": {
+        "pass": 1,
+        "fail": 0,
+        "skipped": 0
+      },
+      "typeScript": "PASS",
+      "lint": "PASS",
+      "diffCheck": "PASS"
+    },
+    "applicationPath": "src/app/api/admin/manager/municipalities/route.ts",
+    "nextCI": "PENDING on correction SHA",
+    "operatorLab": "NOT ACCESSED OR ALTERED"
   }
 }
