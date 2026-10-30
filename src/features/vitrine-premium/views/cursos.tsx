@@ -1,23 +1,6 @@
-import CourseList from "@/features/vitrine-premium/components/cursos/CourseList"
-
-import { mockCursos } from "@/features/vitrine-premium/lib/mock-cursos"
-
-export default function CursosPage() {
-  return (
-    <div className="mx-auto w-full max-w-[1600px]">
-      <header className="mb-6">
-        <h1 className="text-xl font-semibold text-slate-900 sm:text-2xl">
-          Cursos
-        </h1>
-
-        <p className="mt-1 text-sm text-slate-500">
-          Capacitação e educação continuada
-        </p>
-      </header>
-
-      <CourseList
-        courses={mockCursos}
-      />
-    </div>
-  )
-}
+'use client';
+import {useState} from 'react';
+import CourseCatalog from '@/components/courses/CourseCatalog';
+import {demoCourses} from '@/features/vitrine-premium/courses/data';
+import {useCourseMemory} from '@/features/vitrine-premium/courses/CourseMemory';
+export default function CursosPage(){const {state}=useCourseMemory(),[query,setQuery]=useState('');return <div className="space-y-5"><h1 className="text-2xl font-semibold">Cursos demonstrativos</h1><p>Seis exemplos fictícios de aprendizagem. Progresso somente em memória; nenhum curso, matrícula ou certificado real é criado.</p><label className="block">Buscar cursos demonstrativos<input type="search" className="mt-2 block w-full rounded-xl border bg-white p-3" value={query} onChange={e=>setQuery(e.target.value)}/></label><CourseCatalog courses={demoCourses.filter(c=>c.title.toLocaleLowerCase('pt-BR').includes(query.toLocaleLowerCase('pt-BR'))).map(c=>{const completed=state[c.id]?.completed.length||0;return {...c,progress:completed*50,status:completed===2?'COMPLETED':completed?'IN_PROGRESS':'NOT_STARTED',href:`/vitrine/aprender/${c.id}`,actionLabel:completed===2?'Rever demonstração':completed?'Continuar demonstração':'Explorar demonstração'};})}/></div>;}

@@ -38,7 +38,7 @@ export function DemoProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => { ready.current?.setAttribute('data-demo-ready', 'true') }, [])
   return <Context.Provider value={{
     state, save: data => setState(current => saveDemo(current, data)),
-    reset: () => { setState(initialDemo()); setTourIndex(null) },
+    reset: () => { setState(initialDemo()); setTourIndex(null); window.dispatchEvent(new Event('pap:vitrine-reset')) },
     updateProfile: patch => setState(current => ({ ...current, profile: editDemoProfile(current.profile, patch) })),
     mainMenuOpen, conversationMenuOpen,
     openMainMenu: () => { setConversationMenuOpen(false); setMainMenuOpen(true) },

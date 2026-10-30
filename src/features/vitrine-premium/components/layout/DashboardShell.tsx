@@ -5,6 +5,7 @@ import {useRouter,usePathname} from 'next/navigation'
 import PageMotion from '@/features/vitrine-premium/components/motion/PageMotion'
 import { Menu } from 'lucide-react'
 import Sidebar from './Sidebar'
+import {CourseMemory} from '@/features/vitrine-premium/courses/CourseMemory'
 import RouteHero from '@/components/premium/RouteHero'
 import '@/components/premium/premium.css'
 import { DemoProvider, useDemo } from '@/features/vitrine-premium/components/demo/DemoProvider'
@@ -38,5 +39,5 @@ function Workspace({children}:{children:React.ReactNode}) {
   </div>
 }
 export default function DashboardShell({children}:{children:React.ReactNode}) {
-  return <DemoProvider><Workspace>{children}</Workspace></DemoProvider>
+  return <DemoProvider><CourseMemory><Workspace>{children}</Workspace></CourseMemory></DemoProvider>
 }
