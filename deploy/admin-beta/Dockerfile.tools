@@ -1,0 +1,17 @@
+ARG BETA_BUILDER_IMAGE=pap-admin-beta-builder:local
+FROM ${BETA_BUILDER_IMAGE} AS builder
+WORKDIR /app
+RUN node_modules/.bin/esbuild scripts/admin-beta/provision.ts --bundle --platform=node --format=cjs --external:argon2 --external:pg --external:@prisma/client --external:@prisma/adapter-pg --outfile=provision.cjs && npm prune --omit=dev --ignore-scripts --no-audit --offline
+FROM node:22-alpine@sha256:0a7108bf6c7bf5de370ffb1a3ed6be93d405b43ff159f681a8d18c0e2bc2e402
+WORKDIR /app
+RUN rm -rf /usr/local/lib/node_modules/npm /usr/local/lib/node_modules/corepack /opt/yarn* /usr/local/bin/npm /usr/local/bin/npx /usr/local/bin/corepack /usr/local/bin/yarn* /usr/local/bin/pnpm /usr/local/bin/pnpx
+ENV NODE_ENV=production
+COPY --from=builder --chown=node:node /app/node_modules ./node_modules
+COPY --from=builder --chown=node:node /app/provision.cjs ./provision.cjs
+COPY --from=builder --chown=node:node /app/package.json /app/package-lock.json ./
+COPY --chown=node:node prisma ./prisma
+COPY --chown=node:node deploy/admin-beta/verify.mjs ./verify.mjs
+COPY --chown=node:node deploy/admin-beta ./deploy/admin-beta
+COPY --chown=node:node scripts/admin-beta/prepare.mjs ./scripts/admin-beta/prepare.mjs
+USER node
+CMD ["node", "/beta/entrypoint.mjs", "verify"]
