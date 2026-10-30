@@ -30,8 +30,8 @@
   },
   "effectiveInventory": {
     "initialManifest": "SOURCE-MANIFEST.json (historical initial receipt)",
-    "totalDistinctPaths": 110,
-    "sourcePaths": 95,
+    "totalDistinctPaths": 111,
+    "sourcePaths": 96,
     "documentationPaths": 15,
     "allPaths": [
       ".github/workflows/ci.yml",
@@ -136,6 +136,7 @@
       "tests/mission04-b/governance.test.ts",
       "tests/mission04-c/invitations.test.ts",
       "tests/mission04-c/journey.spec.ts",
+      "tests/mission04-d/legacy-upgrade.test.ts",
       "tests/mission04-e/boundaries.spec.ts",
       "tests/mission04-e/journey.spec.ts",
       "tests/mission04-e/rsc-dynamic-metadata.test.ts",
@@ -495,6 +496,10 @@
         "sha256": "19c765d974ee86605b3bb543eb5e36f13ea7e726eaa6eda9027417448d5d748c"
       },
       {
+        "path": "tests/mission04-d/legacy-upgrade.test.ts",
+        "sha256": "b1675543a36ed5c177c0aa8ad0f795d6d218f196f5a86d79c17a720dd675edff"
+      },
+      {
         "path": "tests/mission04-e/boundaries.spec.ts",
         "sha256": "fef7489cafac9d5176cccdfb751dd373b6658264cb11750c5c860cd6ee221fcd"
       },
@@ -527,7 +532,7 @@
         "sha256": "afacd3dc2675c56097e47403c60c86719406a44d3363732eba4c893857850d1f"
       }
     ],
-    "effectiveSourceFingerprint": "d7490a70000585c690d63964f2cb7e660ff191fb981b57292f0caabe9c48caf0",
+    "effectiveSourceFingerprint": "de15320feaf0428750f6e8496f80dfac96db9d6d9d3e5c028d8423af318e4970",
     "fingerprintEncoding": "SHA256 of UTF-8 JSON.stringify(sourceHashes), compact separators, ensure_ascii=false"
   },
   "nextCI": "PENDING on correction SHA",
@@ -858,5 +863,33 @@
     ],
     "nextCI": "PENDING on selective test correction SHA; integral green still mandatory",
     "protectedResources": "No operator5432, 3600/15436, accounts, MFA, .local, volumes, VPS or production accessed or altered."
+  },
+  "legacyDNotificationProjectionCorrection": {
+    "reference": "f48ed1ed80c2d73c70f110d1d7167ff080f39a3b",
+    "failedCI": "https://github.com/joaoCarlosGM/pap-saude/actions/runs/41107055254",
+    "firstFailedGate": "Mission 04 transactional email, reset and authenticated delivery webhooks",
+    "operatorSuppliedError": "legacy-upgrade.test.ts:127:31: current Prisma userNotification.create selects courseEnrollmentId against historical C schema where it does not exist.",
+    "correction": "Fixture create returns only id, preserving the exact inserted legacy/C fields. Added a metadata assertion requiring both later LMS notification columns to be absent before D. All row snapshots, backup/restore, password/TOTP/session and migrate-deploy assertions stay unchanged.",
+    "validation": {
+      "targetedHistoricalFixture": {
+        "pass": 1,
+        "fail": 0,
+        "skipped": 0,
+        "privateLog": "/tmp/pap-beta1-tests-XFTxlW/integration.log",
+        "method": "Extract actual fixture block from modified legacy test, run current Prisma and real MFA fixture against owned dynamic-port PostgreSQL migrated strictly to C; assert one notification with original fields and no LMS columns."
+      },
+      "typeScript": "PASS",
+      "scopedLint": "PASS",
+      "diffCheck": "PASS",
+      "fullLegacyUpgrade": "NOT RUN locally: unchanged legacy launcher mandates protected host5432. Delegate exact backup/restore/forward-upgrade/MFA/session test to new CI.",
+      "notRepeated": "No app builds, full local suites, Docker builds, installs, scanners or operator resource changes."
+    },
+    "applicationSchemaMigrationsIamAuth": "UNCHANGED",
+    "stagingPaths": [
+      "tests/mission04-d/legacy-upgrade.test.ts",
+      "docs/release/pap-beta1-ux-lms/CI-CORRECTIONS.json"
+    ],
+    "nextCI": "PENDING on selective fixture correction SHA; integral green remains required",
+    "protectedResources": "Host5432, lab3600/15436, seven accounts/MFA/passwords/sessions, .local/volumes, VPS and production NOT ACCESSED OR ALTERED."
   }
 }

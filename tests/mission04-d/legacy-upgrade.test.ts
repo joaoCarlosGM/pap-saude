@@ -124,8 +124,13 @@ test("C-to-D forward upgrade preserves exact legacy/C rows, restored backup, pas
       invitedByUserId: f.user.id, reviewedByUserId: f.user.id,
       assignmentId: existingAssignment.id, deliveryStatus: "CAPTURED",
     } });
+    // This is the C schema: current Prisma must not RETURN later LMS columns.
+    assert.deepEqual((await client.query(
+      `SELECT column_name FROM information_schema.columns WHERE table_schema='public'
+       AND table_name='user_notifications' AND column_name IN ('courseEnrollmentId','coursePublicationId')`,
+    )).rows, []);
     await db.userNotification.create({ data: { userId: professional.user.id,
-      invitationId: accepted.id, kind: "ACCESS_APPROVED", dedupeKey: `access/${accepted.id}/ACCESS_APPROVED`, emailStatus: "CAPTURED" } });
+      invitationId: accepted.id, kind: "ACCESS_APPROVED", dedupeKey: `access/${accepted.id}/ACCESS_APPROVED`, emailStatus: "CAPTURED" }, select: { id: true } });
     const tables = [
       "users",
       "password_credentials",
