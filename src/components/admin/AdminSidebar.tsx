@@ -4,6 +4,7 @@ import Link from "next/link";
 import HelpCard from "@/components/premium/HelpCard";
 import ActiveIndicator from "@/components/premium/ActiveIndicator";
 import AreaLinks from "@/components/premium/AreaLinks";
+import { adminBetaPathAllowed } from "@/lib/admin-beta-policy";
 import { useState, useEffect, useRef } from "react";
 
 import {
@@ -27,6 +28,7 @@ type AdminSidebarProps = {
   open: boolean;
   onClose: () => void;
   profile: EffectiveAccessProfile;
+  betaOnly?: boolean;
 };
 
 type NavigationItem = {
@@ -141,6 +143,7 @@ export default function AdminSidebar({
   open,
   onClose,
   profile,
+  betaOnly = false,
 }: AdminSidebarProps) {
   const pathname = usePathname();
   const [search, setSearch] = useState("");
@@ -182,6 +185,7 @@ export default function AdminSidebar({
   const manager=profile.roles.some(r=>r.key==="PAP_MANAGER"&&r.scope==="GLOBAL")&&!profile.roles.some(r=>r.key==="PAP_ADMIN"&&r.scope==="GLOBAL");
   const visible = navigation.map(item=>manager&&item.href==="/admin"?{...item,label:"Bancada de gestão",href:"/admin/manager"}:item).filter(
     (item) =>
+      (!betaOnly || adminBetaPathAllowed(item.href)) &&
       (!item.requiredAny ||
         item.requiredAny.some((p) => profile.permissions.includes(p))) &&
       item.label
@@ -344,7 +348,7 @@ export default function AdminSidebar({
                 : ""
             }
           >
-            <AreaLinks profile={profile} current="/admin"/>
+            {!betaOnly && <AreaLinks profile={profile} current="/admin"/>}
             <HelpCard onTutorial={()=>{onClose();window.dispatchEvent(new CustomEvent("pap-tour:restart",{detail:{tourKey:"admin-core"}}));}}/>
             <Link className="mt-2 block rounded-lg px-3 py-2 text-sm" href="/admin/minha-seguranca">Segurança da minha conta</Link>
           </div>

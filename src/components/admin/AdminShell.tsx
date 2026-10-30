@@ -98,11 +98,13 @@ const ADMIN_TOUR_STEPS: GuidedTourStep[] = [
 export default function AdminShell({
   children,
   profile,
+  betaOnly = false,
 }: {
   children:
     React.ReactNode
   profile:
     EffectiveAccessProfile
+  betaOnly?: boolean
 }) {
   const [
     sidebarOpen,
@@ -113,6 +115,7 @@ export default function AdminShell({
   return (
     <div className="premium-workspace pap-admin flex min-h-screen">
       <AdminSidebar
+        betaOnly={betaOnly}
         open={
           sidebarOpen
         }

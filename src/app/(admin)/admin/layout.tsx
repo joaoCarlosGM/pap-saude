@@ -7,6 +7,7 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
 import AdminShell from "@/components/admin/AdminShell";
+import { adminBetaOnly } from "@/lib/admin-beta-policy";
 
 import { SESSION_COOKIE_NAME } from "@/server/security/constants";
 
@@ -68,5 +69,5 @@ export default async function AdminLayout({
 
   if (!state?.verified) redirect("/primeiros-passos");
 
-  return <AdminShell profile={profile}>{children}</AdminShell>;
+  return <AdminShell profile={profile} betaOnly={adminBetaOnly(process.env.PAP_ADMIN_BETA_ONLY)}>{children}</AdminShell>;
 }
