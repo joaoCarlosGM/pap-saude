@@ -1,0 +1,1 @@
+export type CourseCardModel={id:string;asOf?:string;title:string;description:string;category:string;thumbnail:string;estimatedMinutes:number;lessonCount:number;progress?:number;deadlineAt?:string|null;obligation?:string;status?:string;isNew?:boolean;href?:string;actionLabel?:string};

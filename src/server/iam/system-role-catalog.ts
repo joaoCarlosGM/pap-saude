@@ -31,6 +31,12 @@ export const SYSTEM_ROLES: readonly SystemRoleDefinition[] = [
       "Global PAP platform administration without default clinical access.",
     scope: "GLOBAL",
     permissions: [
+      PERMISSIONS.ORGANIZATION_MUNICIPALITY_CREATE,
+      PERMISSIONS.COURSE_READ,
+      PERMISSIONS.COURSE_EDIT,
+      PERMISSIONS.COURSE_PUBLISH,
+      PERMISSIONS.COURSE_DISTRIBUTE,
+
       PERMISSIONS.ORGANIZATION_READ,
       PERMISSIONS.ORGANIZATION_MANAGE,
       PERMISSIONS.ORGANIZATION_ACTIVATE,
@@ -67,6 +73,12 @@ export const SYSTEM_ROLES: readonly SystemRoleDefinition[] = [
     description: "Institutional review and delegated commercial authorization; no clinical or organization lifecycle access.",
     scope: "GLOBAL",
     permissions: [
+      PERMISSIONS.ORGANIZATION_MUNICIPALITY_CREATE,
+      PERMISSIONS.COURSE_READ,
+      PERMISSIONS.COURSE_EDIT,
+      PERMISSIONS.COURSE_PUBLISH,
+      PERMISSIONS.COURSE_DISTRIBUTE,
+
       PERMISSIONS.ORGANIZATION_READ,
       PERMISSIONS.ORGANIZATION_REQUEST_REVIEW,
       PERMISSIONS.INSTITUTION_INVITE,
@@ -80,6 +92,10 @@ export const SYSTEM_ROLES: readonly SystemRoleDefinition[] = [
       "Administrative role scoped to a municipality.",
     scope: "MUNICIPALITY",
     permissions: [
+      PERMISSIONS.COURSE_READ,
+      PERMISSIONS.COURSE_FORWARD,
+      PERMISSIONS.COURSE_PROGRESS_MUNICIPALITY_READ,
+
       PERMISSIONS.ORGANIZATION_READ,
       PERMISSIONS.ORGANIZATION_MANAGE,
       PERMISSIONS.MEMBERSHIP_READ,
@@ -103,6 +119,10 @@ export const SYSTEM_ROLES: readonly SystemRoleDefinition[] = [
       "Administrative role scoped to a health unit.",
     scope: "HEALTH_UNIT",
     permissions: [
+      PERMISSIONS.COURSE_READ,
+      PERMISSIONS.COURSE_ASSIGN,
+      PERMISSIONS.COURSE_PROGRESS_UNIT_READ,
+
       PERMISSIONS.ORGANIZATION_READ,
       PERMISSIONS.MEMBERSHIP_READ,
       PERMISSIONS.MEMBERSHIP_MANAGE,
@@ -123,6 +143,9 @@ export const SYSTEM_ROLES: readonly SystemRoleDefinition[] = [
       "Clinical role scoped to a health unit.",
     scope: "HEALTH_UNIT",
     permissions: [
+      PERMISSIONS.COURSE_PROGRESS_OWN_READ,
+      PERMISSIONS.COURSE_PROGRESS_OWN_WRITE,
+
       PERMISSIONS.PATIENT_READ,
       PERMISSIONS.PATIENT_CREATE,
       PERMISSIONS.PATIENT_UPDATE_DEMOGRAPHICS,

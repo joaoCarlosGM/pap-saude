@@ -255,6 +255,13 @@ model User {
   sentAccessInvitations AccessInvitation[] @relation("AccessSender")
   accessDecisions       AccessInvitation[] @relation("AccessReviewer")
   notifications         UserNotification[]
+  authoredCourses Course[] @relation("CourseAuthor")
+  courseAssets CourseAsset[]
+  coursePublications CoursePublication[]
+  courseReleases CourseAudience[]
+  assignedCourses CourseAssignment[] @relation("CourseAssigner")
+  receivedCourses CourseAssignment[] @relation("CourseRecipient")
+  enrollments CourseEnrollment[]
 
   submittedFeedback ProductFeedback[] @relation("ProductFeedbackActor")
   resolvedFeedback  ProductFeedback[] @relation("ProductFeedbackResolver")
@@ -265,6 +272,8 @@ model User {
 }
 
 model Organization {
+  courseAudiences CourseAudience[]
+  courseAssignments CourseAssignment[]
   id        String             @id @default(uuid())
   type      OrganizationType
   status    OrganizationStatus @default(PENDING_VERIFICATION)
@@ -420,7 +429,9 @@ model AccessInvitation {
 model UserNotification {
   id           String @id @default(uuid())
   userId       String
-  invitationId String
+  invitationId String?
+  courseEnrollmentId String?
+  coursePublicationId String?
   kind         String
   dedupeKey    String @unique
   readAt       DateTime?
@@ -428,7 +439,9 @@ model UserNotification {
   createdAt    DateTime @default(now())
 
   user       User @relation(fields: [userId], references: [id], onDelete: Restrict)
-  invitation AccessInvitation @relation(fields: [invitationId], references: [id], onDelete: Restrict)
+  courseEnrollment CourseEnrollment? @relation(fields: [courseEnrollmentId], references: [id], onDelete: Restrict)
+  coursePublication CoursePublication? @relation(fields: [coursePublicationId], references: [id], onDelete: Restrict)
+  invitation AccessInvitation? @relation(fields: [invitationId], references: [id], onDelete: Restrict)
 
   @@index([userId, createdAt])
   @@map("user_notifications")
@@ -1278,4 +1291,201 @@ model ClinicalRegistrationOperation {
   @@index([patientId])
   @@index([pregnancyId])
   @@map("clinical_registration_operations")
+}
+
+
+// Beta1 LMS: independent from clinical records. Published content is immutable.
+model Course {
+ id String @id @default(uuid())
+ creationKey String? @unique
+ creationHash String?
+ slug String @unique
+ creatorUserId String
+ archivedAt DateTime?
+ createdAt DateTime @default(now())
+ updatedAt DateTime @updatedAt
+ creator User @relation("CourseAuthor", fields:[creatorUserId],references:[id],onDelete:Restrict)
+ versions CourseVersion[]
+ @@index([creatorUserId,createdAt])
+ @@map("courses")
+}
+model CourseVersion {
+ id String @id @default(uuid())
+ courseId String
+ versionNo Int
+ schemaVersion Int @default(1)
+ revision Int @default(1)
+ title String
+ description String
+ category String
+ level String @default("INTRODUCTORY")
+ language String @default("pt-BR")
+ thumbnail String @default("pre-natal")
+ estimatedMinutes Int
+ publishedAt DateTime?
+ immutableContentHash String?
+ createdAt DateTime @default(now())
+ updatedAt DateTime @updatedAt
+ course Course @relation(fields:[courseId],references:[id],onDelete:Restrict)
+ modules CourseModule[]
+ assessment CourseAssessment?
+ publication CoursePublication?
+ enrollments CourseEnrollment[]
+ @@unique([courseId,versionNo])
+ @@map("course_versions")
+}
+model CourseModule {
+ id String @id @default(uuid())
+ courseVersionId String
+ title String
+ sortOrder Int
+ version CourseVersion @relation(fields:[courseVersionId],references:[id],onDelete:Cascade)
+ lessons CourseLesson[]
+ @@unique([courseVersionId,sortOrder])
+ @@map("course_modules")
+}
+model CourseLesson {
+ id String @id @default(uuid())
+ moduleId String
+ title String
+ sortOrder Int
+ contentBlocks Json
+ estimatedMinutes Int @default(5)
+ module CourseModule @relation(fields:[moduleId],references:[id],onDelete:Cascade)
+ progress CourseProgress[]
+ @@unique([moduleId,sortOrder])
+ @@map("course_lessons")
+}
+model CourseAsset {
+ id String @id @default(uuid())
+ createdBy String
+ checksum String
+ mime String
+ sizeBytes Int
+ storageKey String @unique
+ license String
+ createdAt DateTime @default(now())
+ creator User @relation(fields:[createdBy],references:[id],onDelete:Restrict)
+ @@map("course_assets")
+}
+model CourseAssessment {
+ id String @id @default(uuid())
+ courseVersionId String @unique
+ passingScore Int @default(70)
+ maxAttempts Int @default(3)
+ requiredForCompletion Boolean @default(true)
+ version CourseVersion @relation(fields:[courseVersionId],references:[id],onDelete:Cascade)
+ questions CourseQuestion[]
+ attempts CourseAttempt[]
+ @@map("course_assessments")
+}
+model CourseQuestion {
+ id String @id @default(uuid())
+ assessmentId String
+ sortOrder Int
+ prompt String
+ options Json
+ correctIndex Int
+ assessment CourseAssessment @relation(fields:[assessmentId],references:[id],onDelete:Cascade)
+ @@unique([assessmentId,sortOrder])
+ @@map("course_questions")
+}
+model CoursePublication {
+ id String @id @default(uuid())
+ courseVersionId String @unique
+ publishedBy String
+ publishedAt DateTime @default(now())
+ archivedAt DateTime?
+ revokedAt DateTime?
+ version CourseVersion @relation(fields:[courseVersionId],references:[id],onDelete:Restrict)
+ publisher User @relation(fields:[publishedBy],references:[id],onDelete:Restrict)
+ audiences CourseAudience[]
+ assignments CourseAssignment[]
+ notifications UserNotification[]
+ @@map("course_publications")
+}
+model CourseAudience {
+ id String @id @default(uuid())
+ publicationId String
+ organizationId String
+ releasedBy String
+ releasedAt DateTime @default(now())
+ revokedAt DateTime?
+ publication CoursePublication @relation(fields:[publicationId],references:[id],onDelete:Restrict)
+ organization Organization @relation(fields:[organizationId],references:[id],onDelete:Restrict)
+ releaser User @relation(fields:[releasedBy],references:[id],onDelete:Restrict)
+ @@unique([publicationId,organizationId])
+ @@index([organizationId,revokedAt])
+ @@map("course_audiences")
+}
+model CourseAssignment {
+ id String @id @default(uuid())
+ publicationId String
+ organizationId String
+ professionalUserId String
+ assignedBy String
+ obligation String @default("RECOMMENDED")
+ deadlineAt DateTime?
+ notifiedAt DateTime?
+ revokedAt DateTime?
+ createdAt DateTime @default(now())
+ publication CoursePublication @relation(fields:[publicationId],references:[id],onDelete:Restrict)
+ organization Organization @relation(fields:[organizationId],references:[id],onDelete:Restrict)
+ professional User @relation("CourseRecipient",fields:[professionalUserId],references:[id],onDelete:Restrict)
+ assigner User @relation("CourseAssigner",fields:[assignedBy],references:[id],onDelete:Restrict)
+ enrollment CourseEnrollment?
+ @@unique([publicationId,organizationId,professionalUserId])
+ @@index([organizationId,deadlineAt])
+ @@map("course_assignments")
+}
+model CourseEnrollment {
+ id String @id @default(uuid())
+ assignmentId String @unique
+ learnerUserId String
+ courseVersionId String
+ startedAt DateTime?
+ completedAt DateTime?
+ lastLessonId String?
+ seenAt DateTime?
+ revision Int @default(0)
+ createdAt DateTime @default(now())
+ updatedAt DateTime @updatedAt
+ assignment CourseAssignment @relation(fields:[assignmentId],references:[id],onDelete:Restrict)
+ learner User @relation(fields:[learnerUserId],references:[id],onDelete:Restrict)
+ version CourseVersion @relation(fields:[courseVersionId],references:[id],onDelete:Restrict)
+ progress CourseProgress[]
+ attempts CourseAttempt[]
+ notifications UserNotification[]
+ @@index([learnerUserId,completedAt])
+ @@map("course_enrollments")
+}
+model CourseProgress {
+ id String @id @default(uuid())
+ enrollmentId String
+ lessonId String
+ completedAt DateTime?
+ lastVisitedAt DateTime @default(now())
+ revision Int @default(1)
+ checkpointDigest String?
+ enrollment CourseEnrollment @relation(fields:[enrollmentId],references:[id],onDelete:Restrict)
+ lesson CourseLesson @relation(fields:[lessonId],references:[id],onDelete:Restrict)
+ @@unique([enrollmentId,lessonId])
+ @@map("course_progress")
+}
+model CourseAttempt {
+ id String @id @default(uuid())
+ enrollmentId String
+ assessmentId String
+ requestKey String
+ requestHash String
+ attemptNo Int
+ scoreValidated Int
+ passed Boolean
+ answersDigest String
+ submittedAt DateTime @default(now())
+ enrollment CourseEnrollment @relation(fields:[enrollmentId],references:[id],onDelete:Restrict)
+ assessment CourseAssessment @relation(fields:[assessmentId],references:[id],onDelete:Restrict)
+ @@unique([enrollmentId,requestKey])
+ @@unique([enrollmentId,assessmentId,attemptNo])
+ @@map("course_attempts")
 }

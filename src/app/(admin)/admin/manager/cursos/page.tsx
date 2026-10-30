@@ -1,0 +1,2 @@
+import {authorPageSession} from '@/server/courses/page-session';import {cookies} from 'next/headers';import {SESSION_COOKIE_NAME} from '@/server/security/constants';import {authorCatalog} from '@/server/courses/authoring.service';import AuthorCatalog from '@/components/courses/AuthorCatalog';
+export default async function Page(){await authorPageSession();await authorCatalog((await cookies()).get(SESSION_COOKIE_NAME)?.value||'');return <AuthorCatalog/>;}

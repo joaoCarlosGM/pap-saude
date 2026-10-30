@@ -1,4 +1,19 @@
 export const PERMISSIONS = {
+  // LMS: dedicated grants; no reuse of organization.read or clinical privileges.
+  COURSE_READ: "course.read",
+  COURSE_EDIT: "course.edit",
+  COURSE_PUBLISH: "course.publish",
+  COURSE_DISTRIBUTE: "course.distribute",
+  COURSE_FORWARD: "course.distribute.municipality",
+  COURSE_ASSIGN: "course.assign",
+  COURSE_PROGRESS_OWN_READ: "course.progress.own.read",
+  COURSE_PROGRESS_OWN_WRITE: "course.progress.own.write",
+  COURSE_PROGRESS_UNIT_READ: "course.progress.unit.read",
+  COURSE_PROGRESS_MUNICIPALITY_READ: "course.progress.municipality.read",
+
+  // Narrow delegated inclusion, never organization lifecycle authority.
+  ORGANIZATION_MUNICIPALITY_CREATE: "organization.municipality.create",
+
   // Organizations
   ORGANIZATION_READ: "organization.read",
   ORGANIZATION_MANAGE: "organization.manage",

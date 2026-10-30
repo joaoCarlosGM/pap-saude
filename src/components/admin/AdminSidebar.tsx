@@ -38,6 +38,12 @@ type NavigationItem = {
 };
 
 const navigation: NavigationItem[] = [
+  {label:"Cursos institucionais",href:"/cursos",icon:LayoutDashboard,requiredAny:["course.progress.municipality.read","course.assign","course.progress.own.read"]},
+  {label:"Solicitar nova unidade",href:"/solicitar-adesao",icon:Building2,requiredAny:["institution.invite"]},
+  {label:"Distribuição institucional",href:"/admin/manager/distribuicao",icon:FileClock,requiredAny:["course.distribute"]},
+  {label:"Inclusão de município",href:"/admin/manager/municipios",icon:Building2,requiredAny:["organization.municipality.create"]},
+  {label:"Cursos de autoria",href:"/admin/manager/cursos",icon:LayoutDashboard,requiredAny:["course.edit"]},
+  {label:"Biblioteca de materiais",href:"/admin/manager/materiais",icon:FileClock,requiredAny:["course.edit"]},
   { label: "Central de Pendências", href: "/admin/pendencias", icon: FileClock },
   {
     label: "Visão geral",
@@ -183,7 +189,8 @@ export default function AdminSidebar({
         .includes(search.toLocaleLowerCase("pt-BR")),
   );
   const categories = [
-    {label:"Gestão institucional",paths:["/admin","/admin/pendencias","/admin/solicitacoes","/admin/organizacoes","/admin/rede","/admin/manager"]},
+    {label:"Gestão institucional",paths:["/admin","/admin/pendencias","/admin/solicitacoes","/admin/organizacoes","/admin/rede","/admin/manager","/admin/manager/municipios","/solicitar-adesao"]},
+    {label:"Conhecimento institucional",paths:["/cursos","/admin/manager/cursos","/admin/manager/materiais","/admin/manager/distribuicao"]},
     {label:"Pessoas e Acessos",paths:["/admin/usuarios","/admin/convites","/admin/convites-globais","/admin/acessos"]},
     {label:"Inteligência",paths:["/admin/metricas"]},
     {label:"Auditoria e Segurança",paths:["/admin/auditoria","/admin/minha-seguranca","/admin/seguranca"]},

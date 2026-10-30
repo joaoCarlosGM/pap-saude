@@ -691,7 +691,7 @@ export async function dispatchAccessRelease(notificationId: string) {
     ["CAPTURED", "ACCEPTED_BY_PROVIDER", "DELIVERED", "BOUNCED", "COMPLAINED", "NOT_REQUESTED"].includes(notice.emailStatus)
   )
     return;
-  if (notice.invitation.status !== "ACTIVE" || !notice.invitation.assignmentId)
+  if (!notice.invitation || notice.invitation.status !== "ACTIVE" || !notice.invitation.assignmentId)
     return;
   try {
     const url = new URL("/login", invitationBaseUrl()).toString();
