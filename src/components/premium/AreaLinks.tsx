@@ -3,6 +3,7 @@ import type { EffectiveAccessProfile } from "@/lib/admin/types";
 /** Navigation hints from server-computed effective grants, never an authorization guard. */
 export function authorizedAreas(profile:EffectiveAccessProfile) {
   return [
+    ...(profile.roles.some(r=>r.organization&&((r.key==="HEALTH_UNIT_ADMIN"&&r.permissions.includes("course.assign"))||(r.key==="MUNICIPAL_ADMIN"&&r.permissions.includes("course.progress.municipality.read"))||r.permissions.includes("course.progress.own.read")))?[{href:"/cursos",label:"Cursos e capacitação"}]:[]),
     ...(profile.canAccessAdmin?[{href:"/admin",label:"Administração"}]:[]),
     ...(profile.roles.some(r=>r.scope==="HEALTH_UNIT" && r.organization && r.permissions.includes("patient.read"))?[{href:"/dashboard",label:"Área clínica"}]:[]),
     ...(profile.roles.some(r=>r.key==="COMMERCIAL" && r.scope==="GLOBAL" && r.permissions.includes("commercial.read"))?[{href:"/comercial",label:"Comercial"}]:[]),

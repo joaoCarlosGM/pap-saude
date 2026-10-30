@@ -1,3 +1,5 @@
+import SectionHero from "@/components/premium/SectionHero";
+import "@/components/premium/premium.css";
 import Link from "next/link";
 import { requireOwnPageSession } from "@/server/auth/require-page-session";
 import NotificationInbox from "@/components/access/NotificationInbox";
@@ -8,7 +10,7 @@ export default async function NotificationsPage() {
   return (
     <main className="access-page">
       <section className="access-card access-single">
-        <p className="access-eyebrow">PAP Saúde · Sua conta</p>
+        <SectionHero title="Avisos" headingAs="p" subtitle="Sua caixa de entrada e atualizações de acesso." visual="avisos"/><p className="access-eyebrow">PAP Saúde · Sua conta</p>
         <h1>Minhas notificações</h1>
         <NotificationInbox />
         <nav aria-label="Conta">

@@ -97,3 +97,13 @@
 .dark .premium-workspace.pap-admin>div>header{background:#142d31;color:#e6f4ef}
 .dark .premium-workspace.pap-admin .premium-sidebar [class~="bg-pink-50/40"]{background:#19383b;color:#e6f4ef;border-color:#466163}
 .dark .premium-workspace.pap-admin .premium-sidebar input{background:#142d31;color:#e6f4ef;border-color:#647c7b}
+
+/* LMS-only surfaces: neutral/category and learning callouts remain AA in dark mode. */
+@media(prefers-color-scheme:dark){
+ .premium-workspace [data-course-card] [class~="bg-slate-100"]{background:#2b2230;color:#eee7ed}
+ .premium-workspace [data-course-card] [class~="bg-pink-100"]{background:#452337;color:#f9b6dc}
+ .premium-workspace [data-course-blocks] [class~="bg-pink-50"]{background:#452337;color:#eee7ed}
+}
+.dark .premium-workspace [data-course-card] [class~="bg-slate-100"]{background:#2b2230;color:#eee7ed}
+.dark .premium-workspace [data-course-card] [class~="bg-pink-100"]{background:#452337;color:#f9b6dc}
+.dark .premium-workspace [data-course-blocks] [class~="bg-pink-50"]{background:#452337;color:#eee7ed}

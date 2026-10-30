@@ -4,15 +4,16 @@ import Link from "next/link";
 import NotificationLink from "@/components/admin/NotificationLink";
 import type {NavigationMode} from "./navigation-preference";
 import ThemeToggle from "@/components/demo/ThemeToggle";
-export default function Topbar({ onMenuClick, demo = false, displayName, mode="expanded", onModeChange }: {
+export default function Topbar({ onMenuClick, demo = false, displayName, mode="expanded", onModeChange, clinical = true }: {
     onMenuClick: () => void;
     demo?: boolean;
+    clinical?: boolean;
     displayName?: string;
     mode?: NavigationMode;
     onModeChange?: (mode:NavigationMode)=>void;
 }) {
     return <header className="flex h-14 shrink-0 items-center justify-between border-b border-gray-200 bg-white px-3 text-slate-900 dark:bg-slate-900 dark:text-slate-100 sm:px-4 lg:px-6">
-    <div className="flex min-w-0 items-center gap-2"><button type="button" aria-label="Abrir menu" onClick={onMenuClick} className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md hover:bg-white/10 md:hidden"><Menu size={21}/></button><span className="truncate text-sm font-medium">{demo ? "PAP Saúde · Demo" : "Prontuário de Atendimento"}</span></div>
+    <div className="flex min-w-0 items-center gap-2"><button type="button" aria-label="Abrir menu" onClick={onMenuClick} className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md hover:bg-white/10 md:hidden"><Menu size={21}/></button><span className="truncate text-sm font-medium">{demo ? "PAP Saúde · Demo" : clinical ? "Prontuário de Atendimento" : "Espaço de capacitação"}</span></div>
     <div className="flex shrink-0 items-center gap-1 sm:gap-2">
       <div className="hidden gap-1 md:flex" role="group" aria-label="Preferência de navegação">{([{value:"expanded",label:"Menu expandido",Icon:PanelLeftOpen},{value:"compact",label:"Menu de ícones",Icon:Columns2},{value:"hidden",label:"Recolher menu",Icon:PanelLeftClose}] as const).map(({value,label,Icon})=><button key={value} type="button" className="rounded p-2 hover:bg-slate-100 dark:hover:bg-slate-800" aria-label={label} title={label} aria-pressed={mode===value} onClick={()=>onModeChange?.(value)}><Icon size={18}/></button>)}</div>
       {demo ? <><Link prefetch={false} href="/vitrine/ajuda" aria-label="Como funciona a demonstração" className="grid h-10 w-10 place-items-center rounded-md hover:bg-white/10"><HelpCircle size={18}/></Link><Link prefetch={false} href="/comercial" aria-label="Voltar ao Comercial" className="flex h-10 items-center gap-2 rounded-md px-2 hover:bg-white/10"><ArrowLeft size={18}/><span className="hidden sm:inline">Voltar ao Comercial</span></Link><ThemeToggle /></> : <>

@@ -1,0 +1,3 @@
+"use client";
+import {useEffect,useState} from 'react';import {courseApi} from '@/lib/courses/http';
+export default function CourseBadge(){const [count,setCount]=useState<number|null>(null);useEffect(()=>{let active=true;const update=()=>courseApi<{newCourses:number}>('badge').then(r=>{if(active)setCount(r.newCourses);}).catch(()=>{if(active)setCount(null);});void update();window.addEventListener('pap:courses-changed',update);const timer=setInterval(update,60000);return()=>{active=false;clearInterval(timer);window.removeEventListener('pap:courses-changed',update);};},[]);return count&&count>0?<span className="rounded-full bg-pink-100 px-2 py-1 text-xs text-pink-800" aria-label={`${count} cursos novos`}>Novo</span>:null;}

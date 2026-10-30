@@ -1,0 +1,2 @@
+import {redirect} from 'next/navigation';import {coursePageSession} from '@/server/courses/page-session';import CoursesWorkspace from '@/components/courses/CoursesWorkspace';
+export default async function Page(){const {profile}=await coursePageSession();if(profile.permissions.includes('course.edit')&&!profile.permissions.includes('course.assign')&&!profile.permissions.includes('course.progress.own.read'))redirect('/admin/manager/cursos');return <CoursesWorkspace profile={profile}/>;}
