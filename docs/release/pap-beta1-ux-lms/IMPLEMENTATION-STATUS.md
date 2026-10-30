@@ -8,10 +8,10 @@ Baseline funcional: d247020, CI40962511599 SUCCESS. Pacote completo lido:00/PROM
 | A | Shell/sidebar/hero abstrato/ajuda; preservar identidade e dados; responsivo/teclado | PASS dirigido:4 Node,5 invariantes,1 browser (7 larguras/2 temas/teclado/WCAG);10 capturas |
 | B | Cards/ficha/atendimentos/registro com dados autorizados; KPIs byte-idênticos | PASS dirigido:2 Node +1 browser (card/ficha/teclado/tenant); APIs e registro preservados |
 | C | Admin teal; rede→município→UBS→equipe; grants anteriores intactos | PASS dirigido:2 Node +1 browser Admin/Manager,7 larguras/2 temas/AA;4 capturas |
-| D | Domínio LMS aditivo, IAM dedicado, editor seguro, versões imutáveis/release | NOT RUN |
-| E | Unidade/município: distribuição/ancestry, membros ativos, idempotência e inbox | NOT RUN |
-| F | Player, checkpoints/avaliação no servidor, retomada/badge/progresso | NOT RUN |
-| G | Restore/migrations/continuidade de credenciais em fixture, CI integral, GO/NO-GO | NOT RUN |
+| D | Domínio LMS aditivo, IAM dedicado, editor seguro, versões imutáveis/release | PASS dirigido: autoria/publicação/owner/CAS, inclusão restrita; CI PENDING |
+| E | Unidade/município: distribuição/ancestry, membros ativos, idempotência e inbox | PASS dirigido:12 backend, jornadas reais e agregado mínimo; CI PENDING |
+| F | Player, checkpoints/avaliação no servidor, retomada/badge/progresso | PASS dirigido: perda de resposta/F5/nota server-side/HTML-RSC/AA; CI PENDING |
+| G | Restore/migrations/continuidade de credenciais em fixture, CI integral, GO/NO-GO | PASS local upgrade35→36/replay/drift/restore/restart/ACL/build; CI PENDING; operador NOT RUN |
 
 ## Invariantes
 
@@ -19,9 +19,11 @@ Nenhum acesso ao laboratório3600/PG15436, .local, senhas/MFA/sessões/volume do
 
 Atualização do laboratório: somente operador, após backup/restore válido e autorização explícita para migrations aditivas; preservar .local e origem127.0.0.1:3600. Nenhum PR, merge de integração, deploy/VPS/prod.
 
-## Checkpoint
+## Checkpoint atual
 
-Próximo: validar sliceA com testes dirigidos/TypeScript/lint e browser isolado, commit seletivo/push. Continuar B→G sem recomeçar auditoria nem repetir suites aprovadas sem alteração relevante. PASS sempre com execução, fingerprint e evidência; aceites manuais não executados permanecem NOT RUN.
+A/B/C publicados:38bb6bf,d3a24da,058f8b1. D/E/F implementados: LMS real, editor/versionamento, inclusão municipal restrita, distribuição municipal/unidade, aprendizado/avaliação persistente e Vitrine sintética compartilhando somente apresentação. Gate G local: build real, TypeScript/lint, testes dirigidos, upgrade/drift/restore/restart/ACL aprovados. CI integral do candidato ainda PENDING, nunca substituído pelo baseline histórico.
+
+Consulte LMS-SECURITY-AND-CONTINUITY.md, SAFE-LOCAL-UPGRADE.md, VALIDATION.json e SOURCE-MANIFEST.json para comandos/resultados/inventário. Nenhuma ação no laboratório3600/15436. O ensaio do backup do operador e a homologação das sete contas continuam NOT RUN. Próximo: commits seletivos por responsabilidade, push somente da feature e CI integral exato; diagnosticar somente gate que falhar. Sem PR/merge/deploy/VPS.
 
 SliceA: logs privados /tmp/pap-beta1-mission-20261030/slice-a-*.log; browser final /tmp/pap-beta1-tests-ANXAGw/browser.log. TypeScript/ESLint/diff PASS, zero warnings novos. Duas falhas de contraste2.21:1/3.7:1 corrigidas sem remover asserts. Harness inicial precisou corrigir import relativo/DB descartável/cwd de webServer.10 capturas sintéticas revisadas. Bootstrap/configuradores/MFA não modificados. Próximo:B paridade de cards/ficha, depoisC Admin eD domínioLMS. CI integral somente no candidato consolidado; pushes intermediários podem acionar o workflow existente, sem desativá-lo.
 

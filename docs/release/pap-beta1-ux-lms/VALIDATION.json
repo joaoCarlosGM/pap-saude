@@ -1,0 +1,102 @@
+{
+  "sourceFingerprint": "1fa67aa29cb6a6b4b69f6e40a0cd151e7a032ada750305cea3ed32c5a3094033",
+  "checks": [
+    {
+      "check": "unit/base+order",
+      "status": "PASS",
+      "count": 17,
+      "evidence": "beta1-unit-reorder.log"
+    },
+    {
+      "check": "operator-copy guard",
+      "status": "PASS",
+      "count": 1,
+      "evidence": "copy-guard-directed-final.log"
+    },
+    {
+      "check": "isolation",
+      "status": "PASS",
+      "count": 5,
+      "evidence": "beta1-unit-reorder.log"
+    },
+    {
+      "check": "RSC metadata",
+      "status": "PASS",
+      "count": 2,
+      "evidence": "beta1-unit-reorder.log"
+    },
+    {
+      "check": "backend LMS/inclusion",
+      "status": "PASS",
+      "count": 12,
+      "evidence": "beta1-final-lms.log"
+    },
+    {
+      "check": "distribution reads",
+      "status": "PASS",
+      "count": 1,
+      "evidence": "beta1-distribution-directed.log"
+    },
+    {
+      "check": "browser current directed cases",
+      "status": "PASS",
+      "count": 9,
+      "evidence": "beta1-final-browser.log; beta1-directed-browser-fixes.log; beta1-order-browser.log"
+    },
+    {
+      "check": "upgrade35->36/replay/drift/restore/restart/ACL",
+      "status": "PASS",
+      "count": null,
+      "evidence": "beta1-final-upgrade.log"
+    },
+    {
+      "check": "operator-copy helper on owned synthetic dump",
+      "status": "PASS",
+      "count": null,
+      "evidence": "operator-copy-helper-final.log"
+    },
+    {
+      "check": "TypeScript",
+      "status": "PASS",
+      "count": null,
+      "evidence": "beta1-tsc-final-receipt.log"
+    },
+    {
+      "check": "lint",
+      "status": "PASS",
+      "count": null,
+      "evidence": "beta1-lint-final-receipt.log"
+    },
+    {
+      "check": "build real",
+      "status": "PASS",
+      "count": 44,
+      "evidence": "beta1-production-build.log"
+    },
+    {
+      "check": "CI full exact candidate",
+      "status": "PENDING",
+      "count": null,
+      "evidence": null
+    },
+    {
+      "check": "operator lab/backup/seven accounts",
+      "status": "NOT RUN",
+      "count": null,
+      "evidence": null
+    },
+    {
+      "check": "VPS/production",
+      "status": "NOT RUN",
+      "count": null,
+      "evidence": null
+    }
+  ],
+  "notes": [
+    "Directed PASS receipts are not claimed as a single combined browser run. The first combined run had six PASS and two FAIL; both failures and an additional ordering case passed targeted recovery. Exact candidate full CI is mandatory.",
+    "Full unit18 initially had17PASS/1FAIL because the test fixture inherited umask077: its intended0644 file was0600. Explicit chmod fixes the fixture; the guard case passed, and the17 unchanged tests retain their prior PASS evidence. Composite rerun belongs to final CI.",
+    "Full lint has zero errors and four inherited warnings in older P0 tests; no new warning in this slice.",
+    "No source changes since successful production build; later additions are isolated-copy tooling/tests/docs.",
+    "Operator data and .local were not accessed. All dumps/raw logs remain private in /tmp, outside this manifest."
+  ]
+}

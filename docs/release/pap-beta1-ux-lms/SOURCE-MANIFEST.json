@@ -1,0 +1,547 @@
+{
+  "base": "058f8b132666cffe634d02e0bc7abe1481cd2a3c",
+  "packageBase": "c7b1d7558b26ec85b09d4c9025c75bdadd79bdc7",
+  "branch": "feature/p0-premium-unified-rc",
+  "sourceFingerprint": "1fa67aa29cb6a6b4b69f6e40a0cd151e7a032ada750305cea3ed32c5a3094033",
+  "sourcePaths": 85,
+  "documentationPaths": 13,
+  "totalPaths": 98,
+  "groups": {
+    "lms-authoring": [
+      "prisma/migrations/20261030090000_beta1_courses_lms/migration.sql",
+      "prisma/schema.prisma",
+      "src/app/(admin)/admin/manager/cursos/[versionId]/page.tsx",
+      "src/app/(admin)/admin/manager/cursos/page.tsx",
+      "src/app/(admin)/admin/manager/distribuicao/page.tsx",
+      "src/app/(admin)/admin/manager/materiais/page.tsx",
+      "src/app/(admin)/admin/manager/municipios/page.tsx",
+      "src/app/(admin)/admin/manager/page.tsx",
+      "src/app/api/admin/manager/municipalities/route.ts",
+      "src/app/api/courses/[...segments]/route.ts",
+      "src/components/admin/AdminSidebar.tsx",
+      "src/components/admin/MunicipalityInclusion.tsx",
+      "src/components/courses/AuthorCatalog.tsx",
+      "src/components/courses/CourseCatalog.tsx",
+      "src/components/courses/CourseEditor.tsx",
+      "src/components/courses/LessonBlockRenderer.tsx",
+      "src/lib/courses/http.ts",
+      "src/lib/courses/order.ts",
+      "src/lib/courses/schema.ts",
+      "src/lib/courses/types.ts",
+      "src/server/access-invitations/access-invitation.service.ts",
+      "src/server/admin-beta/delegated-institutions.service.ts",
+      "src/server/courses/assignment.service.ts",
+      "src/server/courses/authoring.service.ts",
+      "src/server/courses/context.ts",
+      "src/server/courses/page-session.ts",
+      "src/server/courses/progress.service.ts",
+      "src/server/courses/publication.service.ts",
+      "src/server/courses/read-json.ts",
+      "src/server/iam/permissions.ts",
+      "src/server/iam/system-role-catalog.ts",
+      "src/server/notifications/notification.service.ts"
+    ],
+    "operational-learning": [
+      "src/app/(auth)/notificacoes/page.tsx",
+      "src/app/(courses)/aprender/[enrollmentId]/page.tsx",
+      "src/app/(courses)/configuracoes/page.tsx",
+      "src/app/(courses)/cursos/page.tsx",
+      "src/app/(courses)/layout.tsx",
+      "src/app/(dashboard)/configuracoes/page.tsx",
+      "src/app/(dashboard)/cursos/page.tsx",
+      "src/app/(dashboard)/layout.tsx",
+      "src/components/courses/CourseBadge.tsx",
+      "src/components/courses/CoursesWorkspace.tsx",
+      "src/components/courses/LearningPlayer.tsx",
+      "src/components/layout/DashboardShell.tsx",
+      "src/components/layout/Sidebar.tsx",
+      "src/components/layout/Topbar.tsx",
+      "src/components/premium/AreaLinks.tsx",
+      "src/components/premium/RouteHero.tsx",
+      "src/components/premium/premium.css",
+      "src/lib/auth/access-destination.ts",
+      "src/server/account/workspace-identity.service.ts"
+    ],
+    "synthetic-courses": [
+      "src/app/(showcase)/vitrine/aprender/[id]/page.tsx",
+      "src/features/vitrine-premium/components/demo/DemoProvider.tsx",
+      "src/features/vitrine-premium/components/layout/DashboardShell.tsx",
+      "src/features/vitrine-premium/courses/CourseMemory.tsx",
+      "src/features/vitrine-premium/courses/DemoLearning.tsx",
+      "src/features/vitrine-premium/courses/data.ts",
+      "src/features/vitrine-premium/views/cursos.tsx"
+    ],
+    "security-ci-tests": [
+      ".github/workflows/ci.yml",
+      "package.json",
+      "scripts/local/validate-beta1-copy.mjs",
+      "tests/beta1/browser-diagnostics.mjs",
+      "tests/beta1/browser-diagnostics.test.mjs",
+      "tests/beta1/copy-guard.test.mjs",
+      "tests/beta1/course-presentation.test.tsx",
+      "tests/beta1/demo-courses.test.ts",
+      "tests/beta1/learning-ui.spec.ts",
+      "tests/beta1/learning.spec.ts",
+      "tests/beta1/lms-fixtures.ts",
+      "tests/beta1/lms.test.ts",
+      "tests/beta1/playwright.config.ts",
+      "tests/beta1/rsc-denial.ts",
+      "tests/beta1/rsc.spec.ts",
+      "tests/beta1/run-isolated.mjs",
+      "tests/beta1/safe-reporter.ts",
+      "tests/beta1/shell.spec.ts",
+      "tests/beta1/upgrade-continuity.ts",
+      "tests/first-access/browser.spec.ts",
+      "tests/mission04-c/journey.spec.ts",
+      "tests/mission04-e/boundaries.spec.ts",
+      "tests/mission04-e/journey.spec.ts",
+      "tests/mission04-e/rsc-dynamic-metadata.test.ts",
+      "tests/mission04-e/rsc-dynamic-metadata.ts",
+      "tests/premium-unified/seed-isolated.mjs",
+      "tests/vitrine-premium/isolation.test.mjs"
+    ],
+    "documentation": [
+      "docs/release/pap-beta1-ux-lms/DEPENDENCY-AUDIT.json",
+      "docs/release/pap-beta1-ux-lms/IMPLEMENTATION-STATUS.md",
+      "docs/release/pap-beta1-ux-lms/LMS-SECURITY-AND-CONTINUITY.md",
+      "docs/release/pap-beta1-ux-lms/RELEASE-REPORT.md",
+      "docs/release/pap-beta1-ux-lms/SAFE-LOCAL-UPGRADE.md",
+      "docs/release/pap-beta1-ux-lms/SOURCE-MANIFEST.json",
+      "docs/release/pap-beta1-ux-lms/VALIDATION.json",
+      "docs/release/pap-beta1-ux-lms/evidence/learner-catalog-light-1440.png",
+      "docs/release/pap-beta1-ux-lms/evidence/learner-player-dark-375.png",
+      "docs/release/pap-beta1-ux-lms/evidence/manager-course-editor-dark-1440.png",
+      "docs/release/pap-beta1-ux-lms/evidence/synthetic-catalog-dark-375.png",
+      "docs/release/pap-beta1-ux-lms/evidence/synthetic-player-light-1440.png",
+      "docs/release/pap-beta1-ux-lms/evidence/unit-assignment-light-1440.png"
+    ]
+  },
+  "sourceHashes": [
+    {
+      "path": ".github/workflows/ci.yml",
+      "status": "modified",
+      "sha256": "820d5d5d3a815f494c82f634b1053967d5b96fcdc004810e0598a7bd681c5220"
+    },
+    {
+      "path": "package.json",
+      "status": "modified",
+      "sha256": "bd36c48dfb14d0cbaa2e69ba3e4ccb0fd262871378b1dae19a4bb8429d4f3fc0"
+    },
+    {
+      "path": "prisma/migrations/20261030090000_beta1_courses_lms/migration.sql",
+      "status": "added",
+      "sha256": "a1b0e1df4652003ca66e20c44fb55923714a49b76e4b3b277c02c5243e7a7239"
+    },
+    {
+      "path": "prisma/schema.prisma",
+      "status": "modified",
+      "sha256": "5201ba589e96ad5b0b7109a8bb63f4454699f35c66123fc7264e71bfb82dc204"
+    },
+    {
+      "path": "scripts/local/validate-beta1-copy.mjs",
+      "status": "added",
+      "sha256": "a75fc28892b127fd28d0111f04e41ee37332fe1cc8f880256a5a805265685cc0"
+    },
+    {
+      "path": "src/app/(admin)/admin/manager/cursos/[versionId]/page.tsx",
+      "status": "added",
+      "sha256": "e5be422406ef1598c3f5c1ae1356087c6bf6925a55f7bab65ab8e4bd41d945ac"
+    },
+    {
+      "path": "src/app/(admin)/admin/manager/cursos/page.tsx",
+      "status": "added",
+      "sha256": "ab2bfff1a23a21c2fa84b5d755384b04f950e68c8423c611cbbe011c6da4df20"
+    },
+    {
+      "path": "src/app/(admin)/admin/manager/distribuicao/page.tsx",
+      "status": "added",
+      "sha256": "9a44fe9dc89b60953a748b09a28aff6d6fb4f8282e8a3ce2a078aaa63cd39a90"
+    },
+    {
+      "path": "src/app/(admin)/admin/manager/materiais/page.tsx",
+      "status": "added",
+      "sha256": "f9fb7466b731126e695f17a6d2a48363260fbdc474efd7599d877936c181d99b"
+    },
+    {
+      "path": "src/app/(admin)/admin/manager/municipios/page.tsx",
+      "status": "added",
+      "sha256": "973c8447650bb7e372770d05af06c4fafb0f74c1358aaf55b219c21f0461761c"
+    },
+    {
+      "path": "src/app/(admin)/admin/manager/page.tsx",
+      "status": "modified",
+      "sha256": "70a5454c7c6792836e01a5126e6e414ea1f8c1f446184b558bf1a0140c2fd4b1"
+    },
+    {
+      "path": "src/app/(auth)/notificacoes/page.tsx",
+      "status": "modified",
+      "sha256": "38b2e17df125cd8ee197b4308668ba882f2d5d993a27715091b68695515e27a4"
+    },
+    {
+      "path": "src/app/(courses)/aprender/[enrollmentId]/page.tsx",
+      "status": "added",
+      "sha256": "269a427a9a19c13e78c4997c1b3c055533a8fbcb29c18e393263e5fab39caae6"
+    },
+    {
+      "path": "src/app/(courses)/configuracoes/page.tsx",
+      "status": "added",
+      "sha256": "b7151f1ef9c5820f70ce9e757d47076cca11f3b28ad74b539a175faf500a441c"
+    },
+    {
+      "path": "src/app/(courses)/cursos/page.tsx",
+      "status": "added",
+      "sha256": "9b90e7f2cb23de098d3d756ef33ae90326a6616eccac15690d32afac899fc63d"
+    },
+    {
+      "path": "src/app/(courses)/layout.tsx",
+      "status": "added",
+      "sha256": "4a2328a07b74cf4afb64563b7e7415da78e198bfc6ab9470306ab61f04866fba"
+    },
+    {
+      "path": "src/app/(dashboard)/configuracoes/page.tsx",
+      "status": "deleted",
+      "sha256": null
+    },
+    {
+      "path": "src/app/(dashboard)/cursos/page.tsx",
+      "status": "deleted",
+      "sha256": null
+    },
+    {
+      "path": "src/app/(dashboard)/layout.tsx",
+      "status": "modified",
+      "sha256": "b83e3105981ed2569ef51702fbecfaee887d78d6b430b623e1a67c172a053bb5"
+    },
+    {
+      "path": "src/app/(showcase)/vitrine/aprender/[id]/page.tsx",
+      "status": "added",
+      "sha256": "9a5be369313ace1972f151d355dfe9f205bd89f21edcf200133be15f4edd67f3"
+    },
+    {
+      "path": "src/app/api/admin/manager/municipalities/route.ts",
+      "status": "added",
+      "sha256": "71d4719ad2511fe7bbdf50b314edaa4636f5bc44c7038e7c973f63d03ecd2dca"
+    },
+    {
+      "path": "src/app/api/courses/[...segments]/route.ts",
+      "status": "added",
+      "sha256": "c2580e9bddf354977acf779eb08372b69bb4636ff3cada4dbbb632f501921ac0"
+    },
+    {
+      "path": "src/components/admin/AdminSidebar.tsx",
+      "status": "modified",
+      "sha256": "c67e43d20899c5c97981d9acb1dfa149f9d31d1ba9ff3a7d35062a88b66b9ee2"
+    },
+    {
+      "path": "src/components/admin/MunicipalityInclusion.tsx",
+      "status": "added",
+      "sha256": "2f50af766780c848153588033febcb529b61d25c0ac06bdfc09239aec259f64c"
+    },
+    {
+      "path": "src/components/courses/AuthorCatalog.tsx",
+      "status": "added",
+      "sha256": "34eb432cf4b8d91f90e5594a13e6c86daf58650597867d53ec6df381f71af439"
+    },
+    {
+      "path": "src/components/courses/CourseBadge.tsx",
+      "status": "added",
+      "sha256": "bf3f1fe1f2e75a5fa8ce2cd331f3630c8bd9d80a4734b71a26cf052420e5d4f9"
+    },
+    {
+      "path": "src/components/courses/CourseCatalog.tsx",
+      "status": "added",
+      "sha256": "86162c48f42a0520bea94839e8f66932f4d837bc2213f4c1798e70d84170b9ad"
+    },
+    {
+      "path": "src/components/courses/CourseEditor.tsx",
+      "status": "added",
+      "sha256": "9650dc637c7749ed98aacf243f802e11a3a008e4429e5db0de850bb40fc3aa67"
+    },
+    {
+      "path": "src/components/courses/CoursesWorkspace.tsx",
+      "status": "added",
+      "sha256": "3bcc1fd4dce2f04572456af2e950bf51bb798d47e168fda05bfb99d88dc1454a"
+    },
+    {
+      "path": "src/components/courses/LearningPlayer.tsx",
+      "status": "added",
+      "sha256": "48079a1daa4d716ef199d5a81dce1edff5ebe651851e866ceb5a48dc21ee38bb"
+    },
+    {
+      "path": "src/components/courses/LessonBlockRenderer.tsx",
+      "status": "added",
+      "sha256": "909131d1ab8aaeb2976ba3d04027bc4dc10b4f83a79ffb8c1a2a3db032135aee"
+    },
+    {
+      "path": "src/components/layout/DashboardShell.tsx",
+      "status": "modified",
+      "sha256": "280117cd7ead0be31b5ceec4938ae5506b4b1f95ec989b5faaa5e272e2c86d7d"
+    },
+    {
+      "path": "src/components/layout/Sidebar.tsx",
+      "status": "modified",
+      "sha256": "9fa97e0383b1dd76f1485c324b7e1ec0174a881b5a177dc632b564cfc59d0acc"
+    },
+    {
+      "path": "src/components/layout/Topbar.tsx",
+      "status": "modified",
+      "sha256": "d55e4f949d2572c044e8be99614ed0f8ae4229e580fc3914a2ddf5695a0ef1d4"
+    },
+    {
+      "path": "src/components/premium/AreaLinks.tsx",
+      "status": "modified",
+      "sha256": "06bd5fa9c0c6ec5ce78d218d98481548da30ad68878fc36d6ca92edda4f9640a"
+    },
+    {
+      "path": "src/components/premium/RouteHero.tsx",
+      "status": "modified",
+      "sha256": "2017a389a5cfbca7619e2190b954cf1af2a9ba0e33abff49dfcea6df009250bd"
+    },
+    {
+      "path": "src/components/premium/premium.css",
+      "status": "modified",
+      "sha256": "d9077e54839e7f4f4c43b1d476318b910e477a7f1288dde2a6b7899b71ed648c"
+    },
+    {
+      "path": "src/features/vitrine-premium/components/demo/DemoProvider.tsx",
+      "status": "modified",
+      "sha256": "c8463537247cddbfc318b28afc66a1ae74f51bfb433456814b4f11bcda070e7f"
+    },
+    {
+      "path": "src/features/vitrine-premium/components/layout/DashboardShell.tsx",
+      "status": "modified",
+      "sha256": "587bf70ed947e06747c7b6a8d2dad2938bf8a38ffaba8eeba7977a5097e20a9e"
+    },
+    {
+      "path": "src/features/vitrine-premium/courses/CourseMemory.tsx",
+      "status": "added",
+      "sha256": "4320d29befb84b5dff09ae7f99560490dee2e56987b46579172f3155c56def83"
+    },
+    {
+      "path": "src/features/vitrine-premium/courses/DemoLearning.tsx",
+      "status": "added",
+      "sha256": "9d744c5e37b1fc03657e8a92bb9037dd5fdbc7cff49cbb747203ae4795452c8b"
+    },
+    {
+      "path": "src/features/vitrine-premium/courses/data.ts",
+      "status": "added",
+      "sha256": "cb4938054bc42005655e719f2e2bb55cf00edf55104984160caa5ba52cc6ccb4"
+    },
+    {
+      "path": "src/features/vitrine-premium/views/cursos.tsx",
+      "status": "modified",
+      "sha256": "b504a2430052c5bd85783b0b384798d4c8f534565d91b3a6ebba0926a1aba39e"
+    },
+    {
+      "path": "src/lib/auth/access-destination.ts",
+      "status": "modified",
+      "sha256": "da2f17ac8b6561b99959402511985d378de04e645e803f6242713389e2462f46"
+    },
+    {
+      "path": "src/lib/courses/http.ts",
+      "status": "added",
+      "sha256": "be68c84c8c9e1f67e2fe056d5129097327c2cb2fa67f168281d879d40e9d49f2"
+    },
+    {
+      "path": "src/lib/courses/order.ts",
+      "status": "added",
+      "sha256": "e196999714a1b626582a205dcb2d34ec31f21603df1c2036b335140777ef5dd3"
+    },
+    {
+      "path": "src/lib/courses/schema.ts",
+      "status": "added",
+      "sha256": "566251246793a3d3237e014d3ed0811f61f6487676a15964ee6ac0a1d47600a5"
+    },
+    {
+      "path": "src/lib/courses/types.ts",
+      "status": "added",
+      "sha256": "263e0697db085a445c156e7c755837242707837fd7f196a87c8d6f18fbb1dae6"
+    },
+    {
+      "path": "src/server/access-invitations/access-invitation.service.ts",
+      "status": "modified",
+      "sha256": "4c86e3b4a87646f545283206004b4bcb41d3139a87c47e745e56e9ce879e04ce"
+    },
+    {
+      "path": "src/server/account/workspace-identity.service.ts",
+      "status": "added",
+      "sha256": "2de9a45fa3ec1983712f6b1fcfd5afad7cb60f4f0cb9e20c0e09b3ee68e2920f"
+    },
+    {
+      "path": "src/server/admin-beta/delegated-institutions.service.ts",
+      "status": "added",
+      "sha256": "cc53fda13bd9e2b64b88e59963246ea48e434752189a6ec4d73b3b3474f3c043"
+    },
+    {
+      "path": "src/server/courses/assignment.service.ts",
+      "status": "added",
+      "sha256": "877fef3b850a3dfa38b6ca4595a37d1837df643fd383dd309f83da7822b95fa9"
+    },
+    {
+      "path": "src/server/courses/authoring.service.ts",
+      "status": "added",
+      "sha256": "150e6f2a95bc5d952fa6083ce07d5b2e65ea5c018c9f29d323b75623475eafa0"
+    },
+    {
+      "path": "src/server/courses/context.ts",
+      "status": "added",
+      "sha256": "bc2c2e3a6132bbf432b8eebfa21cff9dd7ec3209b1e8c45e2d2d2b75f9ddb115"
+    },
+    {
+      "path": "src/server/courses/page-session.ts",
+      "status": "added",
+      "sha256": "f93b57a79c52a5641b654b144942c0f676c294e38908afc6535a6988764a0f50"
+    },
+    {
+      "path": "src/server/courses/progress.service.ts",
+      "status": "added",
+      "sha256": "e03e2a74a6bbaaf52e0ca98219253d146d2b8ebbc3d59b4aacea1d571c248de6"
+    },
+    {
+      "path": "src/server/courses/publication.service.ts",
+      "status": "added",
+      "sha256": "fa7146874c21fe3c8d9d926b25f2cb4856a6c629166fffce54b308d053ba88e3"
+    },
+    {
+      "path": "src/server/courses/read-json.ts",
+      "status": "added",
+      "sha256": "f6be47a491039bd95e9cfedc33f7e463cbcce88a14fc0c47cef1b81fb5ca9a65"
+    },
+    {
+      "path": "src/server/iam/permissions.ts",
+      "status": "modified",
+      "sha256": "16031621ef0aa15e5548be0ca6a8b8982943df2b83088624c6247b5305e53dc0"
+    },
+    {
+      "path": "src/server/iam/system-role-catalog.ts",
+      "status": "modified",
+      "sha256": "3fc08ad6378baf9ec2b08be8f22df80b3600a59bfcb0aa17c8ecf525bf0f159e"
+    },
+    {
+      "path": "src/server/notifications/notification.service.ts",
+      "status": "modified",
+      "sha256": "bc5a4fb10c4c2635a1ad081532eb2cc4b3b0e602adceba456fd4c1ac360e9e5a"
+    },
+    {
+      "path": "tests/beta1/browser-diagnostics.mjs",
+      "status": "added",
+      "sha256": "65777316ec369220003c22976dcb79f473d21f2d19ed133416d82774d1c68082"
+    },
+    {
+      "path": "tests/beta1/browser-diagnostics.test.mjs",
+      "status": "added",
+      "sha256": "226c87c1b94a87d255495ee83792d93c7efeebd3b84a77b2e839eaae79fe900e"
+    },
+    {
+      "path": "tests/beta1/copy-guard.test.mjs",
+      "status": "added",
+      "sha256": "4786e6da52812d17239ce455cb2d33c2f0e821df181ae2d63813e3d0bc57a61d"
+    },
+    {
+      "path": "tests/beta1/course-presentation.test.tsx",
+      "status": "added",
+      "sha256": "8ca15036d83b38b2583a9b0dbf361199bc1ccd8781ef029c08ea5eb973925cc2"
+    },
+    {
+      "path": "tests/beta1/demo-courses.test.ts",
+      "status": "added",
+      "sha256": "603fa46bdcdd4f52657d7b5dc731ff4acb6e2ec267a070bac78cee08baa71e6e"
+    },
+    {
+      "path": "tests/beta1/learning-ui.spec.ts",
+      "status": "added",
+      "sha256": "83ba40e0cd3a52eeb5d4c93d49f2f1edd9bd2b34cc9ace8ad35c85bad4de5a84"
+    },
+    {
+      "path": "tests/beta1/learning.spec.ts",
+      "status": "added",
+      "sha256": "add2973ff0b7a9539e327206c756835c0adee121d8000f71829e4aedfa0106c1"
+    },
+    {
+      "path": "tests/beta1/lms-fixtures.ts",
+      "status": "added",
+      "sha256": "b4e889061b18cdaee5b1d25f7108ca6cf6014bde4f9c670dffe38d702a01ef11"
+    },
+    {
+      "path": "tests/beta1/lms.test.ts",
+      "status": "added",
+      "sha256": "015fbc8e75b3b7d4c076b7ef555b4b395fdce2ced1215c5f10850ed0c4f217d4"
+    },
+    {
+      "path": "tests/beta1/playwright.config.ts",
+      "status": "modified",
+      "sha256": "3391d3d403ce2ff33183f99abeb3d2e419891c202b46b391b74c8f8c4b679164"
+    },
+    {
+      "path": "tests/beta1/rsc-denial.ts",
+      "status": "added",
+      "sha256": "367ca3b787c57d3e9c6360d89ec30564403da9453e56415078e547818d4b331c"
+    },
+    {
+      "path": "tests/beta1/rsc.spec.ts",
+      "status": "added",
+      "sha256": "6f25bd59a9bdfedfec1ff82b7114fb63bfd7911e5ff6393dafc4e260eebeede6"
+    },
+    {
+      "path": "tests/beta1/run-isolated.mjs",
+      "status": "modified",
+      "sha256": "88c65a5b6e86931d6c9b2513169ba348c91114594d84552d4b9163282ad65f84"
+    },
+    {
+      "path": "tests/beta1/safe-reporter.ts",
+      "status": "modified",
+      "sha256": "85c04dd074722b35fcee7fba09bc5ace9fac2910f4ed3c06cff38de2110b36ea"
+    },
+    {
+      "path": "tests/beta1/shell.spec.ts",
+      "status": "modified",
+      "sha256": "d6ab545110a6128f394c2257e1740fffe0b310e384e2cb14f6784a9ed943b4b7"
+    },
+    {
+      "path": "tests/beta1/upgrade-continuity.ts",
+      "status": "added",
+      "sha256": "33ff46d5f36a64d75cc81cf60d0b5282cb2a5e29d44563d592457a9558be7b4b"
+    },
+    {
+      "path": "tests/first-access/browser.spec.ts",
+      "status": "modified",
+      "sha256": "5a691234897eaa1f8615e5c584d7a922ac979073323dd1a8ffe9aa783a5e2797"
+    },
+    {
+      "path": "tests/mission04-c/journey.spec.ts",
+      "status": "modified",
+      "sha256": "19c765d974ee86605b3bb543eb5e36f13ea7e726eaa6eda9027417448d5d748c"
+    },
+    {
+      "path": "tests/mission04-e/boundaries.spec.ts",
+      "status": "modified",
+      "sha256": "fef7489cafac9d5176cccdfb751dd373b6658264cb11750c5c860cd6ee221fcd"
+    },
+    {
+      "path": "tests/mission04-e/journey.spec.ts",
+      "status": "modified",
+      "sha256": "fd7752caf4e67a3b006ba1ab0f5a0c90e0eff456d3f00d941a6379eb56bb80af"
+    },
+    {
+      "path": "tests/mission04-e/rsc-dynamic-metadata.test.ts",
+      "status": "modified",
+      "sha256": "a04a1634be6d1eea6e81302187102bd9f36825745139e41358689026007b4847"
+    },
+    {
+      "path": "tests/mission04-e/rsc-dynamic-metadata.ts",
+      "status": "modified",
+      "sha256": "4876d2b19c174212b7729762f123f579040f05022b86a64f3b0bf75b5606dd7f"
+    },
+    {
+      "path": "tests/premium-unified/seed-isolated.mjs",
+      "status": "modified",
+      "sha256": "226cee46c55eb3ad099bece0cd4843481ff392d47823467fc823eb4f9c9bb115"
+    },
+    {
+      "path": "tests/vitrine-premium/isolation.test.mjs",
+      "status": "modified",
+      "sha256": "685d7fcb4fd9ec083e6e399569ed625294e814ced32621fbe29deaa26e7ea377"
+    }
+  ],
+  "documentationHashes": "Not self-referential; documentation paths inventoried separately"
+}
