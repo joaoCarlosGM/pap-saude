@@ -30,8 +30,8 @@
   },
   "effectiveInventory": {
     "initialManifest": "SOURCE-MANIFEST.json (historical initial receipt)",
-    "totalDistinctPaths": 106,
-    "sourcePaths": 91,
+    "totalDistinctPaths": 107,
+    "sourcePaths": 92,
     "documentationPaths": 15,
     "allPaths": [
       ".github/workflows/ci.yml",
@@ -131,6 +131,7 @@
       "tests/beta1/shell.spec.ts",
       "tests/beta1/upgrade-continuity.ts",
       "tests/first-access/browser.spec.ts",
+      "tests/mission04-b/governance.test.ts",
       "tests/mission04-c/journey.spec.ts",
       "tests/mission04-e/boundaries.spec.ts",
       "tests/mission04-e/journey.spec.ts",
@@ -471,6 +472,10 @@
         "sha256": "5a691234897eaa1f8615e5c584d7a922ac979073323dd1a8ffe9aa783a5e2797"
       },
       {
+        "path": "tests/mission04-b/governance.test.ts",
+        "sha256": "61abc7235eb9ed184e5e5067a599bb21a05df214e82378da6a1c77f85187d61d"
+      },
+      {
         "path": "tests/mission04-c/journey.spec.ts",
         "sha256": "19c765d974ee86605b3bb543eb5e36f13ea7e726eaa6eda9027417448d5d748c"
       },
@@ -507,7 +512,8 @@
         "sha256": "685d7fcb4fd9ec083e6e399569ed625294e814ced32621fbe29deaa26e7ea377"
       }
     ],
-    "effectiveSourceFingerprint": "0e007edd576780a0ea50caf9925a73a3f55ec5459143885bdcd7a8b7a015419f"
+    "effectiveSourceFingerprint": "ea8fa1692bae550273d6de89cb8eb2a4ec16bd86f55ebb80600008e2d94cda67",
+    "fingerprintEncoding": "SHA256 of UTF-8 JSON.stringify(sourceHashes), compact separators, ensure_ascii=false"
   },
   "nextCI": "PENDING on correction SHA",
   "productionPublishDeploy": "SKIPPED; feature branch conditions unchanged",
@@ -641,5 +647,40 @@
     "notRepeated": "Unchanged approved suites, audits, migrations, dependency installation and Docker builds",
     "operatorLabVpsAndProduction": "NOT ACCESSED OR ALTERED",
     "nextCI": "PENDING on correction SHA; no GO before full green"
+  },
+  "delegatedGovernanceCatalogCorrection": {
+    "reference": "8fc34644d95bab8d621c32696369d5b68bbca6e9",
+    "failedCI": "https://github.com/joaoCarlosGM/pap-saude/actions/runs/41067407811",
+    "failedGate": "Mission 04 delegated IAM, legacy upgrade and clinical page boundaries",
+    "reproduction": {
+      "governanceNode": {
+        "pass": 26,
+        "fail": 1
+      },
+      "firstFailure": "PAP_ADMIN appoints PAP_MANAGER using real MFA and canonical global scope",
+      "cause": "Legacy exact permission assertion predates approved Beta1 LMS and pending-municipality permissions."
+    },
+    "correction": "Keep exact closed-set assertion and add course.distribute/edit/publish/read and organization.municipality.create. No backend, catalog, IAM, MFA or clinical changes. Existing escalation/privacy denials preserved.",
+    "validation": {
+      "directedNode": {
+        "pass": 1,
+        "fail": 0,
+        "skipped": 0
+      },
+      "sliceBBrowser": {
+        "pass": 5,
+        "fail": 0
+      },
+      "typeScript": "PASS",
+      "lint": "PASS",
+      "diffCheck": "PASS",
+      "privateNodeLog": "/tmp/pap-beta1-tests-ny8cnL/integration.log",
+      "privateBrowserLog": "/tmp/pap-beta1-tests-MIBb22/browser.log"
+    },
+    "sourcePath": "tests/mission04-b/governance.test.ts",
+    "sourceSha256": "61abc7235eb9ed184e5e5067a599bb21a05df214e82378da6a1c77f85187d61d",
+    "operatorResources": "NOT ACCESSED OR ALTERED; owned disposable test resources only",
+    "legacyUpgrade": "NOT REPEATED locally: exact original harness targets fixed CI disposable context; remote full gate mandatory",
+    "nextCI": "PENDING on correction SHA; no GO before integral success"
   }
 }

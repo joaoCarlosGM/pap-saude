@@ -85,7 +85,12 @@ test("PAP_ADMIN appoints PAP_MANAGER using real MFA and canonical global scope",
   const profile = await getEffectiveAccessProfile(manager.user.id);
   assert.equal(profile?.canAccessAdmin, true);
   assert.deepEqual(profile?.permissions, [
+    "course.distribute",
+    "course.edit",
+    "course.publish",
+    "course.read",
     "institution.invite",
+    "organization.municipality.create",
     "organization.read",
     "organization.request.review",
     "role.assign_commercial",
