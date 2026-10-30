@@ -17,5 +17,5 @@ test('demo provider is structurally independent, API only accepts synthetic IDs 
 });
 test('visual preferences are scoped by identity and mode; operational routes import no mock catalog',async()=>{
  assert.notEqual(navigationKey('a'),navigationKey('b'));assert.notEqual(navigationKey('a'),navigationKey('a',true));assert.equal(navigationMode('PAP_ADMIN'),'expanded');assert.equal(navigationMode('compact'),'compact');
- for(const route of ['dashboard','configuracoes','chat','protocolos','cursos','ferramentas'])assert.ok(!/mock[-_A-Z]/i.test(await readFile(`src/app/(dashboard)/${route}/page.tsx`,'utf8')));
+ for(const path of ['src/app/(dashboard)/dashboard/page.tsx','src/app/(courses)/configuracoes/page.tsx','src/app/(dashboard)/chat/page.tsx','src/app/(dashboard)/protocolos/page.tsx','src/app/(courses)/cursos/page.tsx','src/app/(dashboard)/ferramentas/page.tsx','src/app/(courses)/aprender/[enrollmentId]/page.tsx'])assert.ok(!/mock[-_A-Z]/i.test(await readFile(path,'utf8')),path);
 });

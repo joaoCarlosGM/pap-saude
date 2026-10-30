@@ -1,0 +1,45 @@
+{
+  "initialCandidate": "978aba0db6d14d54071561b8ec1526c22bc286c0",
+  "failedCI": "https://github.com/joaoCarlosGM/pap-saude/actions/runs/41052379544",
+  "firstFailedGate": "P0 post-acceptance server security and data isolation",
+  "cause": "Deterministic ENOENT: legacy static boundary reads configuracoes/cursos from former dashboard route group. Reproduced using the exact server gate in an owned disposable database.",
+  "priorGateSubtests": {
+    "security": 9,
+    "operationalData": 4,
+    "pending": 8,
+    "demoBoundaries": {
+      "pass": 1,
+      "fail": 1
+    },
+    "resetHttp": "NOT RUN due to prior failure"
+  },
+  "correction": {
+    "path": "tests/p0-full/demo-boundaries.test.ts",
+    "sha256": "3c3d7b32163b169be69de75fd86023b3a69fb8dc68c45a862eb4f714161c5238",
+    "contract": "Retain all six operational page mock-import prohibitions using their actual group paths and add the new operational learning page. No application/guard/CI script changes."
+  },
+  "targetedValidation": {
+    "command": "Owned copy of scripts/test-p0-full.sh, limited locally to demo-boundaries and --test-name-pattern=\"visual preferences\"; full remote gate remains unfiltered.",
+    "result": "PASS",
+    "tests": 1,
+    "fail": 0,
+    "skipped": 0,
+    "lint": "PASS",
+    "diffCheck": "PASS",
+    "privateLog": "/tmp/pap-beta1-mission-20261030/ci-p0-boundary-directed.log"
+  },
+  "effectiveInventory": {
+    "initialManifest": "SOURCE-MANIFEST.json",
+    "additionalPaths": [
+      "tests/p0-full/demo-boundaries.test.ts",
+      "docs/release/pap-beta1-ux-lms/CI-CORRECTIONS.json"
+    ],
+    "totalDistinctPaths": 100,
+    "sourcePaths": 86,
+    "documentationPaths": 14,
+    "effectiveSourceFingerprint": "a9811f008fe87960720eb58a8b0e7208461573a315b536e6891c50f572a4c602"
+  },
+  "nextCI": "PENDING on correction SHA",
+  "productionPublishDeploy": "SKIPPED; feature branch conditions unchanged",
+  "operatorLab": "NOT ACCESSED OR ALTERED"
+}
