@@ -5,7 +5,7 @@ import {tmpdir} from 'node:os';
 import {join} from 'node:path';
 import {assertDockerEndpoint} from '../../scripts/local/policy.mjs';
 import {publicBetaDiagnostics} from './browser-diagnostics.mjs';
-const groups={unit:['tests/beta1/presentation.test.tsx','tests/beta1/patients.test.tsx','tests/beta1/navigation.test.tsx','tests/beta1/course-presentation.test.tsx','tests/beta1/demo-courses.test.ts','tests/beta1/browser-diagnostics.test.mjs','tests/beta1/copy-guard.test.mjs'],upgrade:[],build:[],integration:['tests/beta1/lms.test.ts'],browser:[]};
+const groups={unit:['tests/beta1/presentation.test.tsx','tests/beta1/patients.test.tsx','tests/beta1/navigation.test.tsx','tests/beta1/course-presentation.test.tsx','tests/beta1/demo-courses.test.ts','tests/beta1/browser-diagnostics.test.mjs','tests/beta1/copy-guard.test.mjs','tests/beta1/row-lock-policy.test.mjs'],upgrade:[],build:[],integration:['tests/beta1/lms.test.ts'],browser:[]};
 const selected=process.argv[2];if(process.argv.length!==3||!Object.hasOwn(groups,selected))throw Error('Choose an explicit isolated test group');
 if(selected==='unit'){const result=spawnSync('node_modules/.bin/tsx',['--test','--test-concurrency=1',...groups.unit],{stdio:'inherit',env:process.env});process.exit(result.status??1);}
 const dbName='pap_beta1_test';

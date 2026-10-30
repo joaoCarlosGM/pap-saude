@@ -1,3 +1,4 @@
+import {lockCoursePublication} from './transaction-locks';
 import type {Prisma} from '@prisma/client';
 import {releaseSchema} from '@/lib/courses/schema';
 import {PERMISSIONS} from '@/server/iam/permissions';
@@ -22,7 +23,7 @@ export async function editorOrganizations(token:string){return withCourseActor(t
  });}
 export async function releaseCourse(token:string,id:string,input:unknown,municipal=false){const payload=releaseSchema.parse(input);return withCourseActor(token,async(tx,userId)=>{
  const pub=await tx.coursePublication.findUnique({where:{id},include:{version:true}});if(!pub||pub.revokedAt||pub.archivedAt)fail('COURSE_PUBLICATION_UNAVAILABLE',404);
- await tx.$queryRaw`SELECT id FROM course_publications WHERE id=${id} FOR UPDATE`;
+ await lockCoursePublication(tx,id,true);
  if(!municipal)await ownedVersion(tx,userId,pub.courseVersionId,PERMISSIONS.COURSE_DISTRIBUTE);
  let released=0;
  for(const organizationId of [...new Set(payload.organizationIds)].sort()){
@@ -37,7 +38,7 @@ export async function releaseCourse(token:string,id:string,input:unknown,municip
  if(released)await audit(tx,userId,'RELEASED',id,undefined,{organizationIds:payload.organizationIds});return {released,alreadyAvailable:payload.organizationIds.length-released};
  });}
 export async function withdrawPublication(token:string,id:string,action:'ARCHIVE'|'REVOKE'){return withCourseActor(token,async(tx,userId)=>{
- await tx.$queryRaw`SELECT id FROM course_publications WHERE id=${id} FOR UPDATE`;
+ await lockCoursePublication(tx,id,true);
  const pub=await tx.coursePublication.findUnique({where:{id}});if(!pub)fail('COURSE_NOT_FOUND',404);await ownedVersion(tx,userId,pub.courseVersionId,PERMISSIONS.COURSE_PUBLISH);
  const changed=await tx.coursePublication.updateMany({where:{id,...(action==='REVOKE'?{revokedAt:null}:{archivedAt:null})},data:action==='REVOKE'?{revokedAt:new Date()}:{archivedAt:new Date()}});if(changed.count)await audit(tx,userId,action,id);return {status:action};
  });}

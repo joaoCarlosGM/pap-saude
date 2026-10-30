@@ -43,7 +43,7 @@ test('unit assignment is atomic/idempotent, emits one persistent notification, a
 });
 test('learner sequence, checkpoint, server assessment and concurrent replay preserve authoritative progress without answer leakage',async()=>{
  const g=await graph(),a=await assignCourse(g.unit.token,{publicationId:g.pub.publicationId,organizationId:g.learner.unit.id,all:true,obligation:'RECOMMENDED',deadlineAt:null}),id=a.enrollmentIds[0];let view=await getEnrollment(g.learner.token,id);
- assert.equal(JSON.stringify(view).includes('correctIndex'),false);assert.equal(JSON.stringify(view).includes('expected'),false);const [one,two]=view.modules[0].lessons;
+ await assert.rejects(getEnrollment(g.learner.token,id+"' OR '1'='1"));assert.equal(await db.courseEnrollment.count({where:{id}}),1);assert.equal(JSON.stringify(view).includes('correctIndex'),false);assert.equal(JSON.stringify(view).includes('expected'),false);const [one,two]=view.modules[0].lessons;
  await assert.rejects(saveProgress(g.learner.token,id,{lessonId:two.id,revision:0,action:'COMPLETE',acknowledged:true,answers:{}}));
  await assert.rejects(saveProgress(g.learner.token,id,{lessonId:one.id,revision:0,action:'COMPLETE',acknowledged:true,answers:{check:1}}));assert.equal(await db.courseProgress.count({where:{enrollmentId:id}}),0);
  const complete={lessonId:one.id,revision:0,action:'COMPLETE',acknowledged:true,answers:{check:0}};const results=await Promise.all([saveProgress(g.learner.token,id,complete),saveProgress(g.learner.token,id,complete)]);assert.equal(results[0].progress,50);assert.equal(results[1].progress,50);assert.equal(await db.courseProgress.count({where:{enrollmentId:id}}),1);

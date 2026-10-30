@@ -1,3 +1,4 @@
+import {lockCourseScope} from '@/server/courses/transaction-locks';
 import {z} from 'zod';
 import {withCourseActor as withLockedActor,coursePermission,fail} from '@/server/courses/context';
 import {getEffectiveAccessProfile} from '@/server/iam/effective-access-profile.service';
@@ -8,7 +9,7 @@ async function permitted(tx:Parameters<Parameters<typeof withLockedActor>[1]>[0]
 export async function inclusionParents(token:string){return withLockedActor(token,async(tx,userId)=>{await permitted(tx,userId);return tx.organization.findMany({where:{type:'PAP',status:'ACTIVE',isActive:true},select:{id:true,name:true},orderBy:{id:'asc'},take:20});});}
 export async function createDelegatedMunicipality(token:string,input:unknown){const payload=inputSchema.parse(input);return withLockedActor(token,async(tx,userId)=>{
  await permitted(tx,userId);
- await tx.$queryRaw`SELECT id FROM organizations WHERE id=${payload.parentId} FOR SHARE`;
+ await lockCourseScope(tx,payload.parentId);
  const parent=await tx.organization.findUnique({where:{id:payload.parentId}});if(!parent||parent.type!=='PAP'||parent.status!=='ACTIVE'||!parent.isActive)fail('INSTITUTION_PARENT_UNAVAILABLE',403);
  const existing=await tx.organization.findUnique({where:{code:payload.code}});
  if(existing){const own=await tx.auditEvent.findFirst({where:{actorUserId:userId,action:'DELEGATED_MUNICIPALITY_CREATED',resourceId:existing.id}});if(!own||existing.type!=='MUNICIPALITY'||existing.name!==payload.name||existing.city!==payload.city||existing.state!==payload.state||existing.parentId!==payload.parentId)fail('INSTITUTION_CODE_CONFLICT',409);return {id:existing.id,name:existing.name,status:existing.status,replayed:true};}

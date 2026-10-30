@@ -1,4 +1,5 @@
-import {Prisma} from '@prisma/client';
+import {lockCourseEnrollment,lockCoursePublication,lockCourseAudiences} from './transaction-locks';
+import type {Prisma} from '@prisma/client';
 import {progressSchema,attemptSchema,publicBlocks,type LessonBlock} from '@/lib/courses/schema';
 import {PERMISSIONS} from '@/server/iam/permissions';
 import {getEffectiveAccessProfile} from '@/server/iam/effective-access-profile.service';
@@ -10,11 +11,11 @@ const enrollmentInclude={assignment:{include:{publication:true}},version:{includ
 type Enrollment=Prisma.CourseEnrollmentGetPayload<{include:typeof enrollmentInclude}>;
 const lessons=(e:Enrollment)=>e.version.modules.flatMap(m=>m.lessons);
 async function enrollment(tx:Prisma.TransactionClient,userId:string,id:string,write=false){
- await tx.$queryRaw`SELECT id FROM course_enrollments WHERE id=${id} ${write?Prisma.sql`FOR UPDATE`:Prisma.sql`FOR SHARE`}`;
+ await lockCourseEnrollment(tx,id,write);
  const e=await tx.courseEnrollment.findUnique({where:{id},include:enrollmentInclude});if(!e||e.learnerUserId!==userId||e.assignment.professionalUserId!==userId||e.courseVersionId!==e.assignment.publication.courseVersionId)fail('COURSE_ENROLLMENT_NOT_FOUND',404);
  await coursePermission(tx,userId,write?PERMISSIONS.COURSE_PROGRESS_OWN_WRITE:PERMISSIONS.COURSE_PROGRESS_OWN_READ,e.assignment.organizationId);
- await tx.$queryRaw`SELECT id FROM course_publications WHERE id=${e.assignment.publicationId} FOR SHARE`;
- await tx.$queryRaw`SELECT id FROM course_audiences WHERE "publicationId"=${e.assignment.publicationId} FOR SHARE`;
+ await lockCoursePublication(tx,e.assignment.publicationId);
+ await lockCourseAudiences(tx,e.assignment.publicationId);
  if(e.assignment.revokedAt||e.assignment.publication.revokedAt||!await eligibleAudience(tx,e.assignment.publicationId,e.assignment.organizationId))fail('COURSE_ENROLLMENT_UNAVAILABLE',403);
  return e;
 }
@@ -60,7 +61,7 @@ export async function submitAttempt(token:string,id:string,input:unknown){const 
  });}
 async function visibleReleases(tx:Prisma.TransactionClient,userId:string,profile:NonNullable<Awaited<ReturnType<typeof getEffectiveAccessProfile>>>){
  const releases=await tx.userNotification.findMany({where:{userId,kind:'COURSE_RELEASED_TO_UNIT',readAt:null},select:{id:true,coursePublicationId:true},take:100}),visible:{id:string;publicationId:string}[]=[];
- for(const n of releases){if(!n.coursePublicationId)continue;await tx.$queryRaw`SELECT id FROM course_publications WHERE id=${n.coursePublicationId} FOR SHARE`;const p=await tx.coursePublication.findUnique({where:{id:n.coursePublicationId},include:{version:{select:{course:{select:{archivedAt:true}}}}}});if(!p||p.revokedAt||p.archivedAt||p.version.course.archivedAt)continue;
+ for(const n of releases){if(!n.coursePublicationId)continue;await lockCoursePublication(tx,n.coursePublicationId);const p=await tx.coursePublication.findUnique({where:{id:n.coursePublicationId},include:{version:{select:{course:{select:{archivedAt:true}}}}}});if(!p||p.revokedAt||p.archivedAt||p.version.course.archivedAt)continue;
   for(const role of profile.roles){if(role.key!=='HEALTH_UNIT_ADMIN'||!role.organization||!role.permissions.includes(PERMISSIONS.COURSE_ASSIGN))continue;try{await coursePermission(tx,userId,PERMISSIONS.COURSE_ASSIGN,role.organization.id);if(await eligibleAudience(tx,p.id,role.organization.id)){visible.push({id:n.id,publicationId:p.id});break;}}catch(e){if(!(e instanceof AccessDeniedError)&&!(e instanceof CourseError&&e.status===403))throw e;}}
  }return visible;
 }

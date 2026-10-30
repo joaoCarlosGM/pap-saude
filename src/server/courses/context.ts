@@ -1,3 +1,4 @@
+import {lockCourseActorRows,lockCourseScope} from './transaction-locks';
 import {createHash} from 'node:crypto';
 import {Prisma} from '@prisma/client';
 import {db} from '@/server/db/client';
@@ -17,18 +18,13 @@ export async function withCourseActor<T>(token:string,action:(tx:Prisma.Transact
   const id=preliminary.user.id;
   // Hold the authorization inputs until commit. Concurrent revocation/suspension
   // serializes before or after this operation, never between check and write.
-  await tx.$queryRaw`SELECT id FROM users WHERE id=${id} FOR SHARE`;
-  await tx.$queryRaw`SELECT id FROM sessions WHERE id=${preliminary.session.id} FOR SHARE`;
-  await tx.$queryRaw`SELECT id FROM mfa_factors WHERE "userId"=${id} FOR SHARE`;
-  await tx.$queryRaw`SELECT id FROM role_assignments WHERE "userId"=${id} FOR SHARE`;
-  await tx.$queryRaw`SELECT "roleId" FROM role_permissions WHERE "roleId" IN (SELECT "roleId" FROM role_assignments WHERE "userId"=${id}) FOR SHARE`;
-  await tx.$queryRaw`SELECT id FROM memberships WHERE "userId"=${id} FOR SHARE`;
+  await lockCourseActorRows(tx,id,preliminary.session.id);
   const actor=await validateSession(token,{updateLastSeen:false,client:tx});await requireOperationalMfa(actor,tx);
   const result=await action(tx,id);await validateSession(token,{updateLastSeen:false,client:tx});return result;
  });
 }
 export async function coursePermission(tx:Prisma.TransactionClient,userId:string,permission:PermissionKey,organizationId?:string){
- if(organizationId){await tx.$queryRaw`SELECT id FROM organizations WHERE id=${organizationId} OR id=(SELECT "parentId" FROM organizations WHERE id=${organizationId}) OR id=(SELECT "parentId" FROM organizations WHERE id=(SELECT "parentId" FROM organizations WHERE id=${organizationId})) FOR SHARE`;const org=await tx.organization.findUnique({where:{id:organizationId},include:{parent:{include:{parent:true}}}});if(!org?.isActive||org.status!=='ACTIVE'||(org.parent&&(!org.parent.isActive||org.parent.status!=='ACTIVE'))||(org.parent?.parent&&(!org.parent.parent.isActive||org.parent.parent.status!=='ACTIVE')))fail('COURSE_SCOPE_UNAVAILABLE',403);}
+ if(organizationId){await lockCourseScope(tx,organizationId);const org=await tx.organization.findUnique({where:{id:organizationId},include:{parent:{include:{parent:true}}}});if(!org?.isActive||org.status!=='ACTIVE'||(org.parent&&(!org.parent.isActive||org.parent.status!=='ACTIVE'))||(org.parent?.parent&&(!org.parent.parent.isActive||org.parent.parent.status!=='ACTIVE')))fail('COURSE_SCOPE_UNAVAILABLE',403);}
  await requirePermission({userId,permission,organizationId},tx);
 }
 export async function requireUnit(tx:Prisma.TransactionClient,userId:string,organizationId:string,permission:PermissionKey){

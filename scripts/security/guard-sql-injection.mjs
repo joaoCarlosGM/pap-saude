@@ -1,3 +1,4 @@
+import {AUDITED_COURSE_LOCK_PATH,validateAuditedCourseLocks} from './course-locks-policy.mjs';
 import { readFileSync, readdirSync, statSync } from "node:fs";
 
 import { join, relative } from "node:path";
@@ -49,6 +50,12 @@ const violations = [];
 for (const file of walk(sourceRoot)) {
   const content = readFileSync(file, "utf8");
 
+  if(relative(root,file)===AUDITED_COURSE_LOCK_PATH){
+    const audit=validateAuditedCourseLocks(content);
+    if(audit.ok)continue;
+    violations.push({file:AUDITED_COURSE_LOCK_PATH,line:1,label:"Audited row-lock exception refused",source:audit.reason});
+  }
+
   const lines = content.split("\n");
 
   for (let index = 0; index < lines.length; index += 1) {
@@ -88,8 +95,8 @@ if (violations.length > 0) {
   process.exit(1);
 }
 
-console.log("PASS no raw SQL execution APIs in production source");
+console.log("PASS no raw SQL execution outside the fingerprinted read-only row-lock helper");
 
 console.log("PASS no direct node-postgres access in production source");
 
-console.log("PASS production DB access policy: Prisma query API only");
+console.log("PASS Prisma query API plus closed, bound-parameter row locks; no Unsafe execution");
