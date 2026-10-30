@@ -1,0 +1,61 @@
+name: Admin Beta isolated images
+on:
+  push:
+    branches: [feature/admin-beta-isolated-deployment]
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: admin-beta-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  beta:
+    if: github.repository == 'joaoCarlosGM/pap-saude' && github.ref == 'refs/heads/feature/admin-beta-isolated-deployment'
+    runs-on: ubuntu-latest
+    timeout-minutes: 50
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with: {fetch-depth: 0, persist-credentials: false}
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with: {node-version: 22, cache: npm}
+      - name: Install frozen dependencies
+        run: npm ci
+      - name: Production and isolated migrator dependency audits
+        run: |
+          npm audit --omit=dev --audit-level=high
+          npm audit --prefix docker/migrator --omit=dev --audit-level=high
+      - name: Generate client and route types
+        env: {DATABASE_URL: 'postgresql://build_no_connect:unused@127.0.0.1:1/beta_build_only'}
+        run: npx prisma generate && npx next typegen
+      - name: Closed policy, preparation, manifest and preserved baseline contracts
+        run: |
+          npx tsx --test tests/admin-beta-deployment/policy.test.ts tests/admin-beta-deployment/deployment.test.ts
+          npm run test:beta1:unit
+          npx tsc --noEmit
+          npm run lint
+          git diff --exit-code -- Dockerfile .github/workflows/ci.yml docker-compose.yml package-lock.json prisma/migrations
+      - name: Build candidate images once and reuse builder for tools
+        run: bash scripts/admin-beta/build-images.sh "$GITHUB_SHA"
+      - name: Isolated Nginx template syntax without host listeners
+        run: node scripts/admin-beta/test-nginx.mjs
+      - name: Production HTTP RSC API, real MFA, IAM, migrations ACL, backup restore and persistent restart
+        run: node tests/admin-beta-deployment/run-isolated.mjs "pap-admin-beta-web:$GITHUB_SHA" "pap-admin-beta-migrator:$GITHUB_SHA" "pap-admin-beta-tools:$GITHUB_SHA"
+      - name: HIGH CRITICAL scanners for all three images
+        run: node scripts/admin-beta/scan-images.mjs "pap-admin-beta-web:$GITHUB_SHA" "pap-admin-beta-migrator:$GITHUB_SHA" "pap-admin-beta-tools:$GITHUB_SHA"
+      - name: Mark exact candidate validated
+        run: echo "PAP_BETA_VALIDATED_SHA=$GITHUB_SHA" >> "$GITHUB_ENV"
+      - name: Registry login only after all validation gates
+        uses: docker/login-action@c94ce9fb468520275223c153574b00df6fe4bcc9
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Publish Beta SHA tags once; no mutable tags or VPS commands
+        env: {GH_TOKEN: '${{ secrets.GITHUB_TOKEN }}'}
+        run: node scripts/admin-beta/publish-images.mjs
+      - name: Safe release summary
+        run: |
+          printf '## Admin Beta isolated candidate\n\nSHA: `%s`\n\nAll availability, auth/MFA/IAM, integrity, Docker and HIGH/CRITICAL gates passed.\n\nOnly Beta SHA images published. No VPS deployment.\n' "$GITHUB_SHA" >> "$GITHUB_STEP_SUMMARY"
