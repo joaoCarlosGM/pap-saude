@@ -484,7 +484,7 @@
       },
       {
         "path": "tests/mission04-b/governance.test.ts",
-        "sha256": "61abc7235eb9ed184e5e5067a599bb21a05df214e82378da6a1c77f85187d61d"
+        "sha256": "2621782ae1767e39dd472f80e321c35d86c626d3126f4874114b0e19124a5430"
       },
       {
         "path": "tests/mission04-c/invitations.test.ts",
@@ -527,7 +527,7 @@
         "sha256": "afacd3dc2675c56097e47403c60c86719406a44d3363732eba4c893857850d1f"
       }
     ],
-    "effectiveSourceFingerprint": "225d59ad3610f181b88ebe0929bc736cf490d2bbfacd865d0a84bdf1a5902abd",
+    "effectiveSourceFingerprint": "d7490a70000585c690d63964f2cb7e660ff191fb981b57292f0caabe9c48caf0",
     "fingerprintEncoding": "SHA256 of UTF-8 JSON.stringify(sourceHashes), compact separators, ensure_ascii=false"
   },
   "nextCI": "PENDING on correction SHA",
@@ -833,5 +833,30 @@
     "operatorResources": "NOT ACCESSED OR ALTERED: host5432, web3600/PG15436, seven existing accounts/passwords/MFA/sessions, .local and volumes; no VPS, production, PR, merge or deploy.",
     "nextCI": "PENDING on selective correction commit; no release GO until integral success on exact SHA",
     "homologationRisks": "Actual operator backup-copy migration/restore and continuity of seven real local accounts remain operator-controlled validation; assistential MEOWS stays disabled. No production approval."
+  },
+  "legacyManagerMfaNavigationExpectation": {
+    "reference": "43c006b512241602cf6dbe56c5469b50aa9ab711",
+    "failedCI": "https://github.com/joaoCarlosGM/pap-saude/actions/runs/41101728448",
+    "firstFailedGate": "Mission 04 delegated IAM, legacy upgrade and clinical page boundaries",
+    "operatorSuppliedError": "governance.test.ts:125:10, Manager requires MFA for navigation and protected APIs even after completed onboarding: expected /admin, received /admin/manager",
+    "correction": "Change only the verified Manager destination expectation. Primary-session setup redirect, mandatory-MFA assertions, protected API403 and exact delegated permission set retained. No application change.",
+    "validation": {
+      "command": "Owned dynamic-port wrapper for governance.test.ts, PAP_BETA1_NODE_GREP=\"PAP_ADMIN appoints PAP_MANAGER|Manager requires MFA for navigation\"",
+      "pass": 2,
+      "fail": 0,
+      "skipped": 0,
+      "typeScript": "PASS",
+      "scopedLint": "PASS",
+      "diffCheck": "PASS",
+      "privateLog": "/tmp/pap-beta1-tests-NsN5kv/integration.log"
+    },
+    "consumerReview": "Remaining /admin assertions in login-navigation.test.ts refer to PAP_ADMIN; C Manager expectation is already /admin/manager. Direct /admin page behavior is a separate unchanged contract.",
+    "notRepeated": "No browser/full local suites, dependency install, database resets, Docker builds or scanners; source application unchanged.",
+    "stagingPaths": [
+      "tests/mission04-b/governance.test.ts",
+      "docs/release/pap-beta1-ux-lms/CI-CORRECTIONS.json"
+    ],
+    "nextCI": "PENDING on selective test correction SHA; integral green still mandatory",
+    "protectedResources": "No operator5432, 3600/15436, accounts, MFA, .local, volumes, VPS or production accessed or altered."
   }
 }

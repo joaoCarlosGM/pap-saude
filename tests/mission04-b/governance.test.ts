@@ -124,7 +124,7 @@ test("Manager requires MFA for navigation and protected APIs even after complete
   );
   assert.deepEqual(await resolveLoginNavigation(manager.token), {
     view: "REDIRECT",
-    destination: "/admin",
+    destination: "/admin/manager",
   });
 });
 test("manager cannot grant/revoke Managers/Admins, self-elevate or inject actor/scope", async () => {
