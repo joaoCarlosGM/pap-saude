@@ -30,8 +30,8 @@
   },
   "effectiveInventory": {
     "initialManifest": "SOURCE-MANIFEST.json (historical initial receipt)",
-    "totalDistinctPaths": 105,
-    "sourcePaths": 90,
+    "totalDistinctPaths": 106,
+    "sourcePaths": 91,
     "documentationPaths": 15,
     "allPaths": [
       ".github/workflows/ci.yml",
@@ -137,6 +137,7 @@
       "tests/mission04-e/rsc-dynamic-metadata.test.ts",
       "tests/mission04-e/rsc-dynamic-metadata.ts",
       "tests/p0-full/demo-boundaries.test.ts",
+      "tests/p0-full/workspace-ui.test.ts",
       "tests/premium-unified/seed-isolated.mjs",
       "tests/vitrine-premium/isolation.test.mjs"
     ],
@@ -279,7 +280,7 @@
       },
       {
         "path": "src/components/layout/Sidebar.tsx",
-        "sha256": "9fa97e0383b1dd76f1485c324b7e1ec0174a881b5a177dc632b564cfc59d0acc"
+        "sha256": "8d163b8560259a35f291669cbfbf07636563a77613b47a4386bb5d25e98e20b7"
       },
       {
         "path": "src/components/layout/Topbar.tsx",
@@ -494,6 +495,10 @@
         "sha256": "3c3d7b32163b169be69de75fd86023b3a69fb8dc68c45a862eb4f714161c5238"
       },
       {
+        "path": "tests/p0-full/workspace-ui.test.ts",
+        "sha256": "b1858d3c3679ef0b8790e154058dead4ee3363dd19f1f09fdd10eefd6d56520f"
+      },
+      {
         "path": "tests/premium-unified/seed-isolated.mjs",
         "sha256": "226cee46c55eb3ad099bece0cd4843481ff392d47823467fc823eb4f9c9bb115"
       },
@@ -502,7 +507,7 @@
         "sha256": "685d7fcb4fd9ec083e6e399569ed625294e814ced32621fbe29deaa26e7ea377"
       }
     ],
-    "effectiveSourceFingerprint": "0eaa7bd79c76cbfc3bb8430fc90968345b1f98907d7c4dd6eaab8d2fceffaa52"
+    "effectiveSourceFingerprint": "00958d69b03157ecd3cd6bfc757e4672ccf1ba850dad71d425968bda11079315"
   },
   "nextCI": "PENDING on correction SHA",
   "productionPublishDeploy": "SKIPPED; feature branch conditions unchanged",
@@ -576,5 +581,32 @@
     "diagnostics": "Failed Beta1 substeps now also write only the static phase and allowlisted diagnostics to the public Actions summary; raw logs remain private. Gates unchanged.",
     "nextCI": "PENDING on correction SHA",
     "remoteResultAuthority": "GitHub Actions attached to the exact final SHA. Local receipts and earlier failures remain historical evidence, not substitutes for a green candidate CI."
+  },
+  "sharedDemoNotificationCorrection": {
+    "failedCI": "https://github.com/joaoCarlosGM/pap-saude/actions/runs/41060092322",
+    "firstFailedGate": "P0 post-acceptance shared UI and accessibility",
+    "alreadyPassedInRemoteAttempt": [
+      "Beta1 real LMS/continuity/showcase composite",
+      "Unified Premium production UI/isolated lab/synthetic boundary"
+    ],
+    "reproducedCause": "Shared Sidebar rendered operational NotificationLink while demo=true, adding /notificacoes and an operational notification API request to a demo surface. A real presentation-isolation defect, not a test contract relaxation.",
+    "correction": "Mount operational NotificationLink only when !demo. Preserve all demo-prefix assertions and additionally require zero operational notification requests before changing to operational identity.",
+    "localReproduction": {
+      "sharedUiCases": 13,
+      "pass": 12,
+      "fail": 1
+    },
+    "targetedValidation": {
+      "sharedShellIsolation": {
+        "pass": 1,
+        "fail": 0,
+        "skipped": 0
+      },
+      "typeScript": "PASS",
+      "lint": "PASS",
+      "diffCheck": "PASS"
+    },
+    "mfaIamDatabase": "UNCHANGED; no operator resources accessed",
+    "nextCI": "PENDING on correction SHA"
   }
 }
