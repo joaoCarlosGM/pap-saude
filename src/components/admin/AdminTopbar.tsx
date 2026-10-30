@@ -1,4 +1,5 @@
-"use client";
+"use client"
+import ThemeToggle from "@/components/demo/ThemeToggle";;
 
 import NotificationLink from "./NotificationLink";
 import { ChevronDown, HelpCircle, Menu } from "lucide-react";
@@ -54,7 +55,7 @@ export default function AdminTopbar({
       </div>
 
       <div className="flex shrink-0 items-center gap-1 sm:gap-2">
-        <NotificationLink/>
+        <ThemeToggle/><NotificationLink/>
         <button
           type="button"
           aria-label="Ajuda"

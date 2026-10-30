@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import HelpCard from "@/components/premium/HelpCard";
 import ActiveIndicator from "@/components/premium/ActiveIndicator";
 import AreaLinks from "@/components/premium/AreaLinks";
 import { useState, useEffect, useRef } from "react";
@@ -172,7 +173,8 @@ export default function AdminSidebar({
       previous?.focus();
     };
   }, [open, onClose]);
-  const visible = navigation.filter(
+  const manager=profile.roles.some(r=>r.key==="PAP_MANAGER"&&r.scope==="GLOBAL")&&!profile.roles.some(r=>r.key==="PAP_ADMIN"&&r.scope==="GLOBAL");
+  const visible = navigation.map(item=>manager&&item.href==="/admin"?{...item,label:"Bancada de gestão",href:"/admin/manager"}:item).filter(
     (item) =>
       (!item.requiredAny ||
         item.requiredAny.some((p) => profile.permissions.includes(p))) &&
@@ -181,7 +183,7 @@ export default function AdminSidebar({
         .includes(search.toLocaleLowerCase("pt-BR")),
   );
   const categories = [
-    {label:"Gestão institucional",paths:["/admin","/admin/pendencias","/admin/solicitacoes","/admin/organizacoes","/admin/rede"]},
+    {label:"Gestão institucional",paths:["/admin","/admin/pendencias","/admin/solicitacoes","/admin/organizacoes","/admin/rede","/admin/manager"]},
     {label:"Pessoas e Acessos",paths:["/admin/usuarios","/admin/convites","/admin/convites-globais","/admin/acessos"]},
     {label:"Inteligência",paths:["/admin/metricas"]},
     {label:"Auditoria e Segurança",paths:["/admin/auditoria","/admin/minha-seguranca","/admin/seguranca"]},
@@ -336,6 +338,7 @@ export default function AdminSidebar({
             }
           >
             <AreaLinks profile={profile} current="/admin"/>
+            <HelpCard onTutorial={()=>{onClose();window.dispatchEvent(new CustomEvent("pap-tour:restart",{detail:{tourKey:"admin-core"}}));}}/>
             <Link className="mt-2 block rounded-lg px-3 py-2 text-sm" href="/admin/minha-seguranca">Segurança da minha conta</Link>
           </div>
         </div>

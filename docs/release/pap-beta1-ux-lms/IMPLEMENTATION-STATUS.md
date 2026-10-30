@@ -7,7 +7,7 @@ Baseline funcional: d247020, CI40962511599 SUCCESS. Pacote completo lido:00/PROM
 |---|---|---|
 | A | Shell/sidebar/hero abstrato/ajuda; preservar identidade e dados; responsivo/teclado | PASS dirigido:4 Node,5 invariantes,1 browser (7 larguras/2 temas/teclado/WCAG);10 capturas |
 | B | Cards/ficha/atendimentos/registro com dados autorizados; KPIs byte-idênticos | PASS dirigido:2 Node +1 browser (card/ficha/teclado/tenant); APIs e registro preservados |
-| C | Admin teal; rede→município→UBS→equipe; grants anteriores intactos | NOT RUN |
+| C | Admin teal; rede→município→UBS→equipe; grants anteriores intactos | PASS dirigido:2 Node +1 browser Admin/Manager,7 larguras/2 temas/AA;4 capturas |
 | D | Domínio LMS aditivo, IAM dedicado, editor seguro, versões imutáveis/release | NOT RUN |
 | E | Unidade/município: distribuição/ancestry, membros ativos, idempotência e inbox | NOT RUN |
 | F | Player, checkpoints/avaliação no servidor, retomada/badge/progresso | NOT RUN |
@@ -26,3 +26,5 @@ Próximo: validar sliceA com testes dirigidos/TypeScript/lint e browser isolado,
 SliceA: logs privados /tmp/pap-beta1-mission-20261030/slice-a-*.log; browser final /tmp/pap-beta1-tests-ANXAGw/browser.log. TypeScript/ESLint/diff PASS, zero warnings novos. Duas falhas de contraste2.21:1/3.7:1 corrigidas sem remover asserts. Harness inicial precisou corrigir import relativo/DB descartável/cwd de webServer.10 capturas sintéticas revisadas. Bootstrap/configuradores/MFA não modificados. Próximo:B paridade de cards/ficha, depoisC Admin eD domínioLMS. CI integral somente no candidato consolidado; pushes intermediários podem acionar o workflow existente, sem desativá-lo.
 
 SliceB: dois testes de apresentação/idade PASS; jornada com paciente vinculada à UBS real descartável, navegação teclado/ficha/seções/negativa outra UBS PASS (/tmp/pap-beta1-tests-7F8iBa/browser.log). TypeScript/lint/diff PASS. Sem inferir IG/DPP/alergia quando API de lista não fornece; ficha reutiliza APIs autorizadas. Ajuste adicional do hero de layout para texto rotulado preserva H1 original único; teste SSR cobre unicidade sem remover o texto DOM. Registro/atendimentos existentes reutilizados; regressão integral ainda NOT RUN no novo candidato.
+
+SliceC: commit anterior B d3a24da; Admin teal claro/escuro, busca de rede usando somente DTO mínimo autorizado; serviços e métricas institucionais intactos. PAP_MANAGER tem bancada própria sem métricas; destino exige acesso administrativo efetivo, não apenas nome de papel. Comercial apenas com role GLOBAL COMMERCIAL e grant.2 Node +1 browser PASS,7 larguras,WCAG light/dark,negação clínica;4 capturas sintéticas revisadas. Evidência /tmp/pap-beta1-tests-PrGtGz/browser.log e /tmp/pap-beta1-mission-20261030/slice-c-*.log. TypeScript/ESLint/diff PASS. Cursos/biblioteca serão acrescentados somente junto das APIs/grants do LMS no próximo slice; ainda NOT RUN.
