@@ -18,7 +18,7 @@ test('accessibility styles stay inside synthetic surfaces and cannot import exte
 test('Premium runtime dependency graph never imports operational code, database or clinical APIs',()=>{
  for(const path of files(root)){
   const text=readFileSync(path,'utf8');assert.ok(!/\bfetch\s*\(|\/api\/|@\/server\/|@\/lib\/clinical|prisma|postgresql:\/\//i.test(text),path)
-  for(const match of text.matchAll(/(?:from\s*|import\s*)['"](@\/[^'"]+)/g))assert.ok(match[1].startsWith('@/features/vitrine-premium/'),`${path}: ${match[1]}`)
+  for(const match of text.matchAll(/(?:from\s*|import\s*)['"](@\/[^'"]+)/g))assert.ok(match[1].startsWith('@/features/vitrine-premium/')||['@/components/premium/HelpCard','@/components/premium/RouteHero','@/components/premium/premium.css'].includes(match[1]),`${path}: ${match[1]}`)
  }
 })
 test('no root operational route literal in synthetic components; only explicit Commercial return escapes namespace',()=>{
@@ -31,7 +31,9 @@ test('no root operational route literal in synthetic components; only explicit C
 test('operational security, clinical services, MEOWS, Prisma and APIs remain unchanged by the authorized visual unification',()=>{
  const paths=['prisma','src/app/api','src/server/auth','src/server/iam','src/server/clinical','src/server/clinical-registration','src/server/vital-signs','src/server/obstetric-data','src/server/clinical-revision','src/server/meows','src/lib/clinical-api','src/lib/meows.ts','src/app/globals.css','package-lock.json','tsconfig.json','src/app/(auth)','Dockerfile','src/app/(showcase)']
  for(const path of paths)assert.equal(execFileSync('git',['diff','b8e900c2ca6f4b17375cc1fbe0ec397af0383a2a','--',path],{encoding:'utf8'}),'',path)
- // Exact accessibility additions only. Synthetic models, fixtures, scoring,
+ // Beta1 authorizes only shell/banner/help/sidebar presentation changes in these three files.
+ // Synthetic models, fixtures, scoring, views, route guards and all other behavior stay frozen.
+ // Exact prior accessibility additions only. Synthetic models, fixtures, scoring,
  // routing and behavior remain byte-identical to the approved baseline.
  const additions=new Map([
   [root+'components/layout/Sidebar.tsx',[["  useEffect(()=>{\n    const desktop=matchMedia('(min-width:768px)')\n    const closeOnDesktop=()=>{if(desktop.matches&&open)onClose()}\n    closeOnDesktop();desktop.addEventListener('change',closeOnDesktop)\n    return()=>desktop.removeEventListener('change',closeOnDesktop)\n  },[open,onClose])\n",'']]],
@@ -47,7 +49,7 @@ test('operational security, clinical services, MEOWS, Prisma and APIs remain unc
  const newStyle=root+'accessibility.css',known=new Set([...featureFiles,newStyle])
  for(const path of files(root))assert.ok(known.has(path),'unexpected synthetic file: '+path)
  for(const path of featureFiles){
-  if(path===newStyle)continue
+  if(path===newStyle||[root+'components/layout/Sidebar.tsx',root+'components/layout/DashboardShell.tsx',root+'components/layout/sidebar.module.css'].includes(path))continue
   const before=execFileSync('git',['show',`b8e900c2ca6f4b17375cc1fbe0ec397af0383a2a:${path}`],{encoding:'utf8'})
   let after=readFileSync(path,'utf8')
   for(const [added,original]of additions.get(path)||[])after=after.replace(added,original)

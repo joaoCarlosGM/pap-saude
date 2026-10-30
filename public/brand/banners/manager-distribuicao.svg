@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="220" viewBox="0 0 960 220" role="img" aria-label="Arte geométrica decorativa Distribuição Institucional">
+<defs><linearGradient id="g" x1="0" x2="1"><stop offset="0" stop-color="#E7FAF4"/><stop offset="1" stop-color="#B7E9E0"/></linearGradient><linearGradient id="shade" x1="0" x2="1"><stop offset="0" stop-color="#08877F" stop-opacity="0"/><stop offset="1" stop-color="#08877F" stop-opacity=".16"/></linearGradient></defs>
+<rect width="960" height="220" rx="20" fill="url(#g)"/><circle cx="825" cy="47" r="141" fill="white" opacity=".28"/><circle cx="450" cy="195" r="95" fill="white" opacity=".22"/>
+<path d="M345 151Q470 87 590 150T790 105" fill="none" stroke="#08877F" opacity=".17" stroke-width="48" stroke-linecap="round"/>
+<path d="M385 179C520 85 660 210 954 96" fill="none" stroke="white" stroke-width="2" opacity=".56"/>
+<g transform="translate(95,-6)" stroke="#08877F" stroke-width="4.5" fill="url(#shade)" stroke-linejoin="round" stroke-linecap="round" opacity=".67"><circle cx="618" cy="108" r="16"/><circle cx="677" cy="65" r="16"/><circle cx="722" cy="135" r="16"/><path d="M631 97l33-24M690 74l23 47M633 116l73 18"/></g>
+<g fill="#08877F" opacity=".35"><circle cx="845" cy="167" r="6"/><circle cx="788" cy="48" r="4"/><circle cx="916" cy="64" r="3"/></g>
+</svg>

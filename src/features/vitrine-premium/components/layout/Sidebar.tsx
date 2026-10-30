@@ -1,21 +1,21 @@
 'use client'
-import { useEffect, useRef, useState, type CSSProperties } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { ClipboardPlus, ClipboardList, Users, BookOpen, Wrench, LayoutDashboard, Settings, X, GraduationCap, HelpCircle, Bell, ChevronDown, RotateCcw } from 'lucide-react'
 import AnimatedChatIcon from '@/features/vitrine-premium/components/chat/AnimatedChatIcon'
 import { useDemo } from '@/features/vitrine-premium/components/demo/DemoProvider'
-import styles from './sidebar.module.css'
+import HelpCard from '@/components/premium/HelpCard'
 
 const menuItems = [
-  {label:'Registro',href:'/vitrine/registro',icon:ClipboardPlus},
-  {label:'Atendimentos',href:'/vitrine/atendimentos',icon:ClipboardList},
-  {label:'Pacientes',href:'/vitrine/pacientes',icon:Users},
-  {label:'Chat IA',href:'/vitrine/chat',icon:AnimatedChatIcon},
-  {label:'Protocolos',href:'/vitrine/protocolos',icon:BookOpen},
-  {label:'Ferramentas',href:'/vitrine/ferramentas',icon:Wrench},
-  {label:'Cursos',href:'/vitrine/cursos',icon:GraduationCap},
-  {label:'Dashboard',href:'/vitrine/dashboard',icon:LayoutDashboard},
+ {label:'Dashboard',href:'/vitrine/dashboard',icon:LayoutDashboard},
+ {label:'Registro',href:'/vitrine/registro',icon:ClipboardPlus},
+ {label:'Atendimentos',href:'/vitrine/atendimentos',icon:ClipboardList},
+ {label:'Pacientes',href:'/vitrine/pacientes',icon:Users},
+ {label:'Protocolos',href:'/vitrine/protocolos',icon:BookOpen},
+ {label:'Ferramentas',href:'/vitrine/ferramentas',icon:Wrench},
+ {label:'Chat IA',href:'/vitrine/chat',icon:AnimatedChatIcon},
+ {label:'Cursos',href:'/vitrine/cursos',icon:GraduationCap},
 ]
 export default function Sidebar({open,onClose}:{open:boolean;onClose:()=>void}) {
   const pathname = usePathname(), drawer = useRef<HTMLElement>(null)
@@ -45,7 +45,7 @@ export default function Sidebar({open,onClose}:{open:boolean;onClose:()=>void}) 
         if(e.shiftKey&&document.activeElement===nodes[0]){e.preventDefault();nodes.at(-1)?.focus()}
         else if(!e.shiftKey&&document.activeElement===nodes.at(-1)){e.preventDefault();nodes[0]?.focus()}
       }}
-      className={`fixed inset-y-0 left-0 z-50 flex h-dvh w-64 shrink-0 flex-col border-r border-gray-200 bg-white transition-transform duration-200 motion-reduce:transition-none md:static md:z-auto md:w-56 md:translate-x-0 ${open?'translate-x-0 visible':'-translate-x-full invisible md:visible'}`}>
+      className={`fixed inset-y-0 left-0 z-50 flex h-dvh w-64 shrink-0 flex-col border-r border-gray-200 bg-white transition-transform duration-200 motion-reduce:transition-none md:static md:z-auto md:w-64 md:translate-x-0 ${open?'translate-x-0 visible':'-translate-x-full invisible md:visible'}`}>
       <div className="flex h-12 shrink-0 items-center justify-between px-5">
         <span className="text-xl font-semibold text-pink-500">PAP Saúde</span>
         <button type="button" aria-label="Fechar menu" onClick={onClose} className="rounded-md p-2 text-gray-500 hover:bg-gray-100 md:hidden"><X size={20}/></button>
@@ -64,13 +64,13 @@ export default function Sidebar({open,onClose}:{open:boolean;onClose:()=>void}) 
         </div>
       </div>
       <nav className="min-h-0 flex-1 overflow-y-auto px-3 py-2" aria-label="Módulos">
-        <div className="relative flex flex-col gap-1" style={{'--active-index':activeIndex} as CSSProperties}>
-          {activeIndex>=0 && <span aria-hidden="true" data-sidebar-indicator className={styles.indicator}/>}
-          {menuItems.map((item,index)=>{const Icon=item.icon;return <Link key={item.href} href={item.href} prefetch={false} data-tour-nav={item.href} aria-current={activeIndex===index?'page':undefined} onClick={onClose}
-            className={`relative flex h-10 shrink-0 items-center gap-3 rounded-md px-3 text-sm focus-visible:outline-2 focus-visible:outline-pink-500 ${activeIndex===index?'font-medium text-pink-600':'text-gray-600 hover:bg-gray-50'}`}><Icon size={18} strokeWidth={1.8} className="shrink-0"/><span>{item.label}</span></Link>})}
+        <div className="relative flex flex-col gap-1" >
+
+          {menuItems.map((item,index)=>{const Icon=item.icon;return <div key={item.href}>{[0,1,4].includes(index)&&<p className="px-3 pt-2 text-xs text-slate-600">{index===0?'VISÃO GERAL':index===1?'CLÍNICA':'CONHECIMENTO E APOIO'}</p>}<Link href={item.href} prefetch={false} data-tour-nav={item.href} aria-current={activeIndex===index?'page':undefined} onClick={onClose}
+            className={`relative flex h-10 shrink-0 items-center gap-3 rounded-md px-3 text-sm focus-visible:outline-2 focus-visible:outline-pink-500 ${activeIndex===index?'bg-pink-50 font-medium text-pink-600':'text-gray-600 hover:bg-gray-50'}`}><Icon size={18} strokeWidth={1.8} className="shrink-0"/><span>{item.label}</span></Link></div>})}
         </div>
       </nav>
-      <div className="shrink-0 px-3 py-2"><Link href="/comercial" prefetch={false} onClick={onClose} className="block rounded px-3 py-2 text-xs text-slate-600 underline">Voltar ao Comercial</Link><Link href="/vitrine/configuracoes" prefetch={false} aria-current={pathname==='/vitrine/configuracoes'?'page':undefined} onClick={onClose} className={`flex h-10 items-center gap-3 rounded-md px-3 text-sm focus-visible:outline-2 focus-visible:outline-pink-500 ${pathname==='/vitrine/configuracoes'?'bg-pink-50 text-pink-600':'text-gray-600 hover:bg-gray-50'}`}><Settings size={18}/><span>Configurações</span></Link></div>
+      <div className="shrink-0 px-3 py-2"><Link href="/comercial" prefetch={false} onClick={onClose} className="block rounded px-3 py-2 text-xs text-slate-600 underline">Voltar ao Comercial</Link><Link href="/vitrine/configuracoes" prefetch={false} aria-current={pathname==='/vitrine/configuracoes'?'page':undefined} onClick={onClose} className={`flex h-10 items-center gap-3 rounded-md px-3 text-sm focus-visible:outline-2 focus-visible:outline-pink-500 ${pathname==='/vitrine/configuracoes'?'bg-pink-50 text-pink-600':'text-gray-600 hover:bg-gray-50'}`}><Settings size={18}/><span>Configurações</span></Link><HelpCard onTutorial={()=>{onClose();requestHelp(true)}}/></div>
     </aside>
   </>
 }

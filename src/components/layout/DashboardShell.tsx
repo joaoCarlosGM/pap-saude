@@ -2,6 +2,7 @@
 
 import { useCallback, useState, useSyncExternalStore } from "react";
 
+import RouteHero from "@/components/premium/RouteHero";
 import Sidebar from "@/components/layout/Sidebar";
 import PageMotion from "@/components/premium/PageMotion";
 import ClinicalTour from "@/components/premium/ClinicalTour";
@@ -47,7 +48,7 @@ export default function DashboardShell({
             <a href={demo ? "/comercial" : "/minha-seguranca"}>{demo ? "Voltar ao Comercial" : "Segurança da minha conta"}</a>
           </nav>
           {demo && <div className="demo-banner" role="note"><strong>DEMONSTRAÇÃO · Dados simulados</strong><span>Personagens e conteúdos fictícios. Nenhuma leitura ou gravação clínica real.</span></div>}
-          <PageMotion>{children}</PageMotion>
+          <RouteHero demo={demo}/><PageMotion>{children}</PageMotion>
         </main>
       </div>
       {profile && <ClinicalTour permissions={profile.permissions}/>}

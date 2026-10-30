@@ -8,6 +8,7 @@ import type {
   EffectiveAccessProfile,
 } from "@/lib/admin/types"
 
+import RouteHero from "@/components/premium/RouteHero"
 import PageMotion from "@/components/premium/PageMotion"
 import "@/components/premium/premium.css"
 import AdminSidebar from "./AdminSidebar"
@@ -138,7 +139,7 @@ export default function AdminShell({
         />
 
         <main className="min-h-0 flex-1 overflow-auto p-4 sm:p-6 lg:p-8">
-          <PageMotion>{children}</PageMotion>
+          <RouteHero admin/><PageMotion>{children}</PageMotion>
         </main>
       </div>
 
