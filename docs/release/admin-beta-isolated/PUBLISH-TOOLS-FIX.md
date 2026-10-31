@@ -104,3 +104,27 @@ exato. Isso fecha a operação sem manifest/tag nem sobrescrita de conteúdo. N�
 erro:403/401/cancelamento ambíguo, PUT recusado ou digest divergente continuam FAIL.
 Dois testes novos comprovam o fallback legítimo e as recusas, preservando os sete anteriores.
 A mensagem pública distingue cancelamento de finalização vazia; UUID/Location não são expostos.
+
+## Decisão final de implementação — sondagem sintética removida
+
+CI41166614475/SHA593d294: todos os gates de teste/build/integração/Trivy **PASS**;
+preflight sintético **FAIL**, PUT vazio404. Nenhuma tag nova foi publicada.
+As tentativas de sondar APIs auxiliares introduziram incompatibilidades com GHCR e
+reexecuções desnecessárias; não constituem uma correção da ACL privada do pacote.
+
+O fluxo definitivo usa a **publicação real da imagem tools validada primeiro** como
+prova de escrita. Não faz sondagens POST/DELETE/PUT sintéticas. Antes disso, valida
+os três novos SHAs ausentes e os rótulos revision/source (repositório correto) das três
+imagens. Só publica web/migrator depois do push e digest de tools confirmados.
+401/403/denied/estado ambíguo continuam FAIL, sem PAT ou aumento de permissões.
+Saída bruta de erro segue privada; diagnóstico identifica pacote/fase/código.
+
+Os testes novos de publicação passam a verificar o contrato efetivamente utilizado:
+ordem tools-first e três digests; negação em tools impede demais pushes; nenhuma tag
+existente é reutilizada; revision/source incorretos são negados; contexto prod/PROD
+é negado; erro de autenticação/transporte/digest permanece FAIL, sem revelar segredos.
+Nenhum teste homologado da aplicação, IAM, MFA, migrations ou segurança foi alterado.
+A configuração externa Manage Actions access continua necessária se o push real for negado;
+a sessão não alterou nem pôde auditar essa ACL privada.
+
+Fluxo definitivo: **6/6 testes de publicação PASS**, zero skip; lint e diff-check PASS.

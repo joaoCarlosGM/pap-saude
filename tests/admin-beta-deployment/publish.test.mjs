@@ -1,44 +1,39 @@
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
-import {assertToolsPackageWrite,sanitizedPublicationFailure} from '../../scripts/admin-beta/publish-images.mjs';
-const endpoint='https://ghcr.io/v2/joaocarlosgm/pap-saude-admin-beta-tools/blobs/uploads/';
-const location=endpoint+'owned-upload-1?_state=synthetic-private-state';
-test('tools package permission probe starts and cancels only its own empty upload',async()=>{
-  const calls=[];
-  await assertToolsPackageWrite(async(url,options)=>{calls.push({url,options});return calls.length===1?new Response(null,{status:202,headers:{Location:location,'Docker-Upload-UUID':'owned-upload-1'}}):new Response(null,{status:204});},'synthetic-bearer');
-  assert.equal(calls.length,2);assert.equal(calls[0].url,endpoint);assert.equal(calls[0].options.method,'POST');assert.equal(calls[0].options.body,undefined);
-  assert.equal(calls[1].url,location);assert.equal(calls[1].options.method,'DELETE');assert.equal(calls[1].options.headers.Authorization,'Bearer synthetic-bearer');
-  assert.ok(calls.every(c=>c.options.redirect==='error'));
+import {publishBetaImages,sanitizedPublicationFailure} from '../../scripts/admin-beta/publish-images.mjs';
+const sha='a'.repeat(40),source='https://github.com/joaoCarlosGM/pap-saude';
+const base={GITHUB_ACTIONS:'true',GITHUB_REPOSITORY:'joaoCarlosGM/pap-saude',GITHUB_REF:'refs/heads/feature/admin-beta-isolated-deployment',GITHUB_SHA:sha,PAP_BETA_VALIDATED_SHA:sha,GH_TOKEN:'synthetic-private-token',GITHUB_ACTOR:'synthetic-actor'};
+function fixture(overrides={}){
+ const calls=[],requests=[],notices=[];
+ const options={notice:n=>notices.push(n),recordFailure:()=>{},fetcher:async(url,init)=>{requests.push({url,init});return url.includes('/token?')?Response.json({token:'synthetic-registry-bearer'}):new Response(null,{status:overrides.head??404});},exec:(_command,args)=>{
+  calls.push(args);
+  if(args.includes('push')){if(overrides.denyPush)throw Object.assign(new Error('private raw registry failure'),{stderr:'error from registry: denied synthetic-private-token'});return '';}
+  if(args[0]==='tag')return '';
+  if(args.includes('{{json .RepoDigests}}'))return JSON.stringify(overrides.noDigest?[]:[args.at(-1).split(':sha-')[0]+'@sha256:'+'b'.repeat(64)]);
+  return args.some(a=>a.includes('image.revision'))?(overrides.revision??sha):(overrides.source??source);
+ }};return {calls,requests,notices,options};
+}
+test('validated tools is published first; three fresh SHA references and confirmed digests',async()=>{
+ const f=fixture();const digests=await publishBetaImages(base,f.options);const pushes=f.calls.filter(c=>c[0]==='push').map(c=>c[1]);
+ assert.deepEqual(pushes,['pap-saude-admin-beta-tools','pap-saude-admin-beta','pap-saude-admin-beta-migrator'].map(p=>'ghcr.io/joaocarlosgm/'+p+':sha-'+sha));assert.equal(digests.length,3);assert.equal(f.notices.length,3);
+ assert.equal(f.requests.length,6);assert.ok(f.requests.every(r=>r.init.redirect==='error'));assert.ok(f.requests.every(r=>!r.init.method||r.init.method==='HEAD'));assert.ok(f.requests.every(r=>new URL(r.url).origin==='https://ghcr.io'));
 });
-test('denied tools permission aborts before any image publication',async()=>{
-  for(const status of [401,403]){let count=0;await assert.rejects(assertToolsPackageWrite(async()=>{count++;return new Response(null,{status});},'synthetic-bearer'),{message:'TOOLS_PACKAGE_ACTIONS_WRITE_REQUIRED',httpStatus:status});assert.equal(count,1);}
+test('tools write denial blocks web and migrator without exposing registry output',async()=>{
+ const f=fixture({denyPush:true});await assert.rejects(publishBetaImages(base,f.options),e=>{assert.equal(e.code,'REGISTRY_PUSH_DENIED');assert.match(e.message,/package=pap-saude-admin-beta-tools/);assert.ok(!e.message.includes('synthetic-private-token'));return true;});
+ assert.equal(f.calls.filter(c=>c[0]==='push').length,1);assert.equal(f.calls.filter(c=>c[0]==='tag').length,1);assert.equal(f.notices.length,0);
 });
-test('ambiguous upload state fails closed',async()=>{
-  for(const status of [200,404,429,500])await assert.rejects(assertToolsPackageWrite(async()=>new Response(null,{status}),'synthetic-bearer'),{message:'TOOLS_UPLOAD_START_FAILED',httpStatus:status});
+test('any existing immutable tag or ambiguous registry state blocks every push',async()=>{
+ for(const head of [200,401,403,429,500]){const f=fixture({head});await assert.rejects(publishBetaImages(base,f.options),{code:head===200?'IMMUTABLE_TAG_ALREADY_EXISTS':'REGISTRY_STATE_UNCONFIRMED'});assert.equal(f.calls.filter(c=>c[0]==='push'||c[0]==='tag').length,0);}
 });
-test('upload Location cannot exfiltrate the bearer or cancel unrelated resources',async()=>{
-  for(const target of ['https://untrusted.invalid/upload','https://ghcr.io/v2/another/package/blobs/uploads/id','https://ghcr.io/v2/joaocarlosgm/pap-saude-admin-beta-tools/blobs/uploads/','https://user:password@ghcr.io/v2/joaocarlosgm/pap-saude-admin-beta-tools/blobs/uploads/id']){let count=0;await assert.rejects(assertToolsPackageWrite(async()=>{count++;return new Response(null,{status:202,headers:{Location:target,'Docker-Upload-UUID':decodeURIComponent(target.split('?')[0].split('/').at(-1))}});},'synthetic-bearer'),{message:'TOOLS_UPLOAD_LOCATION_INVALID'});assert.equal(count,1);}
+test('wrong source linkage or revision blocks publication',async()=>{
+ for(const override of [{source:'https://github.com/another/repository'},{revision:'c'.repeat(40)}]){const f=fixture(override);await assert.rejects(publishBetaImages(base,f.options),{code:override.source?'IMAGE_SOURCE_REPOSITORY_MISMATCH':'IMAGE_REVISION_MISMATCH'});assert.equal(f.requests.length,0);assert.equal(f.calls.filter(c=>c[0]==='push').length,0);}
 });
-test('failed cancellation blocks publication and error diagnostics omit private content',async()=>{
-  let count=0;await assert.rejects(assertToolsPackageWrite(async()=>++count===1?new Response(null,{status:202,headers:{Location:location,'Docker-Upload-UUID':'owned-upload-1'}}):new Response(null,{status:403}),'synthetic-bearer'),{message:'TOOLS_UPLOAD_CANCEL_FAILED',httpStatus:403});
-  const output=sanitizedPublicationFailure(new Error('private-token-and-upload-state'),'push','pap-saude-admin-beta-tools');assert.equal(output,'phase=push;package=pap-saude-admin-beta-tools;code=PUBLICATION_OPERATION_FAILED');
+test('only the exact repository branch and validated SHA may publish',async()=>{
+ for(const override of [{GITHUB_REF:'refs/heads/prod'},{GITHUB_REF:'refs/heads/PROD'},{GITHUB_ACTIONS:'false'},{GITHUB_REPOSITORY:'another/repo'},{PAP_BETA_VALIDATED_SHA:'c'.repeat(40)},{GH_TOKEN:''}]){const f=fixture();await assert.rejects(publishBetaImages({...base,...override},f.options),{code:'BETA_PUBLICATION_CONTEXT_REQUIRED'});assert.equal(f.calls.length,0);assert.equal(f.requests.length,0);}
 });
-
-test('opaque registry upload identifiers may include dots and base64 padding without escaping the package',async()=>{
-  for(const id of ['opaque.part==','opaque+token=','opaque%2Btoken%3D']){const calls=[];const target=endpoint+id+'?_state=synthetic-private-state';await assertToolsPackageWrite(async(url,options)=>{calls.push({url,options});return calls.length===1?new Response(null,{status:202,headers:{Location:target,'Docker-Upload-UUID':decodeURIComponent(target.split('?')[0].split('/').at(-1))}}):new Response(null,{status:204});},'synthetic-bearer');assert.equal(calls[1].url,target);}
-  for(const id of ['%2Fother','%5Cother','%252Fother','%00'])await assert.rejects(assertToolsPackageWrite(async()=>new Response(null,{status:202,headers:{Location:endpoint+id}}),'synthetic-bearer'),{message:'TOOLS_UPLOAD_LOCATION_INVALID'});
-});
-
-test('global GHCR upload URLs require the UUID from our own POST; foreign repositories and UUIDs remain denied',async()=>{
-  for(const target of ['https://ghcr.io/v2/blobs/uploads/owned-upload-1','https://ghcr.io/v2/blobs/upload/owned-upload-1','https://ghcr.io//v2/joaoCarlosGM/pap-saude-admin-beta-tools/blobs/uploads/owned-upload-1']){let count=0;await assertToolsPackageWrite(async()=>++count===1?new Response(null,{status:202,headers:{Location:target,'Docker-Upload-UUID':'owned-upload-1'}}):new Response(null,{status:204}),'synthetic-bearer');assert.equal(count,2);}
-  for(const [target,uuid]of [[location,'foreign-uuid'],[location,''],['https://ghcr.io/v2/another/package/blobs/uploads/owned-upload-1','owned-upload-1']]){let count=0;await assert.rejects(assertToolsPackageWrite(async()=>{count++;return new Response(null,{status:202,headers:{Location:target,'Docker-Upload-UUID':uuid}});},'synthetic-bearer'),{message:'TOOLS_UPLOAD_LOCATION_INVALID'});assert.equal(count,1);}
-});
-
-test('GHCR405 cancellation is replaced by verified finalization of our own zero-byte upload',async()=>{
-  const calls=[],digest='sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855';
-  const result=await assertToolsPackageWrite(async(url,options)=>{calls.push({url,options});return calls.length===1?new Response(null,{status:202,headers:{Location:location,'Docker-Upload-UUID':'owned-upload-1'}}):calls.length===2?new Response(null,{status:405}):new Response(null,{status:201,headers:{'Docker-Content-Digest':digest}});},'synthetic-bearer');
-  assert.equal(result,'finalized-empty');assert.equal(calls.length,3);assert.equal(calls[2].options.method,'PUT');assert.equal(calls[2].options.body.length,0);assert.equal(new URL(calls[2].url).searchParams.get('digest'),digest);assert.equal(new URL(calls[2].url).searchParams.get('_state'),'synthetic-private-state');assert.equal(new URL(calls[2].url).pathname,new URL(location).pathname);
-});
-test('unsupported cancellation never bypasses failed or unverified empty-upload finalization',async()=>{
-  for(const [status,digest]of [[403,''],[500,''],[201,'sha256:incorrect']]){let count=0;await assert.rejects(assertToolsPackageWrite(async()=>++count===1?new Response(null,{status:202,headers:{Location:location,'Docker-Upload-UUID':'owned-upload-1'}}):count===2?new Response(null,{status:405}):new Response(null,{status,headers:{'Docker-Content-Digest':digest}}),'synthetic-bearer'),{message:'TOOLS_EMPTY_UPLOAD_FINALIZE_FAILED',httpStatus:status});assert.equal(count,3);}
+test('auth denial, transport failure and missing confirmed tools digest remain FAIL',async()=>{
+ const auth=fixture();auth.options.fetcher=async()=>new Response(null,{status:403});await assert.rejects(publishBetaImages(base,auth.options),{code:'REGISTRY_AUTH_FAILED'});assert.equal(auth.calls.filter(c=>c[0]==='push').length,0);
+ const network=fixture();network.options.fetcher=async()=>{throw Error('private network token');};await assert.rejects(publishBetaImages(base,network.options),e=>{assert.equal(e.code,'PUBLICATION_OPERATION_FAILED');assert.ok(!e.message.includes('private network token'));return true;});
+ const digest=fixture({noDigest:true});await assert.rejects(publishBetaImages(base,digest.options),{code:'PUBLISHED_DIGEST_UNCONFIRMED'});assert.equal(digest.calls.filter(c=>c[0]==='push').length,1);
+ assert.equal(sanitizedPublicationFailure(Error('private secret'),'push','pap-saude-admin-beta-tools'),'phase=push;package=pap-saude-admin-beta-tools;code=PUBLICATION_OPERATION_FAILED');
 });
