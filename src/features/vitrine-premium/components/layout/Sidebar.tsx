@@ -51,7 +51,7 @@ export default function Sidebar({open,onClose}:{open:boolean;onClose:()=>void}) 
         <button type="button" aria-label="Fechar menu" onClick={onClose} className="rounded-md p-2 text-gray-500 hover:bg-gray-100 md:hidden"><X size={20}/></button>
       </div>
       <div className="relative shrink-0 px-4 pb-2" data-tour="profile">
-        <button type="button" aria-label="Opções do perfil demonstrativo" aria-expanded={profileMenu} onClick={()=>setProfileMenu(v=>!v)} className="flex w-full items-center gap-2 rounded-md py-1 text-left focus-visible:outline-2 focus-visible:outline-pink-500">
+        <button type="button" title="Opções do perfil demonstrativo" aria-expanded={profileMenu} onClick={()=>setProfileMenu(v=>!v)} className="flex w-full items-center gap-2 rounded-md py-1 text-left focus-visible:outline-2 focus-visible:outline-pink-500">
           <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-pink-500 text-xs font-semibold text-white">{profile.initials}</span>
           <span className="min-w-0 flex-1"><span className="block truncate text-sm font-semibold text-slate-900">{profile.name||'Profissional demonstrativo'}</span><span className="block text-[11px] text-slate-500">Profissional de saúde</span></span><ChevronDown size={14}/>
         </button>

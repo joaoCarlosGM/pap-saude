@@ -43,8 +43,12 @@ jobs:
         run: node --test tests/admin-beta-deployment/publish.test.mjs
       - name: Commercial opt-in, synchronized Nginx and IAM MFA login contracts
         run: |
-          npx tsx --test tests/commercial-beta/availability.test.ts
+          npx tsx --test tests/commercial-beta/availability.test.ts tests/commercial-beta/rsc-metadata.test.ts
+          node --test tests/vitrine-premium/*.test.mjs
           node tests/beta1/run-isolated.mjs commercial
+      - name: Build production standalone for guarded browser validation
+        env: {DATABASE_URL: 'postgresql://build_no_connect:unused@127.0.0.1:1/beta_build_only', NODE_ENV: production, PAP_FIRST_ACCESS_E2E: '0'}
+        run: npm run build
       - name: Commercial Premium workspace browser and real account flows
         run: node tests/beta1/run-isolated.mjs commercial-browser
       - name: Build candidate images once and reuse builder for tools
@@ -54,6 +58,6 @@ jobs:
           node scripts/admin-beta/test-nginx.mjs
           node scripts/admin-beta/test-nginx.mjs --commercial
       - name: Production HTTP RSC API, real MFA, IAM, migrations ACL, backup restore and persistent restart
-        run: node tests/admin-beta-deployment/run-isolated.mjs "pap-admin-beta-web:$GITHUB_SHA" "pap-admin-beta-migrator:$GITHUB_SHA" "pap-admin-beta-tools:$GITHUB_SHA"
+        run: node tests/admin-beta-deployment/run-isolated.mjs "pap-admin-beta-web:$GITHUB_SHA" "pap-admin-beta-migrator:$GITHUB_SHA" "pap-admin-beta-tools:$GITHUB_SHA" --commercial
       - name: HIGH CRITICAL scanners for all three images
         run: node scripts/admin-beta/scan-images.mjs "pap-admin-beta-web:$GITHUB_SHA" "pap-admin-beta-migrator:$GITHUB_SHA" "pap-admin-beta-tools:$GITHUB_SHA"

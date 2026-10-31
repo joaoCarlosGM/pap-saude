@@ -12,6 +12,7 @@ export default class CommercialReporter implements Reporter{
  }
  onTestEnd(test:TestCase,result:TestResult){
   console.log(`${result.status.toUpperCase()}: ${test.title}`);
+  if(result.status!=='passed'&&process.env.PAP_COMMERCIAL_ARTIFACTS)writeFileSync(join(process.env.PAP_COMMERCIAL_ARTIFACTS,'private-browser-errors-'+test.location.line+'.json'),JSON.stringify(result.errors,null,2),{mode:0o600});
   if(result.status!=='passed')for(const error of result.errors)console.error('PAP_COMMERCIAL_DIAGNOSTIC '+JSON.stringify({kind:'test',testLine:test.location.line,locations:error.stack?.match(/(?:workspace|showcase)\.spec\.ts:\d+:\d+/g)||[],matcher:error.message?.match(/\b(?:toBeVisible|toBeFocused|toBe|toEqual|toHaveURL|toHaveValue|toHaveCount|toHaveAttribute|toContainText)\b/)?.[0]||'unknown'}));
  }
 }
