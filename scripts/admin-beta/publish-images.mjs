@@ -3,7 +3,7 @@ import {execFileSync,spawnSync} from 'node:child_process';
 import {pathToFileURL} from 'node:url';
 
 const toolsName='joaocarlosgm/pap-saude-admin-beta-tools';
-const knownCodes=new Set(['BETA_PUBLICATION_CONTEXT_REQUIRED','IMAGE_REVISION_MISMATCH','REGISTRY_AUTH_FAILED','IMMUTABLE_TAG_ALREADY_EXISTS','REGISTRY_STATE_UNCONFIRMED','TOOLS_PACKAGE_ACTIONS_WRITE_REQUIRED','TOOLS_UPLOAD_START_FAILED','TOOLS_UPLOAD_LOCATION_INVALID','TOOLS_UPLOAD_CANCEL_FAILED','REGISTRY_PUSH_DENIED','DOCKER_PUSH_FAILED','PUBLISHED_DIGEST_UNCONFIRMED']);
+const knownCodes=new Set(['BETA_PUBLICATION_CONTEXT_REQUIRED','IMAGE_REVISION_MISMATCH','REGISTRY_AUTH_FAILED','IMMUTABLE_TAG_ALREADY_EXISTS','REGISTRY_STATE_UNCONFIRMED','TOOLS_PACKAGE_ACTIONS_WRITE_REQUIRED','TOOLS_UPLOAD_START_FAILED','TOOLS_UPLOAD_LOCATION_INVALID','TOOLS_UPLOAD_CANCEL_FAILED','TOOLS_EMPTY_UPLOAD_FINALIZE_FAILED','REGISTRY_PUSH_DENIED','DOCKER_PUSH_FAILED','PUBLISHED_DIGEST_UNCONFIRMED']);
 function failure(code,status){return Object.assign(new Error(code),{httpStatus:status});}
 
 /** A new tag being absent proves no write permission. Probe ONLY the tools package;
@@ -36,7 +36,15 @@ export async function assertToolsPackageWrite(fetcher,token){
     throw error;
   }
   const canceled=await fetcher(location.href,{method:'DELETE',headers,redirect:'error',signal:AbortSignal.timeout(30000)});
-  if(canceled.status!==204)throw failure('TOOLS_UPLOAD_CANCEL_FAILED',canceled.status);
+  if(canceled.status===204)return 'canceled';
+  // GHCR responds405 to upload DELETE. Close OUR zero-byte upload instead;
+  // verify its content-addressed digest. This creates no manifest or tag.
+  if(canceled.status!==405)throw failure('TOOLS_UPLOAD_CANCEL_FAILED',canceled.status);
+  const emptyDigest='sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855';
+  location.searchParams.set('digest',emptyDigest);
+  const finalized=await fetcher(location.href,{method:'PUT',headers:{...headers,'Content-Type':'application/octet-stream'},body:Buffer.alloc(0),redirect:'error',signal:AbortSignal.timeout(30000)});
+  if(finalized.status!==201||finalized.headers.get('docker-content-digest')!==emptyDigest)throw failure('TOOLS_EMPTY_UPLOAD_FINALIZE_FAILED',finalized.status);
+  return 'finalized-empty';
 }
 
 export function sanitizedPublicationFailure(error,phase,pkg){
@@ -63,7 +71,7 @@ async function main(){
       const {token}=await auth.json();if(!token)throw failure('REGISTRY_AUTH_FAILED');
       const head=await fetch(`https://ghcr.io/v2/${name}/manifests/sha-${sha}`,{method:'HEAD',headers:{Authorization:'Bearer '+token,Accept:'application/vnd.oci.image.manifest.v1+json, application/vnd.docker.distribution.manifest.v2+json'},redirect:'error',signal:AbortSignal.timeout(30000)});
       if(head.status!==404)throw failure(head.ok?'IMMUTABLE_TAG_ALREADY_EXISTS':'REGISTRY_STATE_UNCONFIRMED',head.status);
-      if(kind==='tools'){phase='tools-package-write-preflight';await assertToolsPackageWrite(fetch,token);console.log('::notice title=Beta tools scoped write::Empty upload created and canceled; tools package accepts the repository Actions token.');}
+      if(kind==='tools'){phase='tools-package-write-preflight';const proof=await assertToolsPackageWrite(fetch,token);console.log('::notice title=Beta tools scoped write::Controlled empty upload '+proof+'; tools package accepts the repository Actions token.');}
     }
     for(const [kind,pkg]of pairs){
       phase='push';activePackage=pkg;

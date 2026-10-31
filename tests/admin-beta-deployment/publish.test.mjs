@@ -33,3 +33,12 @@ test('global GHCR upload URLs require the UUID from our own POST; foreign reposi
   for(const target of ['https://ghcr.io/v2/blobs/uploads/owned-upload-1','https://ghcr.io/v2/blobs/upload/owned-upload-1','https://ghcr.io//v2/joaoCarlosGM/pap-saude-admin-beta-tools/blobs/uploads/owned-upload-1']){let count=0;await assertToolsPackageWrite(async()=>++count===1?new Response(null,{status:202,headers:{Location:target,'Docker-Upload-UUID':'owned-upload-1'}}):new Response(null,{status:204}),'synthetic-bearer');assert.equal(count,2);}
   for(const [target,uuid]of [[location,'foreign-uuid'],[location,''],['https://ghcr.io/v2/another/package/blobs/uploads/owned-upload-1','owned-upload-1']]){let count=0;await assert.rejects(assertToolsPackageWrite(async()=>{count++;return new Response(null,{status:202,headers:{Location:target,'Docker-Upload-UUID':uuid}});},'synthetic-bearer'),{message:'TOOLS_UPLOAD_LOCATION_INVALID'});assert.equal(count,1);}
 });
+
+test('GHCR405 cancellation is replaced by verified finalization of our own zero-byte upload',async()=>{
+  const calls=[],digest='sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855';
+  const result=await assertToolsPackageWrite(async(url,options)=>{calls.push({url,options});return calls.length===1?new Response(null,{status:202,headers:{Location:location,'Docker-Upload-UUID':'owned-upload-1'}}):calls.length===2?new Response(null,{status:405}):new Response(null,{status:201,headers:{'Docker-Content-Digest':digest}});},'synthetic-bearer');
+  assert.equal(result,'finalized-empty');assert.equal(calls.length,3);assert.equal(calls[2].options.method,'PUT');assert.equal(calls[2].options.body.length,0);assert.equal(new URL(calls[2].url).searchParams.get('digest'),digest);assert.equal(new URL(calls[2].url).searchParams.get('_state'),'synthetic-private-state');assert.equal(new URL(calls[2].url).pathname,new URL(location).pathname);
+});
+test('unsupported cancellation never bypasses failed or unverified empty-upload finalization',async()=>{
+  for(const [status,digest]of [[403,''],[500,''],[201,'sha256:incorrect']]){let count=0;await assert.rejects(assertToolsPackageWrite(async()=>++count===1?new Response(null,{status:202,headers:{Location:location,'Docker-Upload-UUID':'owned-upload-1'}}):count===2?new Response(null,{status:405}):new Response(null,{status,headers:{'Docker-Content-Digest':digest}}),'synthetic-bearer'),{message:'TOOLS_EMPTY_UPLOAD_FINALIZE_FAILED',httpStatus:status});assert.equal(count,3);}
+});

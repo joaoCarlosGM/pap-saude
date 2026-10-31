@@ -93,3 +93,14 @@ Isso preserva a validação de propriedade sem depender do formato de URI presum
 Nenhuma tag desse SHA foi publicada; próximo CI será novamente de SHA novo.
 
 Validação dirigida dessa revisão: **7/7 PASS**, zero skip; ESLint e diff-check PASS.
+
+## CI dirigido 41165953551
+
+SHA03b5bcd: testes, builds, integração e Trivy **PASS**. GHCR aceitou o POST de tools,
+mas respondeu405 ao DELETE do upload validado. Não houve publicação de tags.
+Correção de compatibilidade: somente405 permite finalizar o mesmo upload com PUT de
+**zero bytes**, digest SHA256 do conteúdo vazio e confirmação201/Docker-Content-Digest
+exato. Isso fecha a operação sem manifest/tag nem sobrescrita de conteúdo. Não ignora o
+erro:403/401/cancelamento ambíguo, PUT recusado ou digest divergente continuam FAIL.
+Dois testes novos comprovam o fallback legítimo e as recusas, preservando os sete anteriores.
+A mensagem pública distingue cancelamento de finalização vazia; UUID/Location não são expostos.
