@@ -16,13 +16,23 @@ export async function assertToolsPackageWrite(fetcher,token){
   if(response.status!==202)throw failure('TOOLS_UPLOAD_START_FAILED',response.status);
   let location;
   try{location=new URL(response.headers.get('location')||'',endpoint);}catch{throw failure('TOOLS_UPLOAD_LOCATION_INVALID');}
-  const prefix=`/v2/${toolsName}/blobs/uploads/`;
-  // Registry upload identifiers are opaque, not necessarily UUID/base64url.
-  let opaque='';try{opaque=decodeURIComponent(location.pathname.slice(prefix.length));}catch{}
-  const validOpaque=opaque.length>0&&!/[\\/\u0000-\u0020%]/.test(opaque)&&!['.','..'].includes(opaque);
-  if(!response.headers.get('location')||location.origin!=='https://ghcr.io'||location.username||location.password||location.hash||!location.pathname.startsWith(prefix)||!validOpaque){
+  // GHCR may return a global upload resource rather than the repository endpoint.
+  // Bind cancellation to Docker-Upload-UUID from OUR successful POST, not to a
+  // guessed URL prefix. Never accept another repository's scoped resource.
+  const uuid=response.headers.get('docker-upload-uuid')||'';
+  let path='';try{path=decodeURIComponent(location.pathname).replace(/\/{2,}/g,'/');}catch{}
+  const safeUuid=uuid.length>0&&!/[\\/\u0000-\u0020%]/.test(uuid)&&!['.','..'].includes(uuid);
+  const owner='joaocarlosgm';
+  const segments=path.split('/');
+  if(segments[2]?.toLowerCase()===owner)segments[2]=owner;
+  path=segments.join('/');
+  const scoped=['/v2/'+toolsName+'/blobs/uploads/','/v2/'+toolsName+'/blobs/upload/'];
+  const global=['/v2/blobs/uploads/','/v2/blobs/upload/'];
+  const scopedRoute=safeUuid&&scoped.some(prefix=>path===prefix+uuid);
+  const globalRoute=safeUuid&&global.some(prefix=>path===prefix+uuid);
+  if(!response.headers.get('location')||location.origin!=='https://ghcr.io'||location.username||location.password||location.hash||!(scopedRoute||globalRoute)){
     const error=failure('TOOLS_UPLOAD_LOCATION_INVALID');
-    error.locationShape={sameOrigin:location.origin==='https://ghcr.io',sameUploadScope:location.pathname.startsWith(prefix),opaqueLength:Math.min(opaque.length,4096),hasQuery:!!location.search,uuidHeader:!!response.headers.get('docker-upload-uuid')};
+    error.locationShape={sameOrigin:location.origin==='https://ghcr.io',sameUploadScope:scopedRoute,opaqueLength:Math.min(uuid.length,4096),hasQuery:!!location.search,uuidHeader:!!uuid};
     throw error;
   }
   const canceled=await fetcher(location.href,{method:'DELETE',headers,redirect:'error',signal:AbortSignal.timeout(30000)});

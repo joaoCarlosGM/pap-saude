@@ -79,3 +79,17 @@ Teste novo cobre identificadores opacos e escapes negados. Em nova incompatibili
 somente flags estruturais/tamanho limitado da Location são emitidos, nunca seu valor/query.
 Testes dirigidos atualizados: **6/6 PASS**, zero skip; lint e diff-check PASS.
 O próximo commit usa novamente SHA novo; nenhuma tag901b430 foi publicada.
+
+## CI dirigido 41165178230
+
+SHA1eddcb8: testes, build, integração e scanners **PASS**; publicação **FAIL antes de tags**.
+GHCR respondeu202 e Docker-Upload-UUID; diagnóstico sanitizado confirmou mesmo host,
+mas caminho diferente do prefixo de repositório presumido. A validação agora usa o UUID
+retornado no próprio POST como prova de propriedade do upload e admite rotas de upload
+GHCR globais ou do pacote tools. Exige correspondência exata do UUID, HTTPS/same-origin,
+rota de upload e pacote correto nas rotas com escopo. Não segue redirects, não permite
+outros pacotes/UUIDs e não registra Location/query. Testes novos cobrem essas negativas.
+Isso preserva a validação de propriedade sem depender do formato de URI presumido.
+Nenhuma tag desse SHA foi publicada; próximo CI será novamente de SHA novo.
+
+Validação dirigida dessa revisão: **7/7 PASS**, zero skip; ESLint e diff-check PASS.
