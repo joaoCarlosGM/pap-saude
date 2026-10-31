@@ -66,3 +66,16 @@ Não houve alteração de aplicação, autenticação, IAM, migrations, banco, i
 VPS, laboratórios ou CI/CD de produção. Nenhum deploy, merge, alteração de tag existente
 ou manipulação de credenciais foi executado. Somente ativar depois do CI verde e dos
 três novos digests confirmados, seguindo RUNBOOK.md e validações externas do operador.
+
+## CI dirigido 41164481335
+
+SHA901b430: todos os gates anteriores, cinco testes novos, integração e Trivy **PASS**.
+Publicação **FAIL antes de qualquer tag**: o upload de tools recebeu202 (permissão aceita),
+mas a validação local recusou Location. Isso não comprova uma recusa atual da ACL.
+A validação assumia identificador UUID/base64url; o protocolo fornece Location opaca.
+Removida essa suposição: mantidos host GHCR, pacote exato, endpoint de upload, segmento
+sem escape/traversal/controle e redirect proibido; identificadores com ponto/padding são aceitos.
+Teste novo cobre identificadores opacos e escapes negados. Em nova incompatibilidade,
+somente flags estruturais/tamanho limitado da Location são emitidos, nunca seu valor/query.
+Testes dirigidos atualizados: **6/6 PASS**, zero skip; lint e diff-check PASS.
+O próximo commit usa novamente SHA novo; nenhuma tag901b430 foi publicada.

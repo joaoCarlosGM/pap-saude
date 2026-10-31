@@ -17,14 +17,23 @@ export async function assertToolsPackageWrite(fetcher,token){
   let location;
   try{location=new URL(response.headers.get('location')||'',endpoint);}catch{throw failure('TOOLS_UPLOAD_LOCATION_INVALID');}
   const prefix=`/v2/${toolsName}/blobs/uploads/`;
-  if(!response.headers.get('location')||location.origin!=='https://ghcr.io'||location.username||location.password||location.hash||!location.pathname.startsWith(prefix)||!/^[A-Za-z0-9_-]+$/.test(location.pathname.slice(prefix.length)))throw failure('TOOLS_UPLOAD_LOCATION_INVALID');
+  // Registry upload identifiers are opaque, not necessarily UUID/base64url.
+  let opaque='';try{opaque=decodeURIComponent(location.pathname.slice(prefix.length));}catch{}
+  const validOpaque=opaque.length>0&&!/[\\/\u0000-\u0020%]/.test(opaque)&&!['.','..'].includes(opaque);
+  if(!response.headers.get('location')||location.origin!=='https://ghcr.io'||location.username||location.password||location.hash||!location.pathname.startsWith(prefix)||!validOpaque){
+    const error=failure('TOOLS_UPLOAD_LOCATION_INVALID');
+    error.locationShape={sameOrigin:location.origin==='https://ghcr.io',sameUploadScope:location.pathname.startsWith(prefix),opaqueLength:Math.min(opaque.length,4096),hasQuery:!!location.search,uuidHeader:!!response.headers.get('docker-upload-uuid')};
+    throw error;
+  }
   const canceled=await fetcher(location.href,{method:'DELETE',headers,redirect:'error',signal:AbortSignal.timeout(30000)});
   if(canceled.status!==204)throw failure('TOOLS_UPLOAD_CANCEL_FAILED',canceled.status);
 }
 
 export function sanitizedPublicationFailure(error,phase,pkg){
   const code=knownCodes.has(error?.message)?error.message:'PUBLICATION_OPERATION_FAILED';
-  return `phase=${phase};package=${pkg};code=${code}`+(Number.isInteger(error?.httpStatus)?`;HTTP=${error.httpStatus}`:'');
+  const shape=code==='TOOLS_UPLOAD_LOCATION_INVALID'&&error?.locationShape;
+  const safeShape=shape&&['sameOrigin','sameUploadScope','hasQuery','uuidHeader'].every(k=>typeof shape[k]==='boolean')&&Number.isInteger(shape.opaqueLength)&&shape.opaqueLength>=0&&shape.opaqueLength<=4096?`;locationShape=${JSON.stringify({sameOrigin:shape.sameOrigin,sameUploadScope:shape.sameUploadScope,opaqueLength:shape.opaqueLength,hasQuery:shape.hasQuery,uuidHeader:shape.uuidHeader})}`:'';
+  return `phase=${phase};package=${pkg};code=${code}`+(Number.isInteger(error?.httpStatus)?`;HTTP=${error.httpStatus}`:'')+safeShape;
 }
 
 async function main(){
