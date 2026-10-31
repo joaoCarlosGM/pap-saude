@@ -22,6 +22,8 @@ jobs:
         with: {node-version: 22, cache: npm}
       - name: Install frozen dependencies
         run: npm ci
+      - name: Install Chromium on this disposable CI runner
+        run: npx playwright install --with-deps chromium
       - name: Production and isolated migrator dependency audits
         run: |
           npm audit --omit=dev --audit-level=high
@@ -43,6 +45,8 @@ jobs:
         run: |
           npx tsx --test tests/commercial-beta/availability.test.ts
           node tests/beta1/run-isolated.mjs commercial
+      - name: Commercial Premium workspace browser and real account flows
+        run: node tests/beta1/run-isolated.mjs commercial-browser
       - name: Build candidate images once and reuse builder for tools
         run: bash scripts/admin-beta/build-images.sh "$GITHUB_SHA"
       - name: Isolated Nginx template syntax without host listeners

@@ -1,11 +1,12 @@
 import {execFileSync,spawnSync} from 'node:child_process';
+import {createServer} from 'node:net';
 import {randomBytes,randomUUID} from 'node:crypto';
 import {mkdtempSync,writeFileSync,readFileSync,appendFileSync,mkdirSync,cpSync} from 'node:fs';
 import {tmpdir} from 'node:os';
 import {join} from 'node:path';
 import {assertDockerEndpoint} from '../../scripts/local/policy.mjs';
 import {publicBetaDiagnostics} from './browser-diagnostics.mjs';
-const groups={commercial:['tests/commercial-beta/access.test.ts'],unit:['tests/beta1/presentation.test.tsx','tests/beta1/patients.test.tsx','tests/beta1/navigation.test.tsx','tests/beta1/course-presentation.test.tsx','tests/beta1/demo-courses.test.ts','tests/beta1/browser-diagnostics.test.mjs','tests/beta1/copy-guard.test.mjs','tests/beta1/row-lock-policy.test.mjs'],upgrade:[],build:[],integration:['tests/beta1/lms.test.ts'],browser:[]};
+const groups={'commercial-browser':[],commercial:['tests/commercial-beta/access.test.ts','tests/commercial-beta/account.test.ts'],unit:['tests/beta1/presentation.test.tsx','tests/beta1/patients.test.tsx','tests/beta1/navigation.test.tsx','tests/beta1/course-presentation.test.tsx','tests/beta1/demo-courses.test.ts','tests/beta1/browser-diagnostics.test.mjs','tests/beta1/copy-guard.test.mjs','tests/beta1/row-lock-policy.test.mjs'],upgrade:[],build:[],integration:['tests/beta1/lms.test.ts'],browser:[]};
 const selected=process.argv[2];if(process.argv.length!==3||!Object.hasOwn(groups,selected))throw Error('Choose an explicit isolated test group');
 if(selected==='unit'){const result=spawnSync('node_modules/.bin/tsx',['--test','--test-concurrency=1',...groups.unit],{stdio:'inherit',env:process.env});process.exit(result.status??1);}
 const dbName='pap_beta1_test';
@@ -21,6 +22,7 @@ function runtimeAcl(){
 const log=(label,args,env)=>{
  const r=spawnSync(args[0],args.slice(1),{env,encoding:'utf8'}),output=(r.stdout||'')+(r.stderr||'');writeFileSync(join(dir,label+'.log'),output,{mode:0o600});
  if(r.status!==0){
+  if(label==='commercial-browser')for(const line of output.split('\n'))if(line.startsWith('PAP_COMMERCIAL_DIAGNOSTIC ')){try{const item=JSON.parse(line.slice('PAP_COMMERCIAL_DIAGNOSTIC '.length));const safe={kind:['setup','test'].includes(item.kind)?item.kind:'runner',testLine:Number.isInteger(item.testLine)?item.testLine:undefined,locations:Array.isArray(item.locations)?item.locations.filter(x=>typeof x==='string'&&/^[\w.-]+\.ts:\d+:\d+$/.test(x)):[],matcher:['toBeVisible','toBeFocused','toBe','toEqual','toHaveURL','toHaveValue','toHaveCount','toHaveAttribute','toContainText'].includes(item.matcher)?item.matcher:undefined};console.error('::error title=Commercial Beta browser::'+JSON.stringify(safe));}catch{}}
   const diagnostics=label==='browser'?publicBetaDiagnostics(output):[];
   if(label==='browser')console.error('Sanitized browser failure:',JSON.stringify(diagnostics));
   // Summary exposes only the static substep and allowlisted diagnostics, never raw logs.
@@ -55,10 +57,13 @@ try{
   console.log(`PASS upgrade35->36, replay, restore and owned PG restart; seven synthetic MFA sessions preserved; private evidence ${dir}`);
  }else{
  log('migrate',['node_modules/.bin/prisma','migrate','deploy'],env);
- if(selected==='browser'){
+ if(selected==='browser'||selected==='commercial-browser'){
    runtimeAcl();const runtimePassword=randomBytes(24).toString('hex');docker(['exec','-i',cid,'psql','-U','pap_user','-d',dbName,'-v','ON_ERROR_STOP=1'],`ALTER ROLE pap_beta_runtime LOGIN PASSWORD '${runtimePassword}';`);const runtimeUrl=new URL(env.DATABASE_URL);runtimeUrl.username='pap_beta_runtime';runtimeUrl.password=runtimePassword;
    const browserEnv={...env,PAP_BETA1_RUNTIME_DATABASE_URL:runtimeUrl.toString(),PAP_FIRST_ACCESS_E2E:'1',PAP_BETA1_ARTIFACTS:dir,PLAYWRIGHT_CHROMIUM_EXECUTABLE:process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE||'',NODE_ENV:'development'};
-   log(selected,['node_modules/.bin/playwright','test','--config','tests/beta1/playwright.config.ts',...(process.env.PAP_BETA1_GREP?['--grep',process.env.PAP_BETA1_GREP]:[])],browserEnv);
+   if(selected==='commercial-browser'){
+    const listener=createServer();await new Promise((resolve,reject)=>{listener.once('error',reject);listener.listen(0,'127.0.0.1',resolve);});const testPort=listener.address().port;await new Promise((resolve,reject)=>listener.close(e=>e?reject(e):resolve()));
+    log(selected,['node_modules/.bin/playwright','test','--config','tests/commercial-beta/playwright.config.ts'],{...browserEnv,PAP_COMMERCIAL_TEST_PORT:String(testPort),PAP_COMMERCIAL_TEST_PROXY:randomBytes(32).toString('base64url'),PAP_COMMERCIAL_RUNTIME_DATABASE_URL:runtimeUrl.toString(),PAP_COMMERCIAL_ARTIFACTS:dir,AUTH_ALLOWED_ORIGINS:`http://127.0.0.1:3110,http://127.0.0.1:${testPort}`});
+   }else log(selected,['node_modules/.bin/playwright','test','--config','tests/beta1/playwright.config.ts',...(process.env.PAP_BETA1_GREP?['--grep',process.env.PAP_BETA1_GREP]:[])],browserEnv);
  }else if(selected==='build')log('production-build',['npm','run','build'],{...env,NODE_ENV:'production'});else log(selected,['node_modules/.bin/tsx','--test','--test-concurrency=1',...(process.env.PAP_BETA1_NODE_GREP?['--test-name-pattern',process.env.PAP_BETA1_NODE_GREP]:[]),...groups[selected]],env);
  console.log(`PASS ${selected}; private evidence ${dir}`);
  }

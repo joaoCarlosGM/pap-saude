@@ -1,0 +1,26 @@
+.pap-commercial .commercial-sidebar nav{min-height:0;overflow-y:auto;overscroll-behavior:contain}
+.pap-commercial .commercial-mobile-open,.pap-commercial .commercial-drawer-close{display:none}
+.pap-commercial .commercial-guidelines{padding-left:20px;list-style:disc;color:var(--ws-muted);font-size:14px;line-height:1.9;margin:20px 0}
+.pap-commercial .commercial-profile{margin:24px 0;scroll-margin-top:24px}
+.pap-commercial .commercial-profile>section{background:var(--ws-card);color:var(--ws-ink);border-color:var(--ws-line);border-radius:22px}
+.pap-commercial .commercial-profile :is(input,select){background:var(--ws-bg);color:var(--ws-ink);border-color:var(--ws-line);width:100%;min-height:44px}
+.pap-commercial .commercial-profile :is(p,li){color:var(--ws-muted)}
+.pap-commercial .commercial-profile button[type=submit]{background:var(--ws-accent);color:var(--ws-contrast);min-height:44px}
+.pap-commercial .commercial-profile a{color:var(--ws-accent);min-height:44px;display:inline-flex;align-items:center}
+.pap-commercial .commercial-profile input:read-only{opacity:1}
+.pap-commercial .commercial-sidebar button:disabled{opacity:.7;cursor:wait}
+.pap-commercial .commercial-backdrop{display:none}
+@media(max-width:767px){
+ .pap-commercial .commercial-sidebar{position:fixed;inset:0 auto 0 0;width:min(86vw,320px);height:100dvh;z-index:70;padding:16px;transform:translateX(-100%);visibility:hidden;transition:transform .2s ease,visibility .2s}
+ .pap-commercial .commercial-sidebar[data-open=true]{transform:translateX(0);visibility:visible}
+ .pap-commercial .commercial-sidebar nav{display:flex;flex:1;margin-top:20px}
+ .pap-commercial .commercial-sidebar-note{display:block;flex-shrink:0;padding-top:16px}
+ .pap-commercial .commercial-mobile-open,.pap-commercial .commercial-drawer-close{display:grid;place-items:center;min-width:44px;min-height:44px;border:1px solid currentColor;border-radius:10px}
+ .pap-commercial .commercial-drawer-close{margin-left:auto;color:#e1f3ed}
+ .pap-commercial .commercial-mobile-open{color:var(--ws-accent)}
+ .pap-commercial .commercial-backdrop{display:block;position:fixed;inset:0;background:#001b26a8;z-index:60;cursor:pointer}
+ .pap-commercial .commercial-topbar{position:sticky;top:0;z-index:20}
+ .pap-commercial .commercial-topbar>div{gap:10px}
+ .pap-commercial .commercial-profile>section{padding:20px}
+}
+@media(prefers-reduced-motion:reduce){.pap-commercial .commercial-sidebar{transition:none}}
