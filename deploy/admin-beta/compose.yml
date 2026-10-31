@@ -2,6 +2,7 @@ name: pap-admin-beta
 x-beta-env: &beta-env
   NODE_ENV: production
   PAP_ADMIN_BETA_ONLY: "1"
+  PAP_BETA_COMMERCIAL_ENABLED: ${PAP_BETA_COMMERCIAL_ENABLED:-0}
   PAP_PUBLIC_URL: https://admin-beta.papsaude.com.br
   AUTH_ALLOWED_ORIGINS: https://admin-beta.papsaude.com.br
   AUTH_TRUSTED_CLIENT_IP_HEADER: x-pap-beta-client-ip

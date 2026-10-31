@@ -1,3 +1,4 @@
+import { betaCommercialPathAllowed } from "./beta-commercial-availability";
 /** Deployment availability only. Existing session, MFA, IAM and CSRF guards remain authoritative. */
 export function adminBetaOnly(value: string | undefined) {
   // Invalid nonempty configuration fails closed. The Beta entrypoint additionally requires exactly 1.
@@ -40,7 +41,7 @@ const organizationPage = new RegExp(`^/admin/rede/${uuid}$`);
 const organizationApi = new RegExp(`^/api/admin/organizations/${uuid}$`);
 const assignmentApi = new RegExp(`^/api/admin/role-assignments/${uuid}$`);
 
-export function adminBetaPathAllowed(rawPath: string, method = "GET", approvedEmail = false) {
+export function adminBetaPathAllowed(rawPath: string, method = "GET", approvedEmail = false, commercialEnabled = false) {
   let path: string;
   try { path = decodeURIComponent(rawPath); } catch { return false; }
   if (/[\\%\u0000-\u0020]/.test(path) || path.includes("//") || path.split("/").some(p => p === "." || p === "..")) return false;
@@ -51,6 +52,7 @@ export function adminBetaPathAllowed(rawPath: string, method = "GET", approvedEm
     if (/^\/(?:fonts|images|brand|beta1|banners|assets|illustrations)\/[\w/().-]+\.(?:woff2?|ttf|png|jpe?g|webp|svg|ico)$/.test(path)) return true;
     if (["/favicon.ico", "/icon.png", "/apple-icon.png"].includes(path)) return true;
   }
+  if (commercialEnabled && betaCommercialPathAllowed(path, method)) return true;
   if (ADMIN_BETA_API[path]?.includes(method)) return true;
   if (approvedEmail && path === "/api/email/resend/webhook") return method === "POST";
   if (organizationApi.test(path)) return method === "PATCH";

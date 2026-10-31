@@ -16,9 +16,9 @@ export function prepareBetaDirectory(directory,sha){
  // readable mounts support PostgreSQL70 / Node1000 / web1001 without changing users.
  for(const [name,value]of Object.entries(secrets)){const file=join(target,'secrets',name);writeFileSync(file,value+'\n',{flag:'wx',mode:0o444});chmodSync(file,0o444);}
  for(const name of ['compose.yml','entrypoint.mjs','init-db.sh','migration-manifest.json','runtime-acl.psql']){copyFileSync(join(source,name),join(target,name));chmodSync(join(target,name),0o644);}
- for(const name of ['nginx.conf','routes.map.conf']){copyFileSync(join(source,name),join(target,'nginx',name));chmodSync(join(target,'nginx',name),0o644);}
+ for(const name of ['nginx.conf','routes.map.conf','routes.commercial.map.conf']){copyFileSync(join(source,name),join(target,'nginx',name));chmodSync(join(target,'nginx',name),0o644);}
  writeFileSync(join(target,'nginx/proxy-secret.conf'),`proxy_set_header X-PAP-Beta-Proxy-Token "${proxy}";\n`,{flag:'wx',mode:0o600});
- writeFileSync(join(target,'.env'),`BETA_SHA=${sha}\nBETA_WEB_IMAGE=ghcr.io/joaocarlosgm/pap-saude-admin-beta:sha-${sha}\nBETA_MIGRATOR_IMAGE=ghcr.io/joaocarlosgm/pap-saude-admin-beta-migrator:sha-${sha}\nBETA_TOOLS_IMAGE=ghcr.io/joaocarlosgm/pap-saude-admin-beta-tools:sha-${sha}\nPAP_EMAIL_PROVIDER=disabled\nPAP_EMAIL_EXTERNAL_ENABLED=0\nPAP_BETA_EMAIL_APPROVED=0\nPAP_EMAIL_FROM=\nPAP_EMAIL_ALLOWED_SENDERS=\n`,{flag:'wx',mode:0o600});
+ writeFileSync(join(target,'.env'),`BETA_SHA=${sha}\nBETA_WEB_IMAGE=ghcr.io/joaocarlosgm/pap-saude-admin-beta:sha-${sha}\nBETA_MIGRATOR_IMAGE=ghcr.io/joaocarlosgm/pap-saude-admin-beta-migrator:sha-${sha}\nBETA_TOOLS_IMAGE=ghcr.io/joaocarlosgm/pap-saude-admin-beta-tools:sha-${sha}\nPAP_BETA_COMMERCIAL_ENABLED=0\nPAP_EMAIL_PROVIDER=disabled\nPAP_EMAIL_EXTERNAL_ENABLED=0\nPAP_BETA_EMAIL_APPROVED=0\nPAP_EMAIL_FROM=\nPAP_EMAIL_ALLOWED_SENDERS=\n`,{flag:'wx',mode:0o600});
  return {directory:target,sha};
 }
 if(process.argv[1]&&import.meta.url===pathToFileURL(process.argv[1]).href){
