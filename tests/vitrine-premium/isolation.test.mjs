@@ -72,7 +72,7 @@ test('Beta1 preserves authentication, clinical contracts, KPIs and all historica
  const clean=text=>text.replace(/^.*(?:PERMISSIONS\.COURSE_|COURSE_\w+:|ORGANIZATION_MUNICIPALITY_CREATE|\/\/ Narrow delegated inclusion|\/\/ LMS:).*$/gm,'').replace(/\s+/g,' ').trim();
  for(const path of ['src/server/iam/permissions.ts','src/server/iam/system-role-catalog.ts'])assert.equal(clean(readFileSync(path,'utf8')),clean(before(path)),`existing IAM catalog ${path}`);
  const invitation='src/server/access-invitations/access-invitation.service.ts';assert.equal(readFileSync(invitation,'utf8').replace('!notice.invitation || ',''),before(invitation));
- const allowed=new Set(['src/server/iam/permissions.ts','src/server/iam/system-role-catalog.ts','src/server/notifications/notification.service.ts',invitation,'src/server/account/workspace-identity.service.ts','src/server/admin-beta/delegated-institutions.service.ts',navigationPath]);
+ const allowed=new Set(['src/server/email/templates.ts','src/server/iam/permissions.ts','src/server/iam/system-role-catalog.ts','src/server/notifications/notification.service.ts',invitation,'src/server/account/workspace-identity.service.ts','src/server/admin-beta/delegated-institutions.service.ts',navigationPath]);
  const changed=execFileSync('git',['diff','--name-only',base,'--','src/server'],{encoding:'utf8'}).trim().split('\n').filter(Boolean);
  for(const path of changed)assert.ok(path.startsWith('src/server/courses/')||allowed.has(path),path);
  const syntheticCore=execFileSync('git',['ls-tree','-r','--name-only',base,'--',root+'lib/demo',root+'types'],{encoding:'utf8'}).trim().split('\n').filter(Boolean);

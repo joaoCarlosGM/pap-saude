@@ -33,6 +33,7 @@ jobs:
       - name: Closed policy, preparation, manifest and preserved baseline contracts
         run: |
           npx tsx --test tests/admin-beta-deployment/policy.test.ts tests/admin-beta-deployment/deployment.test.ts
+          npx tsx --test tests/email-template-premium.test.ts
           npm run test:beta1:unit
           npx tsc --noEmit
           npm run lint
