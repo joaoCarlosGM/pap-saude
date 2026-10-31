@@ -37,6 +37,8 @@ jobs:
           npx tsc --noEmit
           npm run lint
           git diff --exit-code -- Dockerfile .github/workflows/ci.yml docker-compose.yml package-lock.json prisma/migrations
+      - name: Tools package publishing permission and private diagnostics contracts
+        run: node --test tests/admin-beta-deployment/publish.test.mjs
       - name: Build candidate images once and reuse builder for tools
         run: bash scripts/admin-beta/build-images.sh "$GITHUB_SHA"
       - name: Isolated Nginx template syntax without host listeners
