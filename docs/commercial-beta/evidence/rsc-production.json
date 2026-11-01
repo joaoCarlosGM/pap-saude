@@ -1,0 +1,236 @@
+{
+  "baseSha": "6389b8a91dffc8cacabb946a628046a5b90c2348",
+  "testedCodeFingerprint": "66a1f8e3f3b6e5035a697166d2a8d7ec005f019af9909ec23d7ac81e2c03ea01",
+  "files": [
+    {
+      "path": "tests/commercial-beta/http.test.ts",
+      "sha256": "e1c699830355389f09d03f3b0ccfd333439a6755490e86b196cb8ba4e8048b2b"
+    },
+    {
+      "path": "tests/commercial-beta/rsc-metadata.test.ts",
+      "sha256": "a4c5d07522bda4601cd67284402b554b36406b010674bcd9eb01a73ac28f365e"
+    },
+    {
+      "path": "tests/commercial-beta/rsc-metadata.ts",
+      "sha256": "a3d3223e77ddaa373e1d79d812561fcc26e5c4cb112972d368737f1bbcd602ef"
+    },
+    {
+      "path": "tests/commercial-beta/workspace.spec.ts",
+      "sha256": "b41107e372e281f395bbbac28200d2c73b58e66ba225c5283946b235f0a5d547"
+    }
+  ],
+  "nodeVersion": "22.23.4",
+  "baseline": {
+    "baselineSha": "6389b8a91dffc8cacabb946a628046a5b90c2348",
+    "phase": "http-commercial",
+    "diagnostics": [
+      {
+        "identity": "ANONYMOUS",
+        "path": "/comercial",
+        "status": 200,
+        "flight": true,
+        "interceptable": false,
+        "varyHasNextUrl": false
+      }
+    ],
+    "expectedActual": [
+      "  expected: true",
+      "  actual: false"
+    ],
+    "locations": [
+      "http.test.ts:12:1",
+      "rsc-metadata.ts:6:152",
+      "http.test.ts:25:149"
+    ],
+    "privateLogSha256": "c4ff3577ca1e299e270db2b786e6fbaac04786aeddb688e7833abcbeac4d5543",
+    "localStorage": "owned memory volume held mounted across PostgreSQL restart; original runner assertions unchanged",
+    "localImages": "flattened task-owned cached C03 runtime images; original image builds required in final CI"
+  },
+  "results": {
+    "contracts": {
+      "status": "PASS",
+      "tests": 15
+    },
+    "commercialServices": {
+      "status": "PASS",
+      "tests": 6
+    },
+    "browserProduction": {
+      "status": "PASS",
+      "tests": 9
+    },
+    "isolation": {
+      "status": "PASS",
+      "tests": 6
+    },
+    "typescript": "PASS",
+    "lint": "PASS",
+    "dockerRuntimePhases": {
+      "beta": {
+        "status": "PASS",
+        "tests": 1,
+        "logSha256": "c6d10d5f962e79579fa06d938251d9ace83ddd220e7dad57cd98d202a7c944b6"
+      },
+      "restart": {
+        "status": "PASS",
+        "tests": 1,
+        "logSha256": "e2179f8633b345bf46b2a8677774c536ee52ed92d1efd29df37da8b9d71db0f1"
+      },
+      "normal": {
+        "status": "PASS",
+        "tests": 1,
+        "logSha256": "54f2fc1339ff6b4760673faced737f454c52e56b4f416a6a5fb822604b5a59a8"
+      },
+      "commercial": {
+        "status": "PASS",
+        "tests": 1,
+        "logSha256": "2a4b06c296ed4d975e6d767c505bbc47bd6ec17407c45848d36b0b90382ce037"
+      },
+      "commercial-readonly": {
+        "status": "PASS",
+        "tests": 1,
+        "logSha256": "444d888594c418a2f3feecd8128978bbc847aab1fb0677ef0e3ef135edd092e9"
+      }
+    },
+    "dockerChecks": {
+      "status": "PASS",
+      "sha": "6389b8a91dffc8cacabb946a628046a5b90c2348",
+      "betaHttpRscApi": true,
+      "realTotpAndRecovery": true,
+      "primaryMfaDenied": true,
+      "delegatedIam": true,
+      "backupRestoreSecurityRows": true,
+      "migrationsReplayAndDrift": true,
+      "runtimeAcl": true,
+      "initialProvisioningRefusesReuse": true,
+      "postgresAndWebRestartPreserveSecurity": true,
+      "modeOffClinicalAndLmsPreserved": true,
+      "commercialOptIn": true
+    },
+    "rscDeniedResponses": [
+      {
+        "identity": "NO_COMMERCIAL",
+        "path": "/comercial",
+        "status": 200,
+        "outcome": "PUBLIC_ROUTE_METADATA"
+      },
+      {
+        "identity": "NO_COMMERCIAL",
+        "path": "/vitrine",
+        "status": 200,
+        "outcome": "PUBLIC_ROUTE_METADATA"
+      },
+      {
+        "identity": "NO_COMMERCIAL",
+        "path": "/vitrine/registro",
+        "status": 200,
+        "outcome": "PUBLIC_ROUTE_METADATA"
+      },
+      {
+        "identity": "NO_COMMERCIAL",
+        "path": "/vitrine/pacientes/maria-gracas",
+        "status": 200,
+        "outcome": "PUBLIC_ROUTE_METADATA"
+      },
+      {
+        "identity": "ANONYMOUS",
+        "path": "/comercial",
+        "status": 200,
+        "outcome": "PUBLIC_ROUTE_METADATA"
+      },
+      {
+        "identity": "ANONYMOUS",
+        "path": "/vitrine",
+        "status": 200,
+        "outcome": "PUBLIC_ROUTE_METADATA"
+      },
+      {
+        "identity": "ANONYMOUS",
+        "path": "/vitrine/registro",
+        "status": 200,
+        "outcome": "PUBLIC_ROUTE_METADATA"
+      },
+      {
+        "identity": "ANONYMOUS",
+        "path": "/vitrine/pacientes/maria-gracas",
+        "status": 200,
+        "outcome": "PUBLIC_ROUTE_METADATA"
+      },
+      {
+        "identity": "PAP_ADMIN",
+        "path": "/comercial",
+        "status": 200,
+        "outcome": "PUBLIC_ROUTE_METADATA"
+      },
+      {
+        "identity": "PAP_ADMIN",
+        "path": "/vitrine",
+        "status": 200,
+        "outcome": "PUBLIC_ROUTE_METADATA"
+      },
+      {
+        "identity": "PAP_ADMIN",
+        "path": "/vitrine/registro",
+        "status": 200,
+        "outcome": "PUBLIC_ROUTE_METADATA"
+      },
+      {
+        "identity": "PAP_ADMIN",
+        "path": "/vitrine/pacientes/maria-gracas",
+        "status": 200,
+        "outcome": "PUBLIC_ROUTE_METADATA"
+      },
+      {
+        "identity": "PAP_MANAGER",
+        "path": "/comercial",
+        "status": 200,
+        "outcome": "PUBLIC_ROUTE_METADATA"
+      },
+      {
+        "identity": "PAP_MANAGER",
+        "path": "/vitrine",
+        "status": 200,
+        "outcome": "PUBLIC_ROUTE_METADATA"
+      },
+      {
+        "identity": "PAP_MANAGER",
+        "path": "/vitrine/registro",
+        "status": 200,
+        "outcome": "PUBLIC_ROUTE_METADATA"
+      },
+      {
+        "identity": "PAP_MANAGER",
+        "path": "/vitrine/pacientes/maria-gracas",
+        "status": 200,
+        "outcome": "PUBLIC_ROUTE_METADATA"
+      },
+      {
+        "identity": "MFA_PENDING",
+        "path": "/comercial",
+        "status": 200,
+        "outcome": "PUBLIC_ROUTE_METADATA"
+      },
+      {
+        "identity": "MFA_PENDING",
+        "path": "/vitrine",
+        "status": 200,
+        "outcome": "PUBLIC_ROUTE_METADATA"
+      },
+      {
+        "identity": "MFA_PENDING",
+        "path": "/vitrine/registro",
+        "status": 200,
+        "outcome": "PUBLIC_ROUTE_METADATA"
+      },
+      {
+        "identity": "MFA_PENDING",
+        "path": "/vitrine/pacientes/maria-gracas",
+        "status": 200,
+        "outcome": "PUBLIC_ROUTE_METADATA"
+      }
+    ]
+  },
+  "localDockerMethod": "unchanged runner; cached C03 runtime files flattened for VFS; owned tmpfs volume kept mounted during PG restart; two completed setup images reclaimed before web phases",
+  "productionImageBuildLocal": "BLOCKED (Prisma checksum egress403, then VFS/ENOSPC); no checksum ignore or repository Dockerfile change",
+  "finalCi": "PENDING_AFTER_PUSH; original Dockerfiles, disk-backed volume, dependency audits and scanners remain mandatory"
+}

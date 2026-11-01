@@ -1,3 +1,4 @@
+import {assertPublicRscMetadata} from './rsc-metadata';
 import {test,expect,type Page} from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 import {bootstrapSystemIam} from '../../src/server/iam/bootstrap.service';
@@ -35,4 +36,15 @@ test('MFA primary, missing session and unauthorized Admin never mount the worksp
 });
 test('profile transport failure offers retry and then loads persisted data',async({page,context,baseURL})=>{
  const f=await commercialIdentity();await context.addCookies([{name:'pap_session',value:f.token,url:baseURL!}]);let unavailable=true;await page.route('**/api/account/profile',async route=>{if(unavailable&&route.request().method()==='GET'){await route.fulfill({status:503,contentType:'application/json',body:'{"error":"TEMPORARY_UNAVAILABLE"}'});}else await route.continue();});await page.goto('/comercial');const retry=page.getByRole('button',{name:'Tentar novamente carregar perfil'});await expect(retry).toBeVisible();unavailable=false;await retry.click();await expect(page.getByLabel('E-mail de login')).toHaveValue(f.user.email);
+});
+
+test('production RSC prefetch never exposes workspace or private data to denied identities',async({context,baseURL})=>{
+ const admin=await actor(),manager=await actor('PAP_MANAGER'),commercial=await commercialIdentity(),primary=await createSession({userId:commercial.user.id}),unassigned=await commercialIdentity();
+ await db.roleAssignment.deleteMany({where:{userId:unassigned.user.id}});
+ for(const [kind,token]of [['ANONYMOUS',undefined],['NO_COMMERCIAL',unassigned.token],['PAP_ADMIN',admin.token],['PAP_MANAGER',manager.token],['MFA_PENDING',primary.token]] as const)for(const path of ['/comercial','/vitrine','/vitrine/registro','/vitrine/pacientes/maria-gracas']){
+  const headers={RSC:'1','Next-Router-Prefetch':'1',...(token?{cookie:'pap_session='+token}:{})};let response=await context.request.get(path,{headers,maxRedirects:0});
+  if(response.status()===307&&response.headers().location){const next=new URL(response.headers().location,baseURL);if(next.origin===baseURL&&next.pathname===path&&next.searchParams.has('_rsc')){expect([...next.searchParams.keys()]).toEqual(['_rsc']);response=await context.request.get(next.pathname+next.search,{headers,maxRedirects:0});}}
+  if(response.status()===200){const body=await response.text();expect(response.headers()['content-type']).toContain('text/x-component');expect((response.headers().vary||'').toLowerCase()).not.toContain('next-url');assertPublicRscMetadata(body,path);expect(body).not.toContain('data-commercial-workspace');if(token)expect(body).not.toContain(token);}
+  else{expect(response.status()).toBe(307);const target=new URL(response.headers().location,baseURL);expect(target.origin).toBe(baseURL);expect(target.pathname).toBe(kind==='MFA_PENDING'?'/comercial':'/login');}
+ }
 });
