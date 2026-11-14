@@ -1,0 +1,32 @@
+{
+  "base": "12f67cda73012668c56f8509878531351af50311",
+  "implementationCommit": "ed7f5e42beadbcbdc0ddac16772349b5b68fb3a4",
+  "files": {
+    "src/app/(showcase)/vitrine/[section]/page.tsx": "b95516d953572cc4157b56d75d051360ec99d9cd45e8586c6642cf367f8ad764",
+    "src/app/(showcase)/vitrine/aprender/[id]/page.tsx": "f533646c7820d44c59576bba45c972b7c269828cfe852ecd50b2c97bd0bb1eb1",
+    "src/features/vitrine-premium/SectionView.tsx": "7d56954cb5180526f7e5227909d1e8af255dc7e6b126101fabff02d3ddfa1a98",
+    "src/features/vitrine-premium/components/demo/DemoOnboarding.tsx": "86e4c0f27b1ea0bfca3e428cab9a2babdd2d315e53edaf993e1d0cf642d02cb6",
+    "src/features/vitrine-premium/components/layout/ShowcaseUnavailable.tsx": "2fb87f8254efbe1dbffb13c1965a6821d32817572b9eff83fcb70bb07da9ebc5",
+    "src/features/vitrine-premium/components/layout/Sidebar.tsx": "11723e51c671112c28a2d4e84d2dcfe2909eaaff06434bb2f2f52cb31b14a226",
+    "src/features/vitrine-premium/components/onboarding/GuidedTour.tsx": "9e6a71abcd3d4328d5192d620889c3c102d5731f9b643350b67575c9924d8734",
+    "src/features/vitrine-premium/components/protocolos/ProtocolCard.tsx": "8103136d70dd2babefd533f6cd6894bfc74d2a7d3e0c547cdeb148eb8b732db7",
+    "src/features/vitrine-premium/components/protocolos/ProtocolDetail.tsx": "ce48a4279280784129cbdc4f7032d4e525d55dc8873183bf5dde2037f1afdd93",
+    "src/features/vitrine-premium/components/protocolos/ProtocolList.tsx": "32d5d223daefa52177b0eb4fc650f46c26c47254e1babb3a89bd3fbb4c6a8550",
+    "src/features/vitrine-premium/components/protocolos/protocols.module.css": "dd8d884b8bc04348266c5c283ef60c6598999b4a2900e5ef7c536004ef313b14",
+    "src/features/vitrine-premium/lib/protocol-catalog.ts": "77e48edc40b01fea96368e03ed668a621c9bc48f05fbccabcc51c987ac5b909f",
+    "src/features/vitrine-premium/lib/showcase-tour.ts": "ec73642eb2a71201adb5e126d7795270d9115f65ea783dc6094c683cad268757",
+    "src/features/vitrine-premium/views/protocolos.tsx": "34f3be9f6eeb183905640c5cc97d7ad7a5750bf9fbdd08309bcd2a9d3424145d",
+    "tests/commercial-beta/showcase.spec.ts": "152f1fe37c1a6e77f7384eb70a1aef3e2d65858b3b979ce529f5eefa674c0997",
+    "tests/mission04-e/journey.spec.ts": "02d0dbe6b129d32692c85435ac752651c36608d44a3063989a4c8165c5698e56",
+    "tests/protocols/catalog.test.mjs": "d4792deea20bf2293d211a8087a1d7a8bab90d0464206516a27d948c4439c3d1",
+    "tests/protocols/fixture/app/layout.tsx": "ab6751fc5255f8118a967979f3c19fdb75c006aec94b2a49f12aa5321c7c2f5f",
+    "tests/protocols/fixture/app/states/[state]/page.tsx": "1811b59969ac64fcbf7353cd242344e7562180be06c5367fbf2c39b1d3422d08",
+    "tests/protocols/fixture/app/vitrine/[section]/page.tsx": "0512f8f8d938f18e98c0b4387fae6ad7d0da92756facca277c0a68d734318f69",
+    "tests/protocols/fixture/app/vitrine/aprender/[id]/page.tsx": "3a09bea995e678fafafbd18d26c45f1fc6847aad3a94d8e7aaa877face1b02c1",
+    "tests/protocols/journey.spec.ts": "85cd6466fa20a213321644a235c7ec64db821d01a87f73e1d6430454873340d1",
+    "tests/protocols/load.mjs": "0e0eb845f60131e52a89c93b76110cc7cb42db8a1af3729745a033093d763cf6",
+    "tests/protocols/playwright.config.ts": "2d6a787c211c4a44017f11d5e5cc1a4d43ee69ea01b43750e35071da7efa3306",
+    "tests/protocols/proxy.test.mjs": "9154fc1b00c90b9c554cb4ab15e016ef3f35bfc1417d51813130093264daede3",
+    "tests/protocols/run-browser.mjs": "8863475ab77b6463129003cb43ce848bb6fe1819ce57859943e856c6540119c6"
+  }
+}

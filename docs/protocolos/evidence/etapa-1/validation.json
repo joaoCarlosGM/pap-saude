@@ -1,0 +1,267 @@
+{
+  "scope": "Stage 1 synthetic UI only; no database, migrations, clinical API or operator lab",
+  "node": {
+    "status": "PASS",
+    "tests": 95,
+    "failed": 0,
+    "skipped": 0,
+    "includesDemoMeows": 55
+  },
+  "commercialRscNginx": {
+    "status": "PASS",
+    "tests": 11,
+    "failed": 0,
+    "skipped": 0
+  },
+  "browser": {
+    "status": "PASS",
+    "tests": 9,
+    "failed": 0,
+    "skipped": 0,
+    "workers": 1,
+    "retries": 0,
+    "resultLog": "browser.log",
+    "durationMs": 58511.762
+  },
+  "finalViewportCaptureRevalidation": {
+    "status": "PASS",
+    "tests": 2,
+    "durationMs": 29200,
+    "reason": "Fixed-viewport app screenshots; no assertion or application change after full browser run"
+  },
+  "typegen": "PASS",
+  "typescript": "PASS",
+  "eslint": {
+    "status": "PASS",
+    "errors": 0,
+    "inheritedWarnings": 4,
+    "changedFilesWarnings": 0
+  },
+  "previewServe": "PASS",
+  "diffCheck": "PASS",
+  "pdfOriginals": "BLOCKED",
+  "clinicalApproval": "BLOCKED",
+  "liveAuthenticationDatabaseRegression": "NOT RUN",
+  "productionBuildDockerMigrations": "NOT RUN",
+  "remoteCi": "NOT RUN: branch not selected by existing workflows; workflows unchanged",
+  "references": [
+    {
+      "path": "docs/protocolos/referencias/01-pre-eclampsia-conceito.png",
+      "sha256": "fae0fec2f83a9ec1803760f4b7953dfdab7f13c3006ef78050b27ef15de6ca11",
+      "width": 1672,
+      "height": 941
+    },
+    {
+      "path": "docs/protocolos/referencias/02-sepse-conceito.png",
+      "sha256": "4c5dda99be60f704649352c54fb14ad0383c4dc3b06a7850519ed81184548bec",
+      "width": 1672,
+      "height": 941
+    },
+    {
+      "path": "docs/protocolos/referencias/03-hpp-fluxograma.png",
+      "sha256": "2efe1fc31fc70befa2e0fcb3f0ee4d39b79e3853e93be440ce0c3098dd7f82fe",
+      "width": 1672,
+      "height": 941
+    },
+    {
+      "path": "docs/protocolos/referencias/04-pre-eclampsia-visao-geral.png",
+      "sha256": "32c657fd753476d3ae9e9fd27471cde2e8b11fe896a247fdf4d37b55539d060b",
+      "width": 1672,
+      "height": 941
+    },
+    {
+      "path": "docs/protocolos/referencias/05-pre-eclampsia-checklist.png",
+      "sha256": "66f368ab18a2a9be37adb7ea86bdd9db94d684063a2e9c2e36adb07203ceed60",
+      "width": 1672,
+      "height": 941
+    },
+    {
+      "path": "docs/protocolos/referencias/06-hpp-visao-geral.png",
+      "sha256": "4bc76c466852ac3dbffdd80adca3d2b745ec27b0d28bf4df4e25b910671bb178",
+      "width": 1672,
+      "height": 941
+    },
+    {
+      "path": "docs/protocolos/referencias/07-hpp-checklist.png",
+      "sha256": "73d06c31300afa7ddb727d0821e1bc8a8686facf49400920164dd1757b6d8823",
+      "width": 1672,
+      "height": 941
+    },
+    {
+      "path": "docs/protocolos/referencias/08-sepse-visao-geral.png",
+      "sha256": "ce79538bf368bbcd5e7e56f3e63fa43b85635f564f65f2b6d5a0e27962e1d178",
+      "width": 1672,
+      "height": 941
+    },
+    {
+      "path": "docs/protocolos/referencias/09-sepse-checklist.png",
+      "sha256": "3c63822810b3b8daa17ee30f2bf504e26617c5d76d490092849ca2351ab7a7bf",
+      "width": 1672,
+      "height": 941
+    }
+  ],
+  "captures": [
+    {
+      "path": "docs/protocolos/evidence/etapa-1/biblioteca-1440.png",
+      "sha256": "755d3bf164c50d231eb1f6890bd22a9c73235843278b906f79cca73b70bbdb1d",
+      "width": 1440,
+      "height": 1000
+    },
+    {
+      "path": "docs/protocolos/evidence/etapa-1/biblioteca-390.png",
+      "sha256": "0a7dcbbd0a9d497794ea333b896d51ed212a62342156b74e0a4320537fb11eff",
+      "width": 390,
+      "height": 1000
+    },
+    {
+      "path": "docs/protocolos/evidence/etapa-1/documento-dark-1440.png",
+      "sha256": "d17c1d602c46ee2cd6ab0c0118720390b11c5c8fd3a67f547cd9f16eb13811c4",
+      "width": 1440,
+      "height": 900
+    },
+    {
+      "path": "docs/protocolos/evidence/etapa-1/hemorragia-pos-parto-checklist-1440.png",
+      "sha256": "f9cb100cbfdd47d866cf8f2800e4d7c0fd0c7a174cc57b4133652a5c95d11ef3",
+      "width": 1440,
+      "height": 1000
+    },
+    {
+      "path": "docs/protocolos/evidence/etapa-1/hemorragia-pos-parto-checklist-390.png",
+      "sha256": "2cb047a874f8bfd2034e5a724bff81eb8b4ec24ed7d4abe6a0b807d90abfaf08",
+      "width": 390,
+      "height": 1000
+    },
+    {
+      "path": "docs/protocolos/evidence/etapa-1/hemorragia-pos-parto-documento-original-1440.png",
+      "sha256": "06b53123f2e8a25fa4399b344e7e8c9f25b2906a5ff3d22bcdf6a7387e13dd08",
+      "width": 1440,
+      "height": 1000
+    },
+    {
+      "path": "docs/protocolos/evidence/etapa-1/hemorragia-pos-parto-documento-original-390.png",
+      "sha256": "3feaddf75f77816a7c08033b018c2679dad1322b1341ddf8533c62c63b2d608d",
+      "width": 390,
+      "height": 1000
+    },
+    {
+      "path": "docs/protocolos/evidence/etapa-1/hemorragia-pos-parto-fluxograma-1440.png",
+      "sha256": "22d1f5ae402a8fed735cff888723db91309f09046880c35dad14eb151b2aef1a",
+      "width": 1440,
+      "height": 1000
+    },
+    {
+      "path": "docs/protocolos/evidence/etapa-1/hemorragia-pos-parto-fluxograma-390.png",
+      "sha256": "a7e99c109f893e18999c7b30b6e0b0fb439906b2df50493c459a5ba1f2bfea1b",
+      "width": 390,
+      "height": 1000
+    },
+    {
+      "path": "docs/protocolos/evidence/etapa-1/hemorragia-pos-parto-visao-geral-1440.png",
+      "sha256": "9f836e4ce9f9d93ecf0dc28d88eaf8d689553cfe05539d10137a85fa13480663",
+      "width": 1440,
+      "height": 1000
+    },
+    {
+      "path": "docs/protocolos/evidence/etapa-1/hemorragia-pos-parto-visao-geral-390.png",
+      "sha256": "755cd5716cfd01c683f19bf81e328146b8b15f3f7b9042bd36fc41f7b9eb492a",
+      "width": 390,
+      "height": 1000
+    },
+    {
+      "path": "docs/protocolos/evidence/etapa-1/sepse-obstetrica-checklist-1440.png",
+      "sha256": "41d849dfbfdbe023072f5c89652b982c4fdf9f8b020d2599fa843acd93f72cf3",
+      "width": 1440,
+      "height": 1000
+    },
+    {
+      "path": "docs/protocolos/evidence/etapa-1/sepse-obstetrica-checklist-390.png",
+      "sha256": "6b448db23ffebfca35f4d21d0af081bef0e31c6cbacb7d3a244b126281fad2cd",
+      "width": 390,
+      "height": 1000
+    },
+    {
+      "path": "docs/protocolos/evidence/etapa-1/sepse-obstetrica-documento-original-1440.png",
+      "sha256": "56fd44fffe19c2e2c071abace893788b5cba8dc284245d5ad794ebafd13669cc",
+      "width": 1440,
+      "height": 1000
+    },
+    {
+      "path": "docs/protocolos/evidence/etapa-1/sepse-obstetrica-documento-original-390.png",
+      "sha256": "2bc5e90fec585a552c0eaf51483f27eda41ec26401d2f2464c3b7569e58253a6",
+      "width": 390,
+      "height": 1000
+    },
+    {
+      "path": "docs/protocolos/evidence/etapa-1/sepse-obstetrica-fluxograma-1440.png",
+      "sha256": "9cc01482910e95efcce139598adddceee919f355ed3587702a52e200feb787aa",
+      "width": 1440,
+      "height": 1000
+    },
+    {
+      "path": "docs/protocolos/evidence/etapa-1/sepse-obstetrica-fluxograma-390.png",
+      "sha256": "1257b20d3237dfd506dfd8b45adc9202ad2b22730db2b9b84260d3d9883f77a2",
+      "width": 390,
+      "height": 1000
+    },
+    {
+      "path": "docs/protocolos/evidence/etapa-1/sepse-obstetrica-visao-geral-1440.png",
+      "sha256": "90e1653642dad14dfd42b63be75058eaab22750abd75f3659d0ca9e9b06d6f12",
+      "width": 1440,
+      "height": 1000
+    },
+    {
+      "path": "docs/protocolos/evidence/etapa-1/sepse-obstetrica-visao-geral-390.png",
+      "sha256": "7f2775ed54b877f121baf690a0da9288cccd5a4c7058742f41a06398d521594f",
+      "width": 390,
+      "height": 1000
+    },
+    {
+      "path": "docs/protocolos/evidence/etapa-1/sindromes-hipertensivas-gestacao-checklist-1440.png",
+      "sha256": "7a5cbd447248164066a20284858a7b8fa0497cf1e82193a1c8cf53ff756e594c",
+      "width": 1440,
+      "height": 1000
+    },
+    {
+      "path": "docs/protocolos/evidence/etapa-1/sindromes-hipertensivas-gestacao-checklist-390.png",
+      "sha256": "003af95c5a47c2f9a8f5e5380b35f31126d1f8c1a485a6960af83d5611372874",
+      "width": 390,
+      "height": 1000
+    },
+    {
+      "path": "docs/protocolos/evidence/etapa-1/sindromes-hipertensivas-gestacao-documento-original-1440.png",
+      "sha256": "7133a1f412bb02f1108282b20d027f95a295a7723e97b25a92697a3d0aecea40",
+      "width": 1440,
+      "height": 1000
+    },
+    {
+      "path": "docs/protocolos/evidence/etapa-1/sindromes-hipertensivas-gestacao-documento-original-390.png",
+      "sha256": "efda06bf7cee335223106826f5134373f762e2f43bac72fa2b935852c81075af",
+      "width": 390,
+      "height": 1000
+    },
+    {
+      "path": "docs/protocolos/evidence/etapa-1/sindromes-hipertensivas-gestacao-fluxograma-1440.png",
+      "sha256": "9417a9c4da8f622fd553daa82bc3f465a5fee786769acd3d7713e4f69dac3077",
+      "width": 1440,
+      "height": 1000
+    },
+    {
+      "path": "docs/protocolos/evidence/etapa-1/sindromes-hipertensivas-gestacao-fluxograma-390.png",
+      "sha256": "b8f3ee44911b1b5c480fd04058c3ce02da15d411546d2090f757407cbac205a0",
+      "width": 390,
+      "height": 1000
+    },
+    {
+      "path": "docs/protocolos/evidence/etapa-1/sindromes-hipertensivas-gestacao-visao-geral-1440.png",
+      "sha256": "e5ca5880a658aa7f100635860109d8fe56ae9788457de09370ca5e5c05e7ed17",
+      "width": 1440,
+      "height": 1000
+    },
+    {
+      "path": "docs/protocolos/evidence/etapa-1/sindromes-hipertensivas-gestacao-visao-geral-390.png",
+      "sha256": "c5861825e90f2849d55ac934c9e520ebf6be2b0080c2cbd25498d52cb2d2ceb4",
+      "width": 390,
+      "height": 1000
+    }
+  ]
+}

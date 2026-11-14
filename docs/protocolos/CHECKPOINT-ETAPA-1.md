@@ -29,10 +29,21 @@ Checkout principal e suas alterações locais preservados.
 ## Checklist de execução
 
 - [x] Branch/HEAD/status, documentação e nove referências verificados.
-- [ ] Catálogo/validação/rotas e biblioteca reutilizável.
-- [ ] Quatro abas, fluxo documental, checklist em memória e estado de PDF ausente.
-- [ ] Pausa segura de Cursos/Chat e regressão de tutorial.
-- [ ] Unit/SSR, quarto protocolo por dados, fronteiras de rotas e isolamento.
-- [ ] Navegador desktop/mobile, abas/history/reload, teclado/Axe e capturas.
-- [ ] TypeScript, lint, diff/segredos, relatório PASS/FAIL/BLOCKED e commits seletivos.
-- [ ] Entrega para homologação e STOP antes da Etapa2.
+- [x] Catálogo/validação/rotas e biblioteca reutilizável.
+- [x] Quatro abas, fluxo documental, checklist em memória e estado de PDF ausente.
+- [x] Pausa segura de Cursos/Chat e regressão de tutorial.
+- [x] Unit/SSR, quarto protocolo por dados, fronteiras de rotas e isolamento.
+- [x] Navegador desktop/mobile, abas/history/reload, teclado/Axe e capturas.
+- [x] TypeScript, lint, diff/segredos, relatório PASS/FAIL/BLOCKED e commits seletivos.
+- [x] Entrega para homologação e STOP antes da Etapa2.
+
+## Fechamento
+
+Implementação validada: `ed7f5e42beadbcbdc0ddac16772349b5b68fb3a4`.
+106 testes Node (95 Premium/Protocolos +11 Comercial/RSC),9 browser e2 de
+recaptura: PASS. TypeScript/lint: PASS (quatro avisos herdados fora do diff).
+27 capturas com fontes locais reais. A matriz automatizada é
+320/375/390/430/768/1440; capturas da biblioteca e12 combinações em1440/390,
+mais documento em modo escuro. Detalhes e inventário no RELATORIO-ETAPA-1.md.
+PDFs, direitos e curadoria clínica: BLOCKED. Auth/DB/CI integral: NOT RUN.
+Nenhum recurso de laboratório/VPS alterado. Parar aqui; PAP-ID exige aprovação.

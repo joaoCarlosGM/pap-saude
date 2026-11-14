@@ -1,0 +1,10 @@
+PRESENTATION_ONLY http://127.0.0.1:44359; logs=/tmp/pap-protocols-ui-e7MBeE; database unavailable by construction
+
+Running 2 tests using 1 worker
+
+(node:9462) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  1 tests/protocols/journey.spec.ts:25:5 › all three references and four tabs have real deep links and desktop/mobile evidence (19.3s)
+  ✓  2 tests/protocols/journey.spec.ts:75:5 › responsive library/detail, dark mode and keyboard focus avoid horizontal overflow (8.6s)
+
+  2 passed (29.2s)

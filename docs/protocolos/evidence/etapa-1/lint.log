@@ -1,0 +1,11 @@
+
+/tmp/pap-protocols-stage1/tests/p0-remediation/clinical-finalization-race.integration.test.ts
+  51:6  warning  'Finalization' is defined but never used  @typescript-eslint/no-unused-vars
+
+/tmp/pap-protocols-stage1/tests/release/p0-provenance.integration.test.ts
+   4:10  warning  'Prisma' is defined but never used                          @typescript-eslint/no-unused-vars
+  10:87  warning  'requireClinicalProvenanceScope' is defined but never used  @typescript-eslint/no-unused-vars
+  11:10  warning  'PERMISSIONS' is defined but never used                     @typescript-eslint/no-unused-vars
+
+✖ 4 problems (0 errors, 4 warnings)
+

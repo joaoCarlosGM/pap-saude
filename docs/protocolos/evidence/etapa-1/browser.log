@@ -1,0 +1,17 @@
+PRESENTATION_ONLY http://127.0.0.1:36085; logs=/tmp/pap-protocols-ui-BCjUgh; database unavailable by construction
+
+Running 9 tests using 1 worker
+
+(node:8136) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  1 tests/protocols/journey.spec.ts:18:5 › library searches accents/codes, combines filters and recovers from no results (3.0s)
+  ✓  2 tests/protocols/journey.spec.ts:25:5 › all three references and four tabs have real deep links and desktop/mobile evidence (22.7s)
+  ✓  3 tests/protocols/journey.spec.ts:42:5 › checklist remains local across tabs/protocols and resets only after confirmation (4.1s)
+  ✓  4 tests/protocols/journey.spec.ts:54:5 › native history/reload and keyboard tab navigation retain validated location; flow controls are genuine (2.6s)
+  ✓  5 tests/protocols/journey.spec.ts:61:5 › paused items are noninteractive and direct HTML/RSC routes never mount old chat or course player (6.5s)
+  ✓  6 tests/protocols/journey.spec.ts:71:5 › presentation loading/empty/error states give truthful feedback (3.9s)
+  ✓  7 tests/protocols/journey.spec.ts:75:5 › responsive library/detail, dark mode and keyboard focus avoid horizontal overflow (8.5s)
+  ✓  8 tests/protocols/journey.spec.ts:83:35 › six-step help tour avoids paused routes and resumes from detail query at 1440 (2.9s)
+  ✓  9 tests/protocols/journey.spec.ts:83:35 › six-step help tour avoids paused routes and resumes from detail query at 375 (2.9s)
+
+  9 passed (58.5s)
