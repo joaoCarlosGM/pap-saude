@@ -14,8 +14,8 @@ const menuItems = [
  {label:'Pacientes',href:'/vitrine/pacientes',icon:Users},
  {label:'Protocolos',href:'/vitrine/protocolos',icon:BookOpen},
  {label:'Ferramentas',href:'/vitrine/ferramentas',icon:Wrench},
- {label:'Chat IA',href:'/vitrine/chat',icon:AnimatedChatIcon},
- {label:'Cursos',href:'/vitrine/cursos',icon:GraduationCap},
+ {label:'Chat IA',href:'/vitrine/chat',icon:AnimatedChatIcon,comingSoon:true},
+ {label:'Cursos',href:'/vitrine/cursos',icon:GraduationCap,comingSoon:true},
 ]
 export default function Sidebar({open,onClose}:{open:boolean;onClose:()=>void}) {
   const pathname = usePathname(), drawer = useRef<HTMLElement>(null)
@@ -66,8 +66,10 @@ export default function Sidebar({open,onClose}:{open:boolean;onClose:()=>void}) 
       <nav className="min-h-0 flex-1 overflow-y-auto px-3 py-2" aria-label="Módulos">
         <div className="relative flex flex-col gap-1" >
 
-          {menuItems.map((item,index)=>{const Icon=item.icon;return <div key={item.href}>{[0,1,4].includes(index)&&<p className="px-3 pt-2 text-xs text-slate-600">{index===0?'VISÃO GERAL':index===1?'CLÍNICA':'CONHECIMENTO E APOIO'}</p>}<Link href={item.href} prefetch={false} data-tour-nav={item.href} aria-current={activeIndex===index?'page':undefined} onClick={onClose}
-            className={`relative flex h-10 shrink-0 items-center gap-3 rounded-md px-3 text-sm focus-visible:outline-2 focus-visible:outline-pink-500 ${activeIndex===index?'bg-pink-50 font-medium text-pink-600':'text-gray-600 hover:bg-gray-50'}`}><Icon size={18} strokeWidth={1.8} className="shrink-0"/><span>{item.label}</span></Link></div>})}
+          {menuItems.map((item,index)=>{const Icon=item.icon;const sectionHeading=[0,1,4].includes(index)&&<p className="px-3 pt-2 text-xs text-slate-600">{index===0?'VISÃO GERAL':index===1?'CLÍNICA':'CONHECIMENTO E APOIO'}</p>;return <div key={item.href}>{sectionHeading}{'comingSoon' in item && item.comingSoon
+            ? <div aria-label={`${item.label} — Em breve`} className="flex h-10 shrink-0 cursor-not-allowed items-center gap-3 rounded-md px-3 text-sm text-slate-400" title="Em breve"><Icon size={18} strokeWidth={1.8} className="shrink-0"/><span>{item.label}</span><span className="ml-auto rounded-full border border-slate-200 bg-slate-50 px-2 py-0.5 text-[10px] font-medium text-slate-500">Em breve</span></div>
+            : <Link href={item.href} prefetch={false} data-tour-nav={item.href} aria-current={activeIndex===index?'page':undefined} onClick={onClose}
+            className={`relative flex h-10 shrink-0 items-center gap-3 rounded-md px-3 text-sm focus-visible:outline-2 focus-visible:outline-pink-500 ${activeIndex===index?'bg-pink-50 font-medium text-pink-600':'text-gray-600 hover:bg-gray-50'}`}><Icon size={18} strokeWidth={1.8} className="shrink-0"/><span>{item.label}</span></Link>}</div>})}
         </div>
       </nav>
       <div className="shrink-0 px-3 py-2"><Link href="/comercial" prefetch={false} onClick={onClose} className="block rounded px-3 py-2 text-xs text-slate-600 underline">Voltar ao Comercial</Link><Link href="/vitrine/configuracoes" prefetch={false} aria-current={pathname==='/vitrine/configuracoes'?'page':undefined} onClick={onClose} className={`flex h-10 items-center gap-3 rounded-md px-3 text-sm focus-visible:outline-2 focus-visible:outline-pink-500 ${pathname==='/vitrine/configuracoes'?'bg-pink-50 text-pink-600':'text-gray-600 hover:bg-gray-50'}`}><Settings size={18}/><span>Configurações</span></Link><HelpCard onTutorial={()=>{onClose();requestHelp(true)}}/></div>
