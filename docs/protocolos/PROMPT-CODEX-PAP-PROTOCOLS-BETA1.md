@@ -1,3 +1,5 @@
+> **ATUALIZAÇÃO DE ESCOPO — 14/11/2026.** Antes de qualquer implementação, leia [VALIDACAO-E-PROXIMA-MISSAO.md](./VALIDACAO-E-PROXIMA-MISSAO.md). **A PRÓXIMA MISSÃO É SOMENTE P1: frontend demonstrativo de Protocolos na Vitrine.** As entregas de upload/download real, painel administrativo, IAM, aprovação clínica e publicação por UBS deste prompt são roadmap P2/P3/P4 e **NÃO estão autorizadas nesta execução**. Proibido migrar banco, liberar rotas na VPS ou habilitar atendimento clínico. Ao encerrar P1, relatar testes e bloqueios e parar.
+
 # Prompt de implementação para Codex — PAP-Protocols Beta 1
 
 ## Missão
