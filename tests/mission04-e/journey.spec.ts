@@ -132,16 +132,15 @@ test("all demo interactions are labeled, keyboard accessible and reset without p
     await page.getByRole('link',{name:'Dashboard',exact:true}).click();
     await expect(page.getByText('Pacientes ativas',{exact:true}).locator('..')).toContainText('3');
     await page.reload();await expect(page.getByRole('dialog',{name:'Bem-vindo ao PAP Saúde'})).not.toBeVisible();
-    await page.goto('/vitrine/cursos');await page.getByRole('link',{name:'Explorar demonstração',exact:true}).first().click();
-    await expect(page).toHaveURL(/\/vitrine\/aprender\/pre-natal$/);
-    await expect(page.getByRole('heading',{name:'Explore a experiência de aprendizagem',exact:true})).toBeVisible();
-    await expect(page.getByRole('button',{name:'Concluir atividade demonstrativa',exact:true})).toBeDisabled();
-    await expect(page.getByText('Ambiente fictício.',{exact:false})).toBeVisible();
-    await a11y(page,'course-player');await capture(page,'curso-simulado-dark');
-    await page.goto('/vitrine/chat');await page.getByPlaceholder('Digite sua mensagem...').fill('Mensagem sintética Slice E');
-    await page.getByRole('button',{name:'Enviar mensagem',exact:true}).click();
-    await expect(page.getByText('Simulação: nenhuma IA externa foi consultada. Este texto ilustrativo não avalia dados nem orienta condutas clínicas.',{exact:true})).toBeVisible();
-    await page.reload();await expect(page.getByText('Mensagem sintética Slice E',{exact:true})).toHaveCount(0);
+    // Stage-one Protocols deliberately pauses only the synthetic Chat/Courses and old demo player.
+    // Keep direct-route coverage, accessibility, identity and zero operational API assertions.
+    for(const path of ['/vitrine/cursos','/vitrine/aprender/pre-natal','/vitrine/chat']){
+        await page.goto(path);await expect(page.locator('[data-showcase-unavailable]')).toContainText('Em breve');
+        await expect(page.getByPlaceholder('Digite sua mensagem...')).toHaveCount(0);
+        await expect(page.getByRole('button',{name:'Concluir atividade demonstrativa',exact:true})).toHaveCount(0);
+        await a11y(page,'paused-demo-resource');
+    }
+    await capture(page,'recurso-demonstrativo-em-breve-dark');
     await page.setViewportSize({width:320,height:900});await page.goto('/vitrine');
     const menu=page.getByRole('button',{name:'Abrir menu',exact:true});await menu.click();
     await expect(page.getByRole('dialog',{name:'Navegação principal'})).toBeVisible();await a11y(page,'mobile-menu');

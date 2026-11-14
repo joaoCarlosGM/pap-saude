@@ -3,11 +3,11 @@ import Dashboard from './views/dashboard'
 import Registro from './views/registro'
 import Atendimentos from './views/atendimentos'
 import Pacientes from './views/pacientes'
-import Chat from './views/chat'
+import Unavailable from './components/layout/ShowcaseUnavailable'
 import Protocolos from './views/protocolos'
 import Ferramentas from './views/ferramentas'
-import Cursos from './views/cursos'
+import type {ProtocolLocation} from './lib/protocol-catalog'
 import Configuracoes from './views/configuracoes'
 import type {PremiumSection} from './lib/routes'
-const views={dashboard:Dashboard,registro:Registro,atendimentos:Atendimentos,pacientes:Pacientes,chat:Chat,protocolos:Protocolos,ferramentas:Ferramentas,cursos:Cursos,configuracoes:Configuracoes,ajuda:Help}
-export default function PremiumSectionView({section}:{section:PremiumSection}){const View=views[section];return <View/>}
+const views={dashboard:Dashboard,registro:Registro,atendimentos:Atendimentos,pacientes:Pacientes,chat:()=> <Unavailable feature="Chat IA"/>,protocolos:Protocolos,ferramentas:Ferramentas,cursos:()=> <Unavailable feature="Cursos"/>,configuracoes:Configuracoes,ajuda:Help}
+export default function PremiumSectionView({section,protocolLocation}:{section:PremiumSection;protocolLocation?:ProtocolLocation}){if(section==='protocolos')return <Protocolos location={protocolLocation}/>;const View=views[section];return <View/>}

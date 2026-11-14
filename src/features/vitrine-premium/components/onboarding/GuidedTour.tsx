@@ -29,7 +29,7 @@ export default function GuidedTour({steps,index,onIndexChange,onClose,menuOpen=f
     function visible(el:HTMLElement|null){return !!el&&el.getClientRects().length>0&&getComputedStyle(el).visibility!=='hidden'}
     const measure=()=>{
       const viewport={width:innerWidth,height:innerHeight},mobile=viewport.width<768
-      const selector=mobile&&menuOpen?`[data-tour-nav="${step.navSelectors?.[0]||step.path}"]`:step.selector
+      const selector=mobile&&menuOpen&&step.navSelectors?.length?`[data-tour-nav="${step.navSelectors?.[0]||step.path}"]`:step.selector
       let target=document.querySelector<HTMLElement>(selector)
       if(!visible(target)){
         if(attempts++<120){frame=requestAnimationFrame(measure);return}
