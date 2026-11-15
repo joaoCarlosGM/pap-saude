@@ -9,9 +9,9 @@ Uma agente; testes dirigidos; sem VPS, merge, deploy ou alterações de bancos/l
 - [x] V1 inventário: motion/shell/dashboard/premium idênticos ao SHA de referência0e0a2d8.
 - [x] DB1/ID2: cadastro sintético livre controlado, persistência e idempotência.
 - [x] D1: cartões recuperáveis, PDFs privados versionados/arquivados e auditoria demonstrativa.
-- [ ] ID1: webcam/QR, múltiplos candidatos, permissão e encerramento seguro.
+- [x] ID1: webcam/QR, múltiplos candidatos, permissão e encerramento seguro.
 - [ ] P1/P2: composição visual das referências, fontes reais, PDF/fluxo/checklist.
-- [ ] M1: origem HTTPS LAN exata, autenticação temporária, expiração/revogação, documentação.
+- [x] M1: origem HTTPS LAN exata, autenticação temporária, expiração/revogação, documentação.
 - [ ] R1/S1: execução dirigida, responsividade, acessibilidade, regressões e isolamento standalone/Docker.
 - [ ] V2: pacote e checklist de publicação futura, sem execução.
 - [ ] Fechamento: inventário/segredos, commits/push somente na candidata e homologação humana.
@@ -22,3 +22,10 @@ Câmera/dispositivos físicos e confiança de certificado em Android/iPhone exig
 Slice registro/documentos: Node2/2 PASS; browser dirigido1/1 PASS; TypeScript/lint PASS.
 Upgrade aditivo no perfil próprio anterior, sem recriar DB/container/volume.
 Próximo: câmera, HTTPS móvel e revisão visual. Persistência após restart completo ainda será revalidada no gate final.
+
+Slice câmera/HTTPS: browser câmera2/2 PASS; HTTPS completo PASS com CA explícita e Chromium pinado.
+TLS: pareamento, Secure cookie, origem, PDFs originais, cadastro/card/PDF pós-restart, logout e negativas operacionais PASS.
+Unidades de segurança24/24 PASS (inclui edge3); Node PAP-ID/Protocolos/Premium107/107 PASS.
+Restart PostgreSQL próprio1/1 PASS, comparação integral das linhas e hashes.
+Browser integrado em andamento: dois testes novos de evidência precisam ajuste (sentinela oculta deve usar attached; Escape em fullscreen). Regressores existentes já executados seguem preservados.
+Dispositivos físicos, confiança da CA e encaminhamento WSL/Windows continuam NOT RUN externo.

@@ -1,4 +1,4 @@
-import {authorized} from './documents';import {readProfile,connect,ledgers,issue,revoke} from './card-store';
+import {authorized,expectedReviewOrigin} from './documents';import {readProfile,connect,ledgers,issue,revoke} from './card-store';
 import {cardImage} from './card-image';import {people,cardHistory,createPerson} from './registry-store';
 const headers={'Cache-Control':'private, no-store','X-Content-Type-Options':'nosniff','Referrer-Policy':'no-referrer'}
 const rates=new Map<string,{count:number;until:number}>()
@@ -6,7 +6,7 @@ export async function cardResponse(request:Request){
  if(!authorized(request)||!process.env.PAP_ID_REVIEW_PROFILE)return Response.json({error:'LOCAL_REVIEW_REQUIRED'},{status:403,headers})
  if(new URL(request.url).search)return new Response(null,{status:404,headers})
  if(!['GET','POST'].includes(request.method))return new Response(null,{status:405,headers})
- if(request.method==='POST'&&(request.headers.get('origin')!==process.env.PAP_PRIVATE_REVIEW_ORIGIN||request.headers.get('x-pap-local-review')!=='cards'))return new Response(null,{status:403,headers})
+ if(request.method==='POST'&&(request.headers.get('origin')!==expectedReviewOrigin(request)||request.headers.get('x-pap-local-review')!=='cards'))return new Response(null,{status:403,headers})
  // Per private consent session; no client IP/forwarded header is trusted.
  const key=request.headers.get('cookie')||'';const rate=rates.get(key);if(rate&&rate.until>Date.now()&&rate.count>=60)return Response.json({error:'LOCAL_RATE_LIMIT'},{status:429,headers});if(!rate||rate.until<=Date.now())rates.set(key,{count:1,until:Date.now()+60000});else rate.count++
  let pool:ReturnType<typeof connect>|undefined

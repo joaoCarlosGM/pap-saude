@@ -1,11 +1,12 @@
-import {readFile} from 'node:fs/promises';import {createHash,randomBytes} from 'node:crypto';import {join} from 'node:path';
+import {readFile} from 'node:fs/promises';import {createHash,randomBytes,timingSafeEqual} from 'node:crypto';import {join} from 'node:path';
 import {originalDocuments} from '../../src/features/vitrine-premium/lib/protocol-originals';
 const cookie='pap_private_document_review';
+export function expectedReviewOrigin(request:Request){const secret=process.env.PAP_PRIVATE_REVIEW_EDGE_SECRET||'',received=request.headers.get('x-pap-private-edge')||'';const proxied=/^[a-f0-9]{64}$/.test(secret)&&/^[a-f0-9]{64}$/.test(received)&&timingSafeEqual(Buffer.from(received),Buffer.from(secret));return proxied?process.env.PAP_PRIVATE_REVIEW_MOBILE_ORIGIN||'':process.env.PAP_PRIVATE_REVIEW_ORIGIN||''}
 export function privateChecks(request:Request){
  const origin=process.env.PAP_PRIVATE_REVIEW_ORIGIN||'',loopback=/^http:\/\/127\.0\.0\.1:\d+$/.test(origin),expected=loopback?new URL(origin):null,url=new URL(request.url)
  // Next normalizes its internal Request URL to localhost. The original Host, exact browser
  // Origin and configured ephemeral port still have to match; forwarded/IP headers are ignored.
- return {enabled:process.env.PAP_PRIVATE_REVIEW==='1',loopback,url:url.protocol==='http:'&&['127.0.0.1','localhost'].includes(url.hostname)&&url.port===expected?.port,host:request.headers.get('host')===expected?.host,origin:!request.headers.get('origin')||request.headers.get('origin')===origin,site:!['cross-site','same-site'].includes(request.headers.get('sec-fetch-site')||'')}
+ return {enabled:process.env.PAP_PRIVATE_REVIEW==='1',loopback,url:url.protocol==='http:'&&['127.0.0.1','localhost'].includes(url.hostname)&&url.port===expected?.port,host:request.headers.get('host')===expected?.host,origin:!request.headers.get('origin')||request.headers.get('origin')===expectedReviewOrigin(request),site:!['cross-site','same-site'].includes(request.headers.get('sec-fetch-site')||'')}
 }
 export function privateOrigin(request:Request){return Object.values(privateChecks(request)).every(Boolean)}
 type LocalSession={expiresAt:number}
@@ -20,20 +21,20 @@ const headers={'Cache-Control':'private, no-store','X-Content-Type-Options':'nos
 export async function session(request:Request){
  if(!privateOrigin(request))return Response.json({error:'LOCAL_REVIEW_DISABLED',checks:privateChecks(request)},{status:403,headers:{...headers,'X-PAP-Review-Denial':JSON.stringify(privateChecks(request))}})
  if(request.method==='POST'){
-  if(request.headers.get('origin')!==process.env.PAP_PRIVATE_REVIEW_ORIGIN||request.headers.get('x-pap-local-review')!=='consent')return Response.json({error:'ORIGIN_DENIED'},{status:403,headers:{...headers,'X-PAP-Review-Denial':'explicit-origin-or-consent-header'}})
+  if(request.headers.get('origin')!==expectedReviewOrigin(request)||request.headers.get('x-pap-local-review')!=='consent')return Response.json({error:'ORIGIN_DENIED'},{status:403,headers:{...headers,'X-PAP-Review-Denial':'explicit-origin-or-consent-header'}})
   const body=await request.json().catch(()=>null);if(!body||body.consent!==true||Object.keys(body).length!==1)return Response.json({error:'CONSENT_REQUIRED'},{status:400,headers})
   if(!/^[a-f0-9]{64}$/.test(process.env.PAP_PRIVATE_REVIEW_SECRET||'')||(!Number.isSafeInteger(Number(process.env.PAP_PRIVATE_REVIEW_EXPIRES))||Date.now()>=Number(process.env.PAP_PRIVATE_REVIEW_EXPIRES)))return Response.json({error:'REVIEW_EXPIRED'},{status:403,headers})
   // Verify all documents before enabling any capability. No consent grants public distribution rights.
   try{for(const d of originalDocuments)await verifiedBytes(d.slug)}catch{return Response.json({error:'DOCUMENT_INTEGRITY_FAILED'},{status:503,headers})}
   for(const [key,entry]of sessions())if(entry.expiresAt<=Date.now())sessions().delete(key);sessions().delete(sessionKey(request));if(sessions().size>=100)return Response.json({error:'LOCAL_REVIEW_LIMIT'},{status:429,headers});
-  const nonce=randomBytes(32).toString('hex');sessions().set(createHash('sha256').update(process.env.PAP_PRIVATE_REVIEW_SECRET!+nonce).digest('hex'),{expiresAt:Math.min(Date.now()+7200000,Number(process.env.PAP_PRIVATE_REVIEW_EXPIRES))});
-  return Response.json({enabled:true,documents:capabilities()},{headers:{...headers,'Set-Cookie':`${cookie}=${nonce}; Path=/homologacao; HttpOnly; SameSite=Strict; Max-Age=7200`}})
+  const secure=expectedReviewOrigin(request).startsWith('https:')?'; Secure':'';const nonce=randomBytes(32).toString('hex');sessions().set(createHash('sha256').update(process.env.PAP_PRIVATE_REVIEW_SECRET!+nonce).digest('hex'),{expiresAt:Math.min(Date.now()+7200000,Number(process.env.PAP_PRIVATE_REVIEW_EXPIRES))});
+  return Response.json({enabled:true,documents:capabilities()},{headers:{...headers,'Set-Cookie':`${cookie}=${nonce}; Path=/homologacao; HttpOnly; SameSite=Strict; Max-Age=7200${secure}`}})
  }
  if(request.method==='GET')return Response.json(authorized(request)?{enabled:true,documents:capabilities()}:{enabled:false,documents:[]},{headers})
  if(request.method==='DELETE'){
-  if(request.headers.get('origin')!==process.env.PAP_PRIVATE_REVIEW_ORIGIN||request.headers.get('x-pap-local-review')!=='consent')return new Response(null,{status:403,headers})
+  if(request.headers.get('origin')!==expectedReviewOrigin(request)||request.headers.get('x-pap-local-review')!=='consent')return new Response(null,{status:403,headers})
   sessions().delete(sessionKey(request));
-  return Response.json({enabled:false,documents:[]},{headers:{...headers,'Set-Cookie':`${cookie}=; Path=/homologacao; HttpOnly; SameSite=Strict; Max-Age=0`}})
+  return Response.json({enabled:false,documents:[]},{headers:{...headers,'Set-Cookie':`${cookie}=; Path=/homologacao; HttpOnly; SameSite=Strict; Max-Age=0${expectedReviewOrigin(request).startsWith('https:')?'; Secure':''}`}})
  }
  return new Response(null,{status:405,headers})
 }
