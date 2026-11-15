@@ -4,7 +4,12 @@ import { dashboardFrom, initialDemo, patientViews, saveDemo, type DemoState } fr
 import { editDemoProfile, type DemoProfile } from '@/features/vitrine-premium/lib/demo/profile'
 import type { RegistrationData } from '@/features/vitrine-premium/types/registration'
 
+import {addSyntheticIdentity,demoLedgerSchema,type DemoLedger,type SyntheticIdentity} from '@/features/vitrine-premium/lib/pap-id'
+
 type DemoContext = {
+  identityLedger: DemoLedger | null
+  importIdentityLedger: (ledger: unknown) => void
+  registerSyntheticIdentity: (identity: SyntheticIdentity) => void
   state: DemoState
   save: (data: RegistrationData) => void
   reset: () => void
@@ -28,6 +33,7 @@ const Context = createContext<DemoContext | null>(null)
 
 export function DemoProvider({ children }: { children: React.ReactNode }) {
   const [state, setState] = useState(initialDemo)
+  const [identityLedger,setIdentityLedger]=useState<DemoLedger|null>(null)
   const [mainMenuOpen, setMainMenuOpen] = useState(false)
   const [conversationMenuOpen, setConversationMenuOpen] = useState(false)
   const [resetRequested, requestReset] = useState(false)
@@ -37,8 +43,9 @@ export function DemoProvider({ children }: { children: React.ReactNode }) {
   const ready = useRef<HTMLSpanElement>(null)
   useEffect(() => { ready.current?.setAttribute('data-demo-ready', 'true') }, [])
   return <Context.Provider value={{
+    identityLedger,importIdentityLedger: data=>{const next=demoLedgerSchema.parse(data);if(identityLedger?.patient.subject===next.patient.subject&&(next.revision<identityLedger.revision||(next.revision===identityLedger.revision&&JSON.stringify(next)!==JSON.stringify(identityLedger))))throw new Error('Versão de base incompatível; importe a revisão mais recente.');setIdentityLedger(next)},registerSyntheticIdentity: identity=>setState(current=>addSyntheticIdentity(current,identity)),
     state, save: data => setState(current => saveDemo(current, data)),
-    reset: () => { setState(initialDemo()); setTourIndex(null); window.dispatchEvent(new Event('pap:vitrine-reset')) },
+    reset: () => { setState(initialDemo());setIdentityLedger(null); setTourIndex(null); window.dispatchEvent(new Event('pap:vitrine-reset')) },
     updateProfile: patch => setState(current => ({ ...current, profile: editDemoProfile(current.profile, patch) })),
     mainMenuOpen, conversationMenuOpen,
     openMainMenu: () => { setConversationMenuOpen(false); setMainMenuOpen(true) },

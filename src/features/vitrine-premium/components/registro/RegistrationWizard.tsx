@@ -54,6 +54,7 @@ export default function RegistrationWizard() {
   const [errors,setErrors]=useState<string[]>([])
   useEffect(()=>{if(errors.length)errorRef.current?.focus()},[errors])
   const [saved,setSaved]=useState(false)
+  const [identityEpoch,setIdentityEpoch]=useState(0)
   const [currentStep, setCurrentStep] = useState(1)
 
   const [registration, setRegistration] =
@@ -69,10 +70,12 @@ export default function RegistrationWizard() {
   }
 
   const restart = () => {
-    setSaved(false);setErrors([])
+    setSaved(false);setErrors([]);setIdentityEpoch(n=>n+1)
     setRegistration(initialRegistration)
     setCurrentStep(1)
   }
+
+  useEffect(()=>{const reset=()=>{setSaved(false);setErrors([]);setIdentityEpoch(n=>n+1);setRegistration(initialRegistration);setCurrentStep(1)};window.addEventListener('pap:vitrine-reset',reset);return()=>window.removeEventListener('pap:vitrine-reset',reset)},[])
 
   const updateRegistration = (
     data: Partial<RegistrationData>,
@@ -95,10 +98,11 @@ export default function RegistrationWizard() {
         {saved && <p role="status" className="mb-4 text-sm text-emerald-700">Registro demonstrativo salvo na memória desta aba. <Link prefetch={false} className="underline" href={"/vitrine/pacientes/"+patients.find(p=>normalizeIdentifier(p.cpf)===normalizeIdentifier(registration.cpf))?.id}>Abrir ficha da paciente</Link></p>}
         <Stepper currentStep={currentStep} />
 
-        <div key={currentStep} data-motion-step>
+        <div key={`${currentStep}-${identityEpoch}`} data-motion-step>
         {currentStep === 1 && (
           <IdentificationStep
             onNew={restart}
+            onStart={patch=>{const next={...registration,...patch};const found=registrationErrors(next,1);setErrors(found);if(!found.length){setRegistration(next);setCurrentStep(2)}}}
             data={registration}
             onChange={updateRegistration}
             onNext={nextStep}
