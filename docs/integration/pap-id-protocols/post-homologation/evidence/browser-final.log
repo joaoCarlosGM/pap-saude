@@ -1,0 +1,25 @@
+PRESENTATION_ONLY http://127.0.0.1:44695; logs=/tmp/pap-protocols-ui-NjxGxY; operational database unavailable by construction; owned synthetic registry only when PAP_ID_REVIEW_PROFILE is supplied
+
+Running 17 tests using 1 worker
+
+(node:21316) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   1 tests/pap-id/integrated.spec.ts:19:35 › synthetic QR/document states, record and five-step encounter without duplicate identity at 1440 (7.0s)
+  ✓   2 tests/pap-id/integrated.spec.ts:19:35 › synthetic QR/document states, record and five-step encounter without duplicate identity at 390 (5.5s)
+  ✓   3 tests/pap-id/integrated.spec.ts:30:5 › expired, revoked, malformed and changed-base credentials never release synthetic actions (2.9s)
+  ✓   4 tests/pap-id/integrated.spec.ts:35:5 › three real PDFs require private consent, render pages/zoom, cite their source and download identical bytes (17.3s)
+  ✓   5 tests/pap-id/integrated.spec.ts:49:5 › responsive QR controls, keyboard and resets do not expose clinical APIs or retain credentials after reload (14.8s)
+  ✓   6 tests/pap-id/post-homologation.spec.ts:5:5 › multiple PNGs are deduplicated, explicitly selected before document confirmation; compact desktop/mobile (7.3s)
+  ✓   7 tests/pap-id/post-homologation.spec.ts:10:5 › visible protocol return, real sourced overviews and original flow remain under private capability (4.4s)
+  ✓   8 tests/pap-id/post-homologation.spec.ts:13:5 › private PostgreSQL issuer shares CLI base, persists reload, revokes reissued PNG and never duplicates patient (6.6s)
+  ✓   9 tests/protocols/journey.spec.ts:18:5 › library searches accents/codes, combines filters and recovers from no results (2.2s)
+  ✓  10 tests/protocols/journey.spec.ts:25:5 › all three references and four tabs have real deep links and desktop/mobile evidence (16.2s)
+  ✓  11 tests/protocols/journey.spec.ts:42:5 › checklist remains local across tabs/protocols and resets only after confirmation (4.2s)
+  ✓  12 tests/protocols/journey.spec.ts:54:5 › native history/reload and keyboard tab navigation retain validated location; flow controls are genuine (2.8s)
+  ✓  13 tests/protocols/journey.spec.ts:60:5 › paused items are noninteractive and direct HTML/RSC routes never mount old chat or course player (9.4s)
+  ✓  14 tests/protocols/journey.spec.ts:70:5 › presentation loading/empty/error states give truthful feedback (4.3s)
+  ✓  15 tests/protocols/journey.spec.ts:74:5 › responsive library/detail, dark mode and keyboard focus avoid horizontal overflow (9.1s)
+  ✓  16 tests/protocols/journey.spec.ts:82:35 › six-step help tour avoids paused routes and resumes from detail query at 1440 (2.8s)
+  ✓  17 tests/protocols/journey.spec.ts:82:35 › six-step help tour avoids paused routes and resumes from detail query at 375 (2.7s)
+
+  17 passed (2.1m)

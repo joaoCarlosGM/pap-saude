@@ -1,0 +1,296 @@
+{
+  "base": "a953ca7368dda07715732f0978dd411d90cf164b",
+  "validatedCodeCommit": "ee44853fb75d6e353090615f67d674768c5e1d20",
+  "branch": "feature/beta1-post-homologation-fixes",
+  "codeFiles": [
+    "scripts/pap-id/review-lab.mts",
+    "scripts/private-review/card-api.ts",
+    "scripts/private-review/card-image.ts",
+    "scripts/private-review/card-store.ts",
+    "scripts/private-review/documents.ts",
+    "src/features/vitrine-premium/components/demo/CardServiceContext.tsx",
+    "src/features/vitrine-premium/components/demo/DemoProvider.tsx",
+    "src/features/vitrine-premium/components/pacientes/PatientCardIssuer.tsx",
+    "src/features/vitrine-premium/components/pacientes/PatientList.tsx",
+    "src/features/vitrine-premium/components/protocolos/ProtocolDetail.tsx",
+    "src/features/vitrine-premium/components/registro/steps/IdentificationStep.tsx",
+    "src/features/vitrine-premium/components/registro/steps/identification.module.css",
+    "src/features/vitrine-premium/lib/pap-id.ts",
+    "src/features/vitrine-premium/lib/protocol-catalog.ts",
+    "src/features/vitrine-premium/lib/protocol-content.ts",
+    "tests/pap-id/database.test.mts",
+    "tests/pap-id/fixture/PrivateReviewBridge.tsx",
+    "tests/pap-id/fixture/app/homologacao/carteirinhas/route.ts",
+    "tests/pap-id/identity.test.mjs",
+    "tests/pap-id/integrated.spec.ts",
+    "tests/pap-id/playwright.config.ts",
+    "tests/pap-id/post-homologation.spec.ts",
+    "tests/pap-id/production-boundary.mjs",
+    "tests/protocols/catalog.test.mjs",
+    "tests/protocols/journey.spec.ts",
+    "tests/protocols/run-browser.mjs",
+    "tests/protocols/sourced-content.test.mjs"
+  ],
+  "allPaths": [
+    "docs/integration/pap-id-protocols/post-homologation/CHECKPOINT.md",
+    "docs/integration/pap-id-protocols/post-homologation/RELATORIO.md",
+    "docs/integration/pap-id-protocols/post-homologation/WSL.md",
+    "docs/integration/pap-id-protocols/post-homologation/evidence/browser-compact.log",
+    "docs/integration/pap-id-protocols/post-homologation/evidence/browser-final.log",
+    "docs/integration/pap-id-protocols/post-homologation/evidence/browser-negative.log",
+    "docs/integration/pap-id-protocols/post-homologation/evidence/build-final.log",
+    "docs/integration/pap-id-protocols/post-homologation/evidence/commercial.log",
+    "docs/integration/pap-id-protocols/post-homologation/evidence/compact-confirmed-1440.png",
+    "docs/integration/pap-id-protocols/post-homologation/evidence/compact-confirmed-390.png",
+    "docs/integration/pap-id-protocols/post-homologation/evidence/database-final.log",
+    "docs/integration/pap-id-protocols/post-homologation/evidence/final-lab-status.log",
+    "docs/integration/pap-id-protocols/post-homologation/evidence/hemorragia-pos-parto-checklist-1440.png",
+    "docs/integration/pap-id-protocols/post-homologation/evidence/lint-final.log",
+    "docs/integration/pap-id-protocols/post-homologation/evidence/manifest.json",
+    "docs/integration/pap-id-protocols/post-homologation/evidence/multiple-cards-1440.png",
+    "docs/integration/pap-id-protocols/post-homologation/evidence/multiple-cards-390.png",
+    "docs/integration/pap-id-protocols/post-homologation/evidence/node-final.log",
+    "docs/integration/pap-id-protocols/post-homologation/evidence/production-boundary.log",
+    "docs/integration/pap-id-protocols/post-homologation/evidence/profile-guards.log",
+    "docs/integration/pap-id-protocols/post-homologation/evidence/sepse-obstetrica-visao-geral-390.png",
+    "docs/integration/pap-id-protocols/post-homologation/evidence/sindromes-hipertensivas-gestacao-visao-geral-1440.png",
+    "docs/integration/pap-id-protocols/post-homologation/evidence/sindromes-hipertensivas-gestacao-visao-geral-390.png",
+    "docs/integration/pap-id-protocols/post-homologation/evidence/source-reading.json",
+    "docs/integration/pap-id-protocols/post-homologation/evidence/typescript-final.log",
+    "scripts/pap-id/review-lab.mts",
+    "scripts/private-review/card-api.ts",
+    "scripts/private-review/card-image.ts",
+    "scripts/private-review/card-store.ts",
+    "scripts/private-review/documents.ts",
+    "src/features/vitrine-premium/components/demo/CardServiceContext.tsx",
+    "src/features/vitrine-premium/components/demo/DemoProvider.tsx",
+    "src/features/vitrine-premium/components/pacientes/PatientCardIssuer.tsx",
+    "src/features/vitrine-premium/components/pacientes/PatientList.tsx",
+    "src/features/vitrine-premium/components/protocolos/ProtocolDetail.tsx",
+    "src/features/vitrine-premium/components/registro/steps/IdentificationStep.tsx",
+    "src/features/vitrine-premium/components/registro/steps/identification.module.css",
+    "src/features/vitrine-premium/lib/pap-id.ts",
+    "src/features/vitrine-premium/lib/protocol-catalog.ts",
+    "src/features/vitrine-premium/lib/protocol-content.ts",
+    "tests/pap-id/database.test.mts",
+    "tests/pap-id/fixture/PrivateReviewBridge.tsx",
+    "tests/pap-id/fixture/app/homologacao/carteirinhas/route.ts",
+    "tests/pap-id/identity.test.mjs",
+    "tests/pap-id/integrated.spec.ts",
+    "tests/pap-id/playwright.config.ts",
+    "tests/pap-id/post-homologation.spec.ts",
+    "tests/pap-id/production-boundary.mjs",
+    "tests/protocols/catalog.test.mjs",
+    "tests/protocols/journey.spec.ts",
+    "tests/protocols/run-browser.mjs",
+    "tests/protocols/sourced-content.test.mjs"
+  ],
+  "hashesExcludingSelf": [
+    {
+      "path": "docs/integration/pap-id-protocols/post-homologation/CHECKPOINT.md",
+      "sha256": "2744e1493860ead2bd9af744c095a2965acc77dc7a863973dfb0d0e61c07d603"
+    },
+    {
+      "path": "docs/integration/pap-id-protocols/post-homologation/RELATORIO.md",
+      "sha256": "149684dfa8ba020eed9a74b3059d4a084e36d511102737a09b87c6a4e61e4f18"
+    },
+    {
+      "path": "docs/integration/pap-id-protocols/post-homologation/WSL.md",
+      "sha256": "709da5a1eca777e0577450e0f3e09dce03201791005c6535209ccf6e9619cb23"
+    },
+    {
+      "path": "docs/integration/pap-id-protocols/post-homologation/evidence/browser-compact.log",
+      "sha256": "da1337b9562ddb38cc81c521df29edbe7fa6415ec80bbd22b3020676b9bfb847"
+    },
+    {
+      "path": "docs/integration/pap-id-protocols/post-homologation/evidence/browser-final.log",
+      "sha256": "2a67a37922214f7c073c89cb97cf031fb1643b1378ab0a885cabe9be3ead183c"
+    },
+    {
+      "path": "docs/integration/pap-id-protocols/post-homologation/evidence/browser-negative.log",
+      "sha256": "33b6a91eaea7cb1f68e5848840c7729eaaa672afc28d68a132e6064ff78b9086"
+    },
+    {
+      "path": "docs/integration/pap-id-protocols/post-homologation/evidence/build-final.log",
+      "sha256": "27e45ef3a3f84f65aec3b8dc50e504082a7544dac087dffbdd57b76522164b1b"
+    },
+    {
+      "path": "docs/integration/pap-id-protocols/post-homologation/evidence/commercial.log",
+      "sha256": "6a710bafd4520d9b3ee908c92c809337dce29971de39677f33d0144b16127f10"
+    },
+    {
+      "path": "docs/integration/pap-id-protocols/post-homologation/evidence/compact-confirmed-1440.png",
+      "sha256": "9b836454af782919a75bfa4cad40cd0abcb0e14c35f1fd29e571038da2a88ed7"
+    },
+    {
+      "path": "docs/integration/pap-id-protocols/post-homologation/evidence/compact-confirmed-390.png",
+      "sha256": "45cf62407cbf15c548652348fcc3809667b6a0b8e4376adf0d760afc79e72f68"
+    },
+    {
+      "path": "docs/integration/pap-id-protocols/post-homologation/evidence/database-final.log",
+      "sha256": "d54ca0d014ce0b73b81244189cf6a248e628e785fae6afd68886b8a2e04ae0dc"
+    },
+    {
+      "path": "docs/integration/pap-id-protocols/post-homologation/evidence/final-lab-status.log",
+      "sha256": "2e46755d85ee078f8ab25ada447ea12b59ed5a90115f05ddd9ddc623174ed555"
+    },
+    {
+      "path": "docs/integration/pap-id-protocols/post-homologation/evidence/hemorragia-pos-parto-checklist-1440.png",
+      "sha256": "f31d1abe12d21b38ce8f5a0c38c5403a0b3e4cca1100b861b68d06e18105b610"
+    },
+    {
+      "path": "docs/integration/pap-id-protocols/post-homologation/evidence/lint-final.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/integration/pap-id-protocols/post-homologation/evidence/multiple-cards-1440.png",
+      "sha256": "428e2fe66a60d72937927d804999bb190eb69f060cd83a31523fa8129f3d94b4"
+    },
+    {
+      "path": "docs/integration/pap-id-protocols/post-homologation/evidence/multiple-cards-390.png",
+      "sha256": "6dbd67cd301601086df892063cc880be155e22d9fbeaffad85d86f86b21d29cb"
+    },
+    {
+      "path": "docs/integration/pap-id-protocols/post-homologation/evidence/node-final.log",
+      "sha256": "ab27419957f25515bedab02057af74ccd2eb45de741a647be9fe7cf83138bfb5"
+    },
+    {
+      "path": "docs/integration/pap-id-protocols/post-homologation/evidence/production-boundary.log",
+      "sha256": "1fba921a816d0fde23c8efb165b60bd5548f64c3b3033980efeca11c9ff93112"
+    },
+    {
+      "path": "docs/integration/pap-id-protocols/post-homologation/evidence/profile-guards.log",
+      "sha256": "d85965331685c29b2d82eb82033a0cafa7660139ca84a4603e36a572e41b3894"
+    },
+    {
+      "path": "docs/integration/pap-id-protocols/post-homologation/evidence/sepse-obstetrica-visao-geral-390.png",
+      "sha256": "15d639e4ee753427f2cfd30da8cc68c378a6e00dbcc8a50e40c95dd813cc3552"
+    },
+    {
+      "path": "docs/integration/pap-id-protocols/post-homologation/evidence/sindromes-hipertensivas-gestacao-visao-geral-1440.png",
+      "sha256": "f5c2aacac9adaef83e15ebc7cf5bc68faff723872e2fb6d98a139c29f01df7a3"
+    },
+    {
+      "path": "docs/integration/pap-id-protocols/post-homologation/evidence/sindromes-hipertensivas-gestacao-visao-geral-390.png",
+      "sha256": "6f26175ad7fd74ed3561e30bbb4de2959f8e629d3a9700ff6a04d5d8f90d6e88"
+    },
+    {
+      "path": "docs/integration/pap-id-protocols/post-homologation/evidence/source-reading.json",
+      "sha256": "2d3b30308277c580ba156c23cd9bb07503fc8495162a6d7abcf411912e2a51aa"
+    },
+    {
+      "path": "docs/integration/pap-id-protocols/post-homologation/evidence/typescript-final.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "scripts/pap-id/review-lab.mts",
+      "sha256": "17f6d1b37430dbeb0d67e9542a442facffeafecdf89d14d4de881a14616187a9"
+    },
+    {
+      "path": "scripts/private-review/card-api.ts",
+      "sha256": "0d085696c4095f8531273511556ba66f52421137b0bf038f6bb7ee7b5148ee35"
+    },
+    {
+      "path": "scripts/private-review/card-image.ts",
+      "sha256": "5bf15b511d99e939e63463513b928d4cf3a6895ad13c79072c6ed0e02162cfed"
+    },
+    {
+      "path": "scripts/private-review/card-store.ts",
+      "sha256": "0be9857a7721619568287ea44558f1c43e19350818fd2550515239c3342ea78d"
+    },
+    {
+      "path": "scripts/private-review/documents.ts",
+      "sha256": "3ad22e79139aaf472ac60e1f7ebb13fda1ae0ef96ec7d7b43b052f0b3097ceed"
+    },
+    {
+      "path": "src/features/vitrine-premium/components/demo/CardServiceContext.tsx",
+      "sha256": "9a72cb4eb3d588945ab969ca01d212bdf2babd249701d0aa204a8ecf7c0a375a"
+    },
+    {
+      "path": "src/features/vitrine-premium/components/demo/DemoProvider.tsx",
+      "sha256": "1a81778ceafd011c7ada7b64ab7ff5225bf997efdd020b12b2606dec9d22e517"
+    },
+    {
+      "path": "src/features/vitrine-premium/components/pacientes/PatientCardIssuer.tsx",
+      "sha256": "d33933d872aaea19ab0ee80adaf0f7135e07baa24914640073a3b0861877fc9b"
+    },
+    {
+      "path": "src/features/vitrine-premium/components/pacientes/PatientList.tsx",
+      "sha256": "7812f9dddaed9c890812dfe3c5fce810b542a28ce603591c35323fb807e8908a"
+    },
+    {
+      "path": "src/features/vitrine-premium/components/protocolos/ProtocolDetail.tsx",
+      "sha256": "d51884e2511d3bbe7309d17a8c57b64aefdb4a10bc8bb3938f726caa5b201776"
+    },
+    {
+      "path": "src/features/vitrine-premium/components/registro/steps/IdentificationStep.tsx",
+      "sha256": "a48920ef878e9cb10641656ee654f5be648346d7613293002561598906a46460"
+    },
+    {
+      "path": "src/features/vitrine-premium/components/registro/steps/identification.module.css",
+      "sha256": "4078e82d09ee4fab9f6cd704ee159ca7dfe8a059270ca73f6e60fa69eb0ac41e"
+    },
+    {
+      "path": "src/features/vitrine-premium/lib/pap-id.ts",
+      "sha256": "b56c153ac0b68c72e5264c541117fc6e3e2e1aae2b7b619393aa3cc8aaa5761a"
+    },
+    {
+      "path": "src/features/vitrine-premium/lib/protocol-catalog.ts",
+      "sha256": "fe9462582c2cfc1b7e7924d1a10e4bc5dc950facf0d5b27c8dd6c1b2cd5c1078"
+    },
+    {
+      "path": "src/features/vitrine-premium/lib/protocol-content.ts",
+      "sha256": "bc09202d6d4d0d8b2c8b0bad1942ea156bc30d72a4e077119f1bc699772ef6c1"
+    },
+    {
+      "path": "tests/pap-id/database.test.mts",
+      "sha256": "b71c004970cb33718188f079c53e396b1b540dc2af4906c3daf1e5f7502232db"
+    },
+    {
+      "path": "tests/pap-id/fixture/PrivateReviewBridge.tsx",
+      "sha256": "bf13c5042961b0653f2521ff3a7a166af3b43455f3f56509cecbb5e7af5dc0d9"
+    },
+    {
+      "path": "tests/pap-id/fixture/app/homologacao/carteirinhas/route.ts",
+      "sha256": "d6b7d2d2d1b508a21a9f4c0019059c31634e3e53e334d79878e5caa36cb98ca6"
+    },
+    {
+      "path": "tests/pap-id/identity.test.mjs",
+      "sha256": "777a55d4c18e62d62ce5dbef75fa32c6a7b3171fedca6a1d8d9a8ed24865702a"
+    },
+    {
+      "path": "tests/pap-id/integrated.spec.ts",
+      "sha256": "70399c141091e7971252c8049b6d1f32cacee231485e4f83cb0d9f22aed506f4"
+    },
+    {
+      "path": "tests/pap-id/playwright.config.ts",
+      "sha256": "be579af7bddddb285022573d139ab0308519dd68b3aa148587d30621866c70c7"
+    },
+    {
+      "path": "tests/pap-id/post-homologation.spec.ts",
+      "sha256": "97dde09f81eae9f4f6b6064f8ed26edaa51562dc6ef47b476c4cdaf5f85dbc57"
+    },
+    {
+      "path": "tests/pap-id/production-boundary.mjs",
+      "sha256": "ffe1778bdef4fd1b75873f27ba1d642811cf94fb54b855bee7f9d58ccc40e081"
+    },
+    {
+      "path": "tests/protocols/catalog.test.mjs",
+      "sha256": "ff0195e4d16aad959b6ef0a4b01e98c1d595e83adb90e2cb603bf4f905561fa9"
+    },
+    {
+      "path": "tests/protocols/journey.spec.ts",
+      "sha256": "2357510befa161d10f191595dd975e06021d6e3d058acdcd2989f0d1aac6676f"
+    },
+    {
+      "path": "tests/protocols/run-browser.mjs",
+      "sha256": "0a6b537fa89ad6ad768f2a4340a3991062fbab3e230e90f7aabf278948468928"
+    },
+    {
+      "path": "tests/protocols/sourced-content.test.mjs",
+      "sha256": "334c8c077e0b55781e3cc617109634bb513028c0e031fafdc66506356a6d38f3"
+    }
+  ],
+  "secretScan": "PASS: exact generated password and credential/token patterns absent",
+  "protectedPathsUnchanged": true
+}

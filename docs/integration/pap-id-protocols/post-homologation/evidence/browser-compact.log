@@ -1,0 +1,39 @@
+PRESENTATION_ONLY http://127.0.0.1:40065; logs=/tmp/pap-protocols-ui-WxSZv8; operational database unavailable by construction; owned synthetic registry only when PAP_ID_REVIEW_PROFILE is supplied
+
+Running 6 tests using 1 worker
+
+(node:30148) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  1 tests/pap-id/integrated.spec.ts:19:35 › synthetic QR/document states, record and five-step encounter without duplicate identity at 1440 (7.5s)
+  ✓  2 tests/pap-id/integrated.spec.ts:19:35 › synthetic QR/document states, record and five-step encounter without duplicate identity at 390 (5.0s)
+  ✘  3 tests/pap-id/integrated.spec.ts:30:5 › expired, revoked, malformed and changed-base credentials never release synthetic actions (1.0m)
+(node:31535) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  4 tests/pap-id/integrated.spec.ts:49:5 › responsive QR controls, keyboard and resets do not expose clinical APIs or retain credentials after reload (12.3s)
+  ✓  5 tests/pap-id/post-homologation.spec.ts:5:5 › multiple PNGs are deduplicated, explicitly selected before document confirmation; compact desktop/mobile (6.6s)
+  ✓  6 tests/pap-id/post-homologation.spec.ts:13:5 › private PostgreSQL issuer shares CLI base, persists reload, revokes reissued PNG and never duplicates patient (8.1s)
+
+
+  1) tests/pap-id/integrated.spec.ts:30:5 › expired, revoked, malformed and changed-base credentials never release synthetic actions
+
+    Test timeout of 60000ms exceeded.
+
+    Error: locator.click: Test timeout of 60000ms exceeded.
+    Call log:
+      - waiting for getByRole('button', { name: 'Digitar código', exact: true })
+
+
+      31 |  await start(page);for(const type of ['expired','revoked']){await loadCard(page,cards[type]);await expect(page.locator('[data-pap-id-state]')).toHaveAttribute('data-pap-id-state','invalid');await expect(page.getByRole('link',{name:'Abrir prontuário',exact:true})).toHaveCount(0)}
+      32 |  await loadCard(page,cards.valid);await expect(page.locator('[data-pap-id-state]')).toHaveAttribute('data-pap-id-state','found');const updated=JSON.parse(await readFile(cards.valid.ledger,'utf8'));updated.revision++;updated.cards=updated.cards.map((c:object)=>({...c,revoked:true}));const file=path.join(cards.valid.directory,'revoked-copy.json');await writeFile(file,JSON.stringify(updated));await page.getByRole('button',{name:'Trocar carteirinha',exact:true}).click();await page.getByText('Base sintética • importar ou atualizar',{exact:true}).click();await page.getByLabel('Base sintética (JSON)').setInputFiles(file);await page.getByLabel('Carteirinha PNG',{exact:true}).setInputFiles(cards.valid.png);await expect(page.locator('[data-pap-id-state]')).toHaveAttribute('data-pap-id-state','invalid');await expect(page.getByRole('button',{name:'Iniciar atendimento',exact:true})).toHaveCount(0);
+    > 33 |  await page.getByRole('button',{name:'Tentar outra carteirinha',exact:true}).click();await page.getByRole('button',{name:'Digitar código',exact:true}).click();await page.getByLabel('Código de teste',{exact:true}).fill('https://example.invalid/clinical');await page.getByRole('button',{name:'Identificar carteirinha',exact:true}).click();await expect(page.locator('[data-pap-id-state]')).toHaveAttribute('data-pap-id-state','invalid');
+         |                                                                                                                                                        ^
+      34 | });
+      35 | test('three real PDFs require private consent, render pages/zoom, cite their source and download identical bytes',async({page,context})=>{
+      36 |  await page.goto('/vitrine/protocolos');for(const d of originalDocuments)expect((await context.request.get('/homologacao/documentos/'+d.slug)).status()).toBe(403);
+        at /workspace/beta1-post-homologation/tests/pap-id/integrated.spec.ts:33:152
+
+    Error Context: ../../tmp/pap-protocols-ui-WxSZv8/playwright/pap-id-integrated-expired--96e7f-r-release-synthetic-actions/error-context.md
+
+  1 failed
+    tests/pap-id/integrated.spec.ts:30:5 › expired, revoked, malformed and changed-base credentials never release synthetic actions
+  5 passed (1.8m)
