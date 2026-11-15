@@ -12,7 +12,7 @@ type LocalSession={expiresAt:number}
 const local=globalThis as typeof globalThis&{__papPrivateReviewSessions?:Map<string,LocalSession>}
 function sessions(){return local.__papPrivateReviewSessions??=new Map()}
 function sessionKey(request:Request){const nonce=(request.headers.get('cookie')||'').split(';').map(x=>x.trim()).find(x=>x.startsWith(cookie+'='))?.slice(cookie.length+1)||'';return /^[a-f0-9]{64}$/.test(nonce)?createHash('sha256').update((process.env.PAP_PRIVATE_REVIEW_SECRET||'')+nonce).digest('hex'):''}
-function authorized(request:Request){
+export function authorized(request:Request){
  if(!privateOrigin(request)||!Number.isSafeInteger(Number(process.env.PAP_PRIVATE_REVIEW_EXPIRES))||Date.now()>=Number(process.env.PAP_PRIVATE_REVIEW_EXPIRES))return false
  const entry=sessions().get(sessionKey(request));return !!entry&&entry.expiresAt>Date.now()
 }

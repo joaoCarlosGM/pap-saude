@@ -14,7 +14,7 @@ await writeFile(path.join(app,'app/globals.css'),`@import "${root}/src/app/globa
 const port=await new Promise((resolve,reject)=>{const s=net.createServer();s.on('error',reject);s.listen(0,'127.0.0.1',()=>{const p=s.address().port;s.close(()=>resolve(p))})});
 const base=`http://127.0.0.1:${port}`,env={...process.env,PAP_PRIVATE_REVIEW:integrated?'1':'0',PAP_PRIVATE_REVIEW_ROOT:root,PAP_PRIVATE_REVIEW_ORIGIN:`http://127.0.0.1:${port}`,PAP_PRIVATE_REVIEW_SECRET:randomBytes(32).toString('hex'),PAP_PRIVATE_REVIEW_EXPIRES:String(Date.now()+7200000),DATABASE_URL:'postgresql://no_connection:unused@127.0.0.1:1/protocols_no_database',PAP_EMAIL_PROVIDER:'disabled',PAP_EMAIL_EXTERNAL_ENABLED:'0',NEXT_TELEMETRY_DISABLED:'1',PAP_PROTOCOLS_RUN_DIR:run,PAP_PROTOCOLS_BASE_URL:base,PAP_PROTOCOLS_EVIDENCE:process.env.PAP_PROTOCOLS_EVIDENCE||path.join(run,'evidence')};
 await mkdir(env.PAP_PROTOCOLS_EVIDENCE,{recursive:true});
-console.log(`PRESENTATION_ONLY ${base}; logs=${run}; database unavailable by construction`);
+console.log(`PRESENTATION_ONLY ${base}; logs=${run}; operational database unavailable by construction; owned synthetic registry only when PAP_ID_REVIEW_PROFILE is supplied`);
 const out=openSync(path.join(run,'server.log'),'w'),err=openSync(path.join(run,'server-error.log'),'w');
 const server=spawn(process.execPath,[path.join(root,'node_modules/next/dist/bin/next'),'dev',app,'--webpack','--hostname','127.0.0.1','--port',String(port)],{env,stdio:['ignore',out,err]});
 closeSync(out);closeSync(err);

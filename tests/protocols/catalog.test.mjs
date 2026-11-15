@@ -42,7 +42,7 @@ test('loading, genuine empty catalogue, error and missing-data states render wit
 });
 test('checklist and flow are documentary-only and do not create clinical actions or persistence',()=>{
  const check=render(React.createElement(Page,{location:{view:'detail',slug:catalog[0].slug,tab:'checklist'}}));assert.equal((check.match(/type="checkbox"/g)||[]).length,6);assert.ok(check.includes('não representam ações realizadas'));assert.ok(!/fetch\(|localStorage|sessionStorage/.test(readFileSync('src/features/vitrine-premium/views/protocolos.tsx','utf8')));
- const flow=render(React.createElement(Page,{location:{view:'detail',slug:catalog[0].slug,tab:'fluxograma'}}));assert.ok(flow.includes('Não é um fluxograma de conduta clínica'));assert.ok(flow.includes('Leitura em lista'));
+ const flow=render(React.createElement(Page,{location:{view:'detail',slug:catalog[0].slug,tab:'fluxograma'}}));assert.ok(flow.includes('Fluxograma original • fonte em revisão'));assert.ok(flow.includes('sem redesenho ou decisões automatizadas'));assert.ok(flow.includes('PDF original indisponível'));assert.ok(!flow.includes('Aguardando PDF original e autorização'));
 });
 test('derived six-step tutorial does not navigate to paused modules and frozen core is unchanged',()=>{
  assert.equal(DEMO_TOUR_STEPS.length,6);for(const step of DEMO_TOUR_STEPS)assert.ok(!/\/vitrine\/(chat|cursos)/.test(step.path));

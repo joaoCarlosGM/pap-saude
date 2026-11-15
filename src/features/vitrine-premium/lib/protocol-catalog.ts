@@ -43,7 +43,7 @@ const checklist=[
 const common={category:'Obstetrícia',origin:'Unidade da Mulher • HU-UFGD',status:'IN_REVIEW' as const,flow,checklist}
 export const demoProtocols:readonly DemoProtocol[]=z.array(demoProtocolSchema).parse([
  {...common,slug:'sindromes-hipertensivas-gestacao',title:'Síndromes hipertensivas na gestação',theme:'Síndromes hipertensivas',
-  summary:'Referência documental sobre síndromes hipertensivas no contexto de origem. Conteúdo aguardando conferência e revisão clínica.',
+  summary:'Referência documental sobre síndromes hipertensivas no contexto de origem. Fonte documental conferida; conteúdo em revisão clínica.',
   codes:['PRT.UMUL.012'],version:'01',reportedIssuedAt:'2026-02-02',reportedReviewDue:'2028-02-02',keywords:['pré-eclâmpsia','hipertensão','HELLP','eclâmpsia'],
   document:{availability:'MISSING',originalFilename:'Pré eclampsia.pdf',expectedSha256:'63a0dc9b93bc3be45632bcf46649c92d7118884135ac2ff8a95aa565830804d1',reportedPageCount:25},
   sections:[
@@ -63,7 +63,7 @@ export const demoProtocols:readonly DemoProtocol[]=z.array(demoProtocolSchema).p
    {id:'referencias',title:'Referências de consulta',description:'Fluxograma, kit e documentação dependem da revisão da fonte; não há sequência de intervenção nesta página.'},
   ],flowReference:'Seção 12 de fluxograma informada na página impressa 32; posição digital e conteúdo ainda não conferidos.'},
  {...common,slug:'sepse-obstetrica',title:'Protocolo de sepse em pacientes obstétricas',theme:'Sepse obstétrica',origin:'HUAB-UFRN / EBSERH',
-  summary:'Referência documental sobre sepse no contexto obstétrico. Identificação e conteúdo aguardam validação documental e clínica.',
+  summary:'Referência documental sobre sepse no contexto obstétrico. Fonte em revisão clínica; divergências documentais preservadas.',
   codes:['PRT.UPS.007','PRT.DMED.013'],version:'2 (2025)',identificationNote:'Capa e cabeçalho informam códigos diferentes. Identificador documental a confirmar.',keywords:['sepse','infecção','obstetrícia'],
   document:{availability:'MISSING',originalFilename:'Sepse.pdf',expectedSha256:'5d4e5756b397ade0adc829cca8336eec86db14e955c22a528fa533a9a75f093b',reportedPageCount:36},
   sections:[

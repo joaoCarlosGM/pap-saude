@@ -53,8 +53,7 @@ test('checklist remains local across tabs/protocols and resets only after confir
 
 test('native history/reload and keyboard tab navigation retain validated location; flow controls are genuine',async({page})=>{
  await page.goto(protocolHref(demoProtocols[0].slug));await ready(page);await page.getByRole('tab',{name:'Visão geral',exact:true}).focus();await page.keyboard.press('ArrowRight');await expect(page.getByRole('tab',{name:'Fluxograma',exact:true})).toHaveAttribute('aria-selected','true');
- await page.getByRole('button',{name:'Aumentar zoom do esquema'}).click();await expect(page.getByLabel('Zoom do esquema',{exact:true})).toHaveText('110%');await expect(page.getByRole('region',{name:/Esquema documental/}).locator('ol')).toHaveCSS('transform','matrix(1.1, 0, 0, 1.1, 0, 0)');
- await page.getByRole('button',{name:'Ajustar à tela'}).click();await expect(page.getByLabel('Zoom do esquema',{exact:true})).toHaveText('100%');await page.getByRole('button',{name:'Leitura em lista'}).click();await expect(page.getByRole('button',{name:'Visualização em esquema'})).toHaveAttribute('aria-pressed','true');
+ await expect(page.getByRole('heading',{name:'Fluxograma original • fonte em revisão',exact:true})).toBeVisible();await expect(page.getByRole('link',{name:/13. Fluxograma • digital 22/})).toBeVisible();await expect(page.getByRole('button',{name:'Aumentar zoom do esquema'})).toHaveCount(0);
  await page.getByRole('tab',{name:'Documento original',exact:true}).click();await expect(page.getByRole('button',{name:'Abrir PDF',exact:true})).toBeDisabled();await expect(page.getByRole('button',{name:'Baixar PDF',exact:true})).toBeDisabled();await page.goBack();await expect(page.getByRole('tab',{name:'Fluxograma',exact:true})).toHaveAttribute('aria-selected','true');await page.goForward();await page.reload();await expect(page.getByRole('heading',{name:'PDF original indisponível'})).toBeVisible();
 });
 
