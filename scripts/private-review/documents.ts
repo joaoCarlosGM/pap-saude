@@ -25,7 +25,7 @@ export async function session(request:Request){
   if(!/^[a-f0-9]{64}$/.test(process.env.PAP_PRIVATE_REVIEW_SECRET||'')||(!Number.isSafeInteger(Number(process.env.PAP_PRIVATE_REVIEW_EXPIRES))||Date.now()>=Number(process.env.PAP_PRIVATE_REVIEW_EXPIRES)))return Response.json({error:'REVIEW_EXPIRED'},{status:403,headers})
   // Verify all documents before enabling any capability. No consent grants public distribution rights.
   try{for(const d of originalDocuments)await verifiedBytes(d.slug)}catch{return Response.json({error:'DOCUMENT_INTEGRITY_FAILED'},{status:503,headers})}
-  for(const [key,entry]of sessions())if(entry.expiresAt<=Date.now())sessions().delete(key);if(sessions().size>=100)return Response.json({error:'LOCAL_REVIEW_LIMIT'},{status:429,headers});
+  for(const [key,entry]of sessions())if(entry.expiresAt<=Date.now())sessions().delete(key);sessions().delete(sessionKey(request));if(sessions().size>=100)return Response.json({error:'LOCAL_REVIEW_LIMIT'},{status:429,headers});
   const nonce=randomBytes(32).toString('hex');sessions().set(createHash('sha256').update(process.env.PAP_PRIVATE_REVIEW_SECRET!+nonce).digest('hex'),{expiresAt:Math.min(Date.now()+7200000,Number(process.env.PAP_PRIVATE_REVIEW_EXPIRES))});
   return Response.json({enabled:true,documents:capabilities()},{headers:{...headers,'Set-Cookie':`${cookie}=${nonce}; Path=/homologacao; HttpOnly; SameSite=Strict; Max-Age=7200`}})
  }
