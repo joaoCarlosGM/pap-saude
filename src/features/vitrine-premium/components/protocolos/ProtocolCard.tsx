@@ -12,7 +12,7 @@ export default function ProtocolCard({protocol}:{protocol:DemoProtocol}){
   <div><p className={styles.eyebrow}>{protocol.category}</p><h2>{protocol.title}</h2></div>
   <p className={styles.muted}>{protocol.summary}</p>
   <dl className={styles.facts}><div><dt>Origem informada</dt><dd>{protocol.origin}</dd></div><div><dt>Código informado • a conferir</dt><dd>{protocol.identificationNote?'Identificador a confirmar':protocol.codes.join(' / ')}</dd></div><div><dt>Versão informada</dt><dd>{protocol.version}</dd></div></dl>
-  <p className={styles.muted}>{document?'Original conferido • consulta local privada.':'PDF original pendente de envio e validação.'}</p>
+  <p className={styles.muted}>{document?'Original conferido • consulta local privada.':'PDF indisponível para distribuição pública; consulta local privada mediante autorização.'}</p>
   <div className={styles.actions}><Link className={styles.button} href={protocolHref(protocol.slug)} prefetch={false}>Visualizar<ArrowUpRight size={16} aria-hidden="true"/></Link>{document?<a className={styles.secondary} href={document.downloadUrl}><Download size={15} aria-hidden="true"/>Baixar PDF</a>:<button type="button" disabled className={styles.secondary}><Download size={15} aria-hidden="true"/>Baixar PDF</button>}</div>
  </article>
 }
