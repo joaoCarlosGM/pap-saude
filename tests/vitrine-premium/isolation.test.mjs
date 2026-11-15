@@ -56,7 +56,8 @@ test('Beta1 preserves authentication, clinical contracts, KPIs and all historica
    assert.deepEqual(files(path+'/').sort(),historicalAuth.sort(),'auth file inventory remains frozen');
    assert.equal(execFileSync('git',['diff',base,'--',path,`:(exclude)${navigationPath}`],{encoding:'utf8'}),'','all other authentication files');
    assertNavigationContract(readFileSync(navigationPath,'utf8'),before(navigationPath));
-  }else assert.equal(execFileSync('git',['diff',base,'--',path],{encoding:'utf8'}),'',path);
+  }else if(path==='package-lock.json')assertPdfDependencyOnly(JSON.parse(readFileSync(path,'utf8')),JSON.parse(before(path)));
+  else assert.equal(execFileSync('git',['diff',base,'--',path],{encoding:'utf8'}),'',path);
  }
  const historical=execFileSync('git',['ls-tree','-r','--name-only',base,'--','prisma/migrations'],{encoding:'utf8'}).trim().split('\n');assert.equal(historical.filter(p=>p.endsWith('/migration.sql')).length,35);
  for(const path of historical)assert.equal(readFileSync(path,'utf8'),before(path),path);
@@ -105,3 +106,13 @@ test('all showcase server leaves retain explicit commercial guard before mountin
  assert.ok(readFileSync(root+'components/pacientes/DemoPatientView.tsx','utf8').includes('notFound()'))
  assert.ok(readFileSync(root+'lib/demo/welcome-session.ts','utf8').includes('pap.vitrine.premium.welcome.v2'))
 })
+
+// Closed append-only exception for the local PDF renderer; no existing dependency may change.
+function assertPdfDependencyOnly(current,baseline){
+ const additions=['node_modules/pdfjs-dist','node_modules/@napi-rs/canvas',...['android-arm64','darwin-arm64','darwin-x64','linux-arm-gnueabihf','linux-arm64-gnu','linux-arm64-musl','linux-riscv64-gnu','linux-x64-gnu','linux-x64-musl','win32-arm64-msvc','win32-x64-msvc'].map(p=>'node_modules/@napi-rs/canvas-'+p)];
+ assert.deepEqual(Object.keys(current.packages).filter(p=>!Object.hasOwn(baseline.packages,p)).sort(),additions.sort());
+ const expectedRoot=structuredClone(baseline.packages['']);expectedRoot.devDependencies['pdfjs-dist']='6.5.438';assert.deepEqual(current.packages[''],expectedRoot);
+ for(const [name,value]of Object.entries(baseline.packages))if(name)assert.deepEqual(current.packages[name],value,`frozen dependency ${name}`);
+ for(const name of additions){const item=current.packages[name];assert.equal(item.version,name.endsWith('pdfjs-dist')?'6.5.438':'1.1.1');assert.equal(item.dev,true);assert.match(item.resolved,/^https:\/\/registry\.npmjs\.org\//);assert.match(item.integrity,/^sha512-/);if(!name.endsWith('pdfjs-dist'))assert.equal(item.optional,true);}
+ const strip=p=>Object.fromEntries(Object.entries(p).filter(([key])=>key!=='packages'));assert.deepEqual(strip(current),strip(baseline));
+}

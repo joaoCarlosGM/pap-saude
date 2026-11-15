@@ -1,0 +1,2 @@
+import {notFound} from 'next/navigation';import Patient from '@/features/vitrine-premium/components/pacientes/DemoPatientView';import {initialDemo} from '@/features/vitrine-premium/lib/demo/data';
+export default async function Page({params}:{params:Promise<{id:string}>}){const {id}=await params;if(!initialDemo().patients.some(p=>p.id===id)&&!/^demo-patient-[1-9]\d*$/.test(id))notFound();return <Patient id={id}/>}

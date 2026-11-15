@@ -11,7 +11,7 @@ export default function ProtocolosPage({location={view:'library'},protocols=demo
  useEffect(()=>{const reset=()=>{setMarks({});setFilters({...emptyProtocolFilters})};window.addEventListener('pap:vitrine-reset',reset);return()=>window.removeEventListener('pap:vitrine-reset',reset)},[])
  const selected=location.view==='detail'?protocols.find(p=>p.slug===location.slug):undefined
  return <div className={styles.page}>
-  {selected&&location.view==='detail'?<ProtocolDetail key={selected.slug} protocol={selected} tab={location.tab} marks={marks[selected.slug]||[]} onMark={id=>setMarks(prev=>{const current=prev[selected.slug]||[];return {...prev,[selected.slug]:current.includes(id)?current.filter(x=>x!==id):[...current,id]}})} onClear={()=>setMarks(prev=>({...prev,[selected.slug]:[]}))}/>:<>
+  {selected&&location.view==='detail'?<ProtocolDetail key={selected.slug} protocol={selected} tab={location.tab} initialPage={location.page} marks={marks[selected.slug]||[]} onMark={id=>setMarks(prev=>{const current=prev[selected.slug]||[];return {...prev,[selected.slug]:current.includes(id)?current.filter(x=>x!==id):[...current,id]}})} onClear={()=>setMarks(prev=>({...prev,[selected.slug]:[]}))}/>:<>
    <header className={styles.head}><div><p className={styles.eyebrow}>PAP-PROTOCOLS • VITRINE</p><h1>Protocolos</h1><p className={styles.muted}>Biblioteca de protocolos clínicos • referências em preparação</p></div></header>
    <ReviewNotice/>
    {location.view==='detail'?<div className={styles.empty} role="alert"><h2>Protocolo não encontrado nesta biblioteca</h2><Link className={styles.button} href="/vitrine/protocolos" prefetch={false}>Voltar à biblioteca</Link></div>:<ProtocolList protocols={protocols} filters={filters} onFiltersChange={setFilters} state={state}/>}

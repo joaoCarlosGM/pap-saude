@@ -100,7 +100,10 @@
     "test:beta1:upgrade": "node tests/beta1/run-isolated.mjs upgrade",
     "test:beta1:browser": "node tests/beta1/run-isolated.mjs browser",
     "test:beta1": "npm run test:beta1:unit && npm run test:beta1:lms && npm run test:beta1:upgrade && npm run test:beta1:browser",
-    "test:beta1:build": "node tests/beta1/run-isolated.mjs build"
+    "test:beta1:build": "node tests/beta1/run-isolated.mjs build",
+    "pap-id:demo": "tsx scripts/pap-id/demo.mts",
+    "beta1:acceptance": "node tests/protocols/run-browser.mjs --integrated --serve",
+    "test:pap-id:browser": "node tests/protocols/run-browser.mjs --integrated"
   },
   "dependencies": {
     "@capacitor/android": "^8.5.2",
@@ -136,6 +139,7 @@
     "eslint": "^9",
     "eslint-config-next": "16.4.2",
     "jsqr": "^1.4.0",
+    "pdfjs-dist": "6.5.438",
     "pngjs": "^7.0.0",
     "prisma": "^7.10.0",
     "shadcn": "^4.21.0",

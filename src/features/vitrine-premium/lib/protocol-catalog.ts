@@ -80,16 +80,18 @@ export function filterProtocols(entries:readonly DemoProtocol[],filters:Protocol
  const query=normalize(filters.query)
  return entries.filter(p=> (!filters.theme||p.theme===filters.theme)&&(!filters.origin||p.origin===filters.origin)&&(!filters.version||p.version===filters.version)&&(!query||normalize([p.title,p.summary,p.category,p.theme,p.origin,p.version,...p.codes,...p.keywords].join(' ')).includes(query)))
 }
-export type ProtocolLocation={view:'library'}|{view:'detail';slug:string;tab:ProtocolTab}
+export type ProtocolLocation={view:'library'}|{view:'detail';slug:string;tab:ProtocolTab;page?:number}
 export function parseProtocolLocation(search:Record<string,string|string[]|undefined>,entries:readonly DemoProtocol[]=demoProtocols):ProtocolLocation|null{
- if(Object.keys(search).some(k=>!['protocolo','aba'].includes(k)))return null
+ if(Object.keys(search).some(k=>!['protocolo','aba','pagina'].includes(k)))return null
  if(!Object.keys(search).length)return {view:'library'}
  if(typeof search.protocolo!=='string'||!entries.some(p=>p.slug===search.protocolo))return null
  const tab=search.aba===undefined?'visao-geral':search.aba
  if(typeof tab!=='string'||!protocolTabs.some(t=>t.id===tab))return null
- return {view:'detail',slug:search.protocolo,tab:tab as ProtocolTab}
+ const page=search.pagina;
+ if(page!==undefined&&(typeof page!=='string'||tab!=='documento-original'||!/^([1-9]\d*)$/.test(page)||Number(page)>entries.find(p=>p.slug===search.protocolo)!.document.reportedPageCount))return null
+ return {view:'detail',slug:search.protocolo,tab:tab as ProtocolTab,...(page!==undefined?{page:Number(page)}:{})}
 }
-export function protocolHref(slug:string,tab:ProtocolTab='visao-geral'){
- return '/vitrine/protocolos?'+new URLSearchParams({protocolo:slug,aba:tab}).toString()
+export function protocolHref(slug:string,tab:ProtocolTab='visao-geral',page?:number){
+ return '/vitrine/protocolos?'+new URLSearchParams({protocolo:slug,aba:tab,...(page!==undefined&&tab==='documento-original'?{pagina:String(page)}:{})}).toString()
 }
 export const reportedDate=(value?:string)=>value?value.split('-').reverse().join('/'):'Não informada'

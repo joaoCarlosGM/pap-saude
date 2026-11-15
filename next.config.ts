@@ -3,7 +3,7 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   output: "standalone",
   // Operator credentials and captured tokens must never enter a release artifact.
-  outputFileTracingExcludes: { "/*": ["./.local/**/*", "./.test-audit/**/*", "./.git/**/*", "./.env", "./.env.*"] },
+  outputFileTracingExcludes: { "/*": ["./.local/**/*", "./.test-audit/**/*", "./.git/**/*", "./.env", "./.env.*", "./docs/protocolos/documentos-originais/**/*", "./scripts/private-review/**/*", "./tests/pap-id/**/*"] },
   devIndicators: process.env.PAP_FIRST_ACCESS_E2E === "1" ? false : undefined,
   distDir:
     process.env.PAP_FIRST_ACCESS_E2E === "1" ? ".next-first-access" : ".next",

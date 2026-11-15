@@ -53,3 +53,16 @@ test('commercial guards remain before query parsing and the original course play
  const player=readFileSync('src/app/(showcase)/vitrine/aprender/[id]/page.tsx','utf8');assert.ok(player.includes('await requireCommercialPageSession()'));assert.ok(player.includes('ShowcaseUnavailable'));assert.ok(!player.includes('DemoLearning'));
  for(const p of ['src/server','src/app/api','prisma','deploy','src/proxy.ts','src/lib/admin-beta-policy.ts','src/app/(app)'])assert.equal(execFileSync('git',['diff','12f67cd','--',p],{encoding:'utf8'}),'',p);
 });
+
+test('original-document page deep links are bounded integers and remain exclusive to that tab',()=>{
+ for(const p of catalog){assert.deepEqual(parseProtocolLocation({protocolo:p.slug,aba:'documento-original',pagina:String(p.document.reportedPageCount)}),{view:'detail',slug:p.slug,tab:'documento-original',page:p.document.reportedPageCount});}
+ for(const value of ['0','-1','01','1.5','1e2','999','NaN',['1','2']])assert.equal(parseProtocolLocation({protocolo:catalog[0].slug,aba:'documento-original',pagina:value}),null);
+ assert.equal(parseProtocolLocation({protocolo:catalog[0].slug,aba:'checklist',pagina:'1'}),null);
+});
+
+test('private document capabilities cannot redirect the PDF renderer to arbitrary or clinical URLs',()=>{
+ const {OriginalDocumentProvider}=require('../../src/features/vitrine-premium/components/protocolos/OriginalDocumentContext.tsx'),{originalDocuments}=require('../../src/features/vitrine-premium/lib/protocol-originals.ts'),d=originalDocuments[0];
+ for(const entry of [{...d,url:'/api/clinical/patients',downloadUrl:'/api/clinical/patients'},{...d,slug:'../../api/clinical/patients',url:'/homologacao/documentos/../../api/clinical/patients',downloadUrl:'/homologacao/documentos/../../api/clinical/patients?download=1'},{...d,sha256:'f'.repeat(64),url:'/homologacao/documentos/'+d.slug,downloadUrl:'/homologacao/documentos/'+d.slug+'?download=1'}]){
+  const html=render(React.createElement(OriginalDocumentProvider,{documents:[entry]},React.createElement(Page,{location:{view:'detail',slug:d.slug,tab:'documento-original'}})));assert.ok(html.includes('PDF original indisponível'));assert.ok(!html.includes('/api/clinical'));
+ }
+});
