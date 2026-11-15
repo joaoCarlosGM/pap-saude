@@ -1,0 +1,19 @@
+✔ commercial availability requires explicit opt-in and never changes the default Admin Beta (2.534788ms)
+✔ both generated Nginx maps and the Next availability contract stay synchronized (0.709899ms)
+✔ proxy opt-in preserves private proxy identity and method/clinical restrictions (6.088652ms)
+✔ showcase routes are finite, synthetic-only and read-only, including dynamic records and lessons (14.424106ms)
+✔ Nginx and Next agree on canonical route/method matrix in both modes; legacy internal exceptions remain closed (12.551969ms)
+✔ Commercial CI cannot publish images or deploy and keeps the three scanner inputs intact (0.41309ms)
+✔ RSC prefetch accepts only the closed public transport metadata, never extra user records (10.300559ms)
+✔ RSC dynamic segment siblings and route identifiers cannot smuggle private fields (2.357916ms)
+✔ production interceptability is exactly false; dev flags, missing values and coercions are rejected (0.913902ms)
+✔ RSC accepts unknown/empty siblings and only the known public static siblings (0.802156ms)
+✔ RSC rejects payloads, wrong routes, missing/extra keys and arbitrary static siblings (0.328185ms)
+ℹ tests 11
+ℹ suites 0
+ℹ pass 11
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 234.105956

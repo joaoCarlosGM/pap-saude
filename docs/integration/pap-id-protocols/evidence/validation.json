@@ -1,0 +1,148 @@
+{
+  "sourceCommit": "353328152f73bbab74f88e274f3c3a147411cb1a",
+  "node": {
+    "pass": 104,
+    "fail": 0,
+    "skipped": 0
+  },
+  "commercialRsc": {
+    "pass": 11,
+    "fail": 0,
+    "skipped": 0
+  },
+  "browser": {
+    "pass": 14,
+    "fail": 0,
+    "skipped": 0,
+    "retries": 0,
+    "workers": 1
+  },
+  "typescript": "PASS",
+  "lint": {
+    "errors": 0,
+    "inheritedWarnings": 4
+  },
+  "productionBuild": "PASS webpack/Next16.4.2; application code unchanged since7d95036; later changes only excluded private handler/test",
+  "buildExcludedDiff": [
+    "scripts/private-review/documents.ts",
+    "tests/pap-id/documents.test.mjs"
+  ],
+  "standaloneOutsideCheckout": "PASS",
+  "pdfIntegrityPages": [
+    25,
+    34,
+    36
+  ],
+  "dependencyProductionAudit": {
+    "high": 0,
+    "critical": 0,
+    "moderate": 4
+  },
+  "newPdfDependencyAudit": {
+    "total": 0
+  },
+  "publicPdfDistribution": "BLOCKED",
+  "clinicalApproval": "BLOCKED",
+  "operatorAcceptance": "PENDING",
+  "remoteCi": "NOT RUN branch not in workflow filters",
+  "operationalDatabaseRegression": "NOT RUN",
+  "dockerScanners": "NOT RUN",
+  "screenshots": [
+    {
+      "path": "docs/integration/pap-id-protocols/evidence/pap-id-documento-divergente-1440.png",
+      "sha256": "68f5f99885691300e0eff30da97e3696c1c7655975119259ae83ead9ec0f7cc7",
+      "pdfContentMasked": false
+    },
+    {
+      "path": "docs/integration/pap-id-protocols/evidence/pap-id-documento-divergente-390.png",
+      "sha256": "ef70d9cc83e8c306192f0d6e3828d08f9e9a047cf5f7c8ce1c22519e2491d2f0",
+      "pdfContentMasked": false
+    },
+    {
+      "path": "docs/integration/pap-id-protocols/evidence/pap-id-identificacao-1440.png",
+      "sha256": "c6ba37993cd111b994cef7384f820b3d93354f4c24f114993a24366dff0135b2",
+      "pdfContentMasked": false
+    },
+    {
+      "path": "docs/integration/pap-id-protocols/evidence/pap-id-identificacao-390.png",
+      "sha256": "8d101757eca122ab2b437135c6d7fa62b0217f7f95c64eee30378e41037cb8d6",
+      "pdfContentMasked": false
+    },
+    {
+      "path": "docs/integration/pap-id-protocols/evidence/pap-id-localizada-1440.png",
+      "sha256": "2f80d96235435d18a537bfcc4ef3386be56f0609180ab068bf8d959269d9b73b",
+      "pdfContentMasked": false
+    },
+    {
+      "path": "docs/integration/pap-id-protocols/evidence/pap-id-localizada-390.png",
+      "sha256": "a6993d2bd243897acfe4aa12eafb964ba355f41606357412c8de96b64e4414a9",
+      "pdfContentMasked": false
+    },
+    {
+      "path": "docs/integration/pap-id-protocols/evidence/pap-id-nao-encontrada-1440.png",
+      "sha256": "1dc5eea7f9fb91721b5b4af097840537abe8c85105be811db9c6a1c5d68e93a9",
+      "pdfContentMasked": false
+    },
+    {
+      "path": "docs/integration/pap-id-protocols/evidence/pap-id-nao-encontrada-390.png",
+      "sha256": "0f7724334df03da685ab156ae7db8dbe295c579db0ff3b38dd5118b40e00ab1d",
+      "pdfContentMasked": false
+    },
+    {
+      "path": "docs/integration/pap-id-protocols/evidence/pap-id-resumo-1440.png",
+      "sha256": "700a6bf4c35dcb3a6ed442da63ab5999d648a572b514d46f4d75957ef0efff3e",
+      "pdfContentMasked": false
+    },
+    {
+      "path": "docs/integration/pap-id-protocols/evidence/pap-id-resumo-390.png",
+      "sha256": "2145f3d350e99e574350ee966ac899607a0520fe29a772811b22aab173b1d1e9",
+      "pdfContentMasked": false
+    },
+    {
+      "path": "docs/integration/pap-id-protocols/evidence/pap-id-validada-1440.png",
+      "sha256": "637ce6bc69b28f7d49601ed68f9f12ad183cc7e9c78ef472ff5769b1a696fdc0",
+      "pdfContentMasked": false
+    },
+    {
+      "path": "docs/integration/pap-id-protocols/evidence/pap-id-validada-390.png",
+      "sha256": "472d18f713f78d2f254b177c21e9e7e9799baada7e62833fa8dd1d6b2b90bc4c",
+      "pdfContentMasked": false
+    },
+    {
+      "path": "docs/integration/pap-id-protocols/evidence/pdf-original-hemorragia-pos-parto-1440.png",
+      "sha256": "3426275017fab3a347097d9d6a03d3bac77519a7728f76e2e79da243aa41b977",
+      "pdfContentMasked": true,
+      "maskPixels": 116875
+    },
+    {
+      "path": "docs/integration/pap-id-protocols/evidence/pdf-original-hemorragia-pos-parto-390.png",
+      "sha256": "a5ecc6b6c41a876e995d041e64e213e1b2dffb04038d080f63378f4fa52623fd",
+      "pdfContentMasked": true,
+      "maskPixels": 238728
+    },
+    {
+      "path": "docs/integration/pap-id-protocols/evidence/pdf-original-sepse-obstetrica-1440.png",
+      "sha256": "0ad91c7539e6528dabec4bb5fa49cb30929c7f6eb0e40ab3872b246ae25ca1a2",
+      "pdfContentMasked": true,
+      "maskPixels": 68750
+    },
+    {
+      "path": "docs/integration/pap-id-protocols/evidence/pdf-original-sepse-obstetrica-390.png",
+      "sha256": "9b2a9239686570a4cfff91747b568760688618d2228eba67bae8e9c331cb0065",
+      "pdfContentMasked": true,
+      "maskPixels": 238728
+    },
+    {
+      "path": "docs/integration/pap-id-protocols/evidence/pdf-original-sindromes-hipertensivas-gestacao-1440.png",
+      "sha256": "d1fe906615df31720950b99e2ef747ad589c4cefea046eea078aefb70d4a3f69",
+      "pdfContentMasked": true,
+      "maskPixels": 116875
+    },
+    {
+      "path": "docs/integration/pap-id-protocols/evidence/pdf-original-sindromes-hipertensivas-gestacao-390.png",
+      "sha256": "75632a7b2a302fd6230e85c7caf85bc177567417bdf49378b79cfa2570f68fe3",
+      "pdfContentMasked": true,
+      "maskPixels": 238728
+    }
+  ]
+}

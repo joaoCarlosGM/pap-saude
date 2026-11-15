@@ -1,0 +1,128 @@
+
+> pap-saude@0.1.0 build
+> next build --webpack
+
+▲ Next.js 16.4.2 (webpack)
+✓ Running next.config.ts took 41ms
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 11.4s
+  Running TypeScript ...
+  Finished TypeScript in 5.2s ...
+  Collecting page data using 4 workers ...
+  Generating static pages using 4 workers (0/44) ...
+  Generating static pages using 4 workers (11/44)
+  Generating static pages using 4 workers (22/44)
+  Generating static pages using 4 workers (33/44)
+✓ Generating static pages using 4 workers (44/44) in 508ms
+  Finalizing page optimization ...
+  Collecting build traces ...
+
+Route (app)
+┌ ○ /
+├ ○ /_not-found
+├ ○ /aceitar-convite
+├ ƒ /admin
+├ ƒ /admin/acessos
+├ ƒ /admin/auditoria
+├ ƒ /admin/comercial
+├ ƒ /admin/convites
+├ ƒ /admin/convites-globais
+├ ƒ /admin/integracoes
+├ ƒ /admin/manager
+├ ƒ /admin/manager/cursos
+├ ƒ /admin/manager/cursos/[versionId]
+├ ƒ /admin/manager/distribuicao
+├ ƒ /admin/manager/materiais
+├ ƒ /admin/manager/municipios
+├ ƒ /admin/metricas
+├ ƒ /admin/minha-seguranca
+├ ƒ /admin/monitoramento
+├ ƒ /admin/organizacoes
+├ ƒ /admin/pendencias
+├ ƒ /admin/rede
+├ ƒ /admin/rede/[organizationId]
+├ ƒ /admin/seguranca
+├ ƒ /admin/solicitacoes
+├ ƒ /admin/usuarios
+├ ƒ /aguardando-autorizacao
+├ ○ /ajuda/seguranca
+├ ƒ /api/access-invitations/accept
+├ ƒ /api/account/access-status
+├ ƒ /api/account/notifications
+├ ƒ /api/account/profile
+├ ƒ /api/admin/access-invitations
+├ ƒ /api/admin/audit
+├ ƒ /api/admin/beta/invitations
+├ ƒ /api/admin/beta/metrics
+├ ƒ /api/admin/beta/requests
+├ ƒ /api/admin/beta/users
+├ ƒ /api/admin/context
+├ ƒ /api/admin/invitations
+├ ƒ /api/admin/manager/municipalities
+├ ƒ /api/admin/operations/integrations
+├ ƒ /api/admin/operations/metrics
+├ ƒ /api/admin/operations/monitoring
+├ ƒ /api/admin/organizations
+├ ƒ /api/admin/organizations/[organizationId]
+├ ƒ /api/admin/pending
+├ ƒ /api/admin/role-assignments
+├ ƒ /api/admin/role-assignments/[assignmentId]
+├ ƒ /api/admin/roles
+├ ƒ /api/admin/security
+├ ƒ /api/admin/users
+├ ƒ /api/auth/login
+├ ƒ /api/auth/login/verification
+├ ƒ /api/auth/logout
+├ ƒ /api/auth/mfa/verify
+├ ƒ /api/auth/password/forced-change
+├ ƒ /api/auth/password/forgot
+├ ƒ /api/auth/password/reset
+├ ƒ /api/auth/security
+├ ƒ /api/auth/session
+├ ƒ /api/clinical/[[...path]]
+├ ƒ /api/clinical/registrations
+├ ƒ /api/courses/[...segments]
+├ ƒ /api/email/resend/webhook
+├ ƒ /api/health
+├ ƒ /api/invitations/accept
+├ ƒ /api/onboarding/[tourKey]
+├ ƒ /api/organization-requests
+├ ƒ /api/vitrine/[section]
+├ ƒ /aprender/[enrollmentId]
+├ ƒ /atendimentos
+├ ƒ /casos
+├ ƒ /chat
+├ ƒ /comercial
+├ ƒ /configuracoes
+├ ƒ /convite
+├ ƒ /cursos
+├ ƒ /dashboard
+├ ƒ /ferramentas
+├ ƒ /login
+├ ƒ /minha-seguranca
+├ ƒ /notificacoes
+├ ƒ /pacientes
+├ ƒ /pacientes/[id]
+├ ƒ /primeiros-passos
+├ ƒ /protocolos
+├ ○ /recuperar-senha
+├ ○ /redefinir-senha
+├ ƒ /registro
+├ ○ /solicitar-adesao
+├ ƒ /vitrine
+├ ƒ /vitrine/[section]
+├ ƒ /vitrine/aprender/[id]
+└ ƒ /vitrine/pacientes/[id]
+
+
+ƒ Proxy (Middleware)
+
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
+
+npm notice
+npm notice New major version of npm available! 11.9.0 -> 12.2.2
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.2
+npm notice To update run: npm install -g npm@12.2.2
+npm notice
