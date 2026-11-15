@@ -1,0 +1,5 @@
+✔ owned PostgreSQL restart retains every registry row, new patient, recoverable card and exact private PDF bytes (3000.382968ms)
+ℹ tests 1
+ℹ pass 1
+ℹ fail 0
+ℹ skipped 0

@@ -1,0 +1,20 @@
+
+> pap-saude@0.1.0 lint
+> eslint
+
+
+<candidate>/tests/p0-remediation/clinical-finalization-race.integration.test.ts
+  51:6  warning  'Finalization' is defined but never used  @typescript-eslint/no-unused-vars
+
+<candidate>/tests/release/p0-provenance.integration.test.ts
+   4:10  warning  'Prisma' is defined but never used                          @typescript-eslint/no-unused-vars
+  10:87  warning  'requireClinicalProvenanceScope' is defined but never used  @typescript-eslint/no-unused-vars
+  11:10  warning  'PERMISSIONS' is defined but never used                     @typescript-eslint/no-unused-vars
+
+✖ 4 problems (0 errors, 4 warnings)
+
+npm notice
+npm notice New major version of npm available! 11.9.0 -> 12.2.2
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.2
+npm notice To update run: npm install -g npm@12.2.2
+npm notice

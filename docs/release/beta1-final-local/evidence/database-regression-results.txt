@@ -1,0 +1,8 @@
+✔ owned isolated PostgreSQL: issue/retry/concurrency/revoke/persistence and no duplicate identities (209.568666ms)
+✔ private card endpoint denies missing session, foreign origin, query traversal and unsupported methods (131.947922ms)
+✔ owned stop/status/start retains PostgreSQL history and volume data without rebuilding resources (2252.168867ms)
+✔ profile guards reject operator ports, tampered ownership and cleanup without exact confirmation (528.687085ms)
+ℹ tests 4
+ℹ pass 4
+ℹ fail 0
+ℹ skipped 0

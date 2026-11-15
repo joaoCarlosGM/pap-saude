@@ -1,0 +1,133 @@
+{
+  "functionalCodeCommit": "dfb7331e2faf196d5c4dcdf4525f2cab5f773745",
+  "base": "00a4ebabaa38a896561aa91d00c1089412d76c73",
+  "tests": [
+    {
+      "gate": "node-pap-id-protocols-premium",
+      "status": "PASS",
+      "passed": 107,
+      "failed": 0,
+      "skipped": 0,
+      "privateLog": "node-final.log",
+      "logSha256": "99c36e9b5320c9cd5c416d466dd50907fddbd5634c6accacc3d550de5f8ec245"
+    },
+    {
+      "gate": "security-unit-auth-mfa-rsc-edge",
+      "status": "PASS",
+      "passed": 24,
+      "failed": 0,
+      "skipped": 0,
+      "privateLog": "security-units.log",
+      "logSha256": "66aa778df25d48b33491cc7b473fc09a4e28160aea6892b237cee6e8ea4a4583"
+    },
+    {
+      "gate": "registry-pdf-adversarial",
+      "status": "PASS",
+      "passed": 2,
+      "failed": 0,
+      "skipped": 0,
+      "privateLog": "registry-tests.log",
+      "logSha256": "86b8672f1ebf2ffe2b65439b6c967ea5ce5551b3fdc508c6dad31671dae9dad6"
+    },
+    {
+      "gate": "postgresql-concurrency-resource-guards",
+      "status": "PASS",
+      "passed": 4,
+      "failed": 0,
+      "skipped": 0,
+      "privateLog": "database-regression.log",
+      "logSha256": "c42c7fac2a4730812af292149c787cfaa40c80eb7911ab8ee8921c0905991cb7"
+    },
+    {
+      "gate": "postgresql-full-restart",
+      "status": "PASS",
+      "passed": 1,
+      "failed": 0,
+      "skipped": 0,
+      "privateLog": "restart.log",
+      "logSha256": "d2db0d8916dbfcab697eabfd61dba681fd5fa092207dffa9502e1b433ba3adc5"
+    },
+    {
+      "gate": "private-session-expiration",
+      "status": "PASS",
+      "passed": 1,
+      "failed": 0,
+      "skipped": 0,
+      "privateLog": "private-session.log",
+      "logSha256": "2241ee8738a1ecf6009b12dae5d827c9c954eb413881963a0ff6451c9aa28ea6"
+    },
+    {
+      "gate": "browser-integrated-final",
+      "status": "PASS",
+      "passed": 22,
+      "failed": 0,
+      "skipped": 0,
+      "privateLog": "browser-final.log",
+      "logSha256": "16cf3625a37b3d2c949a08ac834cad2fc8d765c6d43ae18c8809ffe769a0de06"
+    }
+  ],
+  "httpsRuntime": "PASS (real TLS and Chromium; synthetic video separately)",
+  "typescript": "PASS",
+  "lint": {
+    "status": "PASS",
+    "errors": 0,
+    "inheritedWarnings": 4
+  },
+  "build": "PASS real Next webpack; portable dependencies",
+  "standalone": "PASS closed HTTP/RSC/private files and external-link denial",
+  "docker": {
+    "status": "PASS",
+    "scope": "runtime package from tested standalone and pinned base",
+    "canonicalMultistageBuild": "NOT RUN",
+    "trivy": "NOT RUN",
+    "published": false
+  },
+  "npmAudit": {
+    "production": {
+      "info": 0,
+      "low": 0,
+      "moderate": 10,
+      "high": 0,
+      "critical": 0,
+      "total": 10
+    },
+    "all": {
+      "info": 0,
+      "low": 1,
+      "moderate": 24,
+      "high": 14,
+      "critical": 0,
+      "total": 39
+    }
+  },
+  "remoteCI": {
+    "status": "NOT RUN",
+    "reason": "Candidate branch is absent from all existing push allowlists; no workflow or permission change."
+  },
+  "external": [
+    {
+      "gate": "Physical webcam/USB/rear Android/iPhone and WSL/Windows LAN",
+      "status": "NOT RUN"
+    },
+    {
+      "gate": "Institutional clinical review and public PDF distribution rights",
+      "status": "BLOCKED"
+    }
+  ],
+  "decision": {
+    "privateSyntheticAcceptance": "GO for operator evaluation; hardware acceptance pending",
+    "production": "NO-GO"
+  },
+  "preservation": {
+    "operatorLabsTouched": false,
+    "vpsTouched": false,
+    "operationalSourceChanged": false,
+    "operationalMigrationChanged": false
+  },
+  "evidenceReview": {
+    "knownSecretExactScan": "PASS (rechecked before staging)",
+    "images": 15,
+    "qrPayloads": 0,
+    "maskedPrivateImages": true
+  }
+}

@@ -1,0 +1,28 @@
+✔ password policy accepts a sufficiently long password (1.390105ms)
+✔ password policy rejects short passwords (0.554049ms)
+✔ Argon2id hashes and verifies a password (524.604893ms)
+✔ invalid password hashes fail closed (0.332472ms)
+✔ current Argon2 hash does not need rehash (185.125573ms)
+✔ secure tokens are unique (1.141387ms)
+✔ session token stores only its SHA-256 representation (0.386792ms)
+✔ SHA-256 is deterministic (0.124364ms)
+✔ safeEqual compares values safely (0.198503ms)
+✔ MFA secret round-trips through AES-256-GCM (2.271729ms)
+✔ ciphertext is versioned and contains key id (0.334185ms)
+✔ same secret produces different ciphertext (0.510795ms)
+✔ tampered ciphertext fails authentication (0.870216ms)
+✔ tampered authentication tag fails (0.434282ms)
+✔ different key id is rejected (0.33149ms)
+✔ missing encryption key fails closed (0.367764ms)
+✔ wrong key size fails closed (0.380362ms)
+✔ empty secrets are rejected (0.351149ms)
+✔ RSC prefetch accepts only the closed public transport metadata, never extra user records (7.315296ms)
+✔ RSC dynamic segment siblings and route identifiers cannot smuggle private fields (2.19129ms)
+✔ production interceptability is exactly false; dev flags, missing values and coercions are rejected (1.022151ms)
+✔ LAN edge rejects public/wildcard origins, operational routes and traversal without widening the allowlist (1.915622ms)
+✔ trusted HTTPS pairing, exact origin, Secure cookie, revocation, rate limiting and proxy header isolation (166.58522ms)
+✔ private backend accepts the exact TLS Origin only with its internal edge secret, never a forged proxy header (2.841181ms)
+ℹ tests 24
+ℹ pass 24
+ℹ fail 0
+ℹ skipped 0

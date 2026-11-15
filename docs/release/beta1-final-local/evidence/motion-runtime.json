@@ -1,0 +1,31 @@
+{
+  "status": "PASS",
+  "page": {
+    "duration": "0.26s",
+    "delay": "0s",
+    "name": "demo-motion_page-in__wEXhh"
+  },
+  "title": {
+    "duration": "0.26s",
+    "delay": "0s",
+    "name": "demo-motion_title-in__0ROVL"
+  },
+  "kpi": {
+    "duration": "0.36s",
+    "delay": "0s",
+    "name": "demo-motion_item-in__XzORM"
+  },
+  "lastKpi": {
+    "duration": "0.36s",
+    "delay": "0.455s",
+    "name": "demo-motion_item-in__XzORM"
+  },
+  "chart": {
+    "duration": "0.85s",
+    "delay": "0.2s",
+    "name": "demo-motion_bar-in__No6Te"
+  },
+  "measuredAnimations": 23,
+  "reducedMotion": "none",
+  "navigationErrors": 0
+}

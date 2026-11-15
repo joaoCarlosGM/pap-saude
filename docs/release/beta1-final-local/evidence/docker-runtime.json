@@ -1,0 +1,16 @@
+{
+  "status": "PASS",
+  "localImageId": "sha256:e00c01ca6251f083c27dfa9d72aaa9aa870b69ef09f3080b35363a369b4cbd54",
+  "runtimeFromTestedStandalone": true,
+  "basePinned": true,
+  "nonroot": true,
+  "readOnlyContainer": true,
+  "privateArtifactsAbsent": true,
+  "privateSecretsAbsent": true,
+  "filesInspected": 3939,
+  "httpAndRscPrivate404": true,
+  "unauthenticatedRedirectsToLogin": true,
+  "databaseUsed": false,
+  "imagePublished": false,
+  "canonicalMultistageBuild": false
+}

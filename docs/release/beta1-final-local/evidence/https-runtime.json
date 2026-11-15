@@ -1,0 +1,16 @@
+{
+  "status": "PASS",
+  "certificateVerifiedWithExplicitCA": true,
+  "browserCertificateSPKIPinned": true,
+  "secureContext": true,
+  "temporaryPairing": true,
+  "privateConsentViaTLS": true,
+  "exactOriginalPdfBytes": true,
+  "newPatientAfterRestart": true,
+  "restoredCard": true,
+  "restoredPdfHash": true,
+  "operationalRoutesDenied": true,
+  "logoutRevokes": true,
+  "javascriptErrors": 0,
+  "physicalDevice": false
+}

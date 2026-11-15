@@ -1,0 +1,127 @@
+{
+  "status": "PASS",
+  "images": 15,
+  "qrPayloads": 0,
+  "files": [
+    {
+      "file": "biblioteca-1440.png",
+      "width": 1440,
+      "height": 1000,
+      "bytes": 225747,
+      "sha256": "027d54729727326bc8f9332085aca52bd0c154063a22547d9b999d8cd47492d5",
+      "decodedQr": false
+    },
+    {
+      "file": "biblioteca-390.png",
+      "width": 390,
+      "height": 1000,
+      "bytes": 70663,
+      "sha256": "284eccea6c9df422bc16750cee9a1a3260edb71698c7b824af1dba2999d83efc",
+      "decodedQr": false
+    },
+    {
+      "file": "camera-simulated.png",
+      "width": 1280,
+      "height": 720,
+      "bytes": 119595,
+      "sha256": "4adfd6cdc9dd2e86896e22e8d4fa9fce0af71b89cf81bf32d21b6840e1ce2b67",
+      "decodedQr": false
+    },
+    {
+      "file": "documents-1440.png",
+      "width": 1440,
+      "height": 900,
+      "bytes": 169412,
+      "sha256": "0891e9e2d93f12eac5d546f8976a83b174e4e403307bfb2e39d001237211bc17",
+      "decodedQr": false
+    },
+    {
+      "file": "documents-390.png",
+      "width": 390,
+      "height": 900,
+      "bytes": 61588,
+      "sha256": "49206ad0cd24eea99d2a0b18e6d66df7297aaa1b660f6d3dc714180f5bce08bb",
+      "decodedQr": false
+    },
+    {
+      "file": "mobile-https-documents.png",
+      "width": 390,
+      "height": 844,
+      "bytes": 61574,
+      "sha256": "4d6af93fd53ee2d695965183dff9f16e6dabb00fee54e07e490750cb98590fe9",
+      "decodedQr": false
+    },
+    {
+      "file": "premium-dashboard-1440.png",
+      "width": 1440,
+      "height": 1000,
+      "bytes": 215107,
+      "sha256": "52e84b0769f580699fca0d6c989dedd58b7e6eab111c6c4c371d7fba1b743aa3",
+      "decodedQr": false
+    },
+    {
+      "file": "protocol-flow-original-1440.png",
+      "width": 1440,
+      "height": 1000,
+      "bytes": 77870,
+      "sha256": "9c69f858ba23cd095737b79b6fe3cc812c99c1d627cd057deadcec1d2a7d34eb",
+      "decodedQr": false
+    },
+    {
+      "file": "protocol-hemorragia-pos-parto-checklist-1440.png",
+      "width": 1440,
+      "height": 1302,
+      "bytes": 231575,
+      "sha256": "f5a10a1b787f366b72e75eb10d29edd92a6ed8f69b67087a9cf58476f63a3ae4",
+      "decodedQr": false
+    },
+    {
+      "file": "protocol-overview-1440-light.png",
+      "width": 1440,
+      "height": 1000,
+      "bytes": 245479,
+      "sha256": "07b20ad1519e0734576a477abd86bc05b226fde6cf293d0a038ccc489c18111a",
+      "decodedQr": false
+    },
+    {
+      "file": "protocol-overview-390-dark.png",
+      "width": 390,
+      "height": 1000,
+      "bytes": 91684,
+      "sha256": "e3c48b1b620cf8b65b56aecfac17e420a810dc5cb5849331d89609d16b786311",
+      "decodedQr": false
+    },
+    {
+      "file": "protocol-sepse-obstetrica-checklist-390.png",
+      "width": 390,
+      "height": 2463,
+      "bytes": 95334,
+      "sha256": "18fb4532515e35ebcbe09e533823f62ca18f84c1061aaa0b2fec90503aca7349",
+      "decodedQr": false
+    },
+    {
+      "file": "protocol-sindromes-hipertensivas-gestacao-checklist-1440.png",
+      "width": 1440,
+      "height": 1279,
+      "bytes": 221075,
+      "sha256": "e3e971c1b7ebac58d60f875f502fcf9e2ec74660fe69e7b31a4ecc46f40ce4e7",
+      "decodedQr": false
+    },
+    {
+      "file": "protocol-sourced-cards-1440-light.png",
+      "width": 1440,
+      "height": 1000,
+      "bytes": 237740,
+      "sha256": "601d093d09c986431844181b92080c2a857bce934b228cb6069719106500f08a",
+      "decodedQr": false
+    },
+    {
+      "file": "protocol-sourced-cards-390-light.png",
+      "width": 390,
+      "height": 1000,
+      "bytes": 94276,
+      "sha256": "dd612de862a5286ac8a569763b9a64d473bf36af87a9472d990f54189a90cab8",
+      "decodedQr": false
+    }
+  ]
+}

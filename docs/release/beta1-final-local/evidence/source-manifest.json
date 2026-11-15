@@ -1,0 +1,184 @@
+{
+  "base": "00a4ebabaa38a896561aa91d00c1089412d76c73",
+  "functionalCodeCommit": "dfb7331e2faf196d5c4dcdf4525f2cab5f773745",
+  "codeAndTestPaths": 44,
+  "files": [
+    {
+      "path": "scripts/pap-id/review-lab.mts",
+      "sha256": "964214c05c215203db309f3a3e2a748351b34e55ca1814bdb7481d155f162121"
+    },
+    {
+      "path": "scripts/private-review/card-api.ts",
+      "sha256": "e4ed4faca4bb330b2a8c8c1a4804f6305dd591c9d028befaab0799f2b03dfeda"
+    },
+    {
+      "path": "scripts/private-review/card-store.ts",
+      "sha256": "7f6c1763bb8e50d9ea8e4dde4f26772a4f81545bc7a958b321fa51d95fc4c1a8"
+    },
+    {
+      "path": "scripts/private-review/documents.ts",
+      "sha256": "493861ca77cf44b0d98d62465bbcc746df4c1f28810369190d371da916380d68"
+    },
+    {
+      "path": "scripts/private-review/mobile-edge.ts",
+      "sha256": "e1a5436474dcebfc9872dbbd96f67d277e429a4afae47db41d0dd25107f37144"
+    },
+    {
+      "path": "scripts/private-review/registry-api.ts",
+      "sha256": "fe6c849d9f084c23ca0c2af3913d8c4cc3d8843876c0c70aab0032bb78a6a3d7"
+    },
+    {
+      "path": "scripts/private-review/registry-store.ts",
+      "sha256": "d5f17849052613f820ebd683306477bc8605c7a5ecf2ae18214fb6cf87fe9387"
+    },
+    {
+      "path": "scripts/private-review/sql/002_registry_documents.sql",
+      "sha256": "693167bca297e82092909d7963d4c2a1629941f8eea0a53c51d3a8263167474a"
+    },
+    {
+      "path": "src/features/vitrine-premium/components/demo/CardServiceContext.tsx",
+      "sha256": "5a32b5a6a09ec25382c684b28f6c81399e6ab16325362f52cf9fdfee0b303674"
+    },
+    {
+      "path": "src/features/vitrine-premium/components/demo/DemoPatientsView.tsx",
+      "sha256": "59eb8328cda45f4882b79c13dae778a94136056e50a560e6896fe779d13ae3c7"
+    },
+    {
+      "path": "src/features/vitrine-premium/components/demo/DemoProvider.tsx",
+      "sha256": "ee93c6e1767837e821fe587f1702975b027a6339a2ee0523ec12012f5b277e26"
+    },
+    {
+      "path": "src/features/vitrine-premium/components/pacientes/DemoPatientView.tsx",
+      "sha256": "53da2f781d45cd1b6ecdb57a7e65894a7c9c114762809c2ce605716927a05aea"
+    },
+    {
+      "path": "src/features/vitrine-premium/components/pacientes/NewSyntheticPatient.tsx",
+      "sha256": "22950ce54b92e44fbb9a22682858fb712f1ff238b4380ee5a3def3aecf8032ac"
+    },
+    {
+      "path": "src/features/vitrine-premium/components/pacientes/PatientCardIssuer.tsx",
+      "sha256": "26a6733db414a28213f958afa11df9e65e27433fe02489fa65254e8bd3ddcad6"
+    },
+    {
+      "path": "src/features/vitrine-premium/components/pacientes/PatientDocuments.tsx",
+      "sha256": "5d5f5ab00ab71ef04db82a8b369b254c431732bb734365f0914fc9063c56e7e4"
+    },
+    {
+      "path": "src/features/vitrine-premium/components/pacientes/PrivatePatientDocuments.tsx",
+      "sha256": "f8fbf4d62361df2c89d982bbb1a6db867fd07249fc924c97e36a6b205bbdd2cf"
+    },
+    {
+      "path": "src/features/vitrine-premium/components/protocolos/OriginalPdfViewer.tsx",
+      "sha256": "218786ec693daa355de35b379a91ee889c7817075858ed6103d372056a125b47"
+    },
+    {
+      "path": "src/features/vitrine-premium/components/protocolos/ProtocolDetail.tsx",
+      "sha256": "2bc30532180bb352be68ab674c72dcd7579d7ccd87d7a8c984e27760975051c8"
+    },
+    {
+      "path": "src/features/vitrine-premium/components/protocolos/protocols.module.css",
+      "sha256": "808b239b8d1d9323260d706db31141ee6c1b0017a046d4d44a80308d33bcce85"
+    },
+    {
+      "path": "src/features/vitrine-premium/components/registro/CameraScanner.tsx",
+      "sha256": "2b0a84d9eb04e6e6fc19309d06bd5509293acf51dde704ca3a5b8dfad1dc01fa"
+    },
+    {
+      "path": "src/features/vitrine-premium/components/registro/steps/IdentificationStep.tsx",
+      "sha256": "22ecb2188e73df3ba6b72d0bf25056b7bd064d29c447fe4b43cf6a0b22edfbe1"
+    },
+    {
+      "path": "src/features/vitrine-premium/lib/pap-id.ts",
+      "sha256": "e5adaf4696082abc672bf5e12f74fefa74feef872190771994fd46db224c19fa"
+    },
+    {
+      "path": "src/features/vitrine-premium/lib/protocol-display.ts",
+      "sha256": "51d06858753e61f689c3745a47cb6ed7a01a2009fb575843d3991b2aa96805b1"
+    },
+    {
+      "path": "src/features/vitrine-premium/lib/review-registry.ts",
+      "sha256": "aed6609d538f86b7ef7b8e83264047c77728176c184f8ff123d1f7a87e7a0e64"
+    },
+    {
+      "path": "tests/pap-id/docker-runtime-boundary.py",
+      "sha256": "1b31b613a7cf3f01a85303925fa4383b9a029f7e0f6c8f2a2d4b0f0afaf6ab8a"
+    },
+    {
+      "path": "tests/pap-id/final-acceptance.spec.ts",
+      "sha256": "692da9fb7fc4974e68662f7a6ba959ae8cafafadaacbc018c38c8513731a79a6"
+    },
+    {
+      "path": "tests/pap-id/final-registry.test.mts",
+      "sha256": "32b943d106ad63026c87fc8d3ad1e50cba2faf1dee1552b0136e4bed4165c8f6"
+    },
+    {
+      "path": "tests/pap-id/final-visual.spec.ts",
+      "sha256": "41e9ead3e7cd91ea2b2af52b397e1205b695536bd90b6da3fc6e47a614aec777"
+    },
+    {
+      "path": "tests/pap-id/fixture/PrivateReviewBridge.tsx",
+      "sha256": "1b6f6113135052ec6ac5981a42e309b5c7c5623622a02408ae3a4ba1e4d223db"
+    },
+    {
+      "path": "tests/pap-id/fixture/app/homologacao/pacientes/[id]/carteirinhas/[cardId]/route.ts",
+      "sha256": "7b47ba564f569aeaa429b7c64935380d47a4af081aa11d6e562c948a1b813760"
+    },
+    {
+      "path": "tests/pap-id/fixture/app/homologacao/pacientes/[id]/documentos/[documentId]/route.ts",
+      "sha256": "b73a0794c6ae4bee9387d14bdb1f71d4125f18d022814df704e27750da694a6b"
+    },
+    {
+      "path": "tests/pap-id/fixture/app/homologacao/pacientes/[id]/documentos/route.ts",
+      "sha256": "1350fa7ae95b25d673bc49b8e30d5e145b165c9332a126374607cefa495ea25d"
+    },
+    {
+      "path": "tests/pap-id/fixture/app/vitrine/pacientes/[id]/page.tsx",
+      "sha256": "de2c7558b2fc42267e106b19557f4e48bd40235442c7b0e8fa06ae1dab038110"
+    },
+    {
+      "path": "tests/pap-id/mobile-edge.test.mts",
+      "sha256": "b9079ba6a07e9c5bac9ae92cf1e6261b9490fa94a8be5195bd5ed6a74c6f5c1a"
+    },
+    {
+      "path": "tests/pap-id/mobile-runtime.mts",
+      "sha256": "b0a6045869b952a38fe875deb8497428af16e73cef9761ba829698856382bcdb"
+    },
+    {
+      "path": "tests/pap-id/playwright.config.ts",
+      "sha256": "b776d230942e731e58a21f12a9600ce7476e066c575450c8d8cabd4efb3399f2"
+    },
+    {
+      "path": "tests/pap-id/post-homologation.spec.ts",
+      "sha256": "453aa1bbb5e5dd9e64318704ed3f41bce0a163c16712e9e6073ecff9a9826e73"
+    },
+    {
+      "path": "tests/pap-id/private-session.test.mts",
+      "sha256": "0dbf93b91ee6a1737cb78c0a4c95eb4f95c3fd57b26b85ff5e3407d5a10458f1"
+    },
+    {
+      "path": "tests/pap-id/production-boundary.mjs",
+      "sha256": "183cf034eff58c2c2b5741a2fd376a90d2c8905004c951a417ce3e74a565b896"
+    },
+    {
+      "path": "tests/pap-id/restart.test.mts",
+      "sha256": "f740d65c5b5024cfc87b91647d21f69fa63b2f6ae21cfcd6f570ec640f00a5ec"
+    },
+    {
+      "path": "tests/pap-id/scan-evidence.mjs",
+      "sha256": "89a4d5c66d4ddb547bb3a87ea6041ad993072714ee3502a4921657db203307ec"
+    },
+    {
+      "path": "tests/pap-id/synthetic-pdf.ts",
+      "sha256": "52721d7a1f5958294142e67653ed3f8c0090b43393fc975ddf0e19506a9e600f"
+    },
+    {
+      "path": "tests/protocols/catalog.test.mjs",
+      "sha256": "99f7405c997a5fb584f99d30ea5bde12ebdacbcc3fe0c40310e90195ec29e97f"
+    },
+    {
+      "path": "tests/protocols/run-browser.mjs",
+      "sha256": "dbf31d069e6662db2d8293424a09b814a1a115e8689de80ef2a607d44ac799ce"
+    }
+  ],
+  "contentFingerprint": "73f0945790c6dfa04a73117c3978a842e8e3586d9783740aff6ff2d0d8c68795"
+}

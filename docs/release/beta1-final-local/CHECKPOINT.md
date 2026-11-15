@@ -14,7 +14,7 @@ Uma agente; testes dirigidos; sem VPS, merge, deploy ou alterações de bancos/l
 - [x] M1: origem HTTPS LAN exata, autenticação temporária, expiração/revogação, documentação.
 - [x] R1/S1: execução dirigida, responsividade, acessibilidade, regressões e isolamento standalone/Docker.
 - [x] V2: pacote e checklist de publicação futura, sem execução.
-- [ ] Fechamento: inventário/segredos, commits/push somente na candidata e homologação humana.
+- [x] Fechamento: inventário/segredos, commits/push somente na candidata e homologação humana.
 
 Estado: funcionalidades implementadas; consolidar evidência, inventário e entrega para homologação humana.
 Câmera/dispositivos físicos e confiança de certificado em Android/iPhone exigem validação externa.
@@ -36,3 +36,6 @@ Imagem Docker runtime da base pinada + standalone testado: PASS,3939arquivos ins
 TypeScript PASS; lint geral sem erros,4avisos herdados em testes clínicos não modificados.
 Auditoria: produção0HIGH/0CRITICAL e10MODERATE; completa14HIGH/24MODERATE/1LOW (herdados, sem mudança de lockfile).
 CI remoto integral NOT RUN: candidata não consta nas allowlists vigentes; nenhum workflow/infra foi alterado.
+
+Fechamento: browser final integral22/22 PASS no código funcional dfb7331. Sessão privada expirada1/1 PASS.
+Manifesto/capturas15 sem QR, guias e checklists consolidados. Aguardar somente homologação humana; nenhum deploy/PR.

@@ -1,6 +1,6 @@
 # Homologação privada no WSL — candidata final
 
-Este roteiro inicia **somente a Vitrine sintética de homologação**, com os mesmos componentes Premium e um adaptador PostgreSQL privado. Não é deploy, não substitui o PAP operacional e não autentica contas reais. Não executar no checkout/laboratório da porta3600 nem apontar DATABASE_URL para ele. Não copiar contas, dados, sessões, MFA ou segredos dos outros ambientes.
+Este roteiro inicia **somente a Vitrine sintética de homologação**, com os mesmos componentes Premium e um adaptador PostgreSQL privado. Não é deploy, não substitui o PAP operacional e não autentica contas reais. Não executar no checkout/laboratório da porta3600 nem apontar DATABASE_URL para ele. Não copiar contas, dados, sessões, MFA, arquivos.env ou segredos dos outros ambientes. Se o launcher recusar LOCAL_SYNTHETIC_ONLY, mantenha o guard: use um terminal sem configuração de produção e confira o checkout novo.
 
 ## Preparar um checkout separado
 
