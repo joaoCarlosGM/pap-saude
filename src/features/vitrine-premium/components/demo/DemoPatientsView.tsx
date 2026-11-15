@@ -1,4 +1,5 @@
 "use client"
+import NewSyntheticPatient from "../pacientes/NewSyntheticPatient"
 import PatientList from "@/features/vitrine-premium/components/pacientes/PatientList"
 
 import { useDemo } from "@/features/vitrine-premium/components/demo/DemoProvider"
@@ -17,6 +18,7 @@ export default function PacientesPage() {
         </p>
       </header>
 
+      <div className="mb-4"><NewSyntheticPatient/></div>
       <PatientList
         patients={patients}
       />

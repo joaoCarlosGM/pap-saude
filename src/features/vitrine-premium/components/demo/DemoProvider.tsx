@@ -4,6 +4,7 @@ import { dashboardFrom, initialDemo, patientViews, saveDemo, type DemoState } fr
 import { editDemoProfile, type DemoProfile } from '@/features/vitrine-premium/lib/demo/profile'
 import type { RegistrationData } from '@/features/vitrine-premium/types/registration'
 
+import {useCardService} from './CardServiceContext'
 import {addSyntheticIdentity,mergeDemoLedgers,type DemoLedger,type SyntheticIdentity} from '@/features/vitrine-premium/lib/pap-id'
 
 type DemoContext = {
@@ -33,7 +34,9 @@ type DemoContext = {
 const Context = createContext<DemoContext | null>(null)
 
 export function DemoProvider({ children }: { children: React.ReactNode }) {
+  const registry=useCardService()
   const [state, setState] = useState(initialDemo)
+  const hydrate=(value:DemoState)=>(registry?.people||[]).reduce((current,identity)=>addSyntheticIdentity(current,identity),value)
   const [identityLedgers,setIdentityLedgers]=useState<DemoLedger[]>([])
   const ledgerRef=useRef<DemoLedger[]>([])
   const identityLedger=identityLedgers.at(-1)||null
@@ -47,7 +50,7 @@ export function DemoProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => { ready.current?.setAttribute('data-demo-ready', 'true') }, [])
   return <Context.Provider value={{
     identityLedger,identityLedgers,importIdentityLedger: data=>{const next=mergeDemoLedgers(ledgerRef.current,data);ledgerRef.current=next;setIdentityLedgers(next)},registerSyntheticIdentity: identity=>setState(current=>addSyntheticIdentity(current,identity)),
-    state, save: data => setState(current => saveDemo(current, data)),
+    state:hydrate(state), save: data => setState(current => saveDemo(hydrate(current), data)),
     reset: () => { setState(initialDemo());setIdentityLedgers([]);ledgerRef.current=[]; setTourIndex(null); window.dispatchEvent(new Event('pap:vitrine-reset')) },
     updateProfile: patch => setState(current => ({ ...current, profile: editDemoProfile(current.profile, patch) })),
     mainMenuOpen, conversationMenuOpen,

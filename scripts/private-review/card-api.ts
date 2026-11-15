@@ -1,5 +1,5 @@
 import {authorized} from './documents';import {readProfile,connect,ledgers,issue,revoke} from './card-store';
-import {cardImage} from './card-image';
+import {cardImage} from './card-image';import {people,cardHistory,createPerson} from './registry-store';
 const headers={'Cache-Control':'private, no-store','X-Content-Type-Options':'nosniff','Referrer-Policy':'no-referrer'}
 const rates=new Map<string,{count:number;until:number}>()
 export async function cardResponse(request:Request){
@@ -11,10 +11,11 @@ export async function cardResponse(request:Request){
  const key=request.headers.get('cookie')||'';const rate=rates.get(key);if(rate&&rate.until>Date.now()&&rate.count>=60)return Response.json({error:'LOCAL_RATE_LIMIT'},{status:429,headers});if(!rate||rate.until<=Date.now())rates.set(key,{count:1,until:Date.now()+60000});else rate.count++
  let pool:ReturnType<typeof connect>|undefined
  try{const p=await readProfile(process.env.PAP_ID_REVIEW_PROFILE);pool=connect(p)
- if(request.method==='GET')return Response.json({ledgers:await ledgers(pool)},{headers})
+ if(request.method==='GET')return Response.json({ledgers:await ledgers(pool),people:await people(pool),history:await cardHistory(pool)},{headers})
  if(Number(request.headers.get('content-length')||0)>2048)return new Response(null,{status:413,headers});const raw=await request.text();if(raw.length>2048)return new Response(null,{status:413,headers});const data=JSON.parse(raw)
- if(data.action==='revoke'&&Object.keys(data).sort().join(',')==='action,subject'&&/^[a-f0-9-]{36}$/.test(data.subject)){await revoke(pool,data.subject);return Response.json({ledgers:await ledgers(pool)},{headers})}
+ if(data.action==='register'&&Object.keys(data).sort().join(',')==='action,input,operationId'){const patient=await createPerson(pool,data.input,data.operationId);return Response.json({patient},{status:201,headers})}
+ if(data.action==='revoke'&&Object.keys(data).sort().join(',')==='action,subject'&&/^[a-f0-9-]{36}$/.test(data.subject)){await revoke(pool,data.subject);return Response.json({ledgers:await ledgers(pool),people:await people(pool),history:await cardHistory(pool)},{headers})}
  if(data.action!=='issue'||Object.keys(data).sort().join(',')!=='action,operationId,patientId,token')return new Response(null,{status:400,headers})
- const ledger=await issue(pool,data.patientId,data.operationId,data.token);return Response.json({ledger,png:'data:image/png;base64,'+(await cardImage(ledger,data.token)).toString('base64')},{headers})
+ const ledger=await issue(pool,data.patientId,data.operationId,data.token,p.cardKey);return Response.json({ledger,png:'data:image/png;base64,'+(await cardImage(ledger,data.token)).toString('base64')},{headers})
  }catch{return Response.json({error:'LOCAL_CARD_OPERATION_UNCONFIRMED'},{status:409,headers})}finally{await pool?.end()}
 }

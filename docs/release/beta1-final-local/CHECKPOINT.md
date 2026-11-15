@@ -7,8 +7,8 @@ Uma agente; testes dirigidos; sem VPS, merge, deploy ou alterações de bancos/l
 - [x] G0: Git limpo da origem; nova worktree/branch; documentação obrigatória lida.
 - [x] G0:15 PNGs inspecionados; inventário de dimensões/hashes em evidence/reference-assets.json.
 - [x] V1 inventário: motion/shell/dashboard/premium idênticos ao SHA de referência0e0a2d8.
-- [ ] DB1/ID2: cadastro sintético livre controlado, persistência e idempotência.
-- [ ] D1: cartões recuperáveis, PDFs privados versionados/arquivados e auditoria demonstrativa.
+- [x] DB1/ID2: cadastro sintético livre controlado, persistência e idempotência.
+- [x] D1: cartões recuperáveis, PDFs privados versionados/arquivados e auditoria demonstrativa.
 - [ ] ID1: webcam/QR, múltiplos candidatos, permissão e encerramento seguro.
 - [ ] P1/P2: composição visual das referências, fontes reais, PDF/fluxo/checklist.
 - [ ] M1: origem HTTPS LAN exata, autenticação temporária, expiração/revogação, documentação.
@@ -18,3 +18,7 @@ Uma agente; testes dirigidos; sem VPS, merge, deploy ou alterações de bancos/l
 
 Próximo passo: estender exclusivamente o adaptador PostgreSQL privado e o contrato sintético.
 Câmera/dispositivos físicos e confiança de certificado em Android/iPhone exigem validação externa.
+
+Slice registro/documentos: Node2/2 PASS; browser dirigido1/1 PASS; TypeScript/lint PASS.
+Upgrade aditivo no perfil próprio anterior, sem recriar DB/container/volume.
+Próximo: câmera, HTTPS móvel e revisão visual. Persistência após restart completo ainda será revalidada no gate final.

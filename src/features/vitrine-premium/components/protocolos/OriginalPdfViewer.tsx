@@ -1,8 +1,8 @@
 'use client'
 import {useEffect,useRef,useState} from 'react'
-import type {PrivateDocument} from './OriginalDocumentContext'
+export type PdfViewerDocument={url:string;downloadUrl:string;pages:number;filename:string;bytes:number;version:string;sha256:string}
 import styles from './protocols.module.css'
-export default function OriginalPdfViewer({document:source,initialPage=1}:{document:PrivateDocument;initialPage?:number}){
+export default function OriginalPdfViewer({document:source,initialPage=1}:{document:PdfViewerDocument;initialPage?:number}){
  const canvas=useRef<HTMLCanvasElement>(null),[page,setPage]=useState(initialPage),[zoom,setZoom]=useState(1),[loading,setLoading]=useState(true),[error,setError]=useState(''),[text,setText]=useState(''),[showText,setShowText]=useState(false)
  useEffect(()=>{
   let disposed=false,task:import('pdfjs-dist').PDFDocumentLoadingTask|undefined,render:import('pdfjs-dist').RenderTask|undefined
