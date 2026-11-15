@@ -1,0 +1,107 @@
+[
+  {
+    "file": "docs/protocolos/referencias/01-pre-eclampsia-conceito.png",
+    "width": 1672,
+    "height": 941,
+    "sha256": "fae0fec2f83a9ec1803760f4b7953dfdab7f13c3006ef78050b27ef15de6ca11",
+    "visuallyInspected": true
+  },
+  {
+    "file": "docs/protocolos/referencias/02-sepse-conceito.png",
+    "width": 1672,
+    "height": 941,
+    "sha256": "4c5dda99be60f704649352c54fb14ad0383c4dc3b06a7850519ed81184548bec",
+    "visuallyInspected": true
+  },
+  {
+    "file": "docs/protocolos/referencias/03-hpp-fluxograma.png",
+    "width": 1672,
+    "height": 941,
+    "sha256": "2efe1fc31fc70befa2e0fcb3f0ee4d39b79e3853e93be440ce0c3098dd7f82fe",
+    "visuallyInspected": true
+  },
+  {
+    "file": "docs/protocolos/referencias/04-pre-eclampsia-visao-geral.png",
+    "width": 1672,
+    "height": 941,
+    "sha256": "32c657fd753476d3ae9e9fd27471cde2e8b11fe896a247fdf4d37b55539d060b",
+    "visuallyInspected": true
+  },
+  {
+    "file": "docs/protocolos/referencias/05-pre-eclampsia-checklist.png",
+    "width": 1672,
+    "height": 941,
+    "sha256": "66f368ab18a2a9be37adb7ea86bdd9db94d684063a2e9c2e36adb07203ceed60",
+    "visuallyInspected": true
+  },
+  {
+    "file": "docs/protocolos/referencias/06-hpp-visao-geral.png",
+    "width": 1672,
+    "height": 941,
+    "sha256": "4bc76c466852ac3dbffdd80adca3d2b745ec27b0d28bf4df4e25b910671bb178",
+    "visuallyInspected": true
+  },
+  {
+    "file": "docs/protocolos/referencias/07-hpp-checklist.png",
+    "width": 1672,
+    "height": 941,
+    "sha256": "73d06c31300afa7ddb727d0821e1bc8a8686facf49400920164dd1757b6d8823",
+    "visuallyInspected": true
+  },
+  {
+    "file": "docs/protocolos/referencias/08-sepse-visao-geral.png",
+    "width": 1672,
+    "height": 941,
+    "sha256": "ce79538bf368bbcd5e7e56f3e63fa43b85635f564f65f2b6d5a0e27962e1d178",
+    "visuallyInspected": true
+  },
+  {
+    "file": "docs/protocolos/referencias/09-sepse-checklist.png",
+    "width": 1672,
+    "height": 941,
+    "sha256": "3c63822810b3b8daa17ee30f2bf504e26617c5d76d490092849ca2351ab7a7bf",
+    "visuallyInspected": true
+  },
+  {
+    "file": "docs/design/pap-id-v1/images/00-referencia-original.png",
+    "width": 1620,
+    "height": 935,
+    "sha256": "413751998604f85aacd7cc2b211f5c4f57da416a64a0c45927eb3ede7b0c48e1",
+    "visuallyInspected": true
+  },
+  {
+    "file": "docs/design/pap-id-v1/images/01-identificacao-cpf-qr.png",
+    "width": 1672,
+    "height": 941,
+    "sha256": "000c2b3eb593fd79f274cbbf22cbf4b992136c8e32782aa7a8e851135ab8d977",
+    "visuallyInspected": true
+  },
+  {
+    "file": "docs/design/pap-id-v1/images/02-validacao-documental.png",
+    "width": 1448,
+    "height": 1086,
+    "sha256": "520c9a9fdf2fa111ae6f6342c7bffdfb340eb82b9e06e04567d06bc5b0db4bdc",
+    "visuallyInspected": true
+  },
+  {
+    "file": "docs/design/pap-id-v1/images/03-nao-encontrada.png",
+    "width": 1448,
+    "height": 1086,
+    "sha256": "073454cf3b42d5e3edc22b01000e6efcef3a44ccf8774d099df5fee9d69869e2",
+    "visuallyInspected": true
+  },
+  {
+    "file": "docs/design/pap-id-v1/images/04-validada-acoes.png",
+    "width": 1448,
+    "height": 1086,
+    "sha256": "1bbe4080eb58e1fac56ca376ed47ab8a5241fa0ecab434f2ca6380c5e57a5372",
+    "visuallyInspected": true
+  },
+  {
+    "file": "docs/design/pap-id-v1/images/05-resumo-clinico-expandido.png",
+    "width": 1664,
+    "height": 945,
+    "sha256": "485cf70fc7e525ee4214c81661aa49c3f63078d2e4d4813dc45ff83531527820",
+    "visuallyInspected": true
+  }
+]
