@@ -35,7 +35,7 @@ test('fourth protocol is accepted by data alone and uses the same renderer and f
  const html=render(React.createElement(Page,{protocols:extended,location:{view:'detail',slug:fourth.slug,tab:'visao-geral'}}));assert.ok(html.includes(fourth.title));assert.ok(html.includes('Tópico adicional'));assert.equal((html.match(/role="tab"/g)||[]).length,4);assert.ok(!catalog.some(p=>p.slug===fourth.slug));
 });
 test('SSR preserves explicit missing PDF and disables every document action without fake downloads',()=>{
- for(const p of catalog){const html=render(React.createElement(Page,{location:{view:'detail',slug:p.slug,tab:'documento-original'}}));assert.ok(html.includes('PDF original indisponível'));assert.equal((html.match(/disabled=""/g)||[]).length,2);assert.ok(!/download=|href="[^"]*\.pdf|<iframe|<embed/i.test(html));assert.ok(html.includes('não validado'));}
+ for(const p of catalog){const html=render(React.createElement(Page,{location:{view:'detail',slug:p.slug,tab:'documento-original'}}));assert.ok(html.includes('PDF original indisponível'));assert.equal((html.match(/disabled=""/g)||[]).length,4);assert.ok(!/download=|href="[^"]*\.pdf|<iframe|<embed/i.test(html));assert.ok(html.includes('não validado'));}
 });
 test('loading, genuine empty catalogue, error and missing-data states render without false success',()=>{
  for(const [props,text]of [[{state:'loading'},'Carregando biblioteca'],[{state:'error'},'Catálogo indisponível'],[{protocols:[]},'Nenhum documento em preparação'],[{location:{view:'detail',slug:'absent',tab:'checklist'}},'Protocolo não encontrado']])assert.ok(render(React.createElement(Page,props)).includes(text));

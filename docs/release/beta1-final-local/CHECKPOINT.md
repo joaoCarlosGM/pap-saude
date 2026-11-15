@@ -10,22 +10,29 @@ Uma agente; testes dirigidos; sem VPS, merge, deploy ou alterações de bancos/l
 - [x] DB1/ID2: cadastro sintético livre controlado, persistência e idempotência.
 - [x] D1: cartões recuperáveis, PDFs privados versionados/arquivados e auditoria demonstrativa.
 - [x] ID1: webcam/QR, múltiplos candidatos, permissão e encerramento seguro.
-- [ ] P1/P2: composição visual das referências, fontes reais, PDF/fluxo/checklist.
+- [x] P1/P2: composição visual das referências, fontes reais, PDF/fluxo/checklist.
 - [x] M1: origem HTTPS LAN exata, autenticação temporária, expiração/revogação, documentação.
-- [ ] R1/S1: execução dirigida, responsividade, acessibilidade, regressões e isolamento standalone/Docker.
-- [ ] V2: pacote e checklist de publicação futura, sem execução.
+- [x] R1/S1: execução dirigida, responsividade, acessibilidade, regressões e isolamento standalone/Docker.
+- [x] V2: pacote e checklist de publicação futura, sem execução.
 - [ ] Fechamento: inventário/segredos, commits/push somente na candidata e homologação humana.
 
-Próximo passo: estender exclusivamente o adaptador PostgreSQL privado e o contrato sintético.
+Estado: funcionalidades implementadas; consolidar evidência, inventário e entrega para homologação humana.
 Câmera/dispositivos físicos e confiança de certificado em Android/iPhone exigem validação externa.
 
 Slice registro/documentos: Node2/2 PASS; browser dirigido1/1 PASS; TypeScript/lint PASS.
 Upgrade aditivo no perfil próprio anterior, sem recriar DB/container/volume.
-Próximo: câmera, HTTPS móvel e revisão visual. Persistência após restart completo ainda será revalidada no gate final.
+Persistência após restart completo revalidada; câmera, HTTPS e revisão visual implementados e testados.
 
 Slice câmera/HTTPS: browser câmera2/2 PASS; HTTPS completo PASS com CA explícita e Chromium pinado.
 TLS: pareamento, Secure cookie, origem, PDFs originais, cadastro/card/PDF pós-restart, logout e negativas operacionais PASS.
 Unidades de segurança24/24 PASS (inclui edge3); Node PAP-ID/Protocolos/Premium107/107 PASS.
 Restart PostgreSQL próprio1/1 PASS, comparação integral das linhas e hashes.
-Browser integrado em andamento: dois testes novos de evidência precisam ajuste (sentinela oculta deve usar attached; Escape em fullscreen). Regressores existentes já executados seguem preservados.
+Browser:19/22 passaram na execução inicial; três falhas localizadas corrigidas e3/3 PASS dirigidos. Sentinela oculta usa attached; contagem aguarda hidratação real; Escape sai da tela cheia. Matriz visual repetida1/1 PASS. Nenhuma asserção removida.
 Dispositivos físicos, confiança da CA e encaminhamento WSL/Windows continuam NOT RUN externo.
+
+Build real webpack portátil PASS, usando as mesmas dependências materializadas (sem reinstalação).
+Gate standalone agora rejeita links externos; HTTP/RSC privados404 e redirect sem sessão PASS.
+Imagem Docker runtime da base pinada + standalone testado: PASS,3939arquivos inspecionados, sem perfil/segredos/PDFs privados, não publicada. Não substitui rebuild multistage/Trivy remoto.
+TypeScript PASS; lint geral sem erros,4avisos herdados em testes clínicos não modificados.
+Auditoria: produção0HIGH/0CRITICAL e10MODERATE; completa14HIGH/24MODERATE/1LOW (herdados, sem mudança de lockfile).
+CI remoto integral NOT RUN: candidata não consta nas allowlists vigentes; nenhum workflow/infra foi alterado.
