@@ -1,7 +1,7 @@
 # PAP Saúde Beta 1 — Requisitos pós-homologação visual e funcional
 **Registro de solicitações do operador — 22/11/2026**  
-**Branch observada:** \`feature/beta1-final-local-acceptance-rc\`  
-**Base de comparação:** HEAD previamente auditado \`096e9f83b0f4a0895581d6e6a03cd691b92612a5\` (conferir novamente antes de implementar).  
+**Branch observada:** `feature/beta1-final-local-acceptance-rc`  
+**Base de comparação:** HEAD previamente auditado `096e9f83b0f4a0895581d6e6a03cd691b92612a5` (conferir novamente antes de implementar).  
 **Status:** especificação de 17 pendências; **NÃO é evidência de implementação ou autorização de deploy**.  
 **Escopo:** somente Vitrine Premium demonstrativa e ambiente isolado; não atualizar código operacional, IAM, MFA, LMS ou VPS.  
 
@@ -9,7 +9,7 @@
 
 A experiência atual tem funcionalidades testadas, mas o operador **não aprovou o acabamento e a lógica de várias telas**. Corrigir a interação de ponta a ponta, sem reimplementar funcionalidades já aceitas desnecessariamente. A biblioteca de Protocolos e a identidade geral da Vitrine tinham conceito visual aprovado: preservar a direção, **melhorar o conteúdo e a experiência interna**. Evitar novos componentes que pareçam painéis de depuração, formulários extensos ou textos institucionais repetitivos.
 
-**Diretriz UX:** produto moderno, leve e objetivo, com paleta/tokens já existentes; rosa principal de referência \`#C41469\` (inspecionar CSS real), fundo neutro, tipografia legível, microinterações preservadas. A versão VPS aprovada tinha OCI \`org.opencontainers.image.revision=0e0a2d816729cd68bebdc6c1a0339b2c8a19b861\`, digest \`sha256:a536276abc4a67335df11d5e54820297d0a49c24d03241cbb02eee02d3384b1c\`. Comparar motion sem copiar componentes antigos indiscriminadamente.
+**Diretriz UX:** produto moderno, leve e objetivo, com paleta/tokens já existentes; rosa principal de referência `#C41469` (inspecionar CSS real), fundo neutro, tipografia legível, microinterações preservadas. A versão VPS aprovada tinha OCI `org.opencontainers.image.revision=0e0a2d816729cd68bebdc6c1a0339b2c8a19b861`, digest `sha256:a536276abc4a67335df11d5e54820297d0a49c24d03241cbb02eee02d3384b1c`. Comparar motion sem copiar componentes antigos indiscriminadamente.
 
 **Aprovação:** o operador é o aprovador desta etapa de UX e funcionalidade. Não exigir equipe adicional para escolher cores, layouts, labels ou fluxos sintéticos. Isso **não** converte uma tela em regra clínica homologada, nem transforma conteúdo institucional público em autorização irrestrita de distribuição comercial. Manter bloqueios reais de acesso, fronteira entre demonstração e prontuário clínico, e rastreabilidade dos PDFs.
 
@@ -41,30 +41,30 @@ A experiência atual tem funcionalidades testadas, mas o operador **não aprovou
 **Captura descrita:** modal “Escanear carteirinha PAP-ID” mostra preview escuro, texto “Carteirinha detectada”, seletor de câmera e botão “Ativar câmera” ao mesmo tempo, gerando ambiguidade.
 
 **Estado esperado** (máquina de estados explícita):
-1. \`idle\`: instrução breve + botão “Ativar câmera”; nenhum preview preto que pareça stream ativo.
-2. \`requesting-permission\`: loader, só uma solicitação de permissão por ação.
-3. \`scanning\`: vídeo real, máscara de enquadramento, feedback “Aponte para o QR”, opções mínimas (trocar dispositivo quando houver, cancelar).
-4. \`resolving\`: QR capturado; interromper decodificação, mostrar confirmação transitória sem revelar dados antes de verificar token/sessão.
-5. \`detected\`: **sair do leitor** e mostrar o cartão na etapa de Registro (H17).
-6. \`invalid | expired | revoked | offline | denied\`: erro inteligível, sem identidade; retry, PNG ou código; câmera sempre sob controle do usuário.
-7. \`closed\`: \`MediaStreamTrack.stop()\` em TODOS os tracks, limpar \`srcObject\`, RAF/timeouts, no stale callbacks.
+1. `idle`: instrução breve + botão “Ativar câmera”; nenhum preview preto que pareça stream ativo.
+2. `requesting-permission`: loader, só uma solicitação de permissão por ação.
+3. `scanning`: vídeo real, máscara de enquadramento, feedback “Aponte para o QR”, opções mínimas (trocar dispositivo quando houver, cancelar).
+4. `resolving`: QR capturado; interromper decodificação, mostrar confirmação transitória sem revelar dados antes de verificar token/sessão.
+5. `detected`: **sair do leitor** e mostrar o cartão na etapa de Registro (H17).
+6. `invalid | expired | revoked | offline | denied`: erro inteligível, sem identidade; retry, PNG ou código; câmera sempre sob controle do usuário.
+7. `closed`: `MediaStreamTrack.stop()` em TODOS os tracks, limpar `srcObject`, RAF/timeouts, no stale callbacks.
 
 **UI:** bordas simples, espaço adequado, ícone Lucide, foco visível, CTA primário inequívoco, seletor secundário se necessário. Sem duplicar “Ativar câmera” depois de leitura concluída. Suportar webcam USB/integrada e traseira do celular com HTTPS confiável. Frames nunca persistidos/transferidos a terceiros. Não criar loops de permissão, race conditions ou modal preso quando o browser retorna background.
 
-**Arquivo provável:** \`src/features/vitrine-premium/components/registro/CameraScanner.tsx\`; inspecionar também modal base e \`IdentificationStep.tsx\`.
+**Arquivo provável:** `src/features/vitrine-premium/components/registro/CameraScanner.tsx`; inspecionar também modal base e `IdentificationStep.tsx`.
 
 ## H02 — Fluxograma funcional, distinto de “Documento original” [P0]
 
 **Problema demonstrado:** a aba Fluxograma exibe quase exclusivamente uma página do PDF dentro do leitor; barra de controles extensa, janela interna pequena e rolagem aninhada. O usuário precisa “ler o PDF de novo” em vez de navegar por conteúdo estruturado.
 
 **Alvo de experiência:**
-- Canvas/área principal ampla e adaptável, controles compactos de \`+\`, \`−\`, “Ajustar”, “Tela cheia” e “Abrir fonte”; pan/gestos/toque/teclado, sem duplas barras de rolagem.
+- Canvas/área principal ampla e adaptável, controles compactos de `+`, `−`, “Ajustar”, “Tela cheia” e “Abrir fonte”; pan/gestos/toque/teclado, sem duplas barras de rolagem.
 - Reconstruir **estrutura fiel à fonte** em nós/arestas navegáveis *quando verificável*, com hierarquia visual e ramos claros; cada nó tem ID estável, título, tipo, página/versão e eventual condição textual verificável. Zoom não muda conteúdo.
 - Disponibilizar **figura original integral** em alternância “Figura original”, como evidência visual e fallback quando a transcrição dos nós não tiver sido aprovada. Não chamar PDF embutido sozinho de fluxograma interativo concluído.
 - Mobile com pan/zoom por toque, botão reset, leitura alternativa em lista, sem scroll horizontal da página inteira.
 - Não automatizar diagnóstico, dose, decisão terapêutica, execução de conduta ou cálculo de risco a partir do conteúdo extraído sem revisão clínica qualificada. Se não for possível extrair certo ramo com fidelidade, registrar pendência explícita e oferecer original, sem inventar.
 
-**Arquivos prováveis:** \`components/protocolos/{ProtocolDetail,OriginalPdfViewer}.tsx\`, \`lib/protocol-{content,display,originals}.ts\`; \`docs/protocolos/documentos-originais/*.pdf\`.
+**Arquivos prováveis:** `components/protocolos/{ProtocolDetail,OriginalPdfViewer}.tsx`, `lib/protocol-{content,display,originals}.ts`; `docs/protocolos/documentos-originais/*.pdf`.
 
 ## H03 — Carteirinha PAP-ID definitiva (design) [P0]
 
@@ -75,7 +75,7 @@ A experiência atual tem funcionalidades testadas, mas o operador **não aprovou
 **Monocromática:** frente e verso equivalentes, contrastes e espaçamentos consistentes; sem fundos totalmente pretos que gastem toner (versão P&B com fundo branco, preto/cinzas).
 **Artefatos:** frente e verso renderizados programaticamente, com modelo compartilhado para preview/PNG/PDF/print, e QR real no local correto. Não apenas uma imagem ilustrativa não funcional. Tomar o conceito aprovado na conversa como direção; não confundir o preview gerado pelo modelo gráfico com arquivo final imprimível ou QR verificável.
 
-**Estado atual inspecionado:** \`scripts/private-review/card-image.ts\` ainda produz PNG sintético antigo de 1050×600, branco e com dados fictícios de depuração; substituir/estender seu renderer respeitando o contrato de token opaco e as chaves privadas existentes. Não imprimir CPF/RG/CNS no QR. Manter separação de template demo e modelo operacional futuro.
+**Estado atual inspecionado:** `scripts/private-review/card-image.ts` ainda produz PNG sintético antigo de 1050×600, branco e com dados fictícios de depuração; substituir/estender seu renderer respeitando o contrato de token opaco e as chaves privadas existentes. Não imprimir CPF/RG/CNS no QR. Manter separação de template demo e modelo operacional futuro.
 
 ## H04 — Conteúdo pertinente do verso [P0, segurança clínica e privacidade]
 
@@ -91,23 +91,23 @@ A conversa solicita dados que ajudem o profissional a tomar decisões rápidas. 
 
 ## H05 — Protocolos responsivos e fiéis aos conceitos [P0]
 
-Biblioteca foi previamente aprovada como direção. **Não redesenhá-la indiscriminadamente**. Os detalhes/abas e navegação precisam refletir as **nove imagens** de \`docs/protocolos/referencias/\` e especificação \`docs/protocolos/PAP-PROTOCOLS-BETA1-ESPECIFICACAO.md\`.
-- Verificar 320/375/390/430/768/1024/1440 px, portrait/landscape, light/dark, zoom browser, nomes extensos, tab focus, touch target ≥44 px, AA, \`prefers-reduced-motion\`.
+Biblioteca foi previamente aprovada como direção. **Não redesenhá-la indiscriminadamente**. Os detalhes/abas e navegação precisam refletir as **nove imagens** de `docs/protocolos/referencias/` e especificação `docs/protocolos/PAP-PROTOCOLS-BETA1-ESPECIFICACAO.md`.
+- Verificar 320/375/390/430/768/1024/1440 px, portrait/landscape, light/dark, zoom browser, nomes extensos, tab focus, touch target ≥44 px, AA, `prefers-reduced-motion`.
 - Layout 1 coluna em mobile e 2 colunas com aside útil quando couber; cabeçalho e tabs não podem ficar minúsculos; sem overflow ou rolagem horizontal global.
 - Conteúdo não deve ser apenas cartões preenchidos com prosa; entregar densidade informacional e hierarquia apropriadas ao enfermeiro.
 - Capturas comparativas **antes/depois** por aba/protocolo, com anotação das diferenças frente ao conceito original.
 
 ## H06 — Animações e microinterações da Vitrine [P1]
 
-Fonte comprovada VPS Admin Beta/Comercial: commit \`0e0a2d816729cd68bebdc6c1a0339b2c8a19b861\`, imagem \`pap-saude-admin-beta\` digest \`a536276abc4a...\`. Os componentes motion/shell já foram comparados e relatados como byte-equivalentes, mas o usuário não percebeu os efeitos durante a homologação.
+Fonte comprovada VPS Admin Beta/Comercial: commit `0e0a2d816729cd68bebdc6c1a0339b2c8a19b861`, imagem `pap-saude-admin-beta` digest `a536276abc4a...`. Os componentes motion/shell já foram comparados e relatados como byte-equivalentes, mas o usuário não percebeu os efeitos durante a homologação.
 - Comparar **comportamento efetivo**: entrada página/título, KPI/stagger, gráfico, navegação, modal, menus. Inspecionar montagem da fixture e estilos computados, não apenas arquivos.
-- Investigar \`prefers-reduced-motion\`, modo development, velocidade, viewport, overlays, timing, HMR.
+- Investigar `prefers-reduced-motion`, modo development, velocidade, viewport, overlays, timing, HMR.
 - Não aumentar animação artificialmente se desrespeitar usuário com movimento reduzido. Corrigir regressões reais, gravar vídeo curto/séries de frames e demonstrar no browser de teste.
 
 ## H07 — Remover breadcrumb redundante em detalhes de protocolo [P1]
 
-A captura mostra botão **“Voltar aos protocolos”** e logo abaixo link \`Protocolos / [nome]\`. Manter **apenas o botão de voltar**, antes do título principal. Remover breadcrumb redundante deste layout (a especificação histórica prevê breadcrumb; **esta decisão do operador é posterior e prevalece para a Vitrine**).
-- Preservar deep links \`?protocolo=...&aba=...\`, histórico navegador, foco, e preferencialmente pesquisa/filtros ativos ao retornar.
+A captura mostra botão **“Voltar aos protocolos”** e logo abaixo link `Protocolos / [nome]`. Manter **apenas o botão de voltar**, antes do título principal. Remover breadcrumb redundante deste layout (a especificação histórica prevê breadcrumb; **esta decisão do operador é posterior e prevalece para a Vitrine**).
+- Preservar deep links `?protocolo=...&aba=...`, histórico navegador, foco, e preferencialmente pesquisa/filtros ativos ao retornar.
 - Não retirar o título do protocolo nem quebrar a navegação pelo teclado.
 
 ## H08 — Mover emissão/reemissão para Documentos do prontuário [P0]
@@ -118,15 +118,15 @@ Remover botão solto “Emitir/Reemitir carteirinha” debaixo de cada cartão d
 - Ações vinculadas ao ID de paciente/subject corretos, com persistência e histórico, sem duplicar cadastro.
 - Cadastro de gestante nova segue existente; emissão deve ser oferecida após cadastro por acesso a Documentos (pode CTA de navegação), sem botão operacional perdido na listagem.
 
-**Arquivos candidatos:** \`components/pacientes/{PatientList,PrivatePatientDocuments,PatientCardIssuer,DemoPatientView}.tsx\`, \`components/demo/DemoPatientsView.tsx\`.
+**Arquivos candidatos:** `components/pacientes/{PatientList,PrivatePatientDocuments,PatientCardIssuer,DemoPatientView}.tsx`, `components/demo/DemoPatientsView.tsx`.
 
 ## H09 — Prévia, impressão e exportação da carteirinha [P0]
 
 - Clicar no item **Carteirinha PAP-ID** em Documentos abre um visualizador claro em modal ou página focada, com **frente e verso**, flip/tabs legíveis, nome/versão, QR legível, data de emissão e situação (ativa/reemitida/revogada/expirada).
 - Ações reais: “Imprimir”, “Baixar PDF”, “Baixar PNG” e versão “Colorida / Preto e branco”.
-- \`@media print\`: tamanho físico consistente, margens, fidelidade do QR, frente/verso separados de elementos da aplicação, sem sidebar/controles/popovers. PDF/PNG gerados pelo mesmo template e dados.
+- `@media print`: tamanho físico consistente, margens, fidelidade do QR, frente/verso separados de elementos da aplicação, sem sidebar/controles/popovers. PDF/PNG gerados pelo mesmo template e dados.
 - Revisar política de cartão inválido: histórico pode ser consultado, mas não apresentado como válido; watermark/aviso pontual em cartões revogados/expirados e QR que não resolve. Não imprimir snapshots com dados sensíveis sem a opção explícita H04.
-- Testar impressão real/virtual em A4 e papel adequado, QR por webcam após impressão e download; não apenas \`window.print()\` sem layout.
+- Testar impressão real/virtual em A4 e papel adequado, QR por webcam após impressão e download; não apenas `window.print()` sem layout.
 
 ## H10 — Redesenhar bloco do perfil na sidebar [P1]
 
@@ -160,9 +160,9 @@ Ao clicar em “Avisos” na sidebar, abrir **modal acessível de caixa de entra
 4. **Documento original**: leitor PDF completo com zoom, página, busca se suportada e **download byte-idêntico**, sem confundi-lo com aba Fluxograma.
 
 **Três fontes reais e páginas para investigação**:
-- \`sindromes-hipertensivas-gestacao.pdf\` — 25 páginas; versão 01; fluxograma na digital 22; checklist/seções relevantes próximas de 14–16, kit 20–21;
-- \`hemorragia-pos-parto.pdf\` — 34 páginas; versão 03; manejo nas digitais 24–28, kit 30–31, fluxograma 32;
-- \`sepse-obstetrica.pdf\` — 36 páginas digitais, com duplicação textual e divergências documentais; fluxo na digital 15, kit 8, monitoramento 13, ficha 17. Não harmonizar códigos divergentes automaticamente.
+- `sindromes-hipertensivas-gestacao.pdf` — 25 páginas; versão 01; fluxograma na digital 22; checklist/seções relevantes próximas de 14–16, kit 20–21;
+- `hemorragia-pos-parto.pdf` — 34 páginas; versão 03; manejo nas digitais 24–28, kit 30–31, fluxograma 32;
+- `sepse-obstetrica.pdf` — 36 páginas digitais, com duplicação textual e divergências documentais; fluxo na digital 15, kit 8, monitoramento 13, ficha 17. Não harmonizar códigos divergentes automaticamente.
 
 **Regra de conteúdo:** criar um inventário seção/página/versão/trecho e um modelo de dados estruturado, com revisão de transcrição de cada nó/item. Os PDFs são a única fonte de afirmação clínica específica nesta missão; **não gerar recomendações/doses/scores por improviso da IA**. Divergência, falta de nitidez, dose/critério ambíguo = BLOCKED para conversão interativa daquele trecho até revisor clínico; documento original permanece consultável no escopo permitido. A IA não assume autoria institucional nem validade nacional para UBS. Exigir liberação humana antes de qualquer decisão assistencial automática; esta missão NÃO cria CDS.
 
@@ -177,23 +177,23 @@ Ao clicar em “Avisos” na sidebar, abrir **modal acessível de caixa de entra
 - Seções organizadas por navegação interna ou tabs: identificação/queixa, vitais por aferição, dados obstétricos, avaliação/MEOWS e critérios, evolução e reavaliações, condutas/encaminhamentos **registrados**, anexos, fechamento.
 - **Timeline**: eventos cronológicos com horário, autor, tipo, valor anterior/novo quando houver edição/sucessão, unidade, fonte e estado. Visualizar a evolução de PA/FC/FR/SpO2/T quando houver histórico; não inventar medidas retrospectivas.
 - Filtros “Todas as alterações”, “Avaliações”, “Documentos” opcionais; leitura apenas.
-- Eventos históricos ilustrativos sem medições comprovadas devem mostrar “Não registrado”/“Sem histórico disponível” em vez de vitais/condutas fictícios. Score \`0\` ilustrativo não deve ser confundido com avaliação clínica validada.
+- Eventos históricos ilustrativos sem medições comprovadas devem mostrar “Não registrado”/“Sem histórico disponível” em vez de vitais/condutas fictícios. Score `0` ilustrativo não deve ser confundido com avaliação clínica validada.
 - Não alterar registro original durante consulta; futuras edições clínicas exigiriam trilha de auditoria append-only, tenant e papel. Nesta Vitrine, usar eventos sintéticos reais do DemoProvider quando disponíveis; se ausentes, apresentar lacuna honestamente.
 
-**Arquivo:** \`components/atendimentos/AtendimentoDetailsModal.tsx\`, \`components/demo/AssessmentDetails.tsx\`, modelos/fixtures.
+**Arquivo:** `components/atendimentos/AtendimentoDetailsModal.tsx`, `components/demo/AssessmentDetails.tsx`, modelos/fixtures.
 
 ## H15 — Padrão de modais [P1]
 
 Nos modais informativos (e.g. detalhes do atendimento):
-- somente X no cabeçalho, sem botão “Fechar” redundante no rodapé; clique no **backdrop** fecha; \`Escape\` fecha; clique no conteúdo NÃO fecha;
+- somente X no cabeçalho, sem botão “Fechar” redundante no rodapé; clique no **backdrop** fecha; `Escape` fecha; clique no conteúdo NÃO fecha;
 - foco fica contido no modal e retorna ao disparador ao fechar; sem rolagem da página atrás; scroll interno para conteúdo longo; labels acessíveis e tamanho mobile adequado.
 - Exceções justificadas: upload, formulário não salvo, reemissão/revogação ou ação destrutiva NÃO fecham sem confirmação de descarte; modais críticos mantêm botões Cancelar/Confirmar; nunca descarte silencioso.
-- Evitar bug atual onde um \`Link\` ficou dentro do botão \`Fechar\` de \`AtendimentoDetailsModal.tsx\`: separar navegação contextual de ação de fechar, mantendo HTML/semântica válidos.
+- Evitar bug atual onde um `Link` ficou dentro do botão `Fechar` de `AtendimentoDetailsModal.tsx`: separar navegação contextual de ação de fechar, mantendo HTML/semântica válidos.
 
 ## H16 — Remover textos de “homologação” da UX principal, sem retirar segurança [P0 UX]
 
 O operador é único aprovador da experiência demonstrativa e considera excesso de frases:
-\`PDFs privados • consulta autorizada\`, \`Somente homologação privada\`, \`Modo demonstração • vínculo fictício\`, \`Conteúdo em revisão • consulta demonstrativa\`, blocos sobre SHA, bytes, direitos de distribuição, “não homologado” repetidos em cada card, cabeçalhos e avisos.
+`PDFs privados • consulta autorizada`, `Somente homologação privada`, `Modo demonstração • vínculo fictício`, `Conteúdo em revisão • consulta demonstrativa`, blocos sobre SHA, bytes, direitos de distribuição, “não homologado” repetidos em cada card, cabeçalhos e avisos.
 
 **Mudança esperada:** UI com a aparência de produto final. Um indicador discreto de ambiente de demonstração é suficiente onde necessário; remover duplicação de avisos e longos parágrafos operacionais. **Retirar da posição fixa no topo** o painel expansível “PDFs privados • consulta autorizada”; mover gerenciamento de consentimento/expiração/logout para uma área de **Configurações de homologação**, acessível apenas no ambiente privado, ou oferecer consentimento contextual mínimo quando necessário. Não remover a necessidade real de consentimento, nem autoautorizar invisivelmente.
 
@@ -214,32 +214,32 @@ O operador é único aprovador da experiência demonstrativa e considera excesso
 8. **Migração/vinculação** mencionada pelo operador refere-se à experiência futura PAP-Link e eventual importação sintética, **não** significa executar migração clínica real ou reassociar IDs entre UBS automaticamente. A tela deve identificar quando vínculo é necessário, sem simular operação assistencial no backend.
 9. Erros de permissão/dispositivo/conexão mantêm fallback PNG/código; trocar câmera e fechar não deixa tracks abertos; testes de duplo decode/race, câmera USB/mobile, card repetido, credencial revogada/expirada, ação teclado, mobile.
 
-**Referências:** \`components/registro/{CameraScanner,steps/IdentificationStep}.tsx\`, \`components/pacientes/PrivatePatientDocuments.tsx\`, \`scripts/private-review/card-api.ts\`.
+**Referências:** `components/registro/{CameraScanner,steps/IdentificationStep}.tsx`, `components/pacientes/PrivatePatientDocuments.tsx`, `scripts/private-review/card-api.ts`.
 
 ---
 
 ## 18. Condições transversais de implementação
 
 ### T1 — O que preservar
-- Fluxo Registro \`Identificação → Gestação → Sinais Vitais → Dados Obstétricos → Resultado\`; Vitrine Premium e estilos/animados aprovados; passos 2–5; PDFs originais com hashes; upload/download privados; emissão/reemissão/revogação; banco sintético próprio e persistência.
-- Cursos e Chat IA \`Em breve\`, sem liberar rotas antigas; Admin Beta/Comercial sem concessão clínica implícita; IAM/MFA/isolamento real preservados.
-- Laboratório já existente na porta \`3600\`, PostgreSQL \`127.0.0.1:15436\`, containers/volumes/credenciais/MFA do operador, VPS e imagem GHCR referência: intocados.
-- Em homologação, \`PAP_REVIEW_PROFILE\` próprio. Nunca gerar novos perfis sem necessidade, nunca reset/prune, nunca usar \`DATABASE_URL\` real.
-- Não copiar arquivos de \`.local\` ou credenciais/QR ativos para commits, screenshots ou logs publicados.
+- Fluxo Registro `Identificação → Gestação → Sinais Vitais → Dados Obstétricos → Resultado`; Vitrine Premium e estilos/animados aprovados; passos 2–5; PDFs originais com hashes; upload/download privados; emissão/reemissão/revogação; banco sintético próprio e persistência.
+- Cursos e Chat IA `Em breve`, sem liberar rotas antigas; Admin Beta/Comercial sem concessão clínica implícita; IAM/MFA/isolamento real preservados.
+- Laboratório já existente na porta `3600`, PostgreSQL `127.0.0.1:15436`, containers/volumes/credenciais/MFA do operador, VPS e imagem GHCR referência: intocados.
+- Em homologação, `PAP_REVIEW_PROFILE` próprio. Nunca gerar novos perfis sem necessidade, nunca reset/prune, nunca usar `DATABASE_URL` real.
+- Não copiar arquivos de `.local` ou credenciais/QR ativos para commits, screenshots ou logs publicados.
 
 ### T2 — Diferenças entre Vitrine e produto clínico
 O resultado desta missão só usa pacientes/documentos/avisos **sintéticos**. Sem acesso a dados de pacientes reais, sem motor MEOWS assistencial, sem prescrição, sem decision support automático. Dados clínicos de PDFs institucionais devem manter fonte/página e revisão qualificada antes de orientar decisões clínicas reais. Acesso a PDF público e licença de reutilização na Vitrine comercial são assuntos distintos: preservar direitos/atribuição e revisar condições de redistribuição por documento antes de publicar.
 
 ### T3 — Desempenho, acesso e UX
-Acessibilidade AA, teclado, foco, modal/backdrop/Escape, feedback não apenas colorido, empty/error/loading, \`prefers-reduced-motion\`, browser real e celular físico quando disponível. O modelo de dados para timeline, avisos e documento deve distinguir \`missing\`, \`historical\`, \`current\`, \`revoked\`, \`unverified\`. Não inventar dados para “completar” visual.
+Acessibilidade AA, teclado, foco, modal/backdrop/Escape, feedback não apenas colorido, empty/error/loading, `prefers-reduced-motion`, browser real e celular físico quando disponível. O modelo de dados para timeline, avisos e documento deve distinguir `missing`, `historical`, `current`, `revoked`, `unverified`. Não inventar dados para “completar” visual.
 
 ### T4 — Referências textuais e visuais existentes
-- \`AGENTS.md\`
-- \`docs/protocolos/PAP-PROTOCOLS-BETA1-ESPECIFICACAO.md\`
-- \`docs/protocolos/referencias/\` (nove PNGs)
-- \`docs/design/pap-id-v1/\` (seis especificações e imagens)
-- \`docs/protocolos/documentos-originais/\` (três PDFs)
-- \`docs/release/beta1-final-local/{RELATORIO,HOMOLOGACAO-WSL,HOMOLOGACAO-MOBILE,CHECKLIST-UX,CHECKLIST-SEGURANCA}.md\`
+- `AGENTS.md`
+- `docs/protocolos/PAP-PROTOCOLS-BETA1-ESPECIFICACAO.md`
+- `docs/protocolos/referencias/` (nove PNGs)
+- `docs/design/pap-id-v1/` (seis especificações e imagens)
+- `docs/protocolos/documentos-originais/` (três PDFs)
+- `docs/release/beta1-final-local/{RELATORIO,HOMOLOGACAO-WSL,HOMOLOGACAO-MOBILE,CHECKLIST-UX,CHECKLIST-SEGURANCA}.md`
 - As capturas enviadas pelo operador no chat em 22/11 ilustram os defeitos. Se não estiverem disponíveis na sessão do Codex, **usar as descrições acima e pedir referência de captura para comparação**, não inventar que foram inspecionadas.
 
 ### T5 — Ordem sugerida e gates
