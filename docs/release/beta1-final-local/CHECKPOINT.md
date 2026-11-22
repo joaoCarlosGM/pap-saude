@@ -39,3 +39,19 @@ CI remoto integral NOT RUN: candidata não consta nas allowlists vigentes; nenhu
 
 Fechamento: browser final integral22/22 PASS no código funcional dfb7331. Sessão privada expirada1/1 PASS.
 Manifesto/capturas15 sem QR, guias e checklists consolidados. Aguardar somente homologação humana; nenhum deploy/PR.
+
+
+---
+
+## Atualização de requisitos — 22/11/2026 (APENAS DOCUMENTAÇÃO)
+
+**Atenção:** os PASS e o GO para consulta sintética acima descrevem a candidata técnica **anterior** à rodada de homologação visual feita pelo operador. **NÃO significam que as 17 pendências posteriores tenham sido implementadas ou aprovadas.**
+
+O operador consolidou **17 correções H01–H17** e decidiu preparar uma missão futura de Codex. A última decisão operacional é **H17: primeira carteira válida detectada deve encerrar imediatamente a câmera e apresentar a ilustração do cartão; “Adicionar mais” reabre o leitor somente por ação explícita**.
+
+Ler nesta ordem antes de nova implementação:
+1. [AJUSTES-POS-HOMOLOGACAO-2026-11-22.md](./AJUSTES-POS-HOMOLOGACAO-2026-11-22.md) — fonte canônica das 17 decisões UX/funcionais, incluindo protocolos clínicos estruturados, cartão rosa frente/verso, Documentos, caixa de entrada, timeline, modais e redução dos avisos.
+2. [CHECKLIST-ACEITE-POS-HOMOLOGACAO-2026-11-22.md](./CHECKLIST-ACEITE-POS-HOMOLOGACAO-2026-11-22.md) — testes e evidências exigidos, estados iniciais NOT RUN.
+3. [PROMPT-CODEX-AJUSTES-POS-HOMOLOGACAO-2026-11-22.md](./PROMPT-CODEX-AJUSTES-POS-HOMOLOGACAO-2026-11-22.md) — instruções para execução **somente após novo comando explícito**.
+
+A branch foi atualizada **apenas com documentos de requisitos**; implementação da rodada H01–H17 e testes correspondentes ainda **NÃO FORAM EXECUTADOS**. Não houve mudança de componentes, banco, infraestrutura, VPS nem autorização de merge/deploy por este registro.
