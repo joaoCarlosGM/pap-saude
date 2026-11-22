@@ -1,13 +1,13 @@
 # PAP Saúde Beta 1 — Checklist de aceite das correções H01–H17
-**Criado em 22/11/2026 — operador único da homologação**. Complementa \`AJUSTES-POS-HOMOLOGACAO-2026-11-22.md\`. Os itens abaixo são critérios **futuros** e estão inicialmente **PENDENTES/NOT RUN**; PASS de suites anteriores não equivale à aprovação destas mudanças.
+**Criado em 22/11/2026 — operador único da homologação**. Complementa `AJUSTES-POS-HOMOLOGACAO-2026-11-22.md`. Os itens abaixo são critérios **futuros** e estão inicialmente **PENDENTES/NOT RUN**; PASS de suites anteriores não equivale à aprovação destas mudanças.
 
 ## 1. Como registrar cada evidência
 Para cada ID e caso:
-- \`PASS\`: reproduzido com ação real, resultado visível e evidência identificada.
-- \`FAIL\`: desvio observado, reprodução e captura/log sanitizado.
-- \`BLOCKED\`: depende de autorização, revisão documental/clínica ou recurso inexistente; indicar razão.
-- \`NOT RUN\`: ainda não testado; **não** contabilizar como aprovado.
-- \`N/A\`: não aplicável à Vitrine, com justificativa explícita.
+- `PASS`: reproduzido com ação real, resultado visível e evidência identificada.
+- `FAIL`: desvio observado, reprodução e captura/log sanitizado.
+- `BLOCKED`: depende de autorização, revisão documental/clínica ou recurso inexistente; indicar razão.
+- `NOT RUN`: ainda não testado; **não** contabilizar como aprovado.
+- `N/A`: não aplicável à Vitrine, com justificativa explícita.
 - Evidência = SHA testado, ambiente, browser/viewport, data, comandos reais e screenshot/vídeo sanitizados. Nunca incluir token QR ativo, chave, CPF/RG real, paciente real, PIN de pareamento ou certificados privados.
 
 **Regras de liberação:**
@@ -66,9 +66,9 @@ Para cada ID e caso:
 - [ ] Títulos longos, tabs, lateral/aside, toolbar, elementos sticky e retorno não encobrem leitura.
 
 ### H06 — Animações Premium
-- [ ] Diferenças observadas com baseline commit \`0e0a2d8\` registradas.
+- [ ] Diferenças observadas com baseline commit `0e0a2d8` registradas.
 - [ ] Entrada de página/título/KPIs/gráficos/navegação e microinterações conferidas em browser; evidência de duração/frames, não apenas grep CSS.
-- [ ] \`prefers-reduced-motion: reduce\` desativa transições relevantes e mantém navegação completa.
+- [ ] `prefers-reduced-motion: reduce` desativa transições relevantes e mantém navegação completa.
 - [ ] Nenhuma regressão em dark/light ou mobile; performance preservada.
 
 ### H10 / H11 — Perfil e foto
@@ -107,20 +107,20 @@ Para cada ID e caso:
 - [ ] Interface visualmente comparável à experiência Premium; nenhum falso “produto clínico homologado” ou transparência enganosa.
 
 ## 3. Testes automatizados mínimos adicionais
-- \`QR_SCAN_VALID_AUTO_CLOSE\`: chamar \`onScan\` com token real do laboratório privado, garantir \`MediaStreamTrack.stop\` em todas as tracks, modal fechado, preview/miniatura exibido, foco correto; verify zero continue automatic.
-- \`QR_ADD_MORE_SINGLE_USE\`: clique “Adicionar mais”, novo stream, card anterior persistido, novo QR encerra de novo, dedup.
-- \`QR_NEGATIVE\`: expirada/revogada/malformed/forged/origin/permission denied; zero identity disclosure.
-- \`CARD_VISUAL_PRINT\`: templates color/P&B frente/verso, data/gestação corretos, PNG/PDF exportáveis, QR real legível via jsQR, ausência do token em logs.
-- \`CARD_SCOPE\`: operações em paciente A não expõem B, revogação anterior e histórico; PDF/PNG exigem sessão.
-- \`DOCS_PLACEMENT\`: emissão ausente na listagem e presente em Documentos.
-- \`PROTOCOL_BREADCRUMB\`: só botão volta; filtros preservados e deep links OK.
-- \`PROTOCOL_STRUCTURED_SOURCE\`: blocos/itens/nós com referência de página/versão; original byte-idêntico; ausência de texto filler sem fonte.
-- \`MODAL_INTERACTION\`: click outside/Escape/focus, proteção de formulários dirty.
-- \`NOTICES_EVENTS\`: filtros, unread, links, dedup, nenhum alerta clínico inventado.
-- \`ENCOUNTER_TIMELINE\`: sequência registrada corretamente, lacunas explícitas, dados clínicos não forjados.
-- \`PROFILE_PHOTO\`: filtro MIME/bytes/EXIF/refresh/fallback; storage demo isolado.
-- \`PROD_BOUNDARY\`: HTTP/RSC de \`/homologacao/**\` continuam 404 no build público mesmo com flag; sem review DB, arquivos \`.local\` e endpoints LAN no standalone; IAM/MFA intactos.
-- \`FULL_REGRESSION\`: tests PAP-ID/Protocolos/Vitrine, TypeScript, lint, build, browser, test WSL+LAN físico marcado NOT RUN se ausente.
+- `QR_SCAN_VALID_AUTO_CLOSE`: chamar `onScan` com token real do laboratório privado, garantir `MediaStreamTrack.stop` em todas as tracks, modal fechado, preview/miniatura exibido, foco correto; verify zero continue automatic.
+- `QR_ADD_MORE_SINGLE_USE`: clique “Adicionar mais”, novo stream, card anterior persistido, novo QR encerra de novo, dedup.
+- `QR_NEGATIVE`: expirada/revogada/malformed/forged/origin/permission denied; zero identity disclosure.
+- `CARD_VISUAL_PRINT`: templates color/P&B frente/verso, data/gestação corretos, PNG/PDF exportáveis, QR real legível via jsQR, ausência do token em logs.
+- `CARD_SCOPE`: operações em paciente A não expõem B, revogação anterior e histórico; PDF/PNG exigem sessão.
+- `DOCS_PLACEMENT`: emissão ausente na listagem e presente em Documentos.
+- `PROTOCOL_BREADCRUMB`: só botão volta; filtros preservados e deep links OK.
+- `PROTOCOL_STRUCTURED_SOURCE`: blocos/itens/nós com referência de página/versão; original byte-idêntico; ausência de texto filler sem fonte.
+- `MODAL_INTERACTION`: click outside/Escape/focus, proteção de formulários dirty.
+- `NOTICES_EVENTS`: filtros, unread, links, dedup, nenhum alerta clínico inventado.
+- `ENCOUNTER_TIMELINE`: sequência registrada corretamente, lacunas explícitas, dados clínicos não forjados.
+- `PROFILE_PHOTO`: filtro MIME/bytes/EXIF/refresh/fallback; storage demo isolado.
+- `PROD_BOUNDARY`: HTTP/RSC de `/homologacao/**` continuam 404 no build público mesmo com flag; sem review DB, arquivos `.local` e endpoints LAN no standalone; IAM/MFA intactos.
+- `FULL_REGRESSION`: tests PAP-ID/Protocolos/Vitrine, TypeScript, lint, build, browser, test WSL+LAN físico marcado NOT RUN se ausente.
 
 ## 4. Matriz de evidências a preencher pelo executor
 
