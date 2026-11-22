@@ -2,19 +2,19 @@
 **Documento pronto para comando posterior do operador.** **NÃO executar por sua simples presença nesta branch.**
 
 ## Identificação
-- Projeto: \`joaoCarlosGM/pap-saude\`.
-- Baseline: \`feature/beta1-final-local-acceptance-rc\`, incluindo os três documentos de 22/11/2026; verificar HEAD remoto/estado antes de qualquer ação.
-- Nova branch de implementação sugerida: \`feature/beta1-post-acceptance-ux-rc\` a partir do HEAD conferido. Não reescrever nem force-push a candidata anterior.
-- Referência visual VPS: \`0e0a2d816729cd68bebdc6c1a0339b2c8a19b861\`, digest \`a536276abc4a67335df11d5e54820297d0a49c24d03241cbb02eee02d3384b1c\`.
+- Projeto: `joaoCarlosGM/pap-saude`.
+- Baseline: `feature/beta1-final-local-acceptance-rc`, incluindo os três documentos de 22/11/2026; verificar HEAD remoto/estado antes de qualquer ação.
+- Nova branch de implementação sugerida: `feature/beta1-post-acceptance-ux-rc` a partir do HEAD conferido. Não reescrever nem force-push a candidata anterior.
+- Referência visual VPS: `0e0a2d816729cd68bebdc6c1a0339b2c8a19b861`, digest `a536276abc4a67335df11d5e54820297d0a49c24d03241cbb02eee02d3384b1c`.
 - Vitrine **somente sintética**, sem integração clínica real nem deploy automático.
 
 ## Ordem de leitura OBRIGATÓRIA
-1. \`AGENTS.md\` e documentação Next.js realmente instalada em \`node_modules/next/dist/docs/\`.
-2. \`docs/release/beta1-final-local/AJUSTES-POS-HOMOLOGACAO-2026-11-22.md\` **INTEGRALMENTE**.
-3. \`docs/release/beta1-final-local/CHECKLIST-ACEITE-POS-HOMOLOGACAO-2026-11-22.md\` **INTEGRALMENTE**.
-4. \`docs/protocolos/PAP-PROTOCOLS-BETA1-ESPECIFICACAO.md\`, 9 PNGs \`docs/protocolos/referencias/\`, fontes \`docs/protocolos/documentos-originais/\`.
-5. \`docs/design/pap-id-v1/\` e seus 6 PNGs/MD.
-6. \`docs/release/beta1-final-local/{RELATORIO,HOMOLOGACAO-WSL,HOMOLOGACAO-MOBILE,CHECKLIST-UX,CHECKLIST-SEGURANCA,CHECKLIST-DEPLOY-FUTURO}.md\`.
+1. `AGENTS.md` e documentação Next.js realmente instalada em `node_modules/next/dist/docs/`.
+2. `docs/release/beta1-final-local/AJUSTES-POS-HOMOLOGACAO-2026-11-22.md` **INTEGRALMENTE**.
+3. `docs/release/beta1-final-local/CHECKLIST-ACEITE-POS-HOMOLOGACAO-2026-11-22.md` **INTEGRALMENTE**.
+4. `docs/protocolos/PAP-PROTOCOLS-BETA1-ESPECIFICACAO.md`, 9 PNGs `docs/protocolos/referencias/`, fontes `docs/protocolos/documentos-originais/`.
+5. `docs/design/pap-id-v1/` e seus 6 PNGs/MD.
+6. `docs/release/beta1-final-local/{RELATORIO,HOMOLOGACAO-WSL,HOMOLOGACAO-MOBILE,CHECKLIST-UX,CHECKLIST-SEGURANCA,CHECKLIST-DEPLOY-FUTURO}.md`.
 7. Código atual dos módulos Registro/CameraScanner, Documentos/PatientCardIssuer, Protocolos, Sidebar/Perfil/Avisos, atendimento/modal e service SQL privado.
 
 Não usar um relatório antigo de PASS como justificativa para declarar H01–H17 aprovados: são **novos critérios pós-homologação**.
@@ -51,29 +51,29 @@ Entregar **todas as 17 correções** da Vitrine Premium sem introduzir regressõ
 **Gate C:** H06, H10–H12 e H14–H16 reproduzidos com evidência em browser.
 
 **Slice D — Fechamento e isolamento.**
-- Executar \`npm ci\` em checkout isolado, TypeScript, lint, build webpack, testes unitários, e2e e testes privados com banco descartável próprio; idealmente CI do SHA.
+- Executar `npm ci` em checkout isolado, TypeScript, lint, build webpack, testes unitários, e2e e testes privados com banco descartável próprio; idealmente CI do SHA.
 - Revisar 100% dos casos do checklist, inclusive contraste, foco, PDF/PNG/QR, persistência, upload anterior, revogação, schema PostgreSQL review, HTTPS celular com CA confiável, teste físico **quando disponível**; senão NOT RUN.
-- Verificar standalone/Docker (sem endpoints de homologação ou arquivos \`.local\` em build público), auth/MFA/guards/36 migrations intactos, no touch 3600/15436/VPS.
-- Gerar snapshots de UI e evidências \`PASS/FAIL/BLOCKED/NOT RUN\` não sensíveis.
-- Documentar acesso WSL/Desktop/Mobile e forma segura de retomar profile anterior sem \`create\` duplicado, reset, prune ou segredo versionado.
+- Verificar standalone/Docker (sem endpoints de homologação ou arquivos `.local` em build público), auth/MFA/guards/36 migrations intactos, no touch 3600/15436/VPS.
+- Gerar snapshots de UI e evidências `PASS/FAIL/BLOCKED/NOT RUN` não sensíveis.
+- Documentar acesso WSL/Desktop/Mobile e forma segura de retomar profile anterior sem `create` duplicado, reset, prune ou segredo versionado.
 
 ## Entregáveis esperados
-Criar sob \`docs/release/beta1-post-acceptance/\`:
-- \`RELATORIO.md\`: HEAD, base, commits e escopo, cada H01–H17, perdas/ganhos e limites;
-- \`CHECKLIST-RESULTADOS.md\`: tabela item→resultado→evidência e aceite manual pendente;
-- \`COMPARATIVO-VISUAL.md\`: referência/screenshot antes/depois, 7 viewports, dark/light, motion;
-- \`PAP-ID-FRENTE-VERSO.md\`: contrato de campos/cálculos/datas, print/PDF/PNG, minimização/privacy;
-- \`PROTOCOL-EXTRACTION-MATRIX.md\`: documento/versão/página digital e impressa/seção/nó/checklist/fonte/estado de revisão;
-- \`HOMOLOGACAO-WSL.md\` e \`HOMOLOGACAO-MOBILE.md\`: comandos exatos e recuperação de perfil, webcam;
-- \`SEGURANCA-E-DEPLOY-FUTURO.md\`: regressão, direitos, CI e política NO-GO da produção até aprovação;
-- \`evidence/\` capturas/logs sanitizados e manifesto.
+Criar sob `docs/release/beta1-post-acceptance/`:
+- `RELATORIO.md`: HEAD, base, commits e escopo, cada H01–H17, perdas/ganhos e limites;
+- `CHECKLIST-RESULTADOS.md`: tabela item→resultado→evidência e aceite manual pendente;
+- `COMPARATIVO-VISUAL.md`: referência/screenshot antes/depois, 7 viewports, dark/light, motion;
+- `PAP-ID-FRENTE-VERSO.md`: contrato de campos/cálculos/datas, print/PDF/PNG, minimização/privacy;
+- `PROTOCOL-EXTRACTION-MATRIX.md`: documento/versão/página digital e impressa/seção/nó/checklist/fonte/estado de revisão;
+- `HOMOLOGACAO-WSL.md` e `HOMOLOGACAO-MOBILE.md`: comandos exatos e recuperação de perfil, webcam;
+- `SEGURANCA-E-DEPLOY-FUTURO.md`: regressão, direitos, CI e política NO-GO da produção até aprovação;
+- `evidence/` capturas/logs sanitizados e manifesto.
 
 ## Restrições inegociáveis
-- Não tocar \`prod\`, \`PROD\`, \`develop\`, VPS, Nginx/DNS, pap-web, Admin Beta publicado, contas reais, MFA, Prisma/migrations operacionais, banco \`127.0.0.1:15436\` ou UI \`3600\`.
+- Não tocar `prod`, `PROD`, `develop`, VPS, Nginx/DNS, pap-web, Admin Beta publicado, contas reais, MFA, Prisma/migrations operacionais, banco `127.0.0.1:15436` ou UI `3600`.
 - Não usar dados clínicos reais, não iniciar geração de prescrição/CDS, não inventar doses/condutas. Revisão clínica qualificada é gate para uso assistencial; direitos por PDF são gate para redistribuição pública.
 - Não criar login/permission bypass em nome de simplificação de textos. Remover AVISOS DA UI não significa remover controle de acesso. Dados sintéticos não viram prontuário real.
 - Não inserir PDFs privados de paciente, imagens de cartões ativas, chaves, CA, senha, token QR em Git, logs públicos ou builds.
-- Não usar \`git reset --hard\`, \`git clean -fd\`, \`docker prune\`, merge, force push ou deploy.
+- Não usar `git reset --hard`, `git clean -fd`, `docker prune`, merge, force push ou deploy.
 - Manter Cursos/Chat IA “Em breve”, componentes Premium e motion originais, cinco passos do Registro.
 - Se o Codex não conseguir inspecionar as capturas de 22/11 do chat, descrevê-las como **não disponíveis**, usar os requisitos textuais e screenshots existentes no repo; não dizer que as viu.
 
