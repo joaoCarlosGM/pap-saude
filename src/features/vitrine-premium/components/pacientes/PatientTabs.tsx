@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from "react"
+import { useSearchParams } from "next/navigation"
 
 import PatientDocuments from "./PatientDocuments"
 import PatientEvolution from "./PatientEvolution"
@@ -57,8 +58,9 @@ type TabId = (typeof tabs)[number]["id"]
 export default function PatientTabs({
   patient,
 }: Props) {
+  const requested = useSearchParams().get("aba")
   const [activeTab, setActiveTab] =
-    useState<TabId>("resumo")
+    useState<TabId>(requested === "documentos" ? "documentos" : "resumo")
 
   return (
     <div>

@@ -3,7 +3,6 @@
 import { useMemo, useState } from "react"
 import { Search } from "lucide-react"
 
-import PatientCardIssuer from "./PatientCardIssuer"
 import PatientCard from "./PatientCard"
 
 import type { Patient } from "@/features/vitrine-premium/types/paciente"
@@ -96,7 +95,7 @@ export default function PatientList({
           {filtered.map((patient) => (
             <div key={patient.id} className="rounded-xl border border-slate-200"><PatientCard
               patient={patient}
-            /><PatientCardIssuer patientId={patient.id}/></div>
+            /></div>
           ))}
         </div>
       ) : (

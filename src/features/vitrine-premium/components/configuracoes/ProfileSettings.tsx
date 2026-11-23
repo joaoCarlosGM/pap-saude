@@ -1,12 +1,13 @@
 "use client"
 
 import {
-  Camera,
   Mail,
   Phone,
   UserRound,
 } from "lucide-react"
 
+import ProfileAvatar from "./ProfileAvatar"
+import ProfilePhotoEditor from "./ProfilePhotoEditor"
 import { useState } from "react"
 import { useDemo } from "@/features/vitrine-premium/components/demo/DemoProvider"
 import { Button } from "@/features/vitrine-premium/components/ui/button"
@@ -56,78 +57,12 @@ export default function ProfileSettings({
         <Input id="demo-unit" label="UBS demonstrativa" value={state.profile.unit} onChange={e=>updateProfile({unit:e.target.value})}/>
         <div className="flex items-end"><Button variant="outline" onClick={()=>requestReset(true)}>Restaurar demonstração</Button></div>
       </div>
-      <p className="mt-2 text-xs text-slate-500">Metadados fictícios, sem vínculo oficial, CNES ou IAM. A sidebar é atualizada imediatamente.</p>
-      <div
-        className="
-          mt-6
-          flex
-          flex-col
-          gap-4
-          sm:flex-row
-          sm:items-center
-        "
-      >
-        <div className="relative w-fit">
-          <div
-            className="
-              flex
-              h-20
-              w-20
-              items-center
-              justify-center
-              rounded-full
-              bg-pink-100
-              text-xl
-              font-semibold
-              text-pink-600
-            "
-          >
-            {profile.initials}
-          </div>
-
-          <button
-            type="button" disabled title="Avatar demonstrativo"
-            className="
-              absolute
-              bottom-0
-              right-0
-              flex
-              h-8
-              w-8
-              items-center
-              justify-center
-              rounded-full
-              border-2
-              border-white
-              bg-pink-500
-              text-white
-              shadow-sm
-              transition
-              hover:bg-pink-600
-            "
-            aria-label="Alterar foto"
-          >
-            <Camera size={14} />
-          </button>
-        </div>
-
+      <div className="mt-6 flex flex-wrap items-center gap-4">
+        <ProfileAvatar initials={profile.initials} size={80}/>
         <div>
-          <p className="text-sm font-semibold text-slate-800">
-            {profile.name}
-          </p>
-
-          <p className="mt-1 text-xs text-slate-500">
-            {profile.profession}
-          </p>
-
-          <Button
-            type="button" disabled title="Avatar demonstrativo"
-            variant="ghost"
-            size="sm"
-            className="mt-2 px-0 text-pink-600"
-          >
-            Alterar foto
-          </Button>
+          <p className="font-semibold">{profile.name}</p>
+          <p className="mb-2 text-sm text-slate-600">{profile.profession}</p>
+          <ProfilePhotoEditor/>
         </div>
       </div>
 

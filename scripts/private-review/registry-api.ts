@@ -1,3 +1,4 @@
+import {cardPdf,detailedCard,monochromeCard} from './card-image'
 import {createHash} from 'node:crypto';
 import {authorized,expectedReviewOrigin} from './documents';import {readProfile,connect} from './card-store'
 import {loadCard,listDocuments,uploadDocument,loadDocument,archiveDocument} from './registry-store'
@@ -10,12 +11,22 @@ export async function registryResponse(request:Request,patientId:string,resource
  if(!authorized(request)||!process.env.PAP_ID_REVIEW_PROFILE)return Response.json({error:'LOCAL_REVIEW_REQUIRED'},{status:403,headers})
  const key=createHash('sha256').update(request.headers.get('cookie')||'').digest('hex'),now=Date.now(),rate=rates.get(key);if(rate&&rate.until>now&&rate.count>=120)return Response.json({error:'LOCAL_REVIEW_RATE_LIMIT'},{status:429,headers});if(!rate||rate.until<=now){for(const [k,r]of rates)if(r.until<=now)rates.delete(k);if(rates.size>=100)return new Response(null,{status:429,headers});rates.set(key,{count:1,until:now+60000})}else rate.count++
  if(!person(patientId)||(id&&!uuid(id)))return new Response(null,{status:404,headers})
- const query=new URL(request.url).searchParams;if([...query.keys()].some(k=>k!=='download')||query.getAll('download').length>1||(query.has('download')&&query.get('download')!=='1'))return new Response(null,{status:404,headers})
+ const query=new URL(request.url).searchParams
+ const options=resource==='carteirinhas'?{download:'1',format:'pdf',tone:'mono',detail:'1'}:{download:'1'}
+ if([...query.keys()].some(k=>!(k in options)||query.getAll(k).length!==1||query.get(k)!==options[k as keyof typeof options]))return new Response(null,{status:404,headers})
  if(!['GET','POST','DELETE'].includes(request.method))return new Response(null,{status:405,headers})
  if(request.method!=='GET'&&(request.headers.get('origin')!==expectedReviewOrigin(request)||request.headers.get('x-pap-local-review')!=='documents'))return new Response(null,{status:403,headers})
  let pool:ReturnType<typeof connect>|undefined
  try{const profile=await readProfile(process.env.PAP_ID_REVIEW_PROFILE);pool=connect(profile)
- if(resource==='carteirinhas'){if(!id||request.method!=='GET')return new Response(null,{status:405,headers});const bytes=await loadCard(pool,profile,patientId,id);if(!bytes)return new Response(null,{status:404,headers});return new Response(new Uint8Array(bytes),{headers:{...headers,'Content-Type':'image/png','Content-Length':String(bytes.length),'Content-Disposition':`${query.has('download')?'attachment':'inline'}; filename="carteirinha-teste.png"`}})}
+ if(resource==='carteirinhas'){
+  if(!id||request.method!=='GET')return new Response(null,{status:405,headers})
+  const stored=await loadCard(pool,profile,patientId,id,{activeOnly:true})
+  if(!stored)return new Response(null,{status:404,headers})
+  const rendered=query.has('detail')?await detailedCard(stored,patientId):stored
+  const image=query.has('tone')?await monochromeCard(rendered):rendered
+  const pdf=query.has('format'),bytes=pdf?await cardPdf(image):image
+  return new Response(new Uint8Array(bytes),{headers:{...headers,'Content-Type':pdf?'application/pdf':'image/png','Content-Length':String(bytes.length),'Content-Disposition':`${query.has('download')?'attachment':'inline'}; filename="carteirinha-pap-id.${pdf?'pdf':'png'}"`}})
+ }
  if(request.method==='GET'){
   if(!id)return Response.json({documents:await listDocuments(pool,patientId)},{headers})
   const doc=await loadDocument(pool,patientId,id);if(!doc)return new Response(null,{status:404,headers})

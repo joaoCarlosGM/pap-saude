@@ -35,14 +35,14 @@ test('fourth protocol is accepted by data alone and uses the same renderer and f
  const html=render(React.createElement(Page,{protocols:extended,location:{view:'detail',slug:fourth.slug,tab:'visao-geral'}}));assert.ok(html.includes(fourth.title));assert.ok(html.includes('Tópico adicional'));assert.equal((html.match(/role="tab"/g)||[]).length,4);assert.ok(!catalog.some(p=>p.slug===fourth.slug));
 });
 test('SSR preserves explicit missing PDF and disables every document action without fake downloads',()=>{
- for(const p of catalog){const html=render(React.createElement(Page,{location:{view:'detail',slug:p.slug,tab:'documento-original'}}));assert.ok(html.includes('PDF original indisponível'));assert.equal((html.match(/disabled=""/g)||[]).length,4);assert.ok(!/download=|href="[^"]*\.pdf|<iframe|<embed/i.test(html));assert.ok(html.includes('não validado'));}
+ for(const p of catalog){const html=render(React.createElement(Page,{location:{view:'detail',slug:p.slug,tab:'documento-original'}}));assert.ok(html.includes('PDF original indisponível'));assert.equal((html.match(/disabled=""/g)||[]).length,2);assert.ok(!/download=|href="[^"]*\.pdf|<iframe|<embed/i.test(html));assert.ok(html.includes('Original indisponível neste ambiente'));}
 });
 test('loading, genuine empty catalogue, error and missing-data states render without false success',()=>{
  for(const [props,text]of [[{state:'loading'},'Carregando biblioteca'],[{state:'error'},'Catálogo indisponível'],[{protocols:[]},'Nenhum documento em preparação'],[{location:{view:'detail',slug:'absent',tab:'checklist'}},'Protocolo não encontrado']])assert.ok(render(React.createElement(Page,props)).includes(text));
 });
 test('checklist and flow are documentary-only and do not create clinical actions or persistence',()=>{
- const check=render(React.createElement(Page,{location:{view:'detail',slug:catalog[0].slug,tab:'checklist'}}));assert.equal((check.match(/type="checkbox"/g)||[]).length,6);assert.ok(check.includes('não representam ações realizadas'));assert.ok(!/fetch\(|localStorage|sessionStorage/.test(readFileSync('src/features/vitrine-premium/views/protocolos.tsx','utf8')));
- const flow=render(React.createElement(Page,{location:{view:'detail',slug:catalog[0].slug,tab:'fluxograma'}}));assert.ok(flow.includes('Fluxograma original • fonte em revisão'));assert.ok(flow.includes('sem redesenho ou decisões automatizadas'));assert.ok(flow.includes('PDF original indisponível'));assert.ok(!flow.includes('Aguardando PDF original e autorização'));
+ const check=render(React.createElement(Page,{location:{view:'detail',slug:catalog[0].slug,tab:'checklist'}}));assert.equal((check.match(/type="checkbox"/g)||[]).length,6);assert.ok(check.includes('sem registro de condutas'));assert.ok(!/fetch\(|localStorage|sessionStorage/.test(readFileSync('src/features/vitrine-premium/views/protocolos.tsx','utf8')));
+ const flow=render(React.createElement(Page,{location:{view:'detail',slug:catalog[0].slug,tab:'fluxograma'}}));assert.ok(flow.includes('Mapa navegável do fluxograma'));assert.ok(flow.includes('Figura original'));assert.ok(flow.includes('Critérios indicados na figura'));assert.ok(!/<canvas|<iframe|<embed/.test(flow));assert.ok(!flow.includes('Aguardando PDF original e autorização'));
 });
 test('derived six-step tutorial does not navigate to paused modules and frozen core is unchanged',()=>{
  assert.equal(DEMO_TOUR_STEPS.length,6);for(const step of DEMO_TOUR_STEPS)assert.ok(!/\/vitrine\/(chat|cursos)/.test(step.path));

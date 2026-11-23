@@ -1,11 +1,54 @@
 'use client'
-import {useState} from 'react';import Image from 'next/image';import Link from 'next/link'
-import {useDemo} from '../demo/DemoProvider';import {useCardService} from '../demo/CardServiceContext';import Modal from '../ui/Modal';import {Button} from '../ui/button'
-export default function PatientCardIssuer({patientId,inline=false}:{patientId:string;inline?:boolean}){
- const service=useCardService(),demo=useDemo(),[open,setOpen]=useState(false),[png,setPng]=useState(''),[error,setError]=useState(''),[busy,setBusy]=useState(false),[operation,setOperation]=useState('')
- const ledger=service?.ledgers.find(l=>'patientId' in l.patient&&l.patient.patientId===patientId)
- async function issue(){if(!service)return;setBusy(true);setError('');const key=operation||crypto.randomUUID();setOperation(key);try{const result=await service.issue(patientId,key);demo.importIdentityLedger(result.ledger);setPng(result.png);setOperation('')}catch{setError('Emissão não confirmada. Tente novamente com a mesma operação; não haverá novo paciente.')}finally{setBusy(false)}}
- const content=<div className="grid gap-3"><p className="text-sm text-slate-600">Uma credencial ativa por pessoa. Reemitir revoga a anterior. Nenhum acesso clínico real é concedido.</p>{ledger&&<p className="text-sm">Validade: {ledger.cards.filter(c=>!c.revoked).map(c=>new Date(c.expiresAt).toLocaleString('pt-BR')).join(', ')||'Revogada'}</p>}{error&&<p role="alert">{error}</p>}{png?<><p role="status">Emissão confirmada no PostgreSQL isolado.</p><Image unoptimized width={1050} height={600} src={png} alt="Carteirinha sintética privada; QR opaco" className="w-full"/><a download="carteirinha-pap-id-teste.png" href={png} className="text-pink-700 underline">Baixar carteirinha PNG</a><Link href={'/vitrine/pacientes/'+patientId} className="text-pink-700 underline">Carteirinha e histórico em Documentos</Link></>:<Button disabled={busy} onClick={()=>void issue()}>{busy?'Emitindo…':'Confirmar emissão'}</Button>}{ledger&&service&&<Button variant="outline" disabled={busy} onClick={async()=>{setBusy(true);try{await service.revoke(ledger.patient.subject);for(const row of await service.refresh())demo.importIdentityLedger(row);setPng('');setError('Credenciais revogadas.')}catch{setError('Revogação não confirmada.')}finally{setBusy(false)}}}>Revogar carteirinhas</Button>}</div>
- if(inline)return content
- return <div className="px-3 pb-3"><Button variant="outline" disabled={!service} onClick={()=>{setOpen(true);setPng('');setError('')}}>{ledger?'Reemitir carteirinha':'Emitir carteirinha PAP-ID'}</Button>{!service&&<span className="ml-2 text-xs text-slate-500">Exige banco de homologação privado autorizado</span>}<Modal open={open} onClose={()=>setOpen(false)} title="Carteirinha PAP-ID • teste sintético" maxWidth="md">{content}</Modal></div>
+
+import {useState} from 'react'
+import {useCardService} from '../demo/CardServiceContext'
+import Modal from '../ui/Modal'
+import {Button} from '../ui/button'
+
+export default function PatientCardIssuer({patientId, active}: {patientId: string; active: boolean}) {
+  const service = useCardService()
+  const [action, setAction] = useState<'issue' | 'revoke' | null>(null)
+  const [error, setError] = useState('')
+  const [status, setStatus] = useState('')
+  const [busy, setBusy] = useState(false)
+  const [operation, setOperation] = useState('')
+  const ledger = service?.ledgers.find(row => 'patientId' in row.patient && row.patient.patientId === patientId)
+
+  async function confirm() {
+    if (!service || !action || busy) return
+    setBusy(true)
+    setError('')
+    try {
+      if (action === 'revoke' && ledger) {
+        await service.revoke(ledger.patient.subject)
+        setStatus('Carteirinha revogada.')
+      } else {
+        const key = operation || crypto.randomUUID()
+        setOperation(key)
+        await service.issue(patientId, key)
+        setOperation('')
+        setStatus('Carteirinha emitida.')
+      }
+      setAction(null)
+    } catch {
+      setError('Operação não confirmada. Tente novamente.')
+    } finally {
+      setBusy(false)
+    }
+  }
+
+  return <div className="flex flex-wrap items-center gap-2">
+    <Button variant={active ? 'outline' : 'default'} onClick={() => {setError(''); setAction('issue')}}>
+      {active ? 'Reemitir carteirinha' : 'Emitir carteirinha PAP-ID'}
+    </Button>
+    {active && ledger && <Button variant="outline" onClick={() => {setError(''); setAction('revoke')}}>Revogar</Button>}
+    {status && <p role="status" className="text-sm">{status}</p>}
+    <Modal open={!!action} onClose={() => {if (!busy) setAction(null)}} maxWidth="sm"
+      title={action === 'revoke' ? 'Revogar carteirinha?' : active ? 'Reemitir carteirinha?' : 'Emitir carteirinha PAP-ID?'}
+      footer={<><Button variant="outline" disabled={busy} onClick={() => setAction(null)}>Cancelar</Button>
+        <Button disabled={busy} onClick={() => void confirm()}>{action === 'revoke' ? 'Confirmar revogação' : 'Confirmar emissão'}</Button></>}>
+      <p>{action === 'revoke' || active ? 'O QR vigente deixará de funcionar. O histórico será mantido.' : 'A carteirinha terá validade de 24 horas.'}</p>
+      {error && <p role="alert">{error}</p>}
+    </Modal>
+  </div>
 }

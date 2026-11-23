@@ -1,21 +1,162 @@
 'use client'
-import {useEffect,useRef,useState} from 'react';import jsQR from 'jsqr';import {Camera,Pause,Play,CameraOff} from 'lucide-react'
-import Modal from '../ui/Modal';import {Button} from '../ui/button';import {demoCardHash} from '../../lib/pap-id'
-export default function CameraScanner({onScan,onClose,count}:{onScan:(token:string)=>Promise<boolean>;onClose:()=>void;count:number}){
- const video=useRef<HTMLVideoElement>(null),stream=useRef<MediaStream|null>(null),frame=useRef(0),generation=useRef(0),paused=useRef(false),seen=useRef(new Set<string>()),[active,setActive]=useState(false),[isPaused,setPaused]=useState(false),[busy,setBusy]=useState(false),[message,setMessage]=useState('A câmera só será ativada com sua permissão.'),[devices,setDevices]=useState<MediaDeviceInfo[]>([]),[selected,setSelected]=useState('')
- function invalidate(){generation.current++}
- function stop(){generation.current++;cancelAnimationFrame(frame.current);stream.current?.getTracks().forEach(track=>track.stop());stream.current=null;if(video.current)video.current.srcObject=null;setActive(false);setBusy(false)}
- useEffect(()=>{const off=()=>{if(document.hidden)stop()};document.addEventListener('visibilitychange',off);window.addEventListener('pagehide',stop);return()=>{invalidate();cancelAnimationFrame(frame.current);stream.current?.getTracks().forEach(track=>track.stop());document.removeEventListener('visibilitychange',off);window.removeEventListener('pagehide',stop)}},[])
- async function start(deviceId?:string){
-  stop();if(!window.isSecureContext||!navigator.mediaDevices?.getUserMedia){setMessage('A câmera exige HTTPS confiável ou localhost. Use PNG ou código digitado como alternativa.');return}const request=++generation.current;setBusy(true)
-  try{const media=await navigator.mediaDevices.getUserMedia({audio:false,video:deviceId?{deviceId:{exact:deviceId}}:{facingMode:{ideal:'environment'},width:{ideal:1280},height:{ideal:720}}});if(request!==generation.current){media.getTracks().forEach(t=>t.stop());return}stream.current=media;if(!video.current){media.getTracks().forEach(t=>t.stop());return}video.current.srcObject=media;await video.current.play();if(request!==generation.current)return;setDevices((await navigator.mediaDevices.enumerateDevices()).filter(d=>d.kind==='videoinput'));setSelected(media.getVideoTracks()[0]?.getSettings().deviceId||deviceId||'');setActive(true);setBusy(false);paused.current=false;setPaused(false);setMessage('Posicione uma carteirinha. Os frames são processados somente neste dispositivo.')
-   const canvas=document.createElement('canvas'),ctx=canvas.getContext('2d',{willReadFrequently:true});let last=0
-   async function scan(now:number){if(request!==generation.current||!stream.current)return;if(paused.current||now-last<220||!ctx||!video.current?.videoWidth){frame.current=requestAnimationFrame(scan);return}last=now;const v=video.current,scale=Math.min(1,960/v.videoWidth);canvas.width=Math.round(v.videoWidth*scale);canvas.height=Math.round(v.videoHeight*scale);ctx.drawImage(v,0,0,canvas.width,canvas.height);const pixels=ctx.getImageData(0,0,canvas.width,canvas.height),qr=jsQR(pixels.data,canvas.width,canvas.height,{inversionAttempts:'dontInvert'});
-    if(qr&&/^PAP-ID-DEMO-1\.[A-Za-z0-9_-]{43}$/.test(qr.data)){const hash=await demoCardHash(qr.data);if(request!==generation.current)return;if(!seen.current.has(hash)){seen.current.add(hash);try{const accepted=await onScan(qr.data);if(request===generation.current)setMessage(accepted?'Carteirinha detectada. Continue lendo ou feche para selecionar a gestante.':'Credencial indisponível. Confira validade, revogação e base autorizada.')}catch{if(request===generation.current)setMessage('Consulta indisponível; nenhum acesso foi liberado.')}if(seen.current.size>=100){paused.current=true;setPaused(true);setMessage('Limite de leituras nesta sessão. Encerre e revise os candidatos.')}}}
-    if(request===generation.current)frame.current=requestAnimationFrame(scan)
-   }
-   frame.current=requestAnimationFrame(scan)
-  }catch(e){if(request===generation.current){stop();setMessage(e instanceof DOMException&&e.name==='NotAllowedError'?'Permissão de câmera negada. Autorize no navegador ou use PNG/código.':'Câmera indisponível ou ocupada. Confira o dispositivo e use PNG/código como alternativa.')}}
- }
- return <Modal open onClose={()=>{stop();onClose()}} title="Escanear carteirinha PAP-ID" maxWidth="md"><div className="grid gap-3"><p className="text-sm text-slate-600">Leitura local, sem envio ou armazenamento de vídeo. QR não é autorização clínica.</p><video ref={video} muted playsInline autoPlay aria-label="Prévia ao vivo da câmera" className="max-h-[35dvh] w-full rounded-xl bg-slate-900 object-contain"/><p role="status" className="text-sm">{message}</p><p className="text-sm font-medium">{count} candidata(s) na fila</p><div className="flex flex-wrap gap-2">{!active?<Button disabled={busy} onClick={()=>void start(selected||undefined)}><Camera size={18} aria-hidden/>{busy?'Aguardando permissão…':'Ativar câmera'}</Button>:<><Button variant="outline" onClick={()=>{paused.current=!paused.current;setPaused(paused.current)}}>{isPaused?<Play size={18} aria-hidden/>:<Pause size={18} aria-hidden/>}{isPaused?'Retomar leitura':'Pausar leitura'}</Button><Button variant="outline" onClick={stop}><CameraOff size={18} aria-hidden/>Encerrar câmera</Button></>}{devices.length>1&&<label className="text-sm">Câmera<select className="ml-2 max-w-full rounded border p-2" value={selected} onChange={e=>{setSelected(e.target.value);void start(e.target.value)}}>{devices.map((d,i)=><option key={d.deviceId} value={d.deviceId}>{d.label||'Câmera '+(i+1)}</option>)}</select></label>}</div><Button onClick={()=>{stop();onClose()}}>Fechar e selecionar gestante</Button></div></Modal>
+
+import {useEffect, useRef, useState} from 'react'
+import jsQR from 'jsqr'
+import {Camera} from 'lucide-react'
+import Modal from '../ui/Modal'
+import {Button} from '../ui/button'
+
+type Phase = 'idle' | 'requesting-permission' | 'scanning' | 'resolving' | 'invalid' | 'denied' | 'offline'
+const messages: Record<Phase, string> = {
+  idle: 'Ative a câmera e aponte para o QR da carteirinha.',
+  'requesting-permission': 'Aguardando permissão…',
+  scanning: 'Aponte para o QR da carteirinha.',
+  resolving: 'Verificando a carteirinha…',
+  invalid: 'Carteirinha indisponível. Confira o código ou use outra carteirinha.',
+  denied: 'Câmera indisponível. Confira a permissão ou use PNG/código.',
+  offline: 'Consulta indisponível. Tente novamente ou use PNG/código.',
+}
+
+export default function CameraScanner({onScan, onDetected, onClose}: {
+  onScan: (token: string, signal: AbortSignal) => Promise<boolean>
+  onDetected: () => void
+  onClose: () => void
+}) {
+  const video = useRef<HTMLVideoElement>(null)
+  const stream = useRef<MediaStream | null>(null)
+  const frame = useRef(0)
+  const pending = useRef<AbortController | null>(null)
+  const [phase, setPhase] = useState<Phase>('idle')
+  const [devices, setDevices] = useState<MediaDeviceInfo[]>([])
+  const [selected, setSelected] = useState('')
+
+  function releaseStream() {
+    cancelAnimationFrame(frame.current)
+    stream.current?.getTracks().forEach(track => track.stop())
+    stream.current = null
+    if (video.current) video.current.srcObject = null
+  }
+
+  useEffect(() => {
+    const element = video.current
+    function cancel() {
+      pending.current?.abort()
+      pending.current = null
+      cancelAnimationFrame(frame.current)
+      stream.current?.getTracks().forEach(track => track.stop())
+      stream.current = null
+      if (element) element.srcObject = null
+    }
+    const suspend = () => { cancel(); setPhase('idle') }
+    const visibilityChanged = () => { if (document.hidden) suspend() }
+    document.addEventListener('visibilitychange', visibilityChanged)
+    window.addEventListener('pagehide', suspend)
+    return () => {
+      cancel()
+      document.removeEventListener('visibilitychange', visibilityChanged)
+      window.removeEventListener('pagehide', suspend)
+    }
+  }, [])
+
+  function close() {
+    pending.current?.abort()
+    releaseStream()
+    onClose()
+  }
+
+  async function start(deviceId = selected) {
+    if (!window.isSecureContext || !navigator.mediaDevices?.getUserMedia) {
+      setPhase('denied')
+      return
+    }
+    pending.current?.abort()
+    releaseStream()
+    const request = new AbortController()
+    pending.current = request
+    setPhase('requesting-permission')
+
+    try {
+      const media = await navigator.mediaDevices.getUserMedia({
+        audio: false,
+        video: deviceId ? {deviceId: {exact: deviceId}} : {facingMode: {ideal: 'environment'}},
+      })
+      if (request.signal.aborted || !video.current) {
+        media.getTracks().forEach(track => track.stop())
+        return
+      }
+      const element = video.current
+      stream.current = media
+      element.srcObject = media
+      await element.play()
+      const inputs = await navigator.mediaDevices.enumerateDevices().catch(() => [])
+      if (request.signal.aborted) return
+      setDevices(inputs.filter(device => device.kind === 'videoinput'))
+      setSelected(media.getVideoTracks()[0]?.getSettings().deviceId ?? deviceId)
+      for (const track of media.getTracks()) track.addEventListener('ended', () => {
+        if (request.signal.aborted || stream.current !== media) return
+        request.abort()
+        releaseStream()
+        setPhase('denied')
+      }, {once: true})
+
+      const canvas = document.createElement('canvas')
+      const context = canvas.getContext('2d', {willReadFrequently: true})
+      if (!context) throw new Error('Camera canvas unavailable')
+      setPhase('scanning')
+      let last = 0
+
+      async function scan(now: number) {
+        if (request.signal.aborted) return
+        if (now - last < 200 || !element.videoWidth) {
+          frame.current = requestAnimationFrame(scan)
+          return
+        }
+        last = now
+        const scale = Math.min(1, 960 / element.videoWidth)
+        canvas.width = Math.round(element.videoWidth * scale)
+        canvas.height = Math.round(element.videoHeight * scale)
+        context!.drawImage(element, 0, 0, canvas.width, canvas.height)
+        const pixels = context!.getImageData(0, 0, canvas.width, canvas.height)
+        const qr = jsQR(pixels.data, pixels.width, pixels.height, {inversionAttempts: 'dontInvert'})
+        if (!qr) {
+          frame.current = requestAnimationFrame(scan)
+          return
+        }
+        releaseStream()
+        setPhase('resolving')
+        try {
+          const accepted = await onScan(qr.data, request.signal)
+          if (request.signal.aborted) return
+          if (accepted) onDetected()
+          else setPhase('invalid')
+        } catch {
+          if (!request.signal.aborted) setPhase('offline')
+        }
+      }
+      frame.current = requestAnimationFrame(scan)
+    } catch {
+      if (!request.signal.aborted) {
+        releaseStream()
+        setPhase('denied')
+      }
+    }
+  }
+
+  const scanning = phase === 'scanning'
+  return <Modal open onClose={close} title="Escanear carteirinha PAP-ID" maxWidth="md">
+    <div className="grid gap-4">
+      <div hidden={!scanning} className="relative">
+        <video ref={video} muted playsInline autoPlay aria-label="Prévia ao vivo da câmera" className="max-h-[45dvh] w-full rounded-xl bg-slate-900 object-contain"/>
+        <div aria-hidden className="pointer-events-none absolute inset-[18%] rounded-xl border-2 border-white shadow"/>
+      </div>
+      <p role="status" className="text-sm">{messages[phase]}</p>
+      {(phase === 'idle' || phase === 'invalid' || phase === 'offline' || phase === 'denied') &&
+        <Button onClick={() => void start()}><Camera size={18} aria-hidden/>{phase === 'idle' ? 'Ativar câmera' : 'Tentar novamente'}</Button>}
+      {scanning && devices.length > 1 && <label className="text-sm">Câmera
+        <select className="ml-2 max-w-full rounded border p-2" value={selected} onChange={e => void start(e.target.value)}>
+          {devices.map((device, i) => <option key={device.deviceId} value={device.deviceId}>{device.label || 'Câmera ' + (i + 1)}</option>)}
+        </select>
+      </label>}
+    </div>
+  </Modal>
 }

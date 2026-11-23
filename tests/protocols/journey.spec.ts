@@ -17,7 +17,7 @@ async function axe(page:Page){const result=await new AxeBuilder({page}).include(
 
 test('library searches accents/codes, combines filters and recovers from no results',async({page})=>{
  await library(page);await expect(page.getByRole('link',{name:'Visualizar',exact:true})).toHaveCount(3);
- await page.getByRole('searchbox',{name:'Pesquisar protocolos'}).fill('PRE ECLAMPSIA');await expect(page.getByRole('link',{name:'Visualizar',exact:true})).toHaveCount(1);
+ await page.getByRole('searchbox',{name:'Pesquisar protocolos'}).fill('PRE ECLAMPSIA');await expect(page.getByRole('link',{name:'Visualizar',exact:true})).toHaveCount(1);await page.getByRole('link',{name:'Visualizar',exact:true}).click();await expect(page.getByRole('navigation',{name:'Navegação estrutural'})).toHaveCount(0);await page.getByRole('link',{name:'Voltar aos protocolos',exact:true}).click();await expect(page.getByRole('searchbox',{name:'Pesquisar protocolos'})).toHaveValue('PRE ECLAMPSIA');
  await page.getByRole('button',{name:'Limpar filtros'}).click();await page.getByLabel('Tema',{exact:true}).selectOption('Sepse obstétrica');await page.getByLabel('Origem informada',{exact:true}).selectOption('HUAB-UFRN / EBSERH');await page.getByLabel('Versão informada',{exact:true}).selectOption('2 (2025)');await expect(page.getByRole('link',{name:'Visualizar',exact:true})).toHaveCount(1);
  await page.getByRole('searchbox').fill('sem correspondencia');await expect(page.getByRole('heading',{name:'Nenhum protocolo encontrado'})).toBeVisible();await page.getByRole('button',{name:'Limpar filtros'}).click();await expect(page.getByRole('link',{name:'Visualizar',exact:true})).toHaveCount(3);await axe(page);
 });
@@ -34,7 +34,7 @@ test('all three references and four tabs have real deep links and desktop/mobile
     await page.screenshot({path:file(protocol.slug+'-'+tab.id+'-'+width),fullPage:false});
     if(width===1440)await axe(page);
    }
-   await page.getByRole('navigation',{name:'Navegação estrutural'}).getByRole('link',{name:'Protocolos',exact:true}).click();
+   await page.getByRole('link',{name:'Voltar aos protocolos',exact:true}).click();
   }
  }
 });
@@ -43,18 +43,18 @@ test('checklist remains local across tabs/protocols and resets only after confir
  await page.goto(protocolHref(demoProtocols[0].slug,'checklist'));await ready(page);
  const boxes=page.getByRole('checkbox');await boxes.nth(0).check();await boxes.nth(1).check();await expect(page.getByRole('status').last()).toContainText('2 de 6');
  await page.getByRole('tab',{name:'Visão geral',exact:true}).click();await page.getByRole('tab',{name:'Checklist',exact:true}).click();await expect(boxes.nth(0)).toBeChecked();await expect(boxes.nth(1)).toBeChecked();
- await page.getByRole('navigation',{name:'Navegação estrutural'}).getByRole('link',{name:'Protocolos',exact:true}).click();await page.getByRole('article').filter({has:page.getByRole('heading',{name:demoProtocols[1].title,exact:true})}).getByRole('link',{name:'Visualizar',exact:true}).click();await page.getByRole('tab',{name:'Checklist',exact:true}).click();await expect(boxes.nth(0)).not.toBeChecked();await boxes.nth(0).check();
- await page.getByRole('navigation',{name:'Navegação estrutural'}).getByRole('link',{name:'Protocolos',exact:true}).click();await page.getByRole('link',{name:'Visualizar',exact:true}).first().click();await page.getByRole('tab',{name:'Checklist',exact:true}).click();await expect(boxes.nth(1)).toBeChecked();
+ await page.getByRole('link',{name:'Voltar aos protocolos',exact:true}).click();await page.getByRole('article').filter({has:page.getByRole('heading',{name:demoProtocols[1].title,exact:true})}).getByRole('link',{name:'Visualizar',exact:true}).click();await page.getByRole('tab',{name:'Checklist',exact:true}).click();await expect(boxes.nth(0)).not.toBeChecked();await boxes.nth(0).check();
+ await page.getByRole('link',{name:'Voltar aos protocolos',exact:true}).click();await page.getByRole('link',{name:'Visualizar',exact:true}).first().click();await page.getByRole('tab',{name:'Checklist',exact:true}).click();await expect(boxes.nth(1)).toBeChecked();
  await page.getByRole('button',{name:'Limpar marcações',exact:true}).click();await page.getByRole('button',{name:'Cancelar',exact:true}).click();await expect(boxes.nth(1)).toBeChecked();
  await page.getByRole('button',{name:'Limpar marcações',exact:true}).click();await page.getByRole('button',{name:'Confirmar limpeza',exact:true}).click();await expect(boxes.nth(0)).not.toBeChecked();await expect(boxes.nth(1)).not.toBeChecked();await expect(page.getByRole('button',{name:'Limpar marcações',exact:true})).toBeFocused();
- await boxes.nth(0).check();await page.getByTitle('Opções do perfil demonstrativo').click();await page.getByRole('button',{name:'Restaurar demonstração',exact:true}).click();await page.getByRole('button',{name:'Restaurar dados sintéticos',exact:true}).click();await expect(boxes.nth(0)).not.toBeChecked();
+ await boxes.nth(0).check();await page.getByRole('button',{name:/Ana Paula Ferreira/}).click();await page.getByRole('button',{name:'Restaurar demonstração',exact:true}).click();await page.getByRole('button',{name:'Restaurar dados sintéticos',exact:true}).click();await expect(boxes.nth(0)).not.toBeChecked();
  await boxes.nth(0).check();await page.reload();await ready(page);await expect(boxes.nth(0)).not.toBeChecked();
 });
 
 test('native history/reload and keyboard tab navigation retain validated location; flow controls are genuine',async({page})=>{
  await page.goto(protocolHref(demoProtocols[0].slug));await ready(page);await page.getByRole('tab',{name:'Visão geral',exact:true}).focus();await page.keyboard.press('ArrowRight');await expect(page.getByRole('tab',{name:'Fluxograma',exact:true})).toHaveAttribute('aria-selected','true');
- await expect(page.getByRole('heading',{name:'Fluxograma original • fonte em revisão',exact:true})).toBeVisible();await expect(page.getByRole('link',{name:/13. Fluxograma • digital 22/})).toBeVisible();await expect(page.getByRole('button',{name:'Aumentar zoom do esquema'})).toHaveCount(0);
- await page.getByRole('tab',{name:'Documento original',exact:true}).click();await expect(page.getByRole('button',{name:'Abrir PDF',exact:true})).toBeDisabled();await expect(page.getByRole('button',{name:'Baixar PDF',exact:true})).toBeDisabled();await page.goBack();await expect(page.getByRole('tab',{name:'Fluxograma',exact:true})).toHaveAttribute('aria-selected','true');await page.goForward();await page.reload();await expect(page.getByRole('heading',{name:'PDF original indisponível'})).toBeVisible();
+ await expect(page.getByRole('heading',{name:'Fluxograma',exact:true})).toBeVisible();await expect(page.getByRole('link',{name:/13. Fluxograma · digital 22/})).toBeVisible();await expect(page.getByRole('button',{name:'Ampliar zoom',exact:true})).toBeEnabled();
+ await page.getByRole('tab',{name:'Documento original',exact:true}).click();await expect(page.getByRole('button',{name:'Abrir PDF original',exact:true})).toBeDisabled();await expect(page.getByRole('button',{name:'Baixar PDF original',exact:true})).toBeDisabled();await page.goBack();await expect(page.getByRole('tab',{name:'Fluxograma',exact:true})).toHaveAttribute('aria-selected','true');await page.goForward();await page.reload();await expect(page.getByRole('heading',{name:'PDF original indisponível'})).toBeVisible();
 });
 
 test('paused items are noninteractive and direct HTML/RSC routes never mount old chat or course player',async({page,request})=>{

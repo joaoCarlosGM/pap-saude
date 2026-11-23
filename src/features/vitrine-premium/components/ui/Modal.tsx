@@ -18,6 +18,10 @@ const subscribeToClient = () => () => {}
 const clientSnapshot = () => true
 const serverSnapshot = () => false
 
+let openDialogs = 0
+let savedOverflow = ''
+const focusable = 'button:not([disabled]),input:not([disabled]),select:not([disabled]),textarea:not([disabled]),a[href],summary,[tabindex="0"]'
+
 const widthClasses = {
   sm: "sm:max-w-md",
   md: "sm:max-w-xl",
@@ -36,24 +40,32 @@ export default function Modal({
 }: ModalProps) {
   const client=useSyncExternalStore(subscribeToClient,clientSnapshot,serverSnapshot)
   const dialog=useRef<HTMLDivElement>(null), titleId=useId()
-  useEffect(()=>{if(!open||!client)return;const previous=document.activeElement as HTMLElement|null;const el=dialog.current;el?.querySelector<HTMLElement>('button:not([disabled]),input:not([disabled]),select:not([disabled]),textarea:not([disabled]),a[href]')?.focus();return()=>{if(previous?.isConnected&&previous.getClientRects().length&&(el?.contains(document.activeElement)||document.activeElement===document.body))previous.focus()}},[open,client])
+  useEffect(() => {
+    if (!open || !client) return
+    const previous = document.activeElement as HTMLElement | null
+    const element = dialog.current
+    if (openDialogs++ === 0) {
+      savedOverflow = document.body.style.overflow
+      document.body.style.overflow = 'hidden'
+    }
+    element?.querySelector<HTMLElement>(focusable)?.focus()
+    return () => {
+      if (--openDialogs === 0) document.body.style.overflow = savedOverflow
+      if (previous?.isConnected && previous.getClientRects().length &&
+        (element?.contains(document.activeElement) || document.activeElement === document.body)) previous.focus()
+    }
+  }, [open, client])
   if (!open||!client) return null
 
   return createPortal(
-    <div data-vitrine-dialog className="fixed inset-0 z-50">
-      <button
-        type="button"
-        aria-label="Fechar modal"
-        onClick={onClose}
-        className="absolute inset-0 bg-slate-900/40"
-      />
-
-      <div className="relative flex min-h-full items-end justify-center sm:items-center sm:p-4">
+    <div data-vitrine-dialog
+      className="fixed inset-0 z-50 flex items-end justify-center bg-slate-900/40 sm:items-center sm:p-4"
+      onClick={event => {if (event.target === event.currentTarget) onClose()}}>
         <div
           ref={dialog}
           aria-labelledby={title?titleId:undefined}
           aria-label={title?undefined:'Janela demonstrativa'}
-          onKeyDown={e=>{if(e.key==='Escape'){e.stopPropagation();onClose()}if(e.key==='Tab'){const nodes=Array.from(dialog.current?.querySelectorAll<HTMLElement>('button:not([disabled]),input:not([disabled]),select:not([disabled]),textarea:not([disabled]),a[href]')||[]).filter(el=>el.getClientRects().length>0);const first=nodes[0],last=nodes.at(-1);if(e.shiftKey&&document.activeElement===first){e.preventDefault();last?.focus()}else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first?.focus()}}}}
+          onKeyDown={e=>{if(e.key==='Escape'){e.stopPropagation();onClose()}if(e.key==='Tab'){const nodes=Array.from(dialog.current?.querySelectorAll<HTMLElement>(focusable)||[]).filter(el=>el.getClientRects().length>0);const first=nodes[0],last=nodes.at(-1);if(e.shiftKey&&document.activeElement===first){e.preventDefault();last?.focus()}else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first?.focus()}}}}
           role="dialog"
           aria-modal="true"
           className={[
@@ -83,7 +95,7 @@ export default function Modal({
                 type="button"
                 aria-label="Fechar"
                 onClick={onClose}
-                className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-slate-500 transition hover:bg-slate-100 hover:text-slate-900"
+                className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg text-slate-500 transition hover:bg-slate-100 hover:text-slate-900"
               >
                 <X size={20} />
               </button>
@@ -100,7 +112,6 @@ export default function Modal({
             </div>
           )}
         </div>
-      </div>
     </div>, document.body
   )
 }

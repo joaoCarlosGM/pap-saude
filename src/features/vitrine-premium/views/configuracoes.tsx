@@ -1,3 +1,4 @@
+import {PrivateReviewSettings} from "@/features/vitrine-premium/components/protocolos/OriginalDocumentContext"
 import SettingsLayout from "@/features/vitrine-premium/components/configuracoes/SettingsLayout"
 
 import { mockUserSettings } from "@/features/vitrine-premium/lib/mock-configuracao"
@@ -15,6 +16,7 @@ export default function ConfiguracoesPage() {
         </p>
       </header>
 
+      <PrivateReviewSettings/>
       <SettingsLayout
         initialSettings={
           mockUserSettings

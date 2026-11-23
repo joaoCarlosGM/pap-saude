@@ -27,10 +27,10 @@ export async function session(request:Request){
   // Verify all documents before enabling any capability. No consent grants public distribution rights.
   try{for(const d of originalDocuments)await verifiedBytes(d.slug)}catch{return Response.json({error:'DOCUMENT_INTEGRITY_FAILED'},{status:503,headers})}
   for(const [key,entry]of sessions())if(entry.expiresAt<=Date.now())sessions().delete(key);sessions().delete(sessionKey(request));if(sessions().size>=100)return Response.json({error:'LOCAL_REVIEW_LIMIT'},{status:429,headers});
-  const secure=expectedReviewOrigin(request).startsWith('https:')?'; Secure':'';const nonce=randomBytes(32).toString('hex');sessions().set(createHash('sha256').update(process.env.PAP_PRIVATE_REVIEW_SECRET!+nonce).digest('hex'),{expiresAt:Math.min(Date.now()+7200000,Number(process.env.PAP_PRIVATE_REVIEW_EXPIRES))});
-  return Response.json({enabled:true,documents:capabilities()},{headers:{...headers,'Set-Cookie':`${cookie}=${nonce}; Path=/homologacao; HttpOnly; SameSite=Strict; Max-Age=7200${secure}`}})
+  const secure=expectedReviewOrigin(request).startsWith('https:')?'; Secure':'';const nonce=randomBytes(32).toString('hex');const expiresAt=Math.min(Date.now()+7200000,Number(process.env.PAP_PRIVATE_REVIEW_EXPIRES));sessions().set(createHash('sha256').update(process.env.PAP_PRIVATE_REVIEW_SECRET!+nonce).digest('hex'),{expiresAt});
+  return Response.json({enabled:true,documents:capabilities(),expiresAt},{headers:{...headers,'Set-Cookie':`${cookie}=${nonce}; Path=/homologacao; HttpOnly; SameSite=Strict; Max-Age=7200${secure}`}})
  }
- if(request.method==='GET')return Response.json(authorized(request)?{enabled:true,documents:capabilities()}:{enabled:false,documents:[]},{headers})
+ if(request.method==='GET')return Response.json(authorized(request)?{enabled:true,documents:capabilities(),expiresAt:sessions().get(sessionKey(request))?.expiresAt}:{enabled:false,documents:[]},{headers})
  if(request.method==='DELETE'){
   if(request.headers.get('origin')!==expectedReviewOrigin(request)||request.headers.get('x-pap-local-review')!=='consent')return new Response(null,{status:403,headers})
   sessions().delete(sessionKey(request));
