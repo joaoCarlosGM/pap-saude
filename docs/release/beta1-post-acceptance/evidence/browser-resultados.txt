@@ -1,0 +1,37 @@
+Chromium 156, fixture privada e PostgreSQL descartáveis.
+Execução integrada: 22 PASS, 3 FAIL, 25 executados.
+Os três cenários inicialmente falhos passaram nas repetições focadas.
+
+✘   1 tests/pap-id/final-acceptance.spec.ts:13:5 › new synthetic patient persists, issues a recoverable card and versions/downloads private PDFs without crossing patient scope (2.0m)
+✓   2 tests/pap-id/final-acceptance.spec.ts:61:5 › camera decodes a real opaque QR from a simulated local video stream, ignores duplicates and stops every track (11.9s)
+✓   3 tests/pap-id/final-acceptance.spec.ts:101:5 › camera permission denial offers a safe PNG/code fallback without releasing any identity (9.0s)
+✓   4 tests/pap-id/final-visual.spec.ts:4:5 › approved Premium runtime motion, native navigation and reduced motion remain equivalent to the reference source (6.4s)
+✓   5 tests/pap-id/final-visual.spec.ts:9:5 › source-backed protocol layouts fit seven widths, light/dark and accessible checklist (2.1m)
+✓   6 tests/pap-id/final-visual.spec.ts:16:5 › structured protocol map navigates, zooms, enters fullscreen and alternates to the authorized original (26.6s)
+✓   7 tests/pap-id/final-visual.spec.ts:41:5 › profile photo validates, crops, persists across refresh and resets with the demo (13.9s)
+✓   8 tests/pap-id/final-visual.spec.ts:78:5 › informative encounter dialog closes by backdrop and keyboard, retains focus and identifies historical gaps (8.3s)
+✓   9 tests/pap-id/integrated.spec.ts:19:35 › synthetic QR/document states, record and five-step encounter without duplicate identity at 1440 (16.1s)
+✘  10 tests/pap-id/integrated.spec.ts:19:35 › synthetic QR/document states, record and five-step encounter without duplicate identity at 390 (1.0m)
+✓  11 tests/pap-id/integrated.spec.ts:36:5 › expired, revoked, malformed and changed-base credentials never release synthetic actions (5.6s)
+✓  12 tests/pap-id/integrated.spec.ts:41:5 › three real PDFs require private consent, render pages/zoom, cite their source and download identical bytes (46.3s)
+✓  13 tests/pap-id/integrated.spec.ts:56:5 › responsive QR controls, keyboard and resets do not expose clinical APIs or retain credentials after reload (23.8s)
+✓  14 tests/pap-id/post-homologation.spec.ts:5:5 › multiple PNGs are deduplicated, explicitly selected before document confirmation; compact desktop/mobile (10.8s)
+✓  15 tests/pap-id/post-homologation.spec.ts:10:5 › visible protocol return, real sourced overviews and original flow remain under private capability (10.6s)
+✓  16 tests/pap-id/post-homologation.spec.ts:13:5 › private PostgreSQL issuer shares CLI base, persists reload, revokes reissued PNG and never duplicates patient (24.9s)
+✓  17 tests/protocols/journey.spec.ts:18:5 › library searches accents/codes, combines filters and recovers from no results (5.1s)
+✓  18 tests/protocols/journey.spec.ts:25:5 › all three references and four tabs have real deep links and desktop/mobile evidence (28.6s)
+✓  19 tests/protocols/journey.spec.ts:42:5 › checklist remains local across tabs/protocols and resets only after confirmation (6.3s)
+✘  20 tests/protocols/journey.spec.ts:54:5 › native history/reload and keyboard tab navigation retain validated location; flow controls are genuine (19.3s)
+✓  21 tests/protocols/journey.spec.ts:60:5 › paused items are noninteractive and direct HTML/RSC routes never mount old chat or course player (13.5s)
+✓  22 tests/protocols/journey.spec.ts:70:5 › presentation loading/empty/error states give truthful feedback (7.2s)
+✓  23 tests/protocols/journey.spec.ts:74:5 › responsive library/detail, dark mode and keyboard focus avoid horizontal overflow (18.1s)
+✓  24 tests/protocols/journey.spec.ts:82:35 › six-step help tour avoids paused routes and resumes from detail query at 1440 (5.3s)
+✓  25 tests/protocols/journey.spec.ts:82:35 › six-step help tour avoids paused routes and resumes from detail query at 375 (5.4s)
+
+Repetições e verificações focadas: 6 PASS.
+✓  1 tests/pap-id/final-acceptance.spec.ts:13:5 › new synthetic patient persists, issues a recoverable card and versions/downloads private PDFs without crossing patient scope (1.4m)
+✓  2 tests/pap-id/final-visual.spec.ts:16:5 › structured protocol map navigates, zooms, enters fullscreen and alternates to the authorized original (22.0s)
+✓  3 tests/pap-id/final-visual.spec.ts:78:5 › informative encounter dialog closes by backdrop and keyboard, retains focus and identifies historical gaps (7.5s)
+✓  1 tests/pap-id/integrated.spec.ts:19:35 › synthetic QR/document states, record and five-step encounter without duplicate identity at 390 (17.5s)
+✓  1 tests/protocols/journey.spec.ts:54:5 › native history/reload and keyboard tab navigation retain validated location; flow controls are genuine (4.2s)
+✓  1 tests/protocols/journey.spec.ts:18:5 › library searches accents/codes, combines filters and recovers from no results (6.7s)

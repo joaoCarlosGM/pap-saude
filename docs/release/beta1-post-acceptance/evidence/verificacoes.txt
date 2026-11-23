@@ -1,0 +1,41 @@
+Codex Cloud. Checkout /workspace/pap-saude, Git 2.56.1, Node 24.22.3, npm 11.19.1, Chromium 156.
+Base conferida no remoto: e1816eda38192720dd7051392a41b6a04f88dd97.
+Código: 61e39c8ba95d0ea3f900a43312f8f190cf1b0dd6, b211f69c2b9cb5b38f90ad122a189c61bc35c11d e 0ea8d7d86a505fb0d75780ba59a6718937b350b3.
+
+node --import ./tests/protocols/load.mjs --test tests/pap-id/*.test.mjs tests/protocols/*.test.mjs tests/vitrine-premium/*.test.mjs
+107 testes, 107 passaram, 0 falharam.
+
+tsx --test tests/pap-id/card-exports.test.mts
+1 teste passou. QR verificável no verso para três variantes PNG. PDF de uma página aceito pelo parser.
+O mesmo token opaco foi reconhecido e não apareceu como texto no PDF.
+
+tsx --test tests/pap-id/private-session.test.mts tests/pap-id/mobile-edge.test.mts tests/auth/crypto-core.test.ts tests/auth/mfa-secret-encryption.test.ts tests/commercial-beta/rsc-metadata.test.ts
+25 testes, 25 passaram, incluindo sessão privada expirada, origem e HTTPS/pareamento isolados.
+
+tsx --test --test-concurrency=1 tests/pap-id/final-registry.test.mts tests/pap-id/database.test.mts tests/pap-id/restart.test.mts
+7 testes, 7 passaram no PostgreSQL descartável. Linhas e bytes de PNG e PDF iguais após restart do container próprio.
+
+TypeScript com include restrito à Vitrine, scripts privados e testes de homologação: exit 0.
+
+npm run lint
+0 erros, 4 avisos herdados em arquivos de testes não modificados.
+
+Comparação git da base e da candidata: fontes de src/server, src/app, src/proxy.ts, Prisma, 36 migrations, deploy, workflows e lockfile iguais.
+Comparação git com 0e0a2d816729cd68bebdc6c1a0339b2c8a19b861: motion, dashboard e componentes Premium iguais.
+
+prisma generate
+BLOCKED: HTTP 403 no download de checksum do motor em binaries.prisma.sh. Verificação de integridade mantida.
+
+npm run build -- --webpack
+Webpack compilou com sucesso. A fase TypeScript falhou pela ausência do cliente Prisma gerado.
+Standalone HTTP/RSC e Docker runtime: NOT RUN com o artefato final, dependem do build completo.
+
+node tests/protocols/run-browser.mjs --integrated
+22 PASS e 3 FAIL na rodada completa. Os 3 passaram em repetições dirigidas. Ver browser-resultados.txt.
+HTTPS em Chromium com CA explícita: PASS.
+29 PNGs verificadas com jsQR, sem QR detectável.
+
+npm audit --omit=dev --audit-level=high --json
+4 HIGH, 9 MODERATE, 0 CRITICAL. HIGH: @prisma/client, @prisma/config, effect e prisma. Lockfile igual à base.
+
+Desktop e celular físicos, WSL/Windows e QR em papel: NOT RUN neste executor.

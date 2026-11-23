@@ -1,0 +1,183 @@
+{
+  "ambiente": "Codex Cloud, PostgreSQL descartável, Chromium 156",
+  "base": "e1816eda38192720dd7051392a41b6a04f88dd97",
+  "codigoEntregue": "0ea8d7d86a505fb0d75780ba59a6718937b350b3",
+  "capturas": {
+    "quantidade": 29,
+    "qrDetectado": false,
+    "metodo": "decodificação jsQR de todas as imagens PNG"
+  },
+  "arquivos": [
+    {
+      "arquivo": "browser-resultados.txt",
+      "bytes": 5012,
+      "sha256": "a1a1f9b50a72747ad581c3fa2f8bc44f4f118b16e1ca6513b69c571c0cc1aff1"
+    },
+    {
+      "arquivo": "camera-auto-close.png",
+      "bytes": 81468,
+      "sha256": "10dc3a7829bffbd287c626aad839b5ee906d9ba0e638c94f66401bf72368224b"
+    },
+    {
+      "arquivo": "cartao-colorido.png",
+      "bytes": 76798,
+      "sha256": "d7f65f253337f74fc6a47e35546f4f435718fe28f2130f23a10ba8fdf2d8e6c3"
+    },
+    {
+      "arquivo": "cartao-pb-detalhado.png",
+      "bytes": 72899,
+      "sha256": "615ec7fcb8381768ad0c2878541a78f6e37d6db222e4eb1cd4b326ae50e84bea"
+    },
+    {
+      "arquivo": "documents-1440.png",
+      "bytes": 191365,
+      "sha256": "5b18bc90a0ec428f301be4f3e23d3ebf7cb71b00bd1d861f4f7b59c89336440a"
+    },
+    {
+      "arquivo": "documents-390.png",
+      "bytes": 66288,
+      "sha256": "ceee7d89836b6cf77924bb54955341148a419f1e90f3cb85872cbc8f42585f91"
+    },
+    {
+      "arquivo": "https-runtime.json",
+      "bytes": 366,
+      "sha256": "f48509f79e058b7832d7fa5d259c640cf2126085161b1ef059b30aaeef8824b4"
+    },
+    {
+      "arquivo": "mobile-https-documents.png",
+      "bytes": 40572,
+      "sha256": "c6c81088d1ef3bf0a6cb9022e7bde992db82a88b304de8339445e0a87d6d3433"
+    },
+    {
+      "arquivo": "motion-runtime.json",
+      "bytes": 622,
+      "sha256": "0a63e9db28fa2f16e0e3300a3cde725f5c07c26d6c2075b2bd0baf9a4559abde"
+    },
+    {
+      "arquivo": "profile-sidebar-375.png",
+      "bytes": 59715,
+      "sha256": "41490811eb265c9ef0e8cf78ee466f78b362ba3f8aee99e522b4d93cd31d0be4"
+    },
+    {
+      "arquivo": "protocol-flow-original-1440.png",
+      "bytes": 204882,
+      "sha256": "1bf9b6f19fb3f5137556d15295d9b177a98111aa8da1fb498ba0892c8300cd13"
+    },
+    {
+      "arquivo": "protocol-hemorragia-pos-parto-checklist-1440.png",
+      "bytes": 197450,
+      "sha256": "b90dffe87da62a4d1be21528b55d2f4f4a84344e1154428516f196c111734b64"
+    },
+    {
+      "arquivo": "protocol-hemorragia-pos-parto-checklist-390.png",
+      "bytes": 87571,
+      "sha256": "e62e23a7c9323fd5c00663c7fa25b98e1dae0f8af32c847719826c4cf7a5cd40"
+    },
+    {
+      "arquivo": "protocol-map-1440.png",
+      "bytes": 237120,
+      "sha256": "040d49369bcddd7b5d4913529692c118d56ece7a310bb870bf912d3d6d5e3e3c"
+    },
+    {
+      "arquivo": "protocol-overview-1024-dark.png",
+      "bytes": 176860,
+      "sha256": "4a39623bb35a8876385e6bd2908da94f3cdb6bd17a361e42b8bc26ed723913bb"
+    },
+    {
+      "arquivo": "protocol-overview-1024-light.png",
+      "bytes": 171673,
+      "sha256": "6c50f291baf02a55588ef14a49c7d7db304cb38774ecbb3625abbeb31fb751e5"
+    },
+    {
+      "arquivo": "protocol-overview-1440-dark.png",
+      "bytes": 256772,
+      "sha256": "c6fa5afa16b46b9baca104faa480924c009b73cbc75ce226b9676ebe14ec05e5"
+    },
+    {
+      "arquivo": "protocol-overview-1440-light.png",
+      "bytes": 250525,
+      "sha256": "24afcd1c43ee61a950336bf0cd8c2137ea8dd05411627bb340f2f94fc9204e9f"
+    },
+    {
+      "arquivo": "protocol-overview-320-dark.png",
+      "bytes": 67292,
+      "sha256": "302827359c8935c074e01c071d138949fae1a26ca4ee6122ea492eddd5344e04"
+    },
+    {
+      "arquivo": "protocol-overview-320-light.png",
+      "bytes": 64840,
+      "sha256": "22be7b178c484fec9734102da973e1e3e2a34ce92a16a9743ddc1fb66e9de065"
+    },
+    {
+      "arquivo": "protocol-overview-375-dark.png",
+      "bytes": 78506,
+      "sha256": "8b126d914b8c5e079ea7d40923cb93e85c38171edd46ea04ee72678f5e2013eb"
+    },
+    {
+      "arquivo": "protocol-overview-375-light.png",
+      "bytes": 74740,
+      "sha256": "449b5a9746ae7741e3caf147b225debf0eb55d393b12fa528f24245ce5938d50"
+    },
+    {
+      "arquivo": "protocol-overview-390-dark.png",
+      "bytes": 83724,
+      "sha256": "d5f223c6afa8f779c9de3ae40a4d23081177b6265153d3af11c0f0f55a225c28"
+    },
+    {
+      "arquivo": "protocol-overview-390-light.png",
+      "bytes": 79462,
+      "sha256": "bb7e401500ab82de9c6358f83173cd332cd386835dfdc99548dfa3421e9c8b21"
+    },
+    {
+      "arquivo": "protocol-overview-430-dark.png",
+      "bytes": 84893,
+      "sha256": "fe605229f8c0fdad3d7e83ff5782185bbcdf8d3fe7b0296daa481204d3c1e365"
+    },
+    {
+      "arquivo": "protocol-overview-430-light.png",
+      "bytes": 80591,
+      "sha256": "c5d3a8596bfee84485d629ab55e0891b9a6bbe9c838a69dbc617513ee801ec00"
+    },
+    {
+      "arquivo": "protocol-overview-768-dark.png",
+      "bytes": 151639,
+      "sha256": "c5a5ff0080d10a503cd5891973223e6d77b1ffb72467189ed1efc9b39876b31a"
+    },
+    {
+      "arquivo": "protocol-overview-768-light.png",
+      "bytes": 147557,
+      "sha256": "171de5de097c737797cd52de15f417d5b9d60ae77ab4d19545cf233281562e6d"
+    },
+    {
+      "arquivo": "protocol-sepse-obstetrica-checklist-1440.png",
+      "bytes": 209825,
+      "sha256": "3f8ec94d40ceb2cac17f1c4047ed260e644a53c1db79180c8a461ba25e646b64"
+    },
+    {
+      "arquivo": "protocol-sepse-obstetrica-checklist-390.png",
+      "bytes": 90457,
+      "sha256": "62ae6059dab3912d8c05120b36afbc3a91a3b594b3d898c519d78a97eee7bd98"
+    },
+    {
+      "arquivo": "protocol-sindromes-hipertensivas-gestacao-checklist-1440.png",
+      "bytes": 194226,
+      "sha256": "3326d809fd474003963625609b60a75bd7b267e8755ad1b582886c1085eacfbf"
+    },
+    {
+      "arquivo": "protocol-sindromes-hipertensivas-gestacao-checklist-390.png",
+      "bytes": 80612,
+      "sha256": "44b61fde3204f60890f5c700be34193ec1617d2b1f3396ada81dc6c86e1eda94"
+    },
+    {
+      "arquivo": "verificacoes.txt",
+      "bytes": 2517,
+      "sha256": "b233ca54659ec76924131b7d6ff136dd975fb8dbfdf25e32aa824309009613c1"
+    },
+    {
+      "arquivo": "virtual-print.txt",
+      "bytes": 159,
+      "sha256": "3158d7175add64a2774a0d6c04de1b71aee74f183925ae671779186396990f38"
+    }
+  ],
+  "ajusteTesteHistorico": "ee4d30d77550cb815ba6cce21b06fb8b84d841cd"
+}
