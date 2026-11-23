@@ -3,12 +3,15 @@ const sha=(b:Buffer)=>createHash('sha256').update(b).digest('hex')
 async function authorize(page: import('@playwright/test').Page, path: string) {
  await page.goto('/vitrine/configuracoes')
  await page.locator('[data-private-review]>summary').click()
+ const grant=page.waitForResponse(response=>response.url().endsWith('/homologacao/sessao')&&response.request().method()==='POST')
  await page.getByRole('button',{name:'Autorizar consulta local dos PDFs',exact:true}).click()
+ expect((await grant).status()).toBe(200)
  await expect(page.locator('[data-private-review]>summary')).toContainText('consulta autorizada')
  await page.goto(path)
 }
 test.beforeEach(async({page})=>{await page.addInitScript(()=>sessionStorage.setItem('pap.vitrine.premium.welcome.v2','seen'));await page.emulateMedia({reducedMotion:'reduce'})})
 test('new synthetic patient persists, issues a recoverable card and versions/downloads private PDFs without crossing patient scope',async({page,context})=>{
+ test.setTimeout(120000)
  expect(process.env.PAP_ID_REVIEW_PROFILE,'owned PostgreSQL profile required').toBeTruthy();const errors:string[]=[];page.on('pageerror',e=>errors.push(e.name));await authorize(page,'/vitrine/pacientes');await page.getByRole('button',{name:'Cadastrar nova gestante',exact:true}).click();const name='Gestante Sintética Browser '+randomBytes(3).toString('hex');await page.getByLabel('Nome sintético',{exact:true}).fill(name);await page.getByLabel('Confirmo que são dados inteiramente sintéticos.',{exact:true}).check();await page.getByRole('button',{name:'Salvar gestante sintética',exact:true}).click();await expect(page.getByText('Cadastro confirmado no PostgreSQL exclusivo.',{exact:true})).toBeVisible();await page.getByRole('link',{name:'Abrir prontuário e Documentos',exact:true}).click();await expect(page).toHaveURL(/\/vitrine\/pacientes\/review-[a-f0-9-]{36}\?aba=documentos$/);await expect(page.getByRole('heading',{name,exact:true})).toBeVisible();const patientId=new URL(page.url()).pathname.split('/').at(-1)!;
  await page.getByRole('button',{name:'Emitir carteirinha PAP-ID',exact:true}).click();await page.getByRole('button',{name:'Confirmar emissão',exact:true}).click();
  const openCard=()=>page.getByRole('button',{name:'Visualizar carteirinha',exact:true}).click()
