@@ -41,6 +41,7 @@ test('new synthetic patient persists, issues a recoverable card and versions/dow
  await expect(page.getByRole('navigation',{name:'Módulos'})).toBeHidden()
  await page.emulateMedia({media:'screen'})
  await page.keyboard.press('Escape')
+ await expect(viewer).toHaveCount(0)
  const noticeTrigger=page.getByRole('button',{name:'Avisos',exact:true})
  await noticeTrigger.click()
  const inbox=page.getByRole('dialog',{name:'Caixa de entrada'})

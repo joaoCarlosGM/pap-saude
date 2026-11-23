@@ -1,6 +1,6 @@
 "use client"
 
-import {useEffect,useRef,useId,useSyncExternalStore,type ReactNode} from "react"
+import {useEffect,useEffectEvent,useRef,useId,useSyncExternalStore,type ReactNode} from "react"
 import {createPortal} from "react-dom"
 import { X } from "lucide-react"
 
@@ -18,7 +18,7 @@ const subscribeToClient = () => () => {}
 const clientSnapshot = () => true
 const serverSnapshot = () => false
 
-let openDialogs = 0
+const openDialogs: HTMLDivElement[] = []
 let savedOverflow = ''
 const focusable = 'button:not([disabled]),input:not([disabled]),select:not([disabled]),textarea:not([disabled]),a[href],summary,[tabindex="0"]'
 
@@ -39,20 +39,37 @@ export default function Modal({
   maxWidth = "lg",
 }: ModalProps) {
   const client=useSyncExternalStore(subscribeToClient,clientSnapshot,serverSnapshot)
-  const dialog=useRef<HTMLDivElement>(null), titleId=useId()
+  const dialog=useRef<HTMLDivElement>(null), titleId=useId(), descriptionId=useId()
+  const requestClose = useEffectEvent(() => onClose())
   useEffect(() => {
     if (!open || !client) return
     const previous = document.activeElement as HTMLElement | null
     const element = dialog.current
-    if (openDialogs++ === 0) {
+    if (!element) return
+    if (openDialogs.length === 0) {
       savedOverflow = document.body.style.overflow
       document.body.style.overflow = 'hidden'
     }
-    element?.querySelector<HTMLElement>(focusable)?.focus()
+    openDialogs.push(element)
+    const focusFirst = () => (element.querySelector<HTMLElement>(focusable) || element).focus()
+    focusFirst()
+    function handleKeyDown(event: KeyboardEvent) {
+      if (openDialogs.at(-1) !== element || event.defaultPrevented) return
+      if (event.key === 'Escape') {
+        event.preventDefault()
+        requestClose()
+      } else if (event.key === 'Tab' && !element!.contains(document.activeElement)) {
+        event.preventDefault()
+        focusFirst()
+      }
+    }
+    document.addEventListener('keydown', handleKeyDown)
     return () => {
-      if (--openDialogs === 0) document.body.style.overflow = savedOverflow
+      document.removeEventListener('keydown', handleKeyDown)
+      openDialogs.splice(openDialogs.indexOf(element), 1)
+      if (openDialogs.length === 0) document.body.style.overflow = savedOverflow
       if (previous?.isConnected && previous.getClientRects().length &&
-        (element?.contains(document.activeElement) || document.activeElement === document.body)) previous.focus()
+        (element.contains(document.activeElement) || document.activeElement === document.body)) previous.focus()
     }
   }, [open, client])
   if (!open||!client) return null
@@ -64,8 +81,10 @@ export default function Modal({
         <div
           ref={dialog}
           aria-labelledby={title?titleId:undefined}
+          aria-describedby={description?descriptionId:undefined}
+          tabIndex={-1}
           aria-label={title?undefined:'Janela demonstrativa'}
-          onKeyDown={e=>{if(e.key==='Escape'){e.stopPropagation();onClose()}if(e.key==='Tab'){const nodes=Array.from(dialog.current?.querySelectorAll<HTMLElement>(focusable)||[]).filter(el=>el.getClientRects().length>0);const first=nodes[0],last=nodes.at(-1);if(e.shiftKey&&document.activeElement===first){e.preventDefault();last?.focus()}else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first?.focus()}}}}
+          onKeyDown={e=>{if(e.key==='Tab'){const nodes=Array.from(dialog.current?.querySelectorAll<HTMLElement>(focusable)||[]).filter(el=>el.getClientRects().length>0);const first=nodes[0],last=nodes.at(-1);if(e.shiftKey&&document.activeElement===first){e.preventDefault();last?.focus()}else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first?.focus()}}}}
           role="dialog"
           aria-modal="true"
           className={[
@@ -85,7 +104,7 @@ export default function Modal({
                 )}
 
                 {description && (
-                  <p className="mt-1 text-sm text-slate-500">
+                  <p id={descriptionId} className="mt-1 text-sm text-slate-500">
                     {description}
                   </p>
                 )}
