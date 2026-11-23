@@ -54,7 +54,20 @@ test('checklist remains local across tabs/protocols and resets only after confir
 test('native history/reload and keyboard tab navigation retain validated location; flow controls are genuine',async({page})=>{
  await page.goto(protocolHref(demoProtocols[0].slug));await ready(page);await page.getByRole('tab',{name:'Visão geral',exact:true}).focus();await page.keyboard.press('ArrowRight');await expect(page.getByRole('tab',{name:'Fluxograma',exact:true})).toHaveAttribute('aria-selected','true');
  await expect(page.getByRole('heading',{name:'Fluxograma',exact:true})).toBeVisible();await expect(page.getByRole('link',{name:/13. Fluxograma · digital 22/})).toBeVisible();await expect(page.getByRole('button',{name:'Ampliar zoom',exact:true})).toBeEnabled();
- await page.getByRole('tab',{name:'Documento original',exact:true}).click();await expect(page.getByRole('button',{name:'Abrir PDF original',exact:true})).toBeDisabled();await expect(page.getByRole('button',{name:'Baixar PDF original',exact:true})).toBeDisabled();await page.goBack();await expect(page.getByRole('tab',{name:'Fluxograma',exact:true})).toHaveAttribute('aria-selected','true');await page.goForward();await page.reload();await expect(page.getByRole('heading',{name:'PDF original indisponível'})).toBeVisible();
+ const original = page.getByRole('tab',{name:'Documento original',exact:true});
+ await original.click();
+ await expect(page).toHaveURL(/aba=documento-original$/);
+ await expect(original).toHaveAttribute('aria-selected','true');
+ await expect(page.getByRole('button',{name:'Abrir PDF original',exact:true})).toBeDisabled();
+ await expect(page.getByRole('button',{name:'Baixar PDF original',exact:true})).toBeDisabled();
+ await page.goBack();
+ await expect(page).toHaveURL(/aba=fluxograma$/);
+ await expect(page.getByRole('tab',{name:'Fluxograma',exact:true})).toHaveAttribute('aria-selected','true');
+ await page.goForward();
+ await expect(page).toHaveURL(/aba=documento-original$/);
+ await expect(original).toHaveAttribute('aria-selected','true');
+ await page.reload();
+ await expect(page.getByRole('heading',{name:'PDF original indisponível'})).toBeVisible();
 });
 
 test('paused items are noninteractive and direct HTML/RSC routes never mount old chat or course player',async({page,request})=>{
