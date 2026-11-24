@@ -1,0 +1,23 @@
+Execução de 24/11/2026, horário de Fortaleza
+Repositório joaoCarlosGM/pap-saude
+Checkout /workspace/pap-saude
+Git 2.56.1
+Node 24.22.3
+npm 11.19.1
+Next.js 16.4.2
+Docker Server 29.9.2
+Chromium 156.0.8078.79
+Base remota da missão dd3782da4a9c43303f9fec4cc757be24f250b2ad
+Implementação 138f1d3b6fe22b27fca026670db28a8c751f9abd
+Branch feature/beta1-longitudinal-record-h23-h28-rc
+
+Validação inicial
+pwd                      /workspace/pap-saude
+git status --short       saída vazia
+git fetch origin refs/heads/feature/beta1-post-acceptance-ux-rc
+git rev-parse FETCH_HEAD dd3782da4a9c43303f9fec4cc757be24f250b2ad
+
+npm ci  PASS, 918 pacotes instalados, lockfile preservado
+PostgreSQL 16-alpine, perfis descartáveis, portas altas ligadas a 127.0.0.1
+Fixture Next.js, portas altas ligadas a 127.0.0.1, URL operacional inerte
+Diff com a base em prisma, src/app, src/server, .github, public e manifests npm  PASS

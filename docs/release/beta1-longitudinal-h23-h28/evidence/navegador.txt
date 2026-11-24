@@ -1,0 +1,73 @@
+Chromium 156.0.8078.79 | versão da candidata 138f1d3b6fe22b27fca026670db28a8c751f9abd
+
+$ node tests/protocols/run-browser.mjs --integrated longitudinal.spec.ts --grep-invert retomada
+  ✓  1 tests/pap-id/longitudinal.spec.ts:48:5 › H23–H28 jornada desktop: cadastro, prontuário, PDF, Registro, SOAP, Agenda e refresh (1.7m)
+  ✓  2 tests/pap-id/longitudinal.spec.ts:281:7 › Chromium com toque e viewport Android › H24–H27 formulários móveis, validação nativa, retrato e tema escuro (40.4s)
+  2 passed (2.5m)
+
+$ review-lab.mts --action stop/start com o mesmo perfil descartável
+PASS, comandos encadeados com exit 0 antes de iniciar outra fixture
+
+$ PAP_H23_VERIFY_RESTART=1 node tests/protocols/run-browser.mjs --integrated longitudinal.spec.ts --grep retomada
+  ✓  1 tests/pap-id/longitudinal.spec.ts:263:5 › H28 retomada da mesma ficha depois de reiniciar a fixture (1.0m)
+  1 passed (1.1m)
+
+Regressão geral H01–H22/PAP-ID/Protocolos
+$ node tests/protocols/run-browser.mjs --integrated --grep-invert [cenários longitudinais]
+  ✓   1 tests/pap-id/final-acceptance.spec.ts:13:5 › new synthetic patient persists, issues a recoverable card and versions/downloads private PDFs without crossing patient scope (40.4s)
+  ✓   2 tests/pap-id/final-acceptance.spec.ts:62:5 › camera decodes a real opaque QR from a simulated local video stream, ignores duplicates and stops every track (7.5s)
+  ✓   3 tests/pap-id/final-acceptance.spec.ts:102:5 › camera permission denial offers a safe PNG/code fallback without releasing any identity (7.8s)
+  ✓   4 tests/pap-id/final-visual.spec.ts:4:5 › approved Premium runtime motion, native navigation and reduced motion remain equivalent to the reference source (5.4s)
+  ✓   5 tests/pap-id/final-visual.spec.ts:9:5 › source-backed protocol layouts fit seven widths, light/dark and accessible checklist (53.1s)
+  ✓   6 tests/pap-id/final-visual.spec.ts:16:5 › structured protocol map navigates, zooms, enters fullscreen and alternates to the authorized original (12.1s)
+  ✓   7 tests/pap-id/final-visual.spec.ts:41:5 › profile photo validates, crops, persists across refresh and resets with the demo (5.1s)
+  ✓   8 tests/pap-id/final-visual.spec.ts:78:5 › informative encounter dialog closes by backdrop and keyboard, retains focus and identifies historical gaps (3.9s)
+  ✘   9 tests/pap-id/integrated.spec.ts:19:35 › synthetic QR/document states, record and five-step encounter without duplicate identity at 1440 (1.0m)
+  ✘  10 tests/pap-id/integrated.spec.ts:19:35 › synthetic QR/document states, record and five-step encounter without duplicate identity at 390 (1.0m)
+  ✓  11 tests/pap-id/integrated.spec.ts:36:5 › expired, revoked, malformed and changed-base credentials never release synthetic actions (15.9s)
+  ✘  12 tests/pap-id/integrated.spec.ts:41:5 › three real PDFs require private consent, render pages/zoom, cite their source and download identical bytes (1.0m)
+  ✘  13 tests/pap-id/integrated.spec.ts:56:5 › responsive QR controls, keyboard and resets do not expose clinical APIs or retain credentials after reload (1.0m)
+  ✓  14 tests/pap-id/post-homologation.spec.ts:5:5 › multiple PNGs are deduplicated, explicitly selected before document confirmation; compact desktop/mobile (37.9s)
+  ✓  15 tests/pap-id/post-homologation.spec.ts:10:5 › visible protocol return, real sourced overviews and original flow remain under private capability (35.5s)
+  ✘  16 tests/pap-id/post-homologation.spec.ts:13:5 › private PostgreSQL issuer shares CLI base, persists reload, revokes reissued PNG and never duplicates patient (40.3s)
+  ✓  17 tests/protocols/journey.spec.ts:18:5 › library searches accents/codes, combines filters and recovers from no results (15.8s)
+  ✘  18 tests/protocols/journey.spec.ts:25:5 › all three references and four tabs have real deep links and desktop/mobile evidence (1.0m)
+  ✓  19 tests/protocols/journey.spec.ts:42:5 › checklist remains local across tabs/protocols and resets only after confirmation (53.4s)
+  ✓  20 tests/protocols/journey.spec.ts:54:5 › native history/reload and keyboard tab navigation retain validated location; flow controls are genuine (18.0s)
+  ✓  21 tests/protocols/journey.spec.ts:73:5 › paused items are noninteractive and direct HTML/RSC routes never mount old chat or course player (55.2s)
+  ✓  22 tests/protocols/journey.spec.ts:83:5 › presentation loading/empty/error states give truthful feedback (22.1s)
+  ✘  23 tests/protocols/journey.spec.ts:87:5 › responsive library/detail, dark mode and keyboard focus avoid horizontal overflow (1.0m)
+  ✓  24 tests/protocols/journey.spec.ts:95:35 › six-step help tour avoids paused routes and resumes from detail query at 1440 (21.8s)
+  ✓  25 tests/protocols/journey.spec.ts:95:35 › six-step help tour avoids paused routes and resumes from detail query at 375 (16.0s)
+  ✓  26 tests/vitrine-premium/registration-followup.spec.ts:16:5 › cadastro em tela Android, medidas independentes, múltiplos autores e fechamento com viewport reduzida (24.6s)
+  ✓  27 tests/vitrine-premium/registration-followup.spec.ts:116:5 › agenda persiste, mostra lembrete, preserva mudanças e atualiza o prontuário (36.7s)
+  7 failed
+  20 passed (15.8m)
+
+Repetição dos três PDFs e dos links de Protocolos com timeout ampliado
+  ✓  1 tests/protocols/journey.spec.ts:25:5 › all three references and four tabs have real deep links and desktop/mobile evidence (2.5m)
+  1 passed (2.6m)
+  ✓  1 tests/pap-id/integrated.spec.ts:41:5 › three real PDFs require private consent, render pages/zoom, cite their source and download identical bytes (3.0m)
+  1 passed (3.4m)
+
+Controle na base dd3782da (checkout descartável)
+  ✓  1 tests/pap-id/integrated.spec.ts:19:35 › synthetic QR/document states, record and five-step encounter without duplicate identity at 1440 (48.1s)
+  ✓  2 tests/pap-id/integrated.spec.ts:19:35 › synthetic QR/document states, record and five-step encounter without duplicate identity at 390 (55.5s)
+  ✓  3 tests/pap-id/integrated.spec.ts:41:5 › three real PDFs require private consent, render pages/zoom, cite their source and download identical bytes (1.7m)
+  3 passed (3.8m)
+
+Capturas PNG na mesma pasta, com CPF visível mascarado.
+
+Repetição focada em perfil descartável independente, timeout 180 s
+  ✘  1 tests/pap-id/integrated.spec.ts:19:35 › synthetic QR/document states, record and five-step encounter without duplicate identity at 1440 (3.0m)
+  ✓  2 tests/pap-id/integrated.spec.ts:19:35 › synthetic QR/document states, record and five-step encounter without duplicate identity at 390 (25.7s)
+  ✓  3 tests/pap-id/post-homologation.spec.ts:13:5 › private PostgreSQL issuer shares CLI base, persists reload, revokes reissued PNG and never duplicates patient (52.2s)
+  1 failed
+  2 passed (4.7m)
+
+Repetição serial final dos fluxos de apresentação, sem perfil PostgreSQL, timeout 210 s
+  ✓  1 tests/pap-id/integrated.spec.ts:19:35 › synthetic QR/document states, record and five-step encounter without duplicate identity at 1440 (13.5s)
+  ✓  2 tests/pap-id/integrated.spec.ts:19:35 › synthetic QR/document states, record and five-step encounter without duplicate identity at 390 (8.7s)
+  ✓  3 tests/pap-id/integrated.spec.ts:56:5 › responsive QR controls, keyboard and resets do not expose clinical APIs or retain credentials after reload (18.9s)
+  ✓  4 tests/protocols/journey.spec.ts:87:5 › responsive library/detail, dark mode and keyboard focus avoid horizontal overflow (17.6s)
+  4 passed (1.1m)

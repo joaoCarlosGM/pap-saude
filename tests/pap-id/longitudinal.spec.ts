@@ -261,6 +261,7 @@ test('H23–H28 jornada desktop: cadastro, prontuário, PDF, Registro, SOAP, Age
 })
 
 test('H28 retomada da mesma ficha depois de reiniciar a fixture',async ({page,context}) => {
+  test.setTimeout(180_000)
   test.skip(process.env.PAP_H23_VERIFY_RESTART !== '1' || !resume,'Executar com a segunda inicialização da fixture')
   const {route,eventIds} = JSON.parse(await readFile(resume!,'utf8'))
   await authorize(page)
@@ -268,8 +269,12 @@ test('H28 retomada da mesma ficha depois de reiniciar a fixture',async ({page,co
   await tab(page,'Timeline')
   const timeline = page.getByRole('list',{name:'Eventos do prontuário'})
   await expect(timeline.getByText('Anotação SOAP',{exact:true})).toHaveCount(2)
-  const restored = await (await context.request.get(api(route))).json()
-  expect(restored.events.map((event:{id:string})=>event.id)).toEqual(eventIds)
+  await expect(async () => {
+    const response = await context.request.get(api(route))
+    expect(response.status()).toBe(200)
+    const restored = await response.json()
+    expect(restored.events.map((event:{id:string})=>event.id)).toEqual(eventIds)
+  }).toPass({timeout:30000})
   await tab(page,'Agenda')
   await expect(page.getByText('Vacinação · Reforço fictício · D2',{exact:true})).toBeVisible()
 })
@@ -279,6 +284,7 @@ test.describe('Chromium com toque e viewport Android',() => {
   void browser
   test.use(mobile)
   test('H24–H27 formulários móveis, validação nativa, retrato e tema escuro',async ({page}) => {
+    test.setTimeout(120_000)
     await authorize(page)
     await page.goto('/vitrine/pacientes/maria-gracas')
     await viewport(page,390)

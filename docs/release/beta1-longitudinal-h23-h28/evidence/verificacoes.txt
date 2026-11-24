@@ -1,0 +1,81 @@
+EXECUÇÃO AUTOMATIZADA H23–H28
+
+$ node --import ./tests/protocols/load.mjs --test tests/vitrine-premium/*.test.mjs tests/protocols/*.test.mjs tests/pap-id/*.test.mjs
+ℹ tests 111
+ℹ suites 0
+ℹ pass 111
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 35753.107967
+
+$ PAP_H23_RESTART=1 tsx --test tests/pap-id/longitudinal.test.mts
+✔ H23–H27 validam dados explícitos e H26/H27 preservam histórico e DPP em consulta vazia (52.950386ms)
+✔ H23–H28 PostgreSQL próprio: versões, autorização, Agenda e SOAP, PDF, idempotência e reinício real (25824.64696ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 2
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 29491.543188
+
+$ tsx --test --test-concurrency=1 tests/pap-id/{database,final-registry,restart,private-session,mobile-edge}.test.mts
+✔ owned isolated PostgreSQL: issue/retry/concurrency/revoke/persistence and no duplicate identities (844.631655ms)
+✔ private card endpoint denies missing session, foreign origin, query traversal and unsupported methods (613.33062ms)
+✔ owned stop/status/start retains PostgreSQL history and volume data without rebuilding resources (10363.537596ms)
+✔ profile guards reject operator ports, tampered ownership and cleanup without exact confirmation (2828.245033ms)
+✔ v2 additive upgrade preserves legacy rows; registration, encrypted credentials and versioned PDFs persist with audit (4891.292324ms)
+✔ PDF parser rejects corruption, oversized payload, JavaScript and unsupported embedded behavior (8.408429ms)
+✔ LAN edge rejects public/wildcard origins, operational routes and traversal without widening the allowlist (12.987913ms)
+✔ trusted HTTPS pairing, exact origin, Secure cookie, revocation, rate limiting and proxy header isolation (519.385752ms)
+✔ private backend accepts the exact TLS Origin only with its internal edge secret, never a forged proxy header (8.740469ms)
+✔ private consent expires fail-closed for original PDFs, credentials and patient documents, and cannot be silently renewed (151.540628ms)
+✔ owned PostgreSQL restart retains every registry row, new patient, recoverable card and exact private PDF bytes (6899.459829ms)
+ℹ tests 11
+ℹ suites 0
+ℹ pass 11
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 32674.026975
+
+$ tsx --test tests/pap-id/card-exports.test.mts
+✔ the two faces keep an opaque QR in color and monochrome and export a valid PDF (20403.810456ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 1
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 24208.212192
+
+$ npm run guard:sql-injection
+PASS no raw SQL execution outside the fingerprinted read-only row-lock helper
+PASS no direct node-postgres access in production source
+PASS Prisma query API plus closed, bound-parameter row locks; no Unsafe execution
+
+$ tsc --noEmit --pretty false
+PASS, saída vazia
+
+$ npm run lint
+  51:6  warning  'Finalization' is defined but never used  @typescript-eslint/no-unused-vars
+   4:10  warning  'Prisma' is defined but never used                          @typescript-eslint/no-unused-vars
+  10:87  warning  'requireClinicalProvenanceScope' is defined but never used  @typescript-eslint/no-unused-vars
+  11:10  warning  'PERMISSIONS' is defined but never used                     @typescript-eslint/no-unused-vars
+✖ 4 problems (0 errors, 4 warnings)
+
+$ npm run build -- --webpack
+▲ Next.js 16.4.2 (webpack)
+✓ Compiled successfully in 77s
+  Finished TypeScript in 30.7s ...
+✓ Generating static pages using 4 workers (44/44) in 6.8s
+  Finalizing page optimization ...
+  Collecting build traces ...
+
+$ node tests/pap-id/production-boundary.mjs
+{"status":"PASS","candidateProductionBuild":true,"fixtureRoutesAbsent":true,"privateArtifactsAbsent":true,"privateHttpAndRscDenied":true,"clinicalApiDenied":true,"unauthenticatedShowcaseRedirectsToLogin":true,"databaseProvisioned":false,"ephemeralLoopback":true}
