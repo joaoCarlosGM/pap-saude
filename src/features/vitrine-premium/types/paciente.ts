@@ -60,6 +60,7 @@ export type PatientDocument = {
 }
 
 export type Patient = {
+  agendaIdentity?: string
   id: string
   initials: string
   nome: string

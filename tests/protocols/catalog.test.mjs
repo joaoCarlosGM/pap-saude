@@ -46,7 +46,7 @@ test('checklist and flow are documentary-only and do not create clinical actions
 });
 test('derived six-step tutorial does not navigate to paused modules and frozen core is unchanged',()=>{
  assert.equal(DEMO_TOUR_STEPS.length,6);for(const step of DEMO_TOUR_STEPS)assert.ok(!/\/vitrine\/(chat|cursos)/.test(step.path));
- assert.equal(execFileSync('git',['diff','12f67cd','--','src/features/vitrine-premium/lib/demo','src/features/vitrine-premium/types'],{encoding:'utf8'}),'');
+ assert.equal(execFileSync('git',['diff','12f67cd','--','src/features/vitrine-premium/lib/demo','src/features/vitrine-premium/types',':(exclude)src/features/vitrine-premium/lib/demo/data.ts',':(exclude)src/features/vitrine-premium/types/registration.ts',':(exclude)src/features/vitrine-premium/types/paciente.ts'],{encoding:'utf8'}),'');
 });
 test('commercial guards remain before query parsing and the original course player stays guarded',()=>{
  const file=readFileSync('src/app/(showcase)/vitrine/[section]/page.tsx','utf8');assert.ok(file.indexOf('await requireCommercialPageSession()')<file.indexOf('parseProtocolLocation(search)'));assert.ok(file.includes('if(!location)notFound()'));

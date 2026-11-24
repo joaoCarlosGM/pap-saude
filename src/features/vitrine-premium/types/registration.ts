@@ -1,3 +1,5 @@
+import type {EdemaProvenance, LabProteinuria, SoapNote} from "../lib/registration-record"
+
 export type RegistrationData = {
   dumUnknown?: boolean
   allergyStatus?: "sim" | "nao" | "desconhecido"
@@ -11,6 +13,10 @@ export type RegistrationData = {
   pregnancyLosses?: string
   referral?: string
   outcome?: string
+  referralChoice?: string
+  referralDetails?: string
+  outcomeChoice?: string
+  outcomeDetails?: string
   // Identificação
   cpf: string
   nomeCompleto: string
@@ -32,16 +38,22 @@ export type RegistrationData = {
   nivelConsciencia: string
   debitoUrinario: string
   proteinuria: string
+  proteinuriaMethod?: string
+  proteinuriaLab?: LabProteinuria
 
   // Dados obstétricos
   alturaUterina: string
   bcf: string
   movimentacaoFetal: string
   edema: string
+  edemaLocations?: string[]
+  edemaOtherLocation?: string
+  edemaProvenance?: EdemaProvenance
   sangramentoVaginal: string
   pesoAtual: string
 
   // Dados clínicos
   queixasPrincipais: string
   observacoesProfissional: string
+  soapNotes?: SoapNote[]
 }

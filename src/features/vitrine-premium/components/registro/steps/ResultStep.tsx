@@ -1,5 +1,7 @@
 "use client"
 
+import {ClosureFields} from "../RecordFields"
+import {registrationDetails} from "../../../lib/registration-record"
 import AssessmentDetails from "@/features/vitrine-premium/components/demo/AssessmentDetails"
 import {assessmentPresentation,DEMO_ASSESSMENT_NOTICE} from "@/features/vitrine-premium/lib/demo/assessment-presentation"
 import { RotateCcw, Save } from "lucide-react"
@@ -23,7 +25,22 @@ export default function ResultStep({
   onChange,
   saved,
 }: ResultStepProps) {
-    const result = calculateMeows(data)
+  const result = calculateMeows(data)
+  const details = registrationDetails(data)
+  const referralData: [string, string | undefined][] = [
+    ['Paciente', data.nomeCompleto], ['Data de nascimento', data.dataNascimento], ['DUM', data.dum], ['Pressão sistólica', data.paSistolica], ['Pressão diastólica', data.paDiastolica],
+    ['Frequência cardíaca', data.frequenciaCardiaca], ['Frequência respiratória', data.frequenciaRespiratoria],
+    ['Temperatura', data.temperatura], ['Saturação de O₂', data.saturacaoO2], ['Nível de consciência', data.nivelConsciencia],
+    ['Débito urinário', data.debitoUrinario], ['Proteinúria qualitativa', details.proteinuria],
+    ['Modalidade do teste qualitativo', details.method], ['Proteinúria laboratorial', details.lab],
+    ['Altura uterina', data.alturaUterina], ['BCF', data.bcf], ['Movimentação fetal', data.movimentacaoFetal],
+    ['Edema', details.edema], ['Localização do edema', details.location], ['Sangramento vaginal', data.sangramentoVaginal],
+    ['Peso atual', data.pesoAtual], ['Gestações anteriores', data.pregnancies], ['Partos', data.deliveries],
+    ['Cesáreas', data.cesareans], ['Perdas gestacionais', data.pregnancyLosses], ['Queixa principal', data.queixasPrincipais],
+    ['Alergias', data.allergies?.map(allergy => [allergy.agent, allergy.reaction, allergy.notes].filter(Boolean).join(' · ')).join(', ')],
+    ['Comorbidades', data.conditions?.join(', ')],
+    ['Medicações', data.medications?.map(medication => [medication.name, medication.dose, medication.frequency, medication.route].filter(Boolean).join(' · ')).join(', ')],
+  ]
   return (
     <div>
       {/* Cabeçalho */}
@@ -64,22 +81,19 @@ export default function ResultStep({
           </div>
         </div>
 
-        {/* CONDUTA */}
-        <div className="rounded-xl border border-slate-200 bg-slate-50 p-5">
-          <h3 className="text-base font-semibold text-slate-900">
-            Conduta
-          </h3>
-
-          <p className="mt-3 text-sm text-slate-600">
-            Nenhuma conduta, recomendação terapêutica ou encaminhamento é gerado automaticamente.
-          </p>
-        </div>
+        <ClosureFields data={data} onChange={onChange} saved={saved}/>
       </div>
 
-<AssessmentDetails result={result}/>
-      <dl className="mt-4 grid gap-3 text-sm sm:grid-cols-2">{Object.entries(data).map(([key,value])=><div key={key} className="min-w-0 rounded-lg bg-slate-50 p-3"><dt className="font-medium text-slate-700">{key.replace(/([A-Z])/g,' $1')}</dt><dd className="break-words text-slate-500">{value===null || value==='' || value===undefined ? 'Não informado' : typeof value==='boolean' ? (value?'Sim':'Não') : Array.isArray(value)?(value.length?value.map(v=>typeof v==='string'?v:Object.values(v).filter(Boolean).join(' · ')).join('; '):'Sem registro') : String(value)}</dd></div>)}</dl>
-      <div className="mt-4 grid gap-3 sm:grid-cols-2">{(['referral','outcome'] as const).map((key,i)=><label key={key} className="text-sm text-slate-700">{['Encaminhamento demonstrativo','Desfecho demonstrativo'][i]}<textarea className="mt-1 w-full rounded-lg border p-3" disabled={saved} value={data[key]||''} onChange={e=>onChange({[key]:e.target.value})}/></label>)}</div>
-      <button type="button" onClick={onBack} disabled={saved} className="mt-4 rounded-lg border px-4 py-2 text-sm">Voltar para revisar</button>
+      <AssessmentDetails result={result}/>
+      <section className="mt-5">
+        <h3 className="mb-2 font-semibold">Dados registrados</h3>
+        <dl className="grid gap-2 text-sm sm:grid-cols-2">
+          {referralData.filter(([,value]) => value?.trim()).map(([label, value]) => <div key={label} className="min-w-0 rounded-lg bg-slate-50 p-3">
+            <dt className="font-medium">{label}</dt><dd className="break-words text-slate-600">{value}</dd>
+          </div>)}
+        </dl>
+      </section>
+      <button type="button" onClick={onBack} disabled={saved} className="mt-4 min-h-11 rounded-lg border px-4 py-2 text-sm">Voltar para revisar</button>
       {/* FOOTER */}
       <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between border-t border-slate-200 pt-5">
         <button

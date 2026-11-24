@@ -1,7 +1,11 @@
 'use client'
 
 import Link from 'next/link'
+import {useState} from 'react'
 import type {Atendimento} from '../../types/atendimento'
+import {useDemo} from '../demo/DemoProvider'
+import {SoapEditor, SoapHistory} from '../registro/SoapNotes'
+import {registrationDetails} from '../../lib/registration-record'
 import AssessmentDetails from '../demo/AssessmentDetails'
 import Modal from '../ui/Modal'
 
@@ -25,27 +29,46 @@ export default function AtendimentoDetailsModal({atendimento, open, onClose}: {
   open: boolean
   onClose: () => void
 }) {
+  const {state, appendNote} = useDemo()
+  const [pendingNote, setPendingNote] = useState(false)
+  function close() {
+    if (pendingNote && !window.confirm('Descartar a anotação em edição?')) return false
+    setPendingNote(false)
+    onClose()
+    return true
+  }
   if (!atendimento) return null
-  const record = atendimento.registration
+  const current = state.encounters.find(item => item.id === atendimento.id) ?? atendimento
+  const record = current.registration
+  const details = registrationDetails(record)
   const timestamp = formatDateTime.format(new Date(atendimento.dataHora))
   const assessment = atendimento.assessmentSource === 'PAP_MEOWS_DEMO' ? atendimento.assessment : undefined
-  return <Modal open={open} onClose={onClose} title="Detalhes do Atendimento"
+  return <Modal open={open} onClose={close} title="Detalhes do Atendimento"
     description={`${atendimento.paciente.nome} • Consulta #${atendimento.consultaNumero}`} maxWidth="lg">
     <div className="grid gap-5">
       <div className="flex flex-wrap items-center justify-between gap-2">
         <p className="text-sm text-slate-600">{timestamp} · {atendimento.profissional.nome}</p>
-        <Link onClick={onClose} className="inline-flex min-h-11 items-center text-sm text-pink-700 underline" href={'/vitrine/pacientes/' + atendimento.paciente.id}>Abrir ficha da paciente</Link>
+        <Link onClick={event => {if (!close()) event.preventDefault()}} className="inline-flex min-h-11 items-center text-sm text-pink-700 underline" href={'/vitrine/pacientes/' + atendimento.paciente.id}>Abrir ficha da paciente</Link>
       </div>
       <section>
         <h3 className="mb-2 font-semibold">Cronologia</h3>
         {record ? <ol className="border-l-2 border-pink-200 pl-4 text-sm">
           <li><time dateTime={atendimento.dataHora}>{timestamp}</time> · {atendimento.profissional.nome}
-            <p className="font-medium">Registro concluído</p><p className="text-slate-600">Fonte: formulário de Registro da Vitrine.</p></li>
+            <p className="font-medium">Registro concluído</p><p className="text-slate-600">Fonte: formulário de Registro da Vitrine.</p>
+            {details.referral && <p>Conduta e encaminhamento: {details.referral}</p>}
+            {details.outcome && <p>Desfecho da consulta: {details.outcome}</p>}</li>
         </ol> : <p className="text-sm text-slate-600">Sem histórico disponível para esta consulta histórica.</p>}
       </section>
       <section>
-        <h3 className="mb-2 font-semibold">Queixa e evolução</h3>
-        <Facts fields={ [['Queixa principal', record?.queixasPrincipais], ['Observações', record?.observacoesProfissional]] }/>
+        <h3 className="mb-2 font-semibold">Registro Multiprofissional</h3>
+        <div className="grid gap-3">
+          <Facts fields={ [['Queixa principal', record?.queixasPrincipais]] }/>
+          <SoapHistory notes={record?.soapNotes} legacy={record?.observacoesProfissional}/>
+          {record && <details className="rounded-lg border border-slate-200 p-3">
+            <summary className="cursor-pointer text-sm font-medium">Acrescentar anotação</summary>
+            <SoapEditor onAppend={note => appendNote(current.id, note)} onPendingChange={setPendingNote}/>
+          </details>}
+        </div>
       </section>
       <section>
         <h3 className="mb-2 font-semibold">Sinais vitais</h3>
@@ -54,7 +77,7 @@ export default function AtendimentoDetailsModal({atendimento, open, onClose}: {
           ['Frequência cardíaca', measure(record?.frequenciaCardiaca, 'bpm')],
           ['Frequência respiratória', measure(record?.frequenciaRespiratoria, 'irpm')],
           ['Temperatura', measure(record?.temperatura, '°C')], ['Saturação de O₂', measure(record?.saturacaoO2, '%')],
-          ['Nível de consciência', record?.nivelConsciencia], ['Débito urinário', record?.debitoUrinario], ['Proteinúria', record?.proteinuria],
+          ['Nível de consciência', record?.nivelConsciencia], ['Débito urinário', record?.debitoUrinario], ['Proteinúria qualitativa', details.proteinuria], ['Modalidade do teste qualitativo', details.method], ['Proteinúria laboratorial', details.lab],
         ] }/>
       </section>
       <section>
@@ -63,7 +86,7 @@ export default function AtendimentoDetailsModal({atendimento, open, onClose}: {
           ['Idade gestacional no registro', record ? atendimento.paciente.idadeGestacional : undefined],
           ['Altura uterina', measure(record?.alturaUterina, 'cm')], ['BCF', measure(record?.bcf, 'bpm')],
           ['Peso', measure(record?.pesoAtual, 'kg')], ['Movimentação fetal', record?.movimentacaoFetal],
-          ['Edema', record?.edema], ['Sangramento vaginal', record?.sangramentoVaginal],
+          ['Edema', details.edema], ['Localização do edema', details.location], ['Origem da avaliação de edema', details.provenance], ['Sangramento vaginal', record?.sangramentoVaginal],
         ] }/>
       </section>
       <section>
@@ -72,7 +95,7 @@ export default function AtendimentoDetailsModal({atendimento, open, onClose}: {
       </section>
       <section>
         <h3 className="mb-2 font-semibold">Encaminhamento, anexos e fechamento</h3>
-        <Facts fields={ [['Encaminhamento', record?.referral], ['Desfecho', record?.outcome], ['Anexos da consulta', undefined]] }/>
+        <Facts fields={ [['Conduta e encaminhamento', details.referral], ['Desfecho da consulta', details.outcome], ['Anexos da consulta', undefined]] }/>
       </section>
     </div>
   </Modal>

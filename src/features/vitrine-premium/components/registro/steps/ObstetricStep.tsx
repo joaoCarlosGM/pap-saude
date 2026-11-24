@@ -1,5 +1,9 @@
 "use client"
 
+import {useState} from "react"
+import Input from "../../ui/Input"
+import {EdemaFields} from "../RecordFields"
+import {SoapEditor, SoapHistory} from "../SoapNotes"
 import ClinicalHistory from "../ClinicalHistory"
 import type { RegistrationData } from "@/features/vitrine-premium/types/registration"
 
@@ -16,6 +20,16 @@ export default function ObstetricStep({
   onNext,
   onBack,
 }: ObstetricStepProps) {
+  const [pendingNote, setPendingNote] = useState(false)
+  const [noteError, setNoteError] = useState(false)
+
+  function navigate(action: () => void) {
+    if (pendingNote) {
+      setNoteError(true)
+      return
+    }
+    action()
+  }
   return (
     <div>
       {/* Cabeçalho */}
@@ -118,33 +132,6 @@ export default function ObstetricStep({
             </select>
           </div>
 
-          {/* Edema */}
-          <div>
-            <label
-              htmlFor="edema"
-              className="mb-2 block text-sm font-medium text-slate-700"
-            >
-              Edema
-            </label>
-
-            <select
-              id="edema"
-              value={data.edema}
-              onChange={(event) =>
-                onChange({
-                  edema: event.target.value,
-                })
-              }
-              className="h-11 w-full rounded-lg border border-slate-300 bg-white px-4 text-sm text-slate-900 outline-none transition focus:border-pink-500 focus:ring-2 focus:ring-pink-100"
-            >
-              <option value="">Selecione</option>
-              <option value="ausente">Ausente</option>
-              <option value="leve">Leve</option>
-              <option value="moderado">Moderado</option>
-              <option value="grave">Grave</option>
-            </select>
-          </div>
-
           {/* Sangramento vaginal */}
           <div>
             <label
@@ -203,66 +190,24 @@ export default function ObstetricStep({
           </div>
         </div>
 
-        {/* Divisor */}
-        <div className="border-t border-slate-200 pt-6">
-          <p className="text-xs font-semibold uppercase tracking-wider text-slate-500">
-            Dados Clínicos
-          </p>
-        </div>
-
-        {/* Queixas principais */}
-        <div>
-          <label
-            htmlFor="queixas-principais"
-            className="mb-2 block text-sm font-medium text-slate-700"
-          >
-            Queixas Principais
-          </label>
-
-          <textarea
-            id="queixas-principais"
-            value={data.queixasPrincipais}
-            onChange={(event) =>
-              onChange({
-                queixasPrincipais: event.target.value,
-              })
-            }
-            placeholder="Descreva as principais queixas da paciente..."
-            rows={4}
-            className="w-full resize-none rounded-lg border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-pink-500 focus:ring-2 focus:ring-pink-100"
-          />
-        </div>
-
-        {/* Observações */}
-        <div>
-          <label
-            htmlFor="observacoes-profissional"
-            className="mb-2 block text-sm font-medium text-slate-700"
-          >
-            Observações do Profissional
-          </label>
-
-          <textarea
-            id="observacoes-profissional"
-            value={data.observacoesProfissional}
-            onChange={(event) =>
-              onChange({
-                observacoesProfissional: event.target.value,
-              })
-            }
-            placeholder="Adicione observações relevantes sobre o atendimento..."
-            rows={4}
-            className="w-full resize-none rounded-lg border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-pink-500 focus:ring-2 focus:ring-pink-100"
-          />
-        </div>
+        <EdemaFields data={data} onChange={onChange}/>
+        <section className="grid gap-3 border-t border-slate-200 pt-5">
+          <h3 className="font-semibold">Registro Multiprofissional</h3>
+          <Input id="queixas-principais" label="Queixa principal" value={data.queixasPrincipais} maxLength={200}
+            className="min-h-11 text-base" onChange={event => onChange({queixasPrincipais: event.target.value})}/>
+          <SoapEditor onPendingChange={pending => {setPendingNote(pending); if (!pending) setNoteError(false)}}
+            onAppend={note => onChange({soapNotes: [...(data.soapNotes ?? []), note]})}/>
+          {noteError && <p role="alert" className="text-sm text-rose-700">Adicione a anotação ou limpe o texto antes de mudar de etapa.</p>}
+          {(!!data.soapNotes?.length || data.observacoesProfissional) && <SoapHistory notes={data.soapNotes} legacy={data.observacoesProfissional}/>}
+        </section>
       </div>
 
       <ClinicalHistory data={data} onChange={onChange} />
       {/* Footer */}
-      <div className="mt-10 flex items-center justify-between border-t border-slate-200 pt-6">
+      <div className="mt-8 flex flex-wrap gap-3 items-center justify-between border-t border-slate-200 pt-6">
         <button
           type="button"
-          onClick={onBack}
+          onClick={() => navigate(onBack)}
           className="rounded-lg border border-slate-300 bg-white px-5 py-2.5 text-sm font-medium text-slate-700 transition hover:bg-slate-50"
         >
           ← Voltar
@@ -270,7 +215,7 @@ export default function ObstetricStep({
 
         <button
           type="button"
-          onClick={onNext}
+          onClick={() => navigate(onNext)}
           className="rounded-lg bg-pink-500 px-6 py-2.5 text-sm font-medium text-white transition hover:bg-pink-600"
         >
           Ver Resultado →

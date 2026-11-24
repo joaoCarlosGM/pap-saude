@@ -2,8 +2,10 @@
 import { createContext, useContext, useState, useRef, useEffect, type Dispatch, type SetStateAction } from 'react'
 import { dashboardFrom, initialDemo, patientViews, saveDemo, type DemoState } from '@/features/vitrine-premium/lib/demo/data'
 import { editDemoProfile, type DemoProfile } from '@/features/vitrine-premium/lib/demo/profile'
+import type {SoapNote} from "../../lib/registration-record"
 import type { RegistrationData } from '@/features/vitrine-premium/types/registration'
 
+import {resetAppointments} from '../../lib/demo-agenda'
 import {writeDemoPhoto} from '../../lib/demo-photo'
 import type {DemoNotice} from '../../lib/demo-notices'
 import {useCardService} from './CardServiceContext'
@@ -16,6 +18,7 @@ type DemoContext = {
   registerSyntheticIdentity: (identity: SyntheticIdentity) => void
   state: DemoState
   save: (data: RegistrationData) => void
+  appendNote: (encounterId: string, note: SoapNote) => void
   reset: () => void
   updateProfile: (patch: Partial<DemoProfile>) => void
   mainMenuOpen: boolean
@@ -61,9 +64,28 @@ export function DemoProvider({ children }: { children: React.ReactNode }) {
   const ready = useRef<HTMLSpanElement>(null)
   useEffect(() => { ready.current?.setAttribute('data-demo-ready', 'true') }, [])
   return <Context.Provider value={{
-    identityLedger,identityLedgers,importIdentityLedger: data=>{const next=mergeDemoLedgers(ledgerRef.current,data);ledgerRef.current=next;setIdentityLedgers(next)},registerSyntheticIdentity: identity=>setState(current=>addSyntheticIdentity(current,identity)),
-    state:hydrate(state), save: data => setState(current => saveDemo(hydrate(current), data)),
-    reset: () => { setState(initialShowcaseState());setIdentityLedgers([]);ledgerRef.current=[]; setTourIndex(null);setNotices([]);setReadNotices([]);try{writeDemoPhoto('')}catch{} window.dispatchEvent(new Event('pap:vitrine-reset')) },
+    identityLedger,identityLedgers,importIdentityLedger: data=>{const next=mergeDemoLedgers(ledgerRef.current,data);ledgerRef.current=next;setIdentityLedgers(next)},registerSyntheticIdentity: identity=>{
+      setState(current=>{
+        const next=addSyntheticIdentity(current,identity)
+        if (next===current || 'patientId' in identity) return next
+        return {...next, patients: next.patients.map(patient =>
+          patient.id===`demo-patient-${current.next}` ? {...patient, agendaIdentity: identity.subject} : patient)}
+      })
+    },
+    state:hydrate(state), save: data => {
+      const recorded = {at: new Date().toISOString(), agendaIdentity: crypto.randomUUID()}
+      setState(current => saveDemo(hydrate(current), data, recorded))
+    },
+    appendNote: (encounterId, note) => setState(current => ({
+      ...current,
+      encounters: current.encounters.map(encounter => {
+        const record = encounter.registration
+        return encounter.id === encounterId && record && !record.soapNotes?.some(entry => entry.id === note.id)
+          ? {...encounter, registration: {...record, soapNotes: [...(record.soapNotes ?? []), note]}}
+          : encounter
+      }),
+    })),
+    reset: () => { setState(initialShowcaseState());setIdentityLedgers([]);ledgerRef.current=[]; setTourIndex(null);setNotices([]);setReadNotices([]);try{writeDemoPhoto('')}catch{} void resetAppointments().catch(()=>{}); window.dispatchEvent(new Event('pap:vitrine-reset')) },
     updateProfile: patch => setState(current => ({ ...current, profile: editDemoProfile(current.profile, patch) })),
     mainMenuOpen, conversationMenuOpen,
     openMainMenu: () => { setConversationMenuOpen(false); setMainMenuOpen(true) },

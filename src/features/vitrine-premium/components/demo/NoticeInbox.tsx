@@ -2,18 +2,22 @@
 
 import {useState} from 'react'
 import Link from 'next/link'
+import {appointmentKinds, describeSlot, appointmentTimestamp, nextAppointments, useAgendaClock, useAppointments, visibleAppointments} from '../../lib/demo-agenda'
 import {useDemo} from './DemoProvider'
 import {useCardService} from './CardServiceContext'
 import Modal from '../ui/Modal'
 import {Button} from '../ui/button'
 import type {DemoNotice} from '../../lib/demo-notices'
 
-const categories = ['Todos', 'Pacientes', 'Atendimentos', 'Sistema', 'Protocolos', 'Documentos'] as const
+const categories = ['Todos', 'Pacientes', 'Atendimentos', 'Sistema', 'Protocolos', 'Documentos', 'Agenda'] as const
 const formatDate = new Intl.DateTimeFormat('pt-BR', {dateStyle: 'short', timeStyle: 'short', timeZone: 'America/Fortaleza'})
 
 export default function NoticeInbox() {
   const demo = useDemo()
-  const cards = useCardService()?.history || []
+  const schedules = useAppointments()
+  const now = useAgendaClock()
+  const privateService = useCardService()
+  const cards = privateService?.history || []
   const [category, setCategory] = useState<(typeof categories)[number]>('Todos')
   const items: DemoNotice[] = [...demo.notices]
   for (const encounter of demo.state.encounters) {
@@ -26,6 +30,18 @@ export default function NoticeInbox() {
       summary: 'O comprovante de emissão está em Documentos.', date: card.issuedAt, href: '/vitrine/pacientes/' + card.patientId + '?aba=documentos'})
     if (card.revokedAt) items.push({id: 'card-revoked-' + card.id, category: 'Documentos', title: 'Carteirinha revogada',
       summary: 'A alteração aparece no histórico de emissões.', date: card.revokedAt, href: '/vitrine/pacientes/' + card.patientId + '?aba=documentos'})
+  }
+  const visibleSchedules = visibleAppointments(schedules, privateService?.people)
+  for (const appointment of visibleSchedules) {
+    const latest = appointment.events.at(-1)!
+    items.push({id: 'agenda-'+latest.id, category: 'Agenda', title: appointmentKinds[appointment.kind]+' · agenda atualizada',
+      summary: describeSlot(appointment.slot), date: latest.at, href: '/vitrine/agenda'})
+  }
+  for (const appointment of nextAppointments(visibleSchedules, now)) {
+    if (appointmentTimestamp(appointment.slot!) - now > 86_400_000) break
+    items.push({id: 'agenda-lembrete-'+appointment.id+'-'+appointment.slot!.date+'-'+appointment.slot!.time, category: 'Agenda',
+      title: 'Lembrete de '+appointmentKinds[appointment.kind].toLowerCase(), summary: describeSlot(appointment.slot),
+      date: new Date(appointmentTimestamp(appointment.slot!)).toISOString(), href: '/vitrine/agenda'})
   }
   items.sort((a, b) => Date.parse(b.date) - Date.parse(a.date))
   const unread = items.filter(item => !demo.readNotices.includes(item.id))

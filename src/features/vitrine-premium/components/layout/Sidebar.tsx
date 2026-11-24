@@ -2,7 +2,7 @@
 import { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { ClipboardPlus, ClipboardList, Users, BookOpen, Wrench, LayoutDashboard, Settings, X, GraduationCap, HelpCircle, Bell, ChevronDown, RotateCcw } from 'lucide-react'
+import { ClipboardPlus, ClipboardList, Users, BookOpen, Wrench, LayoutDashboard, Settings, X, GraduationCap, HelpCircle, Bell, CalendarDays, ChevronDown, RotateCcw } from 'lucide-react'
 import AnimatedChatIcon from '@/features/vitrine-premium/components/chat/AnimatedChatIcon'
 import { useDemo } from '@/features/vitrine-premium/components/demo/DemoProvider'
 import ProfileAvatar from '../configuracoes/ProfileAvatar'
@@ -12,6 +12,7 @@ const menuItems = [
  {label:'Dashboard',href:'/vitrine/dashboard',icon:LayoutDashboard},
  {label:'Registro',href:'/vitrine/registro',icon:ClipboardPlus},
  {label:'Atendimentos',href:'/vitrine/atendimentos',icon:ClipboardList},
+ {label:'Agenda',href:'/vitrine/agenda',icon:CalendarDays},
  {label:'Pacientes',href:'/vitrine/pacientes',icon:Users},
  {label:'Protocolos',href:'/vitrine/protocolos',icon:BookOpen},
  {label:'Ferramentas',href:'/vitrine/ferramentas',icon:Wrench},
@@ -72,7 +73,7 @@ export default function Sidebar({open,onClose}:{open:boolean;onClose:()=>void}) 
       <nav className="min-h-0 flex-1 overflow-y-auto px-3 py-2" aria-label="Módulos">
         <div className="relative flex flex-col gap-1" >
 
-          {menuItems.map((item,index)=>{const Icon=item.icon;const sectionHeading=[0,1,4].includes(index)&&<p className="px-3 pt-2 text-xs text-slate-600">{index===0?'VISÃO GERAL':index===1?'CLÍNICA':'CONHECIMENTO E APOIO'}</p>;return <div key={'href' in item?item.href:item.id}>{sectionHeading}{!('href' in item)
+          {menuItems.map((item,index)=>{const Icon=item.icon;const sectionHeading=[0,1,5].includes(index)&&<p className="px-3 pt-2 text-xs text-slate-600">{index===0?'VISÃO GERAL':index===1?'CLÍNICA':'CONHECIMENTO E APOIO'}</p>;return <div key={'href' in item?item.href:item.id}>{sectionHeading}{!('href' in item)
             ? <div data-tour-coming-soon={item.id} className="flex min-h-10 shrink-0 items-center gap-3 px-3 text-sm text-slate-600" title="Em breve"><Icon size={18} strokeWidth={1.8} className="shrink-0"/><span>{item.label}</span><span className="ml-auto rounded-full border border-slate-200 bg-slate-50 px-2 py-0.5 text-[10px] font-medium text-slate-500">Em breve</span></div>
             : <Link href={item.href} prefetch={false} data-tour-nav={item.href} aria-current={activeIndex===index?'page':undefined} onClick={onClose}
             className={`relative flex h-10 shrink-0 items-center gap-3 rounded-md px-3 text-sm focus-visible:outline-2 focus-visible:outline-pink-500 ${activeIndex===index?'bg-pink-50 font-medium text-pink-600':'text-gray-600 hover:bg-gray-50'}`}><Icon size={18} strokeWidth={1.8} className="shrink-0"/><span>{item.label}</span></Link>}</div>})}

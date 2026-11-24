@@ -1,5 +1,7 @@
 "use client"
 
+import {ProteinuriaFields} from "../RecordFields"
+
 import type { RegistrationData } from "@/features/vitrine-premium/types/registration"
 
 type VitalSignsStepProps = {
@@ -262,33 +264,7 @@ export default function VitalSignsStep({
             </select>
           </div>
 
-          {/* Proteinúria */}
-          <div>
-            <label
-              htmlFor="proteinuria"
-              className="mb-2 block text-sm font-medium text-slate-700"
-            >
-              Proteinúria
-            </label>
-
-            <select
-              id="proteinuria"
-              value={data.proteinuria}
-              onChange={(event) =>
-                onChange({
-                  proteinuria: event.target.value,
-                })
-              }
-              className="h-11 w-full rounded-lg border border-slate-300 bg-white px-4 text-sm text-slate-900 outline-none transition focus:border-pink-500 focus:ring-2 focus:ring-pink-100"
-            >
-              <option value="">Selecione</option>
-              <option value="negativa">Negativa</option>
-              <option value="tracos">Traços</option>
-              <option value="1+">1+</option>
-              <option value="2+">2+</option>
-              <option value="3+">3+</option>
-            </select>
-          </div>
+          <ProteinuriaFields data={data} onChange={onChange}/>
         </div>
       </div>
 

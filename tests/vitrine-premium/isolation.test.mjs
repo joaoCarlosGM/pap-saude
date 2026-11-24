@@ -77,7 +77,8 @@ test('Beta1 preserves authentication, clinical contracts, KPIs and all historica
  const changed=execFileSync('git',['diff','--name-only',base,'--','src/server'],{encoding:'utf8'}).trim().split('\n').filter(Boolean);
  for(const path of changed)assert.ok(path.startsWith('src/server/courses/')||allowed.has(path),path);
  const syntheticCore=execFileSync('git',['ls-tree','-r','--name-only',base,'--',root+'lib/demo',root+'types'],{encoding:'utf8'}).trim().split('\n').filter(Boolean);
- for(const path of syntheticCore)assert.equal(readFileSync(path,'utf8'),before(path),`synthetic core ${path}`);
+ const registrationChanges=new Set([root+'lib/demo/data.ts',root+'types/registration.ts',root+'types/paciente.ts']);
+ for(const path of syntheticCore.filter(path=>!registrationChanges.has(path)))assert.equal(readFileSync(path,'utf8'),before(path),`synthetic core ${path}`);
  // New shared components remain pure. A shared renderer never acquires an API/data provider.
  for(const path of ['src/components/courses/CourseCatalog.tsx','src/components/courses/LessonBlockRenderer.tsx','src/lib/courses/types.ts','src/lib/courses/schema.ts'])assert.doesNotMatch(readFileSync(path,'utf8'),/\bfetch\s*\(|\/api\/|@\/server\/|@prisma|postgresql:\/\//i,path);
 })

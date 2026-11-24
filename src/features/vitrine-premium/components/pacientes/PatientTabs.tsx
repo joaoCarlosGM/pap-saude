@@ -3,6 +3,7 @@
 import { useState } from "react"
 import { useSearchParams } from "next/navigation"
 
+import AgendaPanel, {UpcomingAppointments} from "../agenda/AgendaPanel"
 import PatientDocuments from "./PatientDocuments"
 import PatientEvolution from "./PatientEvolution"
 import PatientExams from "./PatientExams"
@@ -48,6 +49,10 @@ const tabs = [
     label: "Medicações",
   },
   {
+    id: "agenda",
+    label: "Agenda",
+  },
+  {
     id: "documentos",
     label: "Documentos",
   },
@@ -74,7 +79,7 @@ export default function PatientTabs({
                 setActiveTab(tab.id)
               }
               className={[
-                "relative whitespace-nowrap rounded-md px-3 py-2 text-xs font-medium transition-all sm:px-4",
+                "relative min-h-11 whitespace-nowrap rounded-md px-3 py-2 text-xs font-medium transition-all sm:px-4",
                 activeTab === tab.id
                   ? "bg-white text-pink-600 shadow-sm"
                   : "text-slate-500 hover:text-slate-800",
@@ -91,9 +96,10 @@ export default function PatientTabs({
         className="mt-4 animate-[patientTabIn_.28s_ease-out]"
       >
         {activeTab === "resumo" && (
-          <PatientSummary
-            patient={patient}
-          />
+          <>
+            <UpcomingAppointments patient={patient} onOpen={() => setActiveTab('agenda')}/>
+            <PatientSummary patient={patient}/>
+          </>
         )}
 
         {activeTab === "timeline" && (
@@ -133,6 +139,8 @@ export default function PatientTabs({
             patient={patient}
           />
         )}
+
+        {activeTab === "agenda" && <AgendaPanel patient={patient}/>}
 
         {activeTab ===
           "documentos" && (

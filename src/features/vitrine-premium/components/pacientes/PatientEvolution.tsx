@@ -1,3 +1,4 @@
+import {SoapHistory} from "../registro/SoapNotes"
 import {assessmentPresentation} from "@/features/vitrine-premium/lib/demo/assessment-presentation"
 import AnimatedLineChart from "./AnimatedLineChart"
 
@@ -10,8 +11,17 @@ type Props = {
 export default function PatientEvolution({
   patient,
 }: Props) {
+  const consultationNotes = (patient.encounters ?? []).filter(({registration}) => registration?.soapNotes?.length || registration?.observacoesProfissional?.trim())
   return (
     <div className="space-y-5">
+      <section className="space-y-3 rounded-xl border border-slate-200 bg-white p-4 sm:p-5">
+        <h2 className="font-semibold">Evolução multiprofissional</h2>
+        {consultationNotes.length ? consultationNotes.map(encounter => <details key={encounter.id} className="rounded-lg border border-slate-200 px-3">
+          <summary className="min-h-11 cursor-pointer content-center text-sm font-medium">Consulta {encounter.consultaNumero}</summary>
+          {encounter.registration?.queixasPrincipais && <p className="mb-2 text-sm">Queixa principal: {encounter.registration.queixasPrincipais}</p>}
+          <div className="pb-3"><SoapHistory notes={encounter.registration?.soapNotes} legacy={encounter.registration?.observacoesProfissional}/></div>
+        </details>) : <p className="text-sm text-slate-600">Sem anotações registradas.</p>}
+      </section>
       <section className="min-w-0 rounded-xl border border-slate-200 bg-white p-4 shadow-sm sm:p-5">
         <div className="flex items-center justify-between gap-3">
           <div>

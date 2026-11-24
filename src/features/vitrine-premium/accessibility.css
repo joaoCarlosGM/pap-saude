@@ -38,3 +38,13 @@
 [data-vitrine-premium] [data-metric-final]{position:relative}
 :is([data-vitrine-premium],[data-vitrine-dialog]) [class~="text-rose-600"]{color:var(--demo-pink)}
 :is([data-vitrine-premium],[data-vitrine-dialog]) [class~="bg-rose-50"]{background-color:var(--demo-pink-tint)}
+
+@media (max-width: 767px) {
+  [data-vitrine-premium] [data-registration-wizard] :is(input:not([type=checkbox]):not([type=radio]):not([type=file]), select, textarea) {
+    font-size: 1rem;
+    min-height: 44px;
+    min-width: 0;
+    max-width: 100%;
+  }
+  [data-vitrine-premium] [data-registration-wizard] :is(footer, [data-motion-step]) button { min-height: 44px }
+}

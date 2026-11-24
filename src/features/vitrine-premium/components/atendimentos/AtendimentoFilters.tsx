@@ -12,11 +12,10 @@ export default function AtendimentoFilters({value,onChange}:{value:AttendanceFil
     <div data-tour="attendance-filters" className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
       <Input
         id="search"
-        label="Buscar paciente"
+        label="Buscar paciente ou queixa"
         value={value.search}
         onChange={e=>onChange({...value,search:e.target.value})}
         type="search"
-        placeholder="Buscar por paciente..."
         icon={<Search size={18} />}
       />
 
