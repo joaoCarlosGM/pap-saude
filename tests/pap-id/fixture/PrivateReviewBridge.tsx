@@ -1,9 +1,46 @@
 'use client'
+import type {ChartService} from '@/features/vitrine-premium/components/demo/CardServiceContext'
 import {useEffect,useRef,useState,type ReactNode} from 'react'
 import {OriginalDocumentProvider,type PrivateDocument} from '@/features/vitrine-premium/components/protocolos/OriginalDocumentContext'
 import {CardServiceProvider,type CardIssue,type CardService} from '@/features/vitrine-premium/components/demo/CardServiceContext'
 import type {DemoLedger,SyntheticIdentity} from '@/features/vitrine-premium/lib/pap-id'
 import type {ReviewCard} from '@/features/vitrine-premium/lib/review-registry'
+async function documentsFor(patientId: string) {
+ const response = await fetch(`/homologacao/pacientes/${encodeURIComponent(patientId)}/documentos`,{cache:'no-store'})
+ if (!response.ok) throw Error('PRIVATE_DOCUMENTS_UNAVAILABLE')
+ return (await response.json()).documents
+}
+
+function checkReviewAuthorization(response: Response) {
+ if (response.status === 403) window.dispatchEvent(new Event('pap:review-session-ended'))
+}
+
+const chart: ChartService = {
+ activity: async () => {
+  const response = await fetch('/homologacao/atividade',{cache:'no-store'})
+  checkReviewAuthorization(response)
+  if (!response.ok) throw Error('CHART_UNAVAILABLE')
+  return (await response.json()).events
+ },
+ read: async id => {
+  const response = await fetch(`/homologacao/pacientes/${encodeURIComponent(id)}/prontuario`, {cache:'no-store'})
+  checkReviewAuthorization(response)
+  if (!response.ok) throw Error('CHART_UNAVAILABLE')
+  return response.json()
+ },
+ write: async (id, command) => {
+  const response = await fetch(`/homologacao/pacientes/${encodeURIComponent(id)}/prontuario`, {
+   method:'POST', credentials:'same-origin',
+   headers:{'Content-Type':'application/json','x-pap-local-review':'chart'}, body:JSON.stringify(command),
+  })
+  checkReviewAuthorization(response)
+  const result = await response.json().catch(() => ({}))
+  if (!response.ok) throw Error(result.error || 'CHART_UNAVAILABLE')
+  if (['consulta','soap','agenda'].includes(command.data.kind)) window.dispatchEvent(new Event('pap:vitrine-chart'))
+  return result.event
+ },
+}
+
 export default function PrivateReviewBridge({children}:{children:ReactNode}){
  const [ledgers,setLedgers]=useState<DemoLedger[]>([]),[people,setPeople]=useState<SyntheticIdentity[]>([]),[history,setHistory]=useState<ReviewCard[]>([]),[database,setDatabase]=useState(false),[pending,setPending]=useState(true)
  const [updating,setUpdating]=useState(false)
@@ -62,11 +99,13 @@ export default function PrivateReviewBridge({children}:{children:ReactNode}){
   } catch {setError('Consulta privada indisponível. Confira os originais e a configuração deste laboratório.')}
   finally {consentOperation.current=false;setUpdating(false)}
  }
- const service:CardService={ledgers,people,history,refresh,issue:async(patientId,operationId)=>{let token=tokens.current.get(operationId);if(!token){token='PAP-ID-DEMO-1.'+btoa(String.fromCharCode(...crypto.getRandomValues(new Uint8Array(32)))).replaceAll('+','-').replaceAll('/','_').replace(/=+$/,'');tokens.current.set(operationId,token)}const result=await cards({action:'issue',patientId,operationId,token}) as CardIssue;await refresh();tokens.current.delete(operationId);return result},revoke:async subject=>{await cards({action:'revoke',subject});await refresh()},create:async(input,operationId)=>{const r=await cards({action:'register',input,operationId});await refresh();return r.patient},documents:async patientId=>{const r=await fetch(`/homologacao/pacientes/${encodeURIComponent(patientId)}/documentos`,{cache:'no-store'});if(!r.ok)throw Error('PRIVATE_DOCUMENTS_UNAVAILABLE');return (await r.json()).documents},upload:async(patientId,file,category,operationId,groupId)=>{const r=await fetch(`/homologacao/pacientes/${encodeURIComponent(patientId)}/documentos`,{method:'POST',credentials:'same-origin',headers:{'Content-Type':file.type,'x-pap-local-review':'documents','x-pap-synthetic-document':'confirmed','x-pap-document-name':encodeURIComponent(file.name),'x-pap-document-category':category,'x-pap-operation':operationId,...(groupId?{'x-pap-document-version':groupId}:{})},body:file});if(!r.ok)throw Error('PRIVATE_UPLOAD_REJECTED')},archive:async(patientId,id)=>{const r=await fetch(`/homologacao/pacientes/${encodeURIComponent(patientId)}/documentos/${encodeURIComponent(id)}`,{method:'DELETE',headers:{'x-pap-local-review':'documents'}});if(!r.ok)throw Error('ARCHIVE_DENIED')}}
+ const service:CardService={chart,ledgers,people,history,refresh,issue:async(patientId,operationId)=>{let token=tokens.current.get(operationId);if(!token){token='PAP-ID-DEMO-1.'+btoa(String.fromCharCode(...crypto.getRandomValues(new Uint8Array(32)))).replaceAll('+','-').replaceAll('/','_').replace(/=+$/,'');tokens.current.set(operationId,token)}const result=await cards({action:'issue',patientId,operationId,token}) as CardIssue;await refresh();tokens.current.delete(operationId);return result},revoke:async subject=>{await cards({action:'revoke',subject});await refresh()},create:async(input,operationId)=>{const r=await cards({action:'register',input,operationId});await refresh();return r.patient},documents:documentsFor,upload:async(patientId,file,category,operationId,groupId)=>{const r=await fetch(`/homologacao/pacientes/${encodeURIComponent(patientId)}/documentos`,{method:'POST',credentials:'same-origin',headers:{'Content-Type':file.type,'x-pap-local-review':'documents','x-pap-synthetic-document':'confirmed','x-pap-document-name':encodeURIComponent(file.name),'x-pap-document-category':category,'x-pap-operation':operationId,...(groupId?{'x-pap-document-version':groupId}:{})},body:file});if(!r.ok)throw Error('PRIVATE_UPLOAD_REJECTED')},archive:async(patientId,id)=>{const r=await fetch(`/homologacao/pacientes/${encodeURIComponent(patientId)}/documentos/${encodeURIComponent(id)}`,{method:'DELETE',headers:{'x-pap-local-review':'documents'}});if(!r.ok)throw Error('ARCHIVE_DENIED')}}
  useEffect(()=>{
   if(!expiresAt)return
-  const expiry=setTimeout(()=>{setDocuments([]);setPeople([]);setHistory([]);setLedgers([]);setDatabase(false);setExpiresAt(0);tokens.current.clear();setError('Consulta expirada. Autorize novamente.');},Math.max(0,expiresAt-Date.now()))
-  return()=>clearTimeout(expiry)
+  const end=()=>{setDocuments([]);setPeople([]);setHistory([]);setLedgers([]);setDatabase(false);setExpiresAt(0);tokens.current.clear();setError('Consulta expirada. Autorize novamente.')}
+  const expiry=setTimeout(end,Math.max(0,expiresAt-Date.now()))
+  window.addEventListener('pap:review-session-ended',end)
+  return()=>{clearTimeout(expiry);window.removeEventListener('pap:review-session-ended',end)}
  },[expiresAt])
  const settings=<details ref={panel} data-private-review className="mb-5 rounded-xl border border-slate-200 bg-white p-4 text-sm" aria-label="Configurações de homologação">
   <summary className="min-h-11 cursor-pointer font-semibold">Consulta privada • {documents.length?'consulta autorizada':'aguardando autorização'}</summary>

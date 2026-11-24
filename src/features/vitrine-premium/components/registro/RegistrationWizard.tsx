@@ -54,7 +54,10 @@ export default function RegistrationWizard() {
   const errorRef=useRef<HTMLDivElement>(null)
   const [errors,setErrors]=useState<string[]>([])
   useEffect(()=>{if(errors.length)errorRef.current?.focus()},[errors])
-  const [saved,setSaved]=useState(false)
+  const [saved,setSaved]=useState<false|'memory'|'private'>(false)
+  const [saving,setSaving]=useState(false)
+  const savingRef=useRef(false)
+  const attempt=useRef({id:'',signature:''})
   const [identityEpoch,setIdentityEpoch]=useState(0)
   const [currentStep, setCurrentStep] = useState(1)
 
@@ -71,12 +74,12 @@ export default function RegistrationWizard() {
   }
 
   const restart = () => {
-    setSaved(false);setErrors([]);setIdentityEpoch(n=>n+1)
+    attempt.current={id:'',signature:''};setSaved(false);setErrors([]);setIdentityEpoch(n=>n+1)
     setRegistration(initialRegistration)
     setCurrentStep(1)
   }
 
-  useEffect(()=>{const reset=()=>{setSaved(false);setErrors([]);setIdentityEpoch(n=>n+1);setRegistration(initialRegistration);setCurrentStep(1)};window.addEventListener('pap:vitrine-reset',reset);return()=>window.removeEventListener('pap:vitrine-reset',reset)},[])
+  useEffect(()=>{const reset=()=>{attempt.current={id:'',signature:''};setSaved(false);setErrors([]);setIdentityEpoch(n=>n+1);setRegistration(initialRegistration);setCurrentStep(1)};window.addEventListener('pap:vitrine-reset',reset);return()=>window.removeEventListener('pap:vitrine-reset',reset)},[])
 
   const updateRegistration = (
     data: Partial<RegistrationData>,
@@ -87,11 +90,17 @@ export default function RegistrationWizard() {
     }))
   }
 
-  const saveRegistration = () => {
-    if(saved)return
+  const saveRegistration = async () => {
+    if(saved||savingRef.current)return
     const found = [1, 2, 3, 4, 5].flatMap(step => registrationErrors(registration, step))
     if (found.length) {setErrors(found); return}
-    try {save(registration);setSaved(true);setErrors([])} catch(error){setErrors([error instanceof Error?error.message:"Não foi possível salvar a simulação."])}
+    const signature=JSON.stringify(registration)
+    if(attempt.current.signature!==signature)attempt.current={signature,id:crypto.randomUUID()}
+    savingRef.current=true
+    setSaving(true)
+    try {setSaved(await save(registration,attempt.current.id)?'private':'memory');setErrors([])}
+    catch {setErrors(['Não foi possível confirmar o registro. Confira a sessão e tente novamente.'])}
+    finally {savingRef.current=false;setSaving(false)}
   }
 
   const savedPatient = saved ? patients.find(patient => normalizeIdentifier(patient.cpf) === normalizeIdentifier(registration.cpf)) : undefined
@@ -101,7 +110,7 @@ export default function RegistrationWizard() {
       <CardContent className="p-4 sm:p-6 lg:p-8">
         {errors.length>0 && <div ref={errorRef} tabIndex={-1} role="alert" className="mb-4 rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-700">{errors.map(e=><p key={e}>{e}</p>)}</div>}
         {saved && <p role="status" className="mb-4 text-sm text-emerald-700">
-          Registro demonstrativo salvo na memória desta aba. {savedPatient && <Link prefetch={false} className="underline" href={"/vitrine/pacientes/"+savedPatient.id}>Abrir ficha da paciente</Link>}
+          Registro demonstrativo salvo {saved==='private'?'no laboratório privado.':'na memória desta aba.'} {savedPatient && <Link prefetch={false} className="underline" href={"/vitrine/pacientes/"+savedPatient.id}>Abrir ficha da paciente</Link>}
         </p>}
         <Stepper currentStep={currentStep} />
 
@@ -148,9 +157,10 @@ export default function RegistrationWizard() {
             data={registration}
             onBack={previousStep}
             onChange={updateRegistration}
-            saved={saved}
+            saved={!!saved}
             onRestart={restart}
-            onSave={saveRegistration}
+            onSave={() => void saveRegistration()}
+            saving={saving}
           />
         )}
         </div>

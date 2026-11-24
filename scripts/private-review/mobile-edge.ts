@@ -11,6 +11,7 @@ export function mobilePathAllowed(raw:string,assets:Set<string>){
  if(p==='/vitrine'||/^\/vitrine\/[^/]+$/.test(p)&&sections.has(p.split('/')[2]))return true
  if(originalDocuments.some(d=>p==='/homologacao/documentos/'+d.slug))return [...url.searchParams.keys()].every(k=>k==='download')&&url.searchParams.getAll('download').length<=1&&(!url.searchParams.has('download')||url.searchParams.get('download')==='1')
  if(/^\/vitrine\/pacientes\/[a-z0-9-]{1,64}$/.test(p))return true
+ if(p==='/homologacao/atividade'||/^\/homologacao\/pacientes\/[a-z0-9-]{1,64}\/prontuario$/.test(p))return !url.search
  return ['/homologacao/sessao','/homologacao/carteirinhas'].includes(p)||/^\/homologacao\/pacientes\/[a-z0-9-]{1,64}\/(?:documentos|carteirinhas)(?:\/[a-f0-9-]{36})?$/.test(p)
 }
 export function createMobileEdge(config:MobilePolicy){

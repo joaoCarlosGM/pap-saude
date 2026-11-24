@@ -5,7 +5,7 @@ import type {Profile} from './card-store'
 export const digest=(b:Buffer|string)=>createHash('sha256').update(b).digest('hex')
 export async function upgradeRegistry(pool:Pool,p:Profile){
  if((await pool.query('SELECT current_database() AS name')).rows[0].name!==p.database||(await pool.query('SELECT owner FROM review_meta')).rows[0]?.owner!==p.owner)throw Error('WRONG_REVIEW_DATABASE')
- const sql=await readFile(path.join(process.env.PAP_PRIVATE_REVIEW_ROOT||process.cwd(),'scripts/private-review/sql/002_registry_documents.sql'),'utf8');const db=await pool.connect();try{await db.query('BEGIN');await db.query(sql);await db.query('COMMIT')}catch(e){await db.query('ROLLBACK');throw e}finally{db.release()}
+ const sql=await readFile(path.join(process.env.PAP_PRIVATE_REVIEW_ROOT||process.cwd(),'scripts/private-review/sql/002_registry_documents.sql'),'utf8');const db=await pool.connect();try{await db.query('BEGIN');const {rows:[meta]}=await db.query("SELECT to_jsonb(review_meta)->>'schema_version' AS version FROM review_meta FOR UPDATE");if(Number(meta?.version||1)<3)await db.query(sql);await db.query('COMMIT')}catch(e){await db.query('ROLLBACK');throw e}finally{db.release()}
 }
 export async function people(pool:Pool){return (await pool.query('SELECT identity FROM review_people ORDER BY patient_id')).rows.map(r=>r.identity)}
 export async function createPerson(pool:Pool,input:unknown,operationId:string,actor='PRIVATE_SESSION'){
@@ -13,7 +13,16 @@ export async function createPerson(pool:Pool,input:unknown,operationId:string,ac
  try{await db.query('BEGIN');await db.query("SELECT pg_advisory_xact_lock(hashtextextended('review-people-quota',0))");await db.query('SELECT pg_advisory_xact_lock(hashtextextended($1,0))',['review-create:'+data.document]);const prior=(await db.query('SELECT * FROM review_operations WHERE id=$1',[operationId])).rows[0];if(prior&&(prior.kind!=='PERSON_CREATE'||prior.digest!==hash))throw Error('OPERATION_CONFLICT')
  let row=(await db.query("SELECT * FROM review_people WHERE identity->>'document'=$1",[data.document])).rows[0]
  if(row&&(row.identity.name!==data.name||row.identity.birthDate!==data.birthDate))throw Error('DOCUMENT_ALREADY_USED')
- if(!row){if(Number((await db.query('SELECT count(*) FROM review_people')).rows[0].count)>=100)throw Error('REVIEW_PEOPLE_QUOTA');const subject=randomUUID(),hex=subject.replaceAll('-','').slice(0,6).toUpperCase(),identity=reviewIdentitySchema.parse({kind:'PAP_ID_REVIEW_PERSON_V2',subject,patientId:'review-'+subject,name:data.name,birthDate:data.birthDate,document:data.document,rg:{number:'DEMO-'+hex,uf:'PA',issuer:'DEMO'}});row=(await db.query('INSERT INTO review_people(subject,patient_id,identity) VALUES($1,$2,$3) RETURNING *',[subject,identity.patientId,identity])).rows[0];await db.query('INSERT INTO review_audit(kind,subject,actor) VALUES($1,$2,$3)',['PERSON_CREATED',subject,actor])}
+ if(!row){
+  await db.query("SELECT pg_advisory_xact_lock(hashtextextended('review-chart-cpf',0))")
+  const {rows:[schema]}=await db.query("SELECT to_regclass('review_chart_events') AS chart")
+  if(schema.chart){
+   const aliases=await db.query(`SELECT 1 FROM (
+    SELECT DISTINCT ON (subject) data FROM review_chart_events WHERE kind='identidade' ORDER BY subject,version DESC
+   ) c WHERE c.data->>'cpf'=$1 LIMIT 1`,[data.document])
+   if(aliases.rowCount)throw Error('DOCUMENT_ALREADY_USED')
+  }
+  if(Number((await db.query('SELECT count(*) FROM review_people')).rows[0].count)>=100)throw Error('REVIEW_PEOPLE_QUOTA');const subject=randomUUID(),hex=subject.replaceAll('-','').slice(0,6).toUpperCase(),identity=reviewIdentitySchema.parse({kind:'PAP_ID_REVIEW_PERSON_V2',subject,patientId:'review-'+subject,name:data.name,birthDate:data.birthDate,document:data.document,rg:{number:'DEMO-'+hex,uf:'PA',issuer:'DEMO'}});row=(await db.query('INSERT INTO review_people(subject,patient_id,identity) VALUES($1,$2,$3) RETURNING *',[subject,identity.patientId,identity])).rows[0];await db.query('INSERT INTO review_audit(kind,subject,actor) VALUES($1,$2,$3)',['PERSON_CREATED',subject,actor])}
  await db.query('INSERT INTO review_operations(id,kind,digest,subject) VALUES($1,$2,$3,$4) ON CONFLICT(id) DO NOTHING',[operationId,'PERSON_CREATE',hash,row.subject]);await db.query('COMMIT');return row.identity
  }catch(e){await db.query('ROLLBACK');throw e}finally{db.release()}
 }

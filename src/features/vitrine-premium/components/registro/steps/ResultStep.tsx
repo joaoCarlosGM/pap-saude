@@ -12,6 +12,7 @@ type ResultStepProps = {
   data: RegistrationData
   onRestart: () => void
   onSave: () => void
+  saving?: boolean
   onBack: () => void
   onChange: (data: Partial<RegistrationData>)=>void
   saved: boolean
@@ -21,6 +22,7 @@ export default function ResultStep({
   data,
   onRestart,
   onSave,
+  saving,
   onBack,
   onChange,
   saved,
@@ -93,7 +95,7 @@ export default function ResultStep({
           </div>)}
         </dl>
       </section>
-      <button type="button" onClick={onBack} disabled={saved} className="mt-4 min-h-11 rounded-lg border px-4 py-2 text-sm">Voltar para revisar</button>
+      <button type="button" onClick={onBack} disabled={saved || saving} className="mt-4 min-h-11 rounded-lg border px-4 py-2 text-sm">Voltar para revisar</button>
       {/* FOOTER */}
       <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between border-t border-slate-200 pt-5">
         <button
@@ -108,7 +110,8 @@ export default function ResultStep({
         <button
           type="button"
           onClick={onSave}
-          disabled={saved}
+          aria-busy={saving}
+          disabled={saved || saving}
           className="flex items-center gap-2 rounded-lg bg-pink-500 px-6 py-2.5 text-sm font-medium text-white transition hover:bg-pink-600"
         >
           <Save size={16} />

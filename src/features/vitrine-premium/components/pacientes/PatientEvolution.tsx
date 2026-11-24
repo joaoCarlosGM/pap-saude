@@ -1,5 +1,9 @@
-import {SoapHistory} from "../registro/SoapNotes"
+'use client'
+
+import {useState} from 'react'
+import {SoapEditor,SoapHistory} from "../registro/SoapNotes"
 import {assessmentPresentation} from "@/features/vitrine-premium/lib/demo/assessment-presentation"
+import {useLongitudinal} from './LongitudinalContext'
 import AnimatedLineChart from "./AnimatedLineChart"
 
 import type { Patient } from "@/features/vitrine-premium/types/paciente"
@@ -11,15 +15,26 @@ type Props = {
 export default function PatientEvolution({
   patient,
 }: Props) {
-  const consultationNotes = (patient.encounters ?? []).filter(({registration}) => registration?.soapNotes?.length || registration?.observacoesProfissional?.trim())
+  const chart = useLongitudinal()
+  const [message,setMessage] = useState('')
+  const consultationNotes = (patient.encounters ?? []).filter(({registration}) => !!registration)
   return (
     <div className="space-y-5">
       <section className="space-y-3 rounded-xl border border-slate-200 bg-white p-4 sm:p-5">
         <h2 className="font-semibold">Evolução multiprofissional</h2>
-        {consultationNotes.length ? consultationNotes.map(encounter => <details key={encounter.id} className="rounded-lg border border-slate-200 px-3">
+        {message && <p role="status" className="text-sm text-emerald-700">{message}</p>}
+        {consultationNotes.length ? consultationNotes.map(encounter => <details key={encounter.id} id={'registro-'+encounter.id} tabIndex={-1} className="rounded-lg border border-slate-200 px-3">
           <summary className="min-h-11 cursor-pointer content-center text-sm font-medium">Consulta {encounter.consultaNumero}</summary>
           {encounter.registration?.queixasPrincipais && <p className="mb-2 text-sm">Queixa principal: {encounter.registration.queixasPrincipais}</p>}
-          <div className="pb-3"><SoapHistory notes={encounter.registration?.soapNotes} legacy={encounter.registration?.observacoesProfissional}/></div>
+          <div className="grid gap-3 pb-3">
+            <SoapHistory notes={encounter.registration?.soapNotes} legacy={encounter.registration?.observacoesProfissional}/>
+            {chart?.latest.some(event => event.entityId === encounter.id && event.data.kind === 'consulta') &&
+              <SoapEditor onAppend={async note => {
+                await chart.write({operationId:note.id,entityId:note.id,expectedVersion:0,
+                  data:{kind:'soap',encounterId:encounter.id,author:note.author,content:note.content}})
+                setMessage('Anotação SOAP salva no laboratório privado.')
+              }}/>}
+          </div>
         </details>) : <p className="text-sm text-slate-600">Sem anotações registradas.</p>}
       </section>
       <section className="min-w-0 rounded-xl border border-slate-200 bg-white p-4 shadow-sm sm:p-5">

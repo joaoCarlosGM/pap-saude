@@ -75,25 +75,27 @@ function EventIcon({
 export default function PatientTimeline({
   patient,
 }: Props) {
+  const entries = patient.timeline.filter(event => !patient.encounters?.some(visit => visit.id === event.id && visit.registration))
+  if (!entries.length) return null
   return (
     <section className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm sm:p-5">
       <h2 className="text-sm font-semibold text-slate-900">
-        Linha do Tempo
+        Linha do Tempo ilustrativa
       </h2>
 
       <p className="mt-1 text-xs text-slate-400">
-        Eventos registrados no acompanhamento
+        Dados da fixture de apresentação
       </p>
 
       <div className="mt-5">
-        {patient.timeline.map(
+        {entries.map(
           (event, index) => (
             <div
               key={event.id}
               className="relative flex gap-4 pb-5"
             >
               {index <
-                patient.timeline.length -
+                entries.length -
                   1 && (
                 <div className="absolute left-4 top-8 h-full w-px bg-slate-100" />
               )}

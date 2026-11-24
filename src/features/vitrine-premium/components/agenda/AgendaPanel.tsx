@@ -1,10 +1,10 @@
 'use client'
 
-import {useId, useState, type FormEvent} from 'react'
+import {useId, useRef, useState, type FormEvent} from 'react'
 import Link from 'next/link'
 import {
   agendaPatient, appointmentActions, appointmentKinds, appointmentStatuses, availableStatuses, changeAppointment,
-  createAppointment, describeSlot, isPending, mutateAppointments, nextAppointments, useAgendaClock, useAppointments, visibleAppointments,
+  createAppointment, describeSlot, journalAppointments, isPending, mutateAppointments, nextAppointments, useAgendaClock, useAppointments, visibleAppointments,
   type Appointment, type AppointmentStatus,
 } from '../../lib/demo-agenda'
 import {formatRecordTime} from '../../lib/registration-record'
@@ -14,7 +14,16 @@ import {useDemo} from '../demo/DemoProvider'
 import Input from '../ui/Input'
 import Select from '../ui/Select'
 import {Button} from '../ui/button'
+import {useLongitudinal} from '../pacientes/LongitudinalContext'
+import type {ChartCommand} from '../../lib/longitudinal'
 
+function agendaCommand(item: Appointment, version: number, operationId: string, vaccineId?: string): ChartCommand {
+  return {operationId, entityId:item.id, expectedVersion:version, data:{kind:'agenda',
+    appointmentKind:item.kind, status:item.status, slot:item.slot, professional:item.professional,
+    unit:item.unit, notes:item.reason, vaccineId}}
+}
+
+export type AgendaDraft = {date?: string; reason: string; vaccineId: string}
 type Target = Appointment['patient']
 
 function SlotInputs({slot}: {slot?: Appointment['slot']}) {
@@ -27,14 +36,15 @@ function SlotInputs({slot}: {slot?: Appointment['slot']}) {
 function field(data: FormData, name: string) {return String(data.get(name) ?? '').trim()}
 function formSlot(data: FormData) {return {date: field(data, 'date'), time: field(data, 'time')}}
 
-function AppointmentForm({patients, target, actor, unit, onCreated}: {
-  patients: Target[]; target?: Target; actor: string; unit: string; onCreated: () => void
+function AppointmentForm({patients, target, actor, unit, onCreated, draft, persist, privateIds}: {
+  patients: Target[]; target?: Target; actor: string; unit: string; onCreated: () => void; draft?: AgendaDraft; persist?: (patientId: string, command: ChartCommand) => Promise<void>; privateIds: ReadonlySet<string>
 }) {
   const id = useId()
-  const [kind, setKind] = useState<Appointment['kind']>('consulta')
+  const [kind, setKind] = useState<Appointment['kind']>(draft ? 'vacinacao' : 'consulta')
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState('')
 
+  const previous = useRef<{command:ChartCommand; signature:string} | undefined>(undefined)
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
     if (busy) return
@@ -48,10 +58,17 @@ function AppointmentForm({patients, target, actor, unit, onCreated}: {
         patient, kind, slot: kind === 'solicitacao' ? null : formSlot(data),
         professional: field(data, 'professional'), unit: field(data, 'unit'), reason: field(data, 'reason'),
       }, actor)
-      await mutateAppointments(current => [...current, item])
+      if (persist && privateIds.has(patient.id)) {
+        const next = agendaCommand(item,0,item.events[0].id,draft?.vaccineId)
+        const signature = JSON.stringify(next.data)
+        if (previous.current?.signature !== signature) previous.current = {command:next,signature}
+        await persist(patient.id,previous.current.command)
+      } else {
+        await mutateAppointments(current => [...current, item])
+      }
       onCreated()
     } catch {
-      setError('O compromisso não foi salvo. Confira os campos e a disponibilidade do armazenamento neste navegador.')
+      setError('Não foi possível confirmar o compromisso. Confira os campos, os compromissos existentes e a sessão.')
     } finally {setBusy(false)}
   }
 
@@ -60,28 +77,29 @@ function AppointmentForm({patients, target, actor, unit, onCreated}: {
       <option value="">Selecione</option>
       {patients.map(patient => <option key={patient.key} value={patient.key}>{patient.name}</option>)}
     </Select>}
-    <Select id={id+'-kind'} label="Tipo de compromisso" value={kind} className="min-h-11 text-base" onChange={event => setKind(event.target.value as Appointment['kind'])}>
-      {Object.entries(appointmentKinds).map(([value, label]) => <option key={value} value={value}>{label}</option>)}
+    <Select id={id+'-kind'} label="Tipo de compromisso" value={kind} disabled={!!draft} className="min-h-11 text-base" onChange={event => setKind(event.target.value as Appointment['kind'])}>
+      {Object.entries(appointmentKinds).filter(([value]) => draft || value !== 'vacinacao').map(([value, label]) => <option key={value} value={value}>{label}</option>)}
     </Select>
-    {kind !== 'solicitacao' && <SlotInputs/>}
+    {kind !== 'solicitacao' && <SlotInputs slot={draft?.date ? {date:draft.date,time:''} : undefined}/>}
     <div className="grid min-w-0 gap-3 sm:grid-cols-2">
       <Input name="professional" label="Profissional ou equipe" className="min-h-11 text-base" required maxLength={120} defaultValue={actor}/>
       <Input name="unit" label="Unidade" className="min-h-11 text-base" required maxLength={160} defaultValue={unit}/>
     </div>
-    <Input name="reason" label="Motivo" className="min-h-11 text-base" required maxLength={250}/>
+    <Input name="reason" defaultValue={draft?.reason} label="Motivo" className="min-h-11 text-base" required maxLength={250}/>
     {error && <p role="alert" className="text-sm text-rose-700">{error}</p>}
     <Button type="submit" disabled={busy} className="min-h-11 justify-self-start">Salvar compromisso</Button>
   </form>
 }
 
-function AppointmentCard({item, actor, onUpdate, showPatient, linkedPatientId}: {
-  item: Appointment; actor: string; onUpdate: (message: string) => void; showPatient: boolean; linkedPatientId?: string
+function AppointmentCard({item, actor, onUpdate, showPatient, linkedPatientId, persist, vaccineId}: {
+  item: Appointment; actor: string; onUpdate: (message: string) => void; showPatient: boolean; linkedPatientId?: string; persist?: (command: ChartCommand) => Promise<void>; vaccineId?: string
 }) {
   const id = useId()
   const [reschedule, setReschedule] = useState(false)
   const [status, setStatus] = useState<AppointmentStatus | ''>('')
   const [error, setError] = useState('')
   const [busy, setBusy] = useState(false)
+  const attempt = useRef<{key:string;command:ChartCommand} | undefined>(undefined)
   const first = item.events[0]
   const statuses = availableStatuses(item)
 
@@ -90,7 +108,15 @@ function AppointmentCard({item, actor, onUpdate, showPatient, linkedPatientId}: 
     setBusy(true)
     setError('')
     try {
-      await mutateAppointments(current => {
+      if (persist) {
+        const next = changeAppointment(item, change, actor)
+        if (next !== item) {
+          const key = JSON.stringify([item.events.length,change])
+          if (attempt.current?.key !== key) attempt.current = {key,command:agendaCommand(next,item.events.length,next.events.at(-1)!.id,vaccineId)}
+          await persist(attempt.current.command)
+          attempt.current = undefined
+        }
+      } else await mutateAppointments(current => {
         if (!current.some(row => row.id === item.id)) throw Error('Compromisso indisponível.')
         return current.map(row => row.id === item.id ? changeAppointment(row, change, actor) : row)
       })
@@ -101,7 +127,7 @@ function AppointmentCard({item, actor, onUpdate, showPatient, linkedPatientId}: 
     finally {setBusy(false)}
   }
 
-  return <article className="grid min-w-0 gap-3 rounded-lg border border-slate-200 bg-white p-3 sm:p-4">
+  return <article id={'registro-'+item.id} tabIndex={-1} className="grid min-w-0 gap-3 rounded-lg border border-slate-200 bg-white p-3 sm:p-4">
     <div className="flex flex-wrap items-center justify-between gap-2">
       <h3 className="break-words font-semibold">{appointmentKinds[item.kind]}</h3>
       <span className="rounded-full bg-slate-100 px-3 py-1 text-sm">{appointmentStatuses[item.status]}</span>
@@ -148,8 +174,10 @@ function AppointmentCard({item, actor, onUpdate, showPatient, linkedPatientId}: 
 export function UpcomingAppointments({patient, onOpen}: {patient: Patient; onOpen: () => void}) {
   const items = useAppointments()
   const target = agendaPatient(patient, useCardService()?.people)
+  const chart = useLongitudinal()
+  const durable = target && chart?.enabled ? journalAppointments(chart.snapshot.events,target) : []
   const now = useAgendaClock()
-  const next = nextAppointments(items.filter(item => item.patient.key === target?.key), now).slice(0, 3)
+  const next = nextAppointments([...items.filter(item => item.patient.key === target?.key), ...durable], now).slice(0, 3)
   return <section className="mb-4 grid gap-2 rounded-xl border border-slate-200 bg-white p-4">
     <h2 className="font-semibold">Próximos compromissos</h2>
     {next.length ? <ul className="space-y-1 text-sm">{next.map(item =>
@@ -159,27 +187,40 @@ export function UpcomingAppointments({patient, onOpen}: {patient: Patient; onOpe
   </section>
 }
 
-export default function AgendaPanel({patient}: {patient?: Patient}) {
-  const {patients, state: {profile}} = useDemo()
+export default function AgendaPanel({patient,draft}: {patient?: Patient; draft?: AgendaDraft}) {
+  const {patients, activity, state: {profile}} = useDemo()
   const appointments = useAppointments()
-  const authorized = useCardService()?.people
-  const [creating, setCreating] = useState(false)
+  const chart = useLongitudinal()
+  const service = useCardService()
+  const authorized = service?.people
+  const [creating, setCreating] = useState(!!draft)
   const [message, setMessage] = useState('')
   const selected = patient && agendaPatient(patient, authorized)
   const targets = patients.map(value => agendaPatient(value, authorized)).filter((value): value is Target => !!value)
-  const items = visibleAppointments(appointments, authorized).filter(item => !patient || item.patient.key === selected?.key)
+  const journal = patient ? chart?.snapshot.events ?? [] : activity
+  const durable = (patient ? (selected ? [selected] : []) : targets).flatMap(target => journalAppointments(journal,target))
+  const privateIds = new Set(authorized?.flatMap(person => 'patientId' in person ? [person.patientId] : []) ?? [])
+  async function savePrivate(patientId:string,command:ChartCommand) {
+    if (patient && chart?.enabled) await chart.write(command)
+    else if (service?.chart) await service.chart.write(patientId,command)
+    else throw Error('CHART_UNAVAILABLE')
+  }
+  const items = [...visibleAppointments(appointments, authorized).filter(item => !patient || item.patient.key === selected?.key), ...durable]
   const actor = profile.name.trim() || 'Profissional da Vitrine'
+  const privateAppointment = (item: Appointment) => journal.find(event => event.entityId === item.id && event.data.kind === 'agenda')
   return <section aria-label={patient ? 'Agenda da paciente' : 'Compromissos'} className="grid min-w-0 gap-4">
     <div className="flex flex-wrap items-center justify-between gap-3">
-      <p className="text-sm text-slate-600">Compromissos sintéticos salvos neste navegador.</p>
-      <Button type="button" className="min-h-11" aria-expanded={creating} disabled={!!patient && !selected}
+      <p className="text-sm text-slate-600">{chart?.enabled ? 'Novos compromissos desta ficha são salvos no laboratório privado.' : service?.chart ? 'A agenda reúne compromissos privados do laboratório e demonstrações deste navegador.' : 'Compromissos sintéticos salvos neste navegador.'}</p>
+      <Button type="button" className="min-h-11" aria-expanded={creating} disabled={!!patient && (!selected || chart?.loading || chart?.error)}
         onClick={() => {setMessage(''); setCreating(value => !value)}}>Novo compromisso</Button>
     </div>
-    {creating && (!patient || selected) && <AppointmentForm patients={targets} target={selected} actor={actor} unit={profile.unit.trim() || 'UBS Demonstrativa'}
+    {creating && (!patient || selected) && <AppointmentForm patients={targets} target={selected} actor={actor} draft={draft} persist={service?.chart ? savePrivate : undefined} privateIds={privateIds} unit={profile.unit.trim() || 'UBS Demonstrativa'}
       onCreated={() => {setCreating(false); setMessage('Compromisso salvo.')}}/>}
     {message && <p role="status" className="text-sm text-emerald-700">{message}</p>}
     {items.length ? <div className="grid min-w-0 gap-3 xl:grid-cols-2">{items.toReversed().map(item =>
-      <AppointmentCard key={item.id} item={item} actor={actor} onUpdate={setMessage} showPatient={!patient}
+      <AppointmentCard key={item.id}
+          persist={privateAppointment(item) ? command => savePrivate(item.patient.id,command) : undefined}
+          vaccineId={(privateAppointment(item)?.data as Extract<ChartCommand['data'],{kind:'agenda'}> | undefined)?.vaccineId} item={item} actor={actor} onUpdate={setMessage} showPatient={!patient}
         linkedPatientId={targets.find(target => target.key === item.patient.key)?.id}/>
     )}</div> : <p className="text-sm text-slate-600">Nenhum compromisso registrado.</p>}
   </section>

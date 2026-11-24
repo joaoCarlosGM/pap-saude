@@ -3,12 +3,13 @@
 import {useEffect, useMemo, useState, useSyncExternalStore} from 'react'
 import {z} from 'zod'
 import type {SyntheticIdentity} from './pap-id'
+import type {ChartEvent} from './longitudinal'
 import type {Patient} from '../types/paciente'
 
-const kinds = ['consulta', 'exame', 'solicitacao', 'retorno'] as const
+const kinds = ['consulta', 'exame', 'solicitacao', 'retorno', 'vacinacao'] as const
 const statuses = ['planejado', 'confirmado', 'realizado', 'nao_compareceu', 'cancelado'] as const
 export const appointmentKinds: Record<(typeof kinds)[number], string> = {
-  consulta: 'Consulta', exame: 'Exame', solicitacao: 'Solicitação de exame sem data', retorno: 'Retorno',
+  consulta: 'Consulta', exame: 'Exame', solicitacao: 'Solicitação de exame sem data', retorno: 'Retorno', vacinacao: 'Vacinação',
 }
 export const appointmentStatuses: Record<(typeof statuses)[number], string> = {
   planejado: 'Planejado', confirmado: 'Confirmado', realizado: 'Realizado',
@@ -52,8 +53,8 @@ export function visibleAppointments(items: readonly Appointment[], authorized: r
   return items.filter(item => canSeePatient(item.patient.id, authorized))
 }
 
-export const isPending = (item: Appointment) => item.status === 'planejado' || item.status === 'confirmado'
-export function availableStatuses(item: Appointment): AppointmentStatus[] {
+export const isPending = (item: Pick<Appointment,'status'>) => item.status === 'planejado' || item.status === 'confirmado'
+export function availableStatuses(item: Pick<Appointment,'status'|'slot'>): AppointmentStatus[] {
   if (!isPending(item)) return []
   if (!item.slot) return ['cancelado']
   return item.status === 'planejado'
@@ -145,4 +146,25 @@ export function resetAppointments() {
     localStorage.removeItem(key)
     window.dispatchEvent(new Event(changed))
   })
+}
+
+/** Project the private journal into the existing Agenda H22 view model. */
+export function journalAppointments(events: readonly ChartEvent[], patient: Appointment['patient']): Appointment[] {
+  const appointments = new Map<string,Appointment>()
+  const history = events.filter(event => event.patientId === patient.id && event.data.kind === 'agenda')
+    .toSorted((a,b) => a.version-b.version)
+  for (const event of history) {
+    const data = event.data
+    if (data.kind !== 'agenda') continue
+    const old = appointments.get(event.entityId)
+    const changedSlot = old && (old.slot?.date !== data.slot?.date || old.slot?.time !== data.slot?.time)
+    const action = !old ? 'criado' : changedSlot ? (old.slot ? 'reagendado' : 'agendado') : 'situacao'
+    appointments.set(event.entityId, {
+      id:event.entityId, patient, kind:data.appointmentKind, status:data.status, slot:data.slot,
+      professional:data.professional, unit:data.unit, reason:data.notes, events:[...(old?.events ?? []),{
+        id:event.id, at:event.recordedAt, actor:'Operador da sessão privada', action, status:data.status, slot:data.slot,
+      }],
+    })
+  }
+  return [...appointments.values()]
 }

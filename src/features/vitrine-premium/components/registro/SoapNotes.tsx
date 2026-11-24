@@ -1,6 +1,6 @@
 'use client'
 
-import {useId, useState} from 'react'
+import {useId, useRef, useState} from 'react'
 import {demoAuthors, createSoapNote, formatRecordTime, soapFields, type DemoAuthor, type SoapContent, type SoapNote} from '../../lib/registration-record'
 import {textAreaClass} from './RecordFields'
 import Select from '../ui/Select'
@@ -10,7 +10,7 @@ const fields = Object.keys(soapFields) as Array<keyof SoapContent>
 const emptyContent: SoapContent = {subjective: '', objective: '', assessment: '', plan: ''}
 
 export function SoapEditor({onAppend, onPendingChange}: {
-  onAppend: (note: SoapNote) => void
+  onAppend: (note: SoapNote) => void | Promise<void>
   onPendingChange?: (pending: boolean) => void
 }) {
   const id = useId()
@@ -18,15 +18,28 @@ export function SoapEditor({onAppend, onPendingChange}: {
   const [content, setContent] = useState(emptyContent)
   const hasText = Object.values(content).some(value => value.trim())
 
-  function append() {
-    if (!author || !hasText) return
-    onAppend(createSoapNote(author, content))
-    setContent(emptyContent)
-    setAuthor('')
-    onPendingChange?.(false)
+  const [busy,setBusy] = useState(false)
+  const [error,setError] = useState(false)
+  const pending = useRef<{signature:string; note:SoapNote} | undefined>(undefined)
+  const sending = useRef(false)
+  async function append() {
+    if (!author || !hasText || sending.current) return
+    sending.current = true
+    setBusy(true)
+    setError(false)
+    const signature = JSON.stringify({author,content})
+    if (pending.current?.signature !== signature) pending.current = {signature,note:createSoapNote(author,content)}
+    try {
+      await onAppend(pending.current.note)
+      pending.current = undefined
+      setContent(emptyContent)
+      setAuthor('')
+      onPendingChange?.(false)
+    } catch {setError(true)}
+    finally {sending.current = false;setBusy(false)}
   }
 
-  return <fieldset className="grid min-w-0 gap-3 rounded-xl border border-slate-200 p-3 sm:p-4">
+  return <fieldset disabled={busy} className="grid min-w-0 gap-3 rounded-xl border border-slate-200 p-3 sm:p-4">
     <legend className="px-1 text-sm font-semibold">Nova anotação SOAP</legend>
     <Select id={id} label="Perfil profissional sintético" className="min-h-11 text-base" value={author}
       onChange={event => setAuthor(event.target.value as DemoAuthor | '')}>
@@ -43,7 +56,8 @@ export function SoapEditor({onAppend, onPendingChange}: {
         }}/>
       </label>)}
     </div>
-    <Button type="button" variant="outline" className="min-h-11 justify-self-start" disabled={!hasText || !author} onClick={append}>Adicionar anotação</Button>
+    {error && <p role="alert" className="text-sm text-rose-700">Não foi possível confirmar a anotação. Confira a sessão e tente novamente.</p>}
+    <Button type="button" variant="outline" className="min-h-11 justify-self-start" disabled={!hasText || !author} onClick={() => void append()}>Adicionar anotação</Button>
   </fieldset>
 }
 

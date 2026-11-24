@@ -47,14 +47,49 @@ export function registrationErrors(d:RegistrationData,step:number):string[] {
  if(d.allergyStatus==='sim'&&(!d.allergies?.length||d.allergies.some(a=>!a.agent.trim())))errors.push('Informe o agente da alergia relatada.');if(d.comorbidityStatus==='sim'&&(!d.conditions?.length||d.conditions.some(c=>!c.trim())))errors.push('Informe a condição relatada.');if(d.medications?.some(m=>!m.name.trim()))errors.push('Informe o nome de cada medicação adicionada.')}
  return errors
 }
-export function saveDemo(state:DemoState,d:RegistrationData,recorded?:{at:string;agendaIdentity:string}):DemoState {
+function historyState(value: 'sim'|'nao'|'desconhecido'|undefined, positive: number, previous: string|undefined, label:string) {
+ if(positive) return 'relato registrado'
+ if(value==='nao')return 'investigado sem relato'
+ return previous?.split('; ').find(part=>part.startsWith(label+': '))?.slice(label.length+2) ??
+  (value==='desconhecido'?'desconhecido':'não investigado')
+}
+export function saveDemo(state:DemoState,d:RegistrationData,recorded?:{at:string;agendaIdentity:string;encounterId?:string}):DemoState {
  const errors=[1,2,3,4,5].flatMap(step=>registrationErrors(d,step));if(errors.length)throw new Error(errors.join(' '))
  const existing=state.patients.find(p=>normalizeIdentifier(p.cpf)===normalizeIdentifier(d.cpf)),id=existing?.id??`demo-patient-${state.next}`,g=!d.dumUnknown?pregnancyFrom(d.dum):null
- const patient:Patient={id,agendaIdentity:existing?.agendaIdentity??recorded?.agendaIdentity,initials:d.nomeCompleto.trim().split(/\s+/).slice(0,2).map(n=>n[0]).join(''),nome:d.nomeCompleto.trim(),cpf:normalizeIdentifier(d.cpf),sus:existing?.sus||'Não informado',dataNascimento:d.dataNascimento,idade:Math.floor((+civilDate(DEMO_DATE)!-+civilDate(d.dataNascimento)!)/31557600000),telefone:existing?.telefone||'Não informado',endereco:existing?.endereco||'Não informado',pregnancy:{dum:g?d.dum:'',dpp:g?.dueDate||'',gestationalAge:g?`${g.weeks}s ${g.days}d`:'Desconhecida',trimester:g?.trimester||'Desconhecido'},allergies:d.allergyStatus==='sim'?(d.allergies||[]).map(a=>[a.agent,a.reaction,a.notes].filter(Boolean).join(' — ')):[],comorbidities:d.comorbidityStatus==='sim'?(d.conditions||[]):[],historyStatus:`Alergias: ${d.allergyStatus||'desconhecido'}; comorbidades: ${d.comorbidityStatus||'desconhecido'}`,consultations:0,alerts:0,latestScore:{value:null,classification:'NAO_AVALIADO',date:DEMO_DATE},meowsTrend:[],systolicTrend:[],obstetricHistory:{pregnancies:d.pregnancies?Number(d.pregnancies):null,deliveries:d.deliveries?Number(d.deliveries):null,cesareans:d.cesareans?Number(d.cesareans):null,abortions:d.pregnancyLosses?Number(d.pregnancyLosses):null},timeline:existing?.timeline||[],exams:existing?.exams||[],vaccines:existing?.vaccines||[],documents:existing?.documents||[],medications:(d.medications||[]).map((m,i)=>({id:`med-${i}`,...m})),previousNotes:[]}
+ const addedAllergies=d.allergyStatus==='sim'?(d.allergies||[]).map(a=>[a.agent,a.reaction,a.notes].filter(Boolean).join(' — ')):[]
+ const addedConditions=d.comorbidityStatus==='sim'?d.conditions||[]:[]
+ const allergies=[...new Set([...(existing?.allergies??[]),...addedAllergies])]
+ const comorbidities=[...new Set([...(existing?.comorbidities??[]),...addedConditions])]
+ const medications=[...(existing?.medications??[])]
+ for (const medication of d.medications??[]) {
+  const same=medications.some(entry=>['name','dose','frequency','route'].every(key=>
+   entry[key as keyof typeof medication]?.trim().toLocaleLowerCase('pt-BR')===medication[key as keyof typeof medication]?.trim().toLocaleLowerCase('pt-BR')))
+  if(!same)medications.push({...medication,id:crypto.randomUUID()})
+ }
+ const allergyHistory=historyState(d.allergyStatus,allergies.length,existing?.historyStatus,'Alergias')
+ const conditionHistory=historyState(d.comorbidityStatus,comorbidities.length,existing?.historyStatus,'comorbidades')
+ const patient:Patient={
+  id,agendaIdentity:existing?.agendaIdentity??recorded?.agendaIdentity,
+  initials:existing?.initials??d.nomeCompleto.trim().split(/\s+/).slice(0,2).map(n=>n[0]).join(''),
+  nome:existing?.nome??d.nomeCompleto.trim(),cpf:normalizeIdentifier(d.cpf),
+  sus:existing?.sus||'Não informado',dataNascimento:existing?.dataNascimento??d.dataNascimento,
+  idade:existing?.idade??Math.floor((+civilDate(DEMO_DATE)!-+civilDate(d.dataNascimento)!)/31557600000),
+  telefone:existing?.telefone||'Não informado',endereco:existing?.endereco||'Não informado',
+  pregnancy:g?{dum:d.dum,dpp:g.dueDate,gestationalAge:`${g.weeks}s ${g.days}d`,trimester:g.trimester}:
+    existing?.pregnancy??{dum:'',dpp:'',gestationalAge:'Desconhecida',trimester:'Desconhecido'},
+  allergies,comorbidities,historyStatus:`Alergias: ${allergyHistory}; comorbidades: ${conditionHistory}`,
+  consultations:0,alerts:0,latestScore:{value:null,classification:'NAO_AVALIADO',date:DEMO_DATE},meowsTrend:[],systolicTrend:[],
+  obstetricHistory:{pregnancies:d.pregnancies?Number(d.pregnancies):existing?.obstetricHistory.pregnancies??null,
+    deliveries:d.deliveries?Number(d.deliveries):existing?.obstetricHistory.deliveries??null,
+    cesareans:d.cesareans?Number(d.cesareans):existing?.obstetricHistory.cesareans??null,
+    abortions:d.pregnancyLosses?Number(d.pregnancyLosses):existing?.obstetricHistory.abortions??null},
+  timeline:existing?.timeline||[],exams:existing?.exams||[],vaccines:existing?.vaccines||[],
+  documents:existing?.documents||[],medications,previousNotes:[],
+ }
  const assessment=calculateDemoMeows(d)
  const registration=structuredClone(d)
  if(recorded&&(d.edema||d.edemaLocations?.length))registration.edemaProvenance={author:'enfermagem',recordedAt:recorded.at,source:'Registro da Vitrine'}
- const encounter:Atendimento={id:`demo-record-${state.next}`,consultaNumero:state.encounters.filter(a=>a.paciente.id===id).length+1,dataHora:`${DEMO_DATE}T15:${String(state.next%60).padStart(2,'0')}:00Z`,paciente:{id,nome:patient.nome,idadeGestacional:patient.pregnancy.gestationalAge},profissional:professionals[0],score:assessment.score,classificacao:assessment.classification,assessment,assessmentSource:'PAP_MEOWS_DEMO',registration}
+ const encounter:Atendimento={id:recorded?.encounterId??`demo-record-${state.next}`,consultaNumero:state.encounters.filter(a=>a.paciente.id===id).length+1,dataHora:recorded?.at??`${DEMO_DATE}T15:${String(state.next%60).padStart(2,'0')}:00Z`,paciente:{id,nome:patient.nome,idadeGestacional:patient.pregnancy.gestationalAge},profissional:professionals[0],score:assessment.score,classificacao:assessment.classification,assessment,assessmentSource:'PAP_MEOWS_DEMO',registration}
  return {...state,patients:[...state.patients.filter(p=>p.id!==id),patient],encounters:[...state.encounters,encounter],next:state.next+1}
 }
 export function dashboardFrom(state:DemoState){

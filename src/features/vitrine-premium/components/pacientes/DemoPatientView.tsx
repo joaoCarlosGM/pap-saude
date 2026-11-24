@@ -10,6 +10,10 @@ import PatientTabs from "@/features/vitrine-premium/components/pacientes/Patient
 
 
 
+import {LongitudinalProvider, useLongitudinal} from './LongitudinalContext'
+import {projectChart} from '../../lib/chart-projection'
+import type {Patient} from '../../types/paciente'
+
 type Props = {id: string}
 
 export default function PatientPage({
@@ -22,12 +26,20 @@ export default function PatientPage({
     (item) => item.id === id,
   )
 
-  if(!patient&&pending)return <p role="status">Carregando cadastro sintético autorizado…</p>
-  if(!patient&&!registry&&id.startsWith('review-'))return <div><h1>Consulta privada necessária</h1><p>Autorize a homologação privada para recuperar o cadastro do banco de testes.</p><Link href="/vitrine/pacientes">Voltar para pacientes</Link></div>
+  const privatePatient = id.startsWith('review-')
+  const authorized = registry?.people.some(person => 'patientId' in person && person.patientId === id)
+  if(privatePatient&&!authorized&&pending)return <p role="status">Carregando cadastro sintético autorizado…</p>
+  if(privatePatient&&!authorized)return <div><h1>Consulta privada necessária</h1><p>Autorize a homologação privada para recuperar o cadastro do banco de testes.</p><Link href="/vitrine/pacientes">Voltar para pacientes</Link></div>
   if (!patient) {
     notFound()
   }
 
+  return <LongitudinalProvider key={id} patientId={id}><ChartView base={patient}/></LongitudinalProvider>
+}
+
+function ChartView({base}: {base: Patient}) {
+  const chart = useLongitudinal()
+  const patient = projectChart(base,chart?.latest ?? [])
   return (
     <div className="mx-auto w-full max-w-[1600px]">
       <Link

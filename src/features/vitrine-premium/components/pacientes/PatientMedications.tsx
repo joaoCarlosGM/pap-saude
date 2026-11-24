@@ -13,7 +13,7 @@ export default function PatientMedications({
     <section className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
       <div className="border-b border-slate-100 px-5 py-4">
         <h2 className="text-sm font-semibold text-slate-900">
-          Medicações em uso
+          Medicações informadas na fixture ou no Registro
         </h2>
       </div>
 
