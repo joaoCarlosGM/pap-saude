@@ -16,8 +16,11 @@ async function navigate(page: Page, label: string, path: string) {
 test('cadastro em tela Android, medidas independentes, autoria da sessão e fechamento com viewport reduzida', async ({page}) => {
   test.setTimeout(120_000)
   await page.goto('/vitrine/registro')
-  await page.locator('[data-demo-ready=true]').waitFor({state:'attached'})
-  await page.getByRole('button',{name:'Cadastro manual',exact:true}).click()
+  const manual = page.getByRole('button',{name:'Cadastro manual',exact:true})
+  await expect(async () => {
+    await manual.click()
+    await expect(manual).toHaveAttribute('aria-pressed','true',{timeout:2000})
+  }).toPass({timeout:30_000})
   await page.getByLabel('CPF sintético',{exact:true}).fill('98000000413')
   await page.locator('#patient-name').fill('Gestante Sintética Registro')
   await page.locator('#birth-date').fill('1995-11-01')

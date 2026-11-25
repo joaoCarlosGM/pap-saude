@@ -1,0 +1,87 @@
+Playwright com Chromium em fixture isolada
+Linhas de resultado extraídas dos logs e organizadas por execução.
+
+Rodada completa. --integrated --grep-invert retomada --timeout 180000
+
+Running 32 tests using 1 worker
+  ✓   1 tests/pap-id/final-acceptance.spec.ts:13:5 › new synthetic patient persists, issues a recoverable card and versions/downloads private PDFs without crossing patient scope (1.1m)
+  ✓   2 tests/pap-id/final-acceptance.spec.ts:63:5 › camera decodes a real opaque QR from a simulated local video stream, ignores duplicates and stops every track (12.2s)
+  ✓   3 tests/pap-id/final-acceptance.spec.ts:103:5 › camera permission denial offers a safe PNG/code fallback without releasing any identity (9.6s)
+  ✓   4 tests/pap-id/final-ux.spec.ts:41:5 › H32–H35 Resumo, MEOWS zero e crítico, calendário e Agenda privada em sete larguras (25.4s)
+  ✓   5 tests/pap-id/final-ux.spec.ts:110:7 › Android emulado › H31 descarte visível, erro no campo, foco e rascunho após falha de rede (5.5s)
+  ✘   6 tests/pap-id/final-ux.spec.ts:145:5 › H36 percorre decisões e retornos nos três mapas e mantém a figura privada (24.2s)
+  ✓   7 tests/pap-id/final-visual.spec.ts:4:5 › approved Premium runtime motion, native navigation and reduced motion remain equivalent to the reference source (5.8s)
+  ✓   8 tests/pap-id/final-visual.spec.ts:9:5 › source-backed protocol layouts fit seven widths, light/dark and accessible checklist (54.7s)
+  ✓   9 tests/pap-id/final-visual.spec.ts:16:5 › structured protocol map navigates, zooms, enters fullscreen and alternates to the authorized original (9.4s)
+  ✓  10 tests/pap-id/final-visual.spec.ts:41:5 › profile photo validates, crops, persists across refresh and resets with the demo (6.8s)
+  ✓  11 tests/pap-id/final-visual.spec.ts:78:5 › informative encounter dialog closes by backdrop and keyboard, retains focus and identifies historical gaps (4.2s)
+  ✓  12 tests/pap-id/integrated.spec.ts:19:35 › synthetic QR/document states, record and five-step encounter without duplicate identity at 1440 (11.3s)
+  ✓  13 tests/pap-id/integrated.spec.ts:19:35 › synthetic QR/document states, record and five-step encounter without duplicate identity at 390 (14.1s)
+  ✓  14 tests/pap-id/integrated.spec.ts:36:5 › expired, revoked, malformed and changed-base credentials never release synthetic actions (7.1s)
+  ✘  15 tests/pap-id/integrated.spec.ts:41:5 › three real PDFs require private consent, render pages/zoom, cite their source and download identical bytes (53.7s)
+  ✓  16 tests/pap-id/integrated.spec.ts:56:5 › responsive QR controls, keyboard and resets do not expose clinical APIs or retain credentials after reload (24.0s)
+  ✓  17 tests/pap-id/longitudinal.spec.ts:48:5 › H23–H28 jornada desktop: cadastro, prontuário, PDF, Registro, SOAP, Agenda e refresh (56.9s)
+  ✓  18 tests/pap-id/longitudinal.spec.ts:286:7 › Chromium com toque e viewport Android › H24–H27 formulários móveis, validação nativa, retrato e tema escuro (15.5s)
+  ✓  19 tests/pap-id/post-homologation.spec.ts:5:5 › multiple PNGs are deduplicated, explicitly selected before document confirmation; compact desktop/mobile (17.4s)
+  ✓  20 tests/pap-id/post-homologation.spec.ts:10:5 › visible protocol return, real sourced overviews and original flow remain under private capability (12.7s)
+  ✓  21 tests/pap-id/post-homologation.spec.ts:13:5 › private PostgreSQL issuer shares CLI base, persists reload, revokes reissued PNG and never duplicates patient (36.3s)
+  ✓  22 tests/protocols/journey.spec.ts:18:5 › library searches accents/codes, combines filters and recovers from no results (8.8s)
+  ✓  23 tests/protocols/journey.spec.ts:25:5 › all three references and four tabs have real deep links and desktop/mobile evidence (33.9s)
+  ✓  24 tests/protocols/journey.spec.ts:42:5 › checklist remains local across tabs/protocols and resets only after confirmation (6.0s)
+  ✓  25 tests/protocols/journey.spec.ts:54:5 › native history/reload and keyboard tab navigation retain validated location; flow controls are genuine (4.1s)
+  ✓  26 tests/protocols/journey.spec.ts:73:5 › paused items are noninteractive and direct HTML/RSC routes never mount old chat or course player (13.7s)
+  ✓  27 tests/protocols/journey.spec.ts:83:5 › presentation loading/empty/error states give truthful feedback (8.2s)
+  ✓  28 tests/protocols/journey.spec.ts:87:5 › responsive library/detail, dark mode and keyboard focus avoid horizontal overflow (19.6s)
+  ✓  29 tests/protocols/journey.spec.ts:95:35 › six-step help tour avoids paused routes and resumes from detail query at 1440 (8.1s)
+  ✓  30 tests/protocols/journey.spec.ts:95:35 › six-step help tour avoids paused routes and resumes from detail query at 375 (7.2s)
+  ✓  31 tests/vitrine-premium/registration-followup.spec.ts:16:5 › cadastro em tela Android, medidas independentes, autoria da sessão e fechamento com viewport reduzida (9.2s)
+  ✓  32 tests/vitrine-premium/registration-followup.spec.ts:118:5 › agenda persiste, mostra lembrete, preserva mudanças e atualiza o prontuário (9.2s)
+  2 failed
+  30 passed (10.2m)
+
+Rodada focada inicial. Registro, Agenda, Resumo e jornada H23–H28
+
+Running 7 tests using 1 worker
+  ✓  1 tests/pap-id/final-acceptance.spec.ts:13:5 › new synthetic patient persists, issues a recoverable card and versions/downloads private PDFs without crossing patient scope (46.5s)
+  ✓  2 tests/pap-id/final-ux.spec.ts:40:5 › H32–H35 Resumo, MEOWS zero e crítico, calendário e Agenda privada em sete larguras (13.2s)
+  ✓  3 tests/pap-id/final-ux.spec.ts:106:7 › Android emulado › H31 descarte visível, erro no campo, foco e rascunho após falha de rede (8.7s)
+  ✘  4 tests/pap-id/longitudinal.spec.ts:48:5 › H23–H28 jornada desktop: cadastro, prontuário, PDF, Registro, SOAP, Agenda e refresh (14.1s)
+  ✓  5 tests/pap-id/longitudinal.spec.ts:286:7 › Chromium com toque e viewport Android › H24–H27 formulários móveis, validação nativa, retrato e tema escuro (7.9s)
+  ✘  6 tests/vitrine-premium/registration-followup.spec.ts:16:5 › cadastro em tela Android, medidas independentes, autoria da sessão e fechamento com viewport reduzida (4.8s)
+  ✓  7 tests/vitrine-premium/registration-followup.spec.ts:118:5 › agenda persiste, mostra lembrete, preserva mudanças e atualiza o prontuário (7.7s)
+  2 failed
+  5 passed (1.9m)
+
+Repetição. PAP-Gest, Resumo, três mapas e Registro
+
+Running 4 tests using 1 worker
+  ✓  1 tests/pap-id/final-acceptance.spec.ts:13:5 › new synthetic patient persists, issues a recoverable card and versions/downloads private PDFs without crossing patient scope (48.0s)
+  ✓  2 tests/pap-id/final-ux.spec.ts:41:5 › H32–H35 Resumo, MEOWS zero e crítico, calendário e Agenda privada em sete larguras (25.4s)
+  ✓  3 tests/pap-id/final-ux.spec.ts:150:5 › H36 percorre decisões e retornos nos três mapas e mantém a figura privada (18.7s)
+  ✘  4 tests/vitrine-premium/registration-followup.spec.ts:16:5 › cadastro em tela Android, medidas independentes, autoria da sessão e fechamento com viewport reduzida (2.0m)
+  1 failed
+  3 passed (3.6m)
+
+Repetição isolada. integrated.spec.ts --grep "three real PDFs"
+
+Running 1 test using 1 worker
+  ✓  1 tests/pap-id/integrated.spec.ts:41:5 › three real PDFs require private consent, render pages/zoom, cite their source and download identical bytes (59.1s)
+  1 passed (1.1m)
+
+Repetição isolada. registration-followup.spec.ts --grep "cadastro em tela"
+
+Running 1 test using 1 worker
+  ✓  1 tests/vitrine-premium/registration-followup.spec.ts:16:5 › cadastro em tela Android, medidas independentes, autoria da sessão e fechamento com viewport reduzida (15.2s)
+  1 passed (17.5s)
+
+As primeiras tentativas separaram seletores das versões desktop e mobile da Agenda. A execução completa confirmou as duas jornadas.
+No teste do mapa, a escolha de retorno passou a ser restrita ao nó ativo. A verificação de três PDFs agora aguarda a URL e a seleção da aba antes de abrir a fonte. Ambas as repetições passaram.
+No teste mobile do Registro, a repetição começou a verificar o modo Cadastro manual pelo estado do botão. Essa repetição passou.
+
+Retomada após reiniciar o PostgreSQL e a fixture
+
+PostgreSQL sintético: exited
+PostgreSQL sintético: running
+Running 1 test using 1 worker
+  ✓  1 tests/pap-id/longitudinal.spec.ts:263:5 › H28 retomada da mesma ficha depois de reiniciar a fixture (13.1s)
+  1 passed (15.4s)

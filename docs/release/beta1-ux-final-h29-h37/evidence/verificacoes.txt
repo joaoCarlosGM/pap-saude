@@ -1,0 +1,74 @@
+Base validada
+fe87c57d20e24e9392e6d6274f077931228ecb31
+Commit de implementação
+50144d1d0a664a30ea31747ffdd6e70facced186
+
+$ node --import ./tests/protocols/load.mjs --test tests/vitrine-premium/*.test.mjs tests/protocols/*.test.mjs tests/pap-id/*.test.mjs
+ℹ tests 111
+ℹ suites 0
+ℹ pass 111
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 8811.679213
+
+$ PAP_H23_RESTART=1 tsx --test --test-concurrency=1 tests/pap-id/{longitudinal,database,final-registry,private-session,mobile-edge,card-exports,restart}.test.mts
+✔ the two faces keep an opaque QR in color and monochrome and export a valid PDF (4205.758795ms)
+✔ owned isolated PostgreSQL: issue/retry/concurrency/revoke/persistence and no duplicate identities (461.093494ms)
+✔ private card endpoint denies missing session, foreign origin, query traversal and unsupported methods (140.336203ms)
+✔ owned stop/status/start retains PostgreSQL history and volume data without rebuilding resources (4727.357014ms)
+✔ profile guards reject operator ports, tampered ownership and cleanup without exact confirmation (1170.488136ms)
+✔ v2 additive upgrade preserves legacy rows; registration, encrypted credentials and versioned PDFs persist with audit (2478.571934ms)
+✔ PDF parser rejects corruption, oversized payload, JavaScript and unsupported embedded behavior (5.787945ms)
+✔ H23–H27 validam dados explícitos e H26/H27 preservam histórico e DPP em consulta vazia (20.896252ms)
+✔ H23–H28 PostgreSQL próprio: versões, autorização, Agenda e SOAP, PDF, idempotência e reinício real (5718.725533ms)
+✔ LAN edge rejects public/wildcard origins, operational routes and traversal without widening the allowlist (2.706974ms)
+✔ trusted HTTPS pairing, exact origin, Secure cookie, revocation, rate limiting and proxy header isolation (147.834865ms)
+✔ private backend accepts the exact TLS Origin only with its internal edge secret, never a forged proxy header (5.578346ms)
+✔ private consent expires fail-closed for original PDFs, credentials and patient documents, and cannot be silently renewed (68.353713ms)
+✔ owned PostgreSQL restart retains every registry row, new patient, recoverable card and exact private PDF bytes (3984.461288ms)
+ℹ tests 14
+ℹ suites 0
+ℹ pass 14
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 27089.999599
+
+$ tsc --noEmit --pretty false
+PASS, saída vazia
+
+$ npm run lint
+  51:6  warning  'Finalization' is defined but never used  @typescript-eslint/no-unused-vars
+   4:10  warning  'Prisma' is defined but never used                          @typescript-eslint/no-unused-vars
+  10:87  warning  'requireClinicalProvenanceScope' is defined but never used  @typescript-eslint/no-unused-vars
+  11:10  warning  'PERMISSIONS' is defined but never used                     @typescript-eslint/no-unused-vars
+✖ 4 problems (0 errors, 4 warnings)
+
+$ npm run build -- --webpack
+▲ Next.js 16.4.2 (webpack)
+✓ Compiled successfully in 22.2s
+  Finished TypeScript in 17.2s ...
+✓ Generating static pages using 4 workers (44/44) in 2.7s
+  Finalizing page optimization ...
+  Collecting build traces ...
+
+$ node tests/pap-id/production-boundary.mjs
+{"status":"PASS","candidateProductionBuild":true,"fixtureRoutesAbsent":true,"privateArtifactsAbsent":true,"privateHttpAndRscDenied":true,"clinicalApiDenied":true,"unauthenticatedShowcaseRedirectsToLogin":true,"databaseProvisioned":false,"ephemeralLoopback":true}
+
+$ node scripts/security/guard-sql-injection.mjs
+PASS no raw SQL execution outside the fingerprinted read-only row-lock helper
+PASS no direct node-postgres access in production source
+PASS Prisma query API plus closed, bound-parameter row locks; no Unsafe execution
+
+$ sha256sum docs/protocolos/documentos-originais/*.pdf
+f48c79881152eae50e25ebaf8d354f1219db7c8dd9d5c41b8cfb8ff2360337d2  docs/protocolos/documentos-originais/hemorragia-pos-parto.pdf
+5d4e5756b397ade0adc829cca8336eec86db14e955c22a528fa533a9a75f093b  docs/protocolos/documentos-originais/sepse-obstetrica.pdf
+63a0dc9b93bc3be45632bcf46649c92d7118884135ac2ff8a95aa565830804d1  docs/protocolos/documentos-originais/sindromes-hipertensivas-gestacao.pdf
+
+Primeiras tentativas corrigidas
+Build e PostgreSQL apontaram nome duplicado em uma variável do teste longitudinal. A execução final das duas verificações foi bem-sucedida.
+
+TypeScript foi executado novamente após as duas correções de teste. ESLint nos dois arquivos modificados terminou sem avisos e sem erros.
