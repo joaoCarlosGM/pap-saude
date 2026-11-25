@@ -1,4 +1,4 @@
-import {authorized,expectedReviewOrigin} from './documents';import {readProfile,connect,ledgers,issue,revoke} from './card-store';
+import {authorized,expectedReviewOrigin} from './documents';import {readProfile,connect,ledgers,issue,issueInitial,revoke} from './card-store';
 import {cardImage} from './card-image';import {people,cardHistory,createPerson} from './registry-store';
 const headers={'Cache-Control':'private, no-store','X-Content-Type-Options':'nosniff','Referrer-Policy':'no-referrer'}
 const rates=new Map<string,{count:number;until:number}>()
@@ -13,7 +13,19 @@ export async function cardResponse(request:Request){
  try{const p=await readProfile(process.env.PAP_ID_REVIEW_PROFILE);pool=connect(p)
  if(request.method==='GET')return Response.json({ledgers:await ledgers(pool),people:await people(pool),history:await cardHistory(pool)},{headers})
  if(Number(request.headers.get('content-length')||0)>2048)return new Response(null,{status:413,headers});const raw=await request.text();if(raw.length>2048)return new Response(null,{status:413,headers});const data=JSON.parse(raw)
- if(data.action==='register'&&Object.keys(data).sort().join(',')==='action,input,operationId'){const patient=await createPerson(pool,data.input,data.operationId);return Response.json({patient},{status:201,headers})}
+ if(data.action==='register'&&Object.keys(data).sort().join(',')==='action,input,operationId'){
+  const patient=await createPerson(pool,data.input,data.operationId)
+  let issuance:'issued'|'pending'='pending'
+  if(authorized(request)){
+   try{await issueInitial(pool,patient.patientId,p.cardKey);issuance='issued'}catch{}
+  }
+  return Response.json({patient,issuance},{status:201,headers})
+ }
+ if(data.action==='initial-issue'&&Object.keys(data).sort().join(',')==='action,patientId'){
+  if(!authorized(request))return new Response(null,{status:403,headers})
+  await issueInitial(pool,data.patientId,p.cardKey)
+  return Response.json({issuance:'issued'},{headers})
+ }
  if(data.action==='revoke'&&Object.keys(data).sort().join(',')==='action,subject'&&/^[a-f0-9-]{36}$/.test(data.subject)){await revoke(pool,data.subject);return Response.json({ledgers:await ledgers(pool),people:await people(pool),history:await cardHistory(pool)},{headers})}
  if(data.action!=='issue'||Object.keys(data).sort().join(',')!=='action,operationId,patientId,token')return new Response(null,{status:400,headers})
  const ledger=await issue(pool,data.patientId,data.operationId,data.token,p.cardKey);return Response.json({ledger,png:'data:image/png;base64,'+(await cardImage(ledger,data.token)).toString('base64')},{headers})

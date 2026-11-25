@@ -1,7 +1,7 @@
 'use client'
 
 import {useEffect, useId, useRef, useState, type FormEvent} from 'react'
-import Modal from '../ui/Modal'
+import FormDialog from '../ui/FormDialog'
 import {Button} from '../ui/button'
 import {chartCommand, type ChartEvent} from '../../lib/longitudinal'
 import {chartLabels, definitions, type EditableKind, type Field} from './longitudinal-fields'
@@ -41,10 +41,10 @@ export default function LongitudinalEditor({edit, onClose, onSaved}: {edit: Char
   const [confirmed,setConfirmed] = useState(false)
   const [reason,setReason] = useState('')
   const [dirty,setDirty] = useState(false)
-  const [discard,setDiscard] = useState(false)
   const [busy,setBusy] = useState(false)
   const [error,setError] = useState('')
   const [fieldError,setFieldError] = useState('')
+  const [validationAttempt,setValidationAttempt] = useState(0)
   const problem = useRef<HTMLParagraphElement>(null)
   const form = useRef<HTMLFormElement>(null)
   const pending = useRef(false)
@@ -55,24 +55,13 @@ export default function LongitudinalEditor({edit, onClose, onSaved}: {edit: Char
   const requiresReason = correction || (disposition && (kind !== 'resultado' || fields.status === 'retificado'))
 
   useEffect(() => {
-    if (!dirty) return
-    const beforeUnload = (event: BeforeUnloadEvent) => {event.preventDefault(); event.returnValue = ''}
-    window.addEventListener('beforeunload', beforeUnload)
-    return () => window.removeEventListener('beforeunload', beforeUnload)
-  }, [dirty])
-
-  useEffect(() => {
-    if (!error) return
+    if (!error || busy) return
     const field = form.current?.elements.namedItem(fieldError)
-    if (field instanceof HTMLElement) field.focus()
-    else problem.current?.focus()
-  }, [error,fieldError])
-
-  function close() {
-    if (busy) return
-    if (dirty) setDiscard(true)
-    else onClose()
-  }
+    if (field instanceof HTMLElement) {
+      field.scrollIntoView({block:'nearest'})
+      field.focus({preventScroll:true})
+    } else problem.current?.focus({preventScroll:true})
+  }, [error,fieldError,validationAttempt,busy])
 
   function change(key: string, value: string) {
     setDirty(true)
@@ -89,6 +78,14 @@ export default function LongitudinalEditor({edit, onClose, onSaved}: {edit: Char
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
     if (pending.current) return
+    setValidationAttempt(value => value + 1)
+    const invalid = event.currentTarget.querySelector<HTMLInputElement>(':invalid:not(fieldset)')
+    if (invalid) {
+      setFieldError(invalid.name)
+      const label = definition.fields.find(field => field.key === invalid.name)?.label
+      setError(label ? 'Confira o campo ' + label.toLocaleLowerCase('pt-BR') + '.' : 'Confira o campo destacado.')
+      return
+    }
     setError('')
     setFieldError('')
     const data = Object.fromEntries(Object.entries(fields).map(([key,value]) => [key,value.trim()]).filter(([,value]) => value))
@@ -108,7 +105,8 @@ export default function LongitudinalEditor({edit, onClose, onSaved}: {edit: Char
       expectedVersion:current?.version ?? 0, data:payload, correction, reason:reason.trim() || undefined})
     if (!parsed.success) {
       const issue = parsed.error.issues[0]
-      const key = String(issue.path[0] === 'data' ? issue.path[1] : issue.path[0])
+      const path = issue.path[0] === 'data' ? issue.path.slice(1) : issue.path
+      const key = path.join('.')
       setFieldError(key)
       setError(issue.code === 'custom' ? issue.message : 'Confira o campo ' + (definition.fields.find(field => field.key === key)?.label ?? 'indicado') + '.')
       return
@@ -150,19 +148,12 @@ export default function LongitudinalEditor({edit, onClose, onSaved}: {edit: Char
     </div>
   }
 
-  return <Modal open onClose={close} title={current && correction ? 'Retificar ' + chartLabels[kind].toLocaleLowerCase('pt-BR') :
-    current && !definition.singleton ? 'Atualizar ' + chartLabels[kind].toLocaleLowerCase('pt-BR') : definition.button} maxWidth="md">
-    {discard && <div className="mb-4 grid gap-2 rounded-lg bg-amber-50 p-3 text-sm">
-      <p role="alert">Descartar as alterações deste formulário?</p>
-      <div className="flex flex-wrap gap-2">
-        <Button type="button" onClick={() => setDiscard(false)}>Continuar editando</Button>
-        <Button type="button" variant="outline" className="min-h-11" onClick={onClose}>Descartar alterações</Button>
-      </div>
-    </div>}
-    {kind === 'identidade' && <p className="mb-4 text-sm text-slate-600">A retificação vale para a ficha longitudinal. A identificação de emissão do PAP-ID continua vinculada ao cadastro de origem.</p>}
-    <form ref={form} className="grid min-w-0 gap-4" onSubmit={submit} onInvalid={event => {setFieldError((event.target as HTMLInputElement).name);setError('Confira os campos obrigatórios e o formato dos valores.')}}>
-      {error && <p tabIndex={-1} ref={problem} role="alert" className="rounded-lg bg-rose-50 p-3 text-sm text-rose-800">{error}</p>}
-      <fieldset disabled={busy || discard} className="grid min-w-0 gap-3 sm:grid-cols-2">
+  return <FormDialog open dirty={dirty} busy={busy} onClose={onClose} title={current && correction ? 'Retificar ' + chartLabels[kind].toLocaleLowerCase('pt-BR') :
+    current && !definition.singleton ? 'Atualizar ' + chartLabels[kind].toLocaleLowerCase('pt-BR') : definition.button} maxWidth="md"
+    feedback={error && <p tabIndex={-1} ref={problem} role="alert" className="shrink-0 bg-rose-50 px-4 py-2 text-sm text-rose-800">{error}</p>}>
+    {requestClose => <>{kind === 'identidade' && <p className="mb-4 text-sm text-slate-600">A retificação vale para a ficha longitudinal. A identificação de emissão do PAP-ID continua vinculada ao cadastro de origem.</p>}
+    <form ref={form} className="grid min-w-0 gap-4" onSubmit={submit} noValidate>
+      <fieldset disabled={busy} className="grid min-w-0 gap-3 sm:grid-cols-2">
         {definition.fields.map(input)}
         {definition.pdf && <div className="grid min-w-0 gap-1 text-sm font-medium sm:col-span-2">
           <label htmlFor={fieldPrefix+'-pdf'}>{definition.pdf}</label>
@@ -177,7 +168,7 @@ export default function LongitudinalEditor({edit, onClose, onSaved}: {edit: Char
           {components.map((item,index) => <fieldset key={item.id} className="grid min-w-0 gap-2 rounded-lg border p-3 sm:grid-cols-2">
             <legend className="px-1 text-sm">Componente {index+1}</legend>
             {Object.entries(componentLabels).map(([key,label]) => <label key={key} className="grid min-w-0 gap-1 text-sm">
-              {label}<input className={control} maxLength={160} required={key==='name'||key==='value'} value={item[key as keyof Omit<ComponentDraft,'id'>]}
+              {label}<input name={`components.${index}.${key}`} className={control} maxLength={160} required={key==='name'||key==='value'} value={item[key as keyof Omit<ComponentDraft,'id'>]}
                 onChange={event => {setDirty(true);setComponents(rows => rows.map(row => row.id === item.id ? {...row,[key]:event.target.value} : row))}}/>
             </label>)}
             <Button type="button" variant="outline" className="min-h-11" onClick={() => {setDirty(true);setComponents(rows => rows.filter(row => row.id !== item.id))}}>Remover componente</Button>
@@ -187,7 +178,7 @@ export default function LongitudinalEditor({edit, onClose, onSaved}: {edit: Char
           }}>Adicionar componente</Button>
         </div>}
         {kind === 'identidade' && <label className="flex min-h-11 items-center gap-2 text-sm sm:col-span-2">
-          <input type="checkbox" required checked={confirmed} onChange={event => {setConfirmed(event.target.checked);setDirty(true)}}/>
+          <input type="checkbox" name="identityConfirmation" required checked={confirmed} onChange={event => {setConfirmed(event.target.checked);setDirty(true)}}/>
           Conferi a paciente e confirmo a retificação sintética.
         </label>}
         {(current || correction) && <label className="grid min-w-0 gap-1 text-sm font-medium sm:col-span-2">
@@ -196,9 +187,9 @@ export default function LongitudinalEditor({edit, onClose, onSaved}: {edit: Char
         </label>}
       </fieldset>
       <div className="flex flex-wrap gap-2">
-        <Button type="submit" className="min-h-11" disabled={busy || discard}>{busy ? 'Salvando…' : 'Salvar registro'}</Button>
-        <Button type="button" variant="outline" className="min-h-11" disabled={busy || discard} onClick={close}>Cancelar</Button>
+        <Button type="submit" className="min-h-11" disabled={busy}>{busy ? 'Salvando…' : 'Salvar registro'}</Button>
+        <Button type="button" variant="outline" className="min-h-11" disabled={busy} onClick={requestClose}>Cancelar</Button>
       </div>
-    </form>
-  </Modal>
+    </form></>}
+  </FormDialog>
 }

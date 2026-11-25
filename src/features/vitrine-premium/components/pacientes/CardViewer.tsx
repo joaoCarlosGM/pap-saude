@@ -24,7 +24,7 @@ export default function CardViewer({card, onClose}: {card: ReviewCard; onClose: 
   const loaded = loadedURL === imageURL
   const error = imageURL === errorURL
 
-  return <Modal open onClose={onClose} title="Carteirinha PAP-ID" maxWidth="md">
+  return <Modal open onClose={onClose} title="PAP-Gest" maxWidth="md">
     <div className="grid gap-4">
       <p className="text-sm text-slate-600">Ativa • Emissão: {card.issuedAt ? new Date(card.issuedAt).toLocaleString('pt-BR') : 'Não registrada'}</p>
       <div className="flex flex-wrap items-center gap-2" aria-label="Face e formato da carteirinha">
@@ -38,7 +38,7 @@ export default function CardViewer({card, onClose}: {card: ReviewCard; onClose: 
       </label>}
       {error ? <p role="alert">Carteirinha indisponível. Confira a validade e a autorização da consulta.</p> :
         <div className="w-full overflow-hidden rounded-xl border border-slate-200" style={{aspectRatio: '1050/600'}}>
-          <Image key={imageURL} unoptimized width={1050} height={1200} src={imageURL} alt={twoSided ? face + ' da carteirinha PAP-ID' : 'Carteirinha PAP-ID legada'} className="h-auto w-full"
+          <Image key={imageURL} unoptimized width={1050} height={1200} src={imageURL} alt={twoSided ? face + ' da PAP-Gest' : 'Carteirinha legada'} className="h-auto w-full"
             style={{transform: twoSided && face === 'Verso' ? 'translateY(-50%)' : undefined}}
             onLoad={event => {setTwoSided(event.currentTarget.naturalHeight === 1200); setLoadedURL(imageURL)}} onError={() => setErrorURL(imageURL)}/>
         </div>}

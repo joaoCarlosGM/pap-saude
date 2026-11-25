@@ -1,12 +1,17 @@
 'use client'
 
 import {useId, useRef, useState} from 'react'
-import {demoAuthors, createSoapNote, formatRecordTime, soapFields, type DemoAuthor, type SoapContent, type SoapNote} from '../../lib/registration-record'
+import {demoAuthors, createSoapNote, formatRecordTime, soapFields, sessionSoapAuthor, type SoapContent, type SoapNote} from '../../lib/registration-record'
 import {textAreaClass} from './RecordFields'
-import Select from '../ui/Select'
 import {Button} from '../ui/button'
 
 const fields = Object.keys(soapFields) as Array<keyof SoapContent>
+const soapHelp: SoapContent = {
+  subjective:'Relato da paciente.',
+  objective:'Sinais e achados observados.',
+  assessment:'Avaliação do profissional.',
+  plan:'Condutas e acompanhamento registrados.',
+}
 const emptyContent: SoapContent = {subjective: '', objective: '', assessment: '', plan: ''}
 
 export function SoapEditor({onAppend, onPendingChange}: {
@@ -14,7 +19,7 @@ export function SoapEditor({onAppend, onPendingChange}: {
   onPendingChange?: (pending: boolean) => void
 }) {
   const id = useId()
-  const [author, setAuthor] = useState<DemoAuthor | ''>('')
+  const author = demoAuthors[sessionSoapAuthor]
   const [content, setContent] = useState(emptyContent)
   const hasText = Object.values(content).some(value => value.trim())
 
@@ -23,17 +28,16 @@ export function SoapEditor({onAppend, onPendingChange}: {
   const pending = useRef<{signature:string; note:SoapNote} | undefined>(undefined)
   const sending = useRef(false)
   async function append() {
-    if (!author || !hasText || sending.current) return
+    if (!hasText || sending.current) return
     sending.current = true
     setBusy(true)
     setError(false)
-    const signature = JSON.stringify({author,content})
-    if (pending.current?.signature !== signature) pending.current = {signature,note:createSoapNote(author,content)}
+    const signature = JSON.stringify(content)
+    if (pending.current?.signature !== signature) pending.current = {signature,note:createSoapNote(sessionSoapAuthor,content)}
     try {
       await onAppend(pending.current.note)
       pending.current = undefined
       setContent(emptyContent)
-      setAuthor('')
       onPendingChange?.(false)
     } catch {setError(true)}
     finally {sending.current = false;setBusy(false)}
@@ -41,23 +45,20 @@ export function SoapEditor({onAppend, onPendingChange}: {
 
   return <fieldset disabled={busy} className="grid min-w-0 gap-3 rounded-xl border border-slate-200 p-3 sm:p-4">
     <legend className="px-1 text-sm font-semibold">Nova anotação SOAP</legend>
-    <Select id={id} label="Perfil profissional sintético" className="min-h-11 text-base" value={author}
-      onChange={event => setAuthor(event.target.value as DemoAuthor | '')}>
-      <option value="">Selecione</option>
-      {Object.entries(demoAuthors).map(([key, person]) => <option key={key} value={key}>{person.category} · {person.name}</option>)}
-    </Select>
+    <p className="text-sm text-slate-600">{author.name} · {author.category} · Sessão sintética</p>
     <div className="grid gap-3 sm:grid-cols-2">
       {fields.map(field => <label key={field} className="grid gap-1 text-sm font-medium">
         {soapFields[field]}
-        <textarea rows={2} className={textAreaClass} maxLength={2000} value={content[field]} onChange={event => {
+        <textarea aria-label={soapFields[field]} aria-describedby={id+field} rows={2} className={textAreaClass} maxLength={2000} value={content[field]} onChange={event => {
           const next = {...content, [field]: event.target.value}
           setContent(next)
           onPendingChange?.(Object.values(next).some(value => value.trim()))
         }}/>
+        <span id={id+field} className="text-xs font-normal text-slate-600">{soapHelp[field]}</span>
       </label>)}
     </div>
     {error && <p role="alert" className="text-sm text-rose-700">Não foi possível confirmar a anotação. Confira a sessão e tente novamente.</p>}
-    <Button type="button" variant="outline" className="min-h-11 justify-self-start" disabled={!hasText || !author} onClick={() => void append()}>Adicionar anotação</Button>
+    <Button type="button" variant="outline" className="min-h-11 justify-self-start" disabled={!hasText} onClick={() => void append()}>Adicionar anotação</Button>
   </fieldset>
 }
 
@@ -71,7 +72,7 @@ export function SoapHistory({notes, legacy}: {notes?: readonly SoapNote[]; legac
     {notes?.toSorted((a,b) => a.recordedAt.localeCompare(b.recordedAt)).map(note => {
       const author = demoAuthors[note.author]
       return <li key={note.id} className="min-w-0 rounded-lg border border-slate-200 p-3 text-sm">
-        <p className="font-semibold">{author.name} · {author.category}</p>
+        <p className="font-semibold">{author.name} · {note.category ?? author.category}</p>
         <time className="text-slate-600" dateTime={note.recordedAt}>{formatRecordTime(note.recordedAt)}</time>
         <dl className="mt-2 space-y-2">
           {fields.filter(field => note.content[field].trim()).map(field => <div key={field}>

@@ -66,7 +66,7 @@ export const appointmentTimestamp = (slot: AppointmentSlot) => Date.parse(`${slo
 export const describeSlot = (slot: AppointmentSlot | null) => slot
   ? `${slot.date.split('-').reverse().join('/')} às ${slot.time}` : 'Sem data agendada'
 
-export function nextAppointments(items: readonly Appointment[], now: number) {
+export function nextAppointments<T extends Appointment>(items: readonly T[], now: number) {
   return items
     .filter(item => isPending(item) && item.slot && appointmentTimestamp(item.slot) >= now)
     .toSorted((a, b) => appointmentTimestamp(a.slot!) - appointmentTimestamp(b.slot!))

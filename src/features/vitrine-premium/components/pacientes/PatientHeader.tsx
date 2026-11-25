@@ -1,4 +1,6 @@
 import {assessmentPresentation} from "@/features/vitrine-premium/lib/demo/assessment-presentation"
+import {assessmentFlags} from '../../lib/chart-assessment'
+import {formatRecordTime} from '../../lib/registration-record'
 import {formatDemoDate} from "@/features/vitrine-premium/lib/demo/validation"
 import {
   AlertTriangle,
@@ -16,6 +18,7 @@ type Props = {
 export default function PatientHeader({
   patient,
 }: Props) {
+  const {flags,visit} = assessmentFlags(patient.encounters)
   return (
     <section className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm sm:p-5 lg:p-6">
       <div className="flex flex-col gap-5 lg:flex-row lg:items-start lg:justify-between">
@@ -92,13 +95,21 @@ export default function PatientHeader({
               />
 
               <p className="text-xl font-semibold text-pink-600">
-                {patient.alerts}
+                {visit?.assessment?.status === 'CALCULADO' ? flags.length : '—'}
               </p>
             </div>
 
             <p className="text-[11px] text-pink-400">
-              alertas
+              alertas MEOWS
             </p>
+            {!!flags.length && <details className="relative mt-1 text-xs">
+              <summary className="min-h-8 cursor-pointer content-center text-pink-700">Ver alertas</summary>
+              <div className="z-20 min-w-40 rounded-lg border border-slate-200 bg-white p-3 text-left sm:absolute sm:right-0 sm:shadow-md">
+                <p className="font-medium">Avaliação demonstrativa</p>
+                <p className="my-1 text-slate-600">{formatRecordTime(visit!.dataHora)}</p>
+                <ul className="space-y-1">{flags.map(flag => <li key={flag.key}>{flag.parameter} · {flag.value}</li>)}</ul>
+              </div>
+            </details>}
           </div>
         </div>
       </div>

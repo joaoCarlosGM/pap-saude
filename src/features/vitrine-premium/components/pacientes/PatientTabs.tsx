@@ -3,12 +3,13 @@
 import {useEffect, useState} from "react"
 import { useSearchParams } from "next/navigation"
 
-import AgendaPanel, {UpcomingAppointments,type AgendaDraft} from "../agenda/AgendaPanel"
+import AgendaPanel, {type AgendaDraft} from "../agenda/AgendaPanel"
 import PatientDocuments from "./PatientDocuments"
 import PatientEvolution from "./PatientEvolution"
 import PatientExams from "./PatientExams"
 import PatientMedications from "./PatientMedications"
 import PatientPreviousNotes from "./PatientPreviousNotes"
+import PatientBackground from './PatientBackground'
 import PatientSummary from "./PatientSummary"
 import PatientTimeline from "./PatientTimeline"
 import LongitudinalPanel from './LongitudinalPanel'
@@ -68,13 +69,13 @@ export default function PatientTabs({
 }: Props) {
   const requested = useSearchParams().get("aba")
   const [activeTab, setActiveTab] =
-    useState<TabId>(requested === "documentos" ? "documentos" : "resumo")
+    useState<TabId>(tabs.find(tab => tab.id === requested)?.id ?? 'resumo')
 
   const chart = useLongitudinal()
   const [draft,setDraft] = useState<AgendaDraft>()
   const [anchor,setAnchor] = useState('')
   useEffect(() => {
-    if (!anchor) return
+    if (!anchor || activeTab === 'agenda') return
     function focusRecord() {
       const target = document.getElementById('registro-'+anchor)
       if (!target) return false
@@ -97,7 +98,9 @@ export default function PatientTabs({
   }
 
   function openEvent(tab:TimelineTab, target:string) {
-    open(tab === 'consulta' ? 'evolucao' : tab,target)
+    const kind = chart?.latest.find(event => event.entityId === target)?.data.kind
+    if (tab === 'resumo') open(kind === 'contato' || kind === 'identidade' ? 'documentos' : 'observacoes',target)
+    else open(tab === 'consulta' ? 'evolucao' : tab,target)
   }
 
   return (
@@ -128,13 +131,7 @@ export default function PatientTabs({
         key={activeTab}
         className="mt-4 animate-[patientTabIn_.28s_ease-out]"
       >
-        {activeTab === "resumo" && (
-          <>
-            <UpcomingAppointments patient={patient} onOpen={() => open('agenda')}/>
-            <LongitudinalPanel kinds={['contato','identidade','alergia','comorbidade','historico']}/>
-            <PatientSummary patient={patient}/>
-          </>
-        )}
+        {activeTab === "resumo" && <PatientSummary patient={patient} onOpenAgenda={id => open('agenda',id)}/>}
 
         {activeTab === "timeline" && (
           <>
@@ -145,9 +142,11 @@ export default function PatientTabs({
 
         {activeTab ===
           "observacoes" && (
-          <PatientPreviousNotes
-            patient={patient}
-          />
+          <div className="grid gap-4">
+            <PatientPreviousNotes patient={patient}/>
+            <LongitudinalPanel kinds={['alergia','comorbidade','historico']}/>
+            <PatientBackground patient={patient}/>
+          </div>
         )}
 
         {activeTab === "evolucao" && (
@@ -180,13 +179,14 @@ export default function PatientTabs({
           </>
         )}
 
-        {activeTab === "agenda" && <AgendaPanel patient={patient} draft={draft}/>}
+        {activeTab === "agenda" && <AgendaPanel patient={patient} draft={draft} focusId={anchor}/>}
 
         {activeTab ===
           "documentos" && (
-          <PatientDocuments
-            patient={patient}
-          />
+          <div className="grid gap-4">
+            <PatientDocuments patient={patient}/>
+            <LongitudinalPanel kinds={['contato','identidade']}/>
+          </div>
         )}
       </div>
     </div>

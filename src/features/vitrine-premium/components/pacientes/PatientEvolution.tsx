@@ -1,5 +1,6 @@
 'use client'
 
+import {assessmentTrend,completeAssessments} from '../../lib/chart-assessment'
 import {useState} from 'react'
 import {SoapEditor,SoapHistory} from "../registro/SoapNotes"
 import {assessmentPresentation} from "@/features/vitrine-premium/lib/demo/assessment-presentation"
@@ -51,13 +52,13 @@ export default function PatientEvolution({
 
           <span className="rounded-full bg-pink-50 px-2.5 py-1 text-[11px] font-medium text-pink-600">
             Atual:{" "}
-            {patient.latestScore.value ?? "Não avaliado"}
+            {completeAssessments(patient.encounters).at(-1)?.assessment?.score ?? "Não avaliado"}
           </span>
         </div>
 
         <div className="mt-4 overflow-x-auto">
           <AnimatedLineChart
-            data={patient.meowsTrend}
+            data={assessmentTrend(patient.encounters)}
             min={0}
             max={21}
             height={280}

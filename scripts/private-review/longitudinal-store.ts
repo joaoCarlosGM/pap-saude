@@ -1,3 +1,5 @@
+import {calculateDemoMeows} from '../../src/features/vitrine-premium/lib/demo/meows'
+import {normalizeEdema, sessionSoapAuthor, demoAuthors} from '../../src/features/vitrine-premium/lib/registration-record'
 import {readFile} from 'node:fs/promises'
 import path from 'node:path'
 import type {Pool, PoolClient} from 'pg'
@@ -41,8 +43,10 @@ function declaredDate(data: ChartData) {
 }
 
 function eventFrom(row: Record<string, unknown>, patientId: string): ChartEvent {
-  const data = row.data as ChartData
+  const {assessment,...payload} = row.data as ChartData & {assessment?:ChartEvent['assessment']}
+  const data = payload as ChartData
   return {
+    ...(assessment && {assessment}),
     id: row.id as string, entityId: row.entity_id as string, patientId, version: row.version as number,
     data, occurrencePrecision: row.version === 1 && declaredDate(data) && !('time' in data && data.time) ? 'day' : 'time', actions: row.actions as ChartEvent['actions'], fields: row.fields as string[],
     occurredAt: (row.occurred_at as Date).toISOString(), recordedAt: (row.recorded_at as Date).toISOString(),
@@ -100,7 +104,15 @@ export async function writeChart(pool: Pool, patientId: string, input: unknown) 
     }
     const quota = await db.query('SELECT count(*) FROM review_chart_events WHERE subject=$1', [subject])
     if (Number(quota.rows[0].count) >= 1000) throw new ChartError(409, 'CHART_QUOTA')
-    const data = chartData.parse(patchKinds.includes(command.data.kind) ? {...previous?.data, ...command.data} : command.data)
+    let data = chartData.parse(patchKinds.includes(command.data.kind) ? {...previous?.data, ...command.data} : command.data)
+    if (data.kind === 'soap') data = {...data, author:sessionSoapAuthor, category:demoAuthors[sessionSoapAuthor].category}
+    if (data.kind === 'consulta') {
+      const recordedAt = new Date().toISOString()
+      const record = normalizeEdema(data.record)
+      data = {...data, record:{...record, soapNotes:record.soapNotes?.map(note => ({
+        ...note, author:sessionSoapAuthor, recordedAt, category:demoAuthors[sessionSoapAuthor].category,
+      }))}}
+    }
     const correction = !!command.correction
     const {fields, actions} = chartDelta(previous?.data, data, correction)
     if (previous && fields.length === 0) throw new ChartError(409, 'NO_CHANGE')
@@ -155,10 +167,11 @@ export async function writeChart(pool: Pool, patientId: string, input: unknown) 
     const clinicalTime = ('time' in data && data.time) || '00:00'
     const occurredAt = !previous && clinicalDate ? clinicalDate + 'T' + clinicalTime + ':00-03:00' : null
     const source = 'source' in data ? data.source : 'registro_vitrine'
+    const storedData = data.kind === 'consulta' ? {...data,assessment:calculateDemoMeows(data.record)} : data
     const {rows: [row]} = await db.query(`INSERT INTO review_chart_events
       (id,subject,entity_id,kind,version,data,actions,fields,occurred_at,actor,source,reason,digest)
       VALUES($1,$2,$3,$4,$5,$6,$7,$8,COALESCE($9::timestamptz,clock_timestamp()),$10,$11,$12,$13) ON CONFLICT DO NOTHING RETURNING *`,
-    [operationId, subject, entityId, data.kind, expectedVersion + 1, data, actions, fields, occurredAt, 'PRIVATE_SESSION', source, reason ?? null, hash])
+    [operationId, subject, entityId, data.kind, expectedVersion + 1, storedData, actions, fields, occurredAt, 'PRIVATE_SESSION', source, reason ?? null, hash])
     if (!row) throw new ChartError(409, 'OPERATION_CONFLICT')
     return eventFrom(row, patientId)
   })

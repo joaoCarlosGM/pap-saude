@@ -22,16 +22,19 @@ export default function ProtocolFlow({slug}: {slug: string}) {
   const [zoom, setZoom] = useState(1)
   const [figure, setFigure] = useState(false)
   const [message, setMessage] = useState('')
-  const [focused, setFocused] = useState('')
+  const [path, setPath] = useState<string[]>([])
+  const focused = path.at(-1) ?? nodes[0]?.id
+  const selected = nodes.find(node => node.id === focused)
   if (!original) return null
   const source = original.flow
   const sourceLabel = `${source.section} · digital ${source.digitalPage} / impressa ${source.printedPage} · v${source.version}`
 
-  function goTo(nodeId: string) {
-    setFocused(nodeId)
+  function goTo(from: string, nodeId: string) {
+    setPath(current => (current.at(-1) === from ? [...current,nodeId] : [from,nodeId]).slice(-20))
     const target = document.getElementById(id + nodeId)
     target?.focus({preventScroll: true})
-    target?.scrollIntoView({block: 'nearest', inline: 'nearest'})
+    target?.scrollIntoView({block: 'nearest', inline: 'nearest',
+      behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth'})
   }
 
   return <section ref={region} className={styles.panel} aria-label="Fluxograma">
@@ -43,7 +46,7 @@ export default function ProtocolFlow({slug}: {slug: string}) {
         <button className={styles.secondary} type="button" aria-label="Reduzir zoom" disabled={zoom <= .75} onClick={() => setZoom(value => value - .25)}><Minus size={16}/></button>
         <output aria-label="Zoom do mapa">{Math.round(zoom * 100)}%</output>
         <button className={styles.secondary} type="button" aria-label="Ampliar zoom" disabled={zoom >= 2} onClick={() => setZoom(value => value + .25)}><Plus size={16}/></button>
-        <button className={styles.secondary} type="button" onClick={() => {setZoom(1); viewport.current?.scrollTo(0, 0)}}>Ajustar</button>
+        <button className={styles.secondary} type="button" onClick={() => {setZoom(1); setPath([]); viewport.current?.scrollTo(0, 0)}}>Ajustar</button>
       </>}
       <button className={styles.secondary} type="button" onClick={async () => {
         try {
@@ -59,6 +62,10 @@ export default function ProtocolFlow({slug}: {slug: string}) {
       <OriginalPdfViewer document={documentSource} initialPage={source.digitalPage} figureOnly/> :
       canAuthorize ? <p>Para abrir a figura, <Link className={styles.textLink} href="/vitrine/configuracoes">autorize a consulta privada</Link>.</p> : <p>Figura original indisponível neste ambiente.</p> :
       <>
+        {selected && <div className={styles.flowSelection} aria-live="polite">
+          <strong>{selected.title}</strong>
+          {selected.note && <p className={styles.muted}>{selected.note}</p>}
+        </div>}
         <div ref={viewport} className={styles.mapViewport} role="region" aria-label="Mapa navegável do fluxograma" tabIndex={0}
           onPointerDown={event => {
             if (event.pointerType !== 'mouse' || event.button !== 0 || (event.target as HTMLElement).closest('button')) return
@@ -79,12 +86,13 @@ export default function ProtocolFlow({slug}: {slug: string}) {
             if (movement) {event.preventDefault(); viewport.current?.scrollBy(...movement)}
           }}>
           <ol className={styles.mapNodes} style={{width: Math.max(1, zoom) * 100 + '%', fontSize: zoom + 'rem'}}>
-            {nodes.map(node => <li key={node.id} id={id + node.id} tabIndex={-1} aria-describedby={id+'-source'} data-focused={focused === node.id} data-kind={node.kind}>
+            {nodes.map(node => <li key={node.id} id={id + node.id} tabIndex={-1} aria-describedby={id+'-source'} data-focused={focused === node.id} data-visited={path.includes(node.id)} data-kind={node.kind}>
               <span className={styles.muted}>{node.kind}</span>
               <strong>{node.title}</strong>
               {!!node.next.length && <div className={styles.mapEdges}>{node.next.map(edge => {
                 const title = nodes.find(candidate => candidate.id === edge.id)?.title
-                return <button type="button" key={edge.id} className={styles.secondary} onClick={() => goTo(edge.id)}>
+                const followed = path.some((id,index) => id === node.id && path[index+1] === edge.id)
+                return <button type="button" key={edge.id} className={styles.secondary} data-followed={followed} onClick={() => goTo(node.id,edge.id)}>
                   <ArrowRight size={16} aria-hidden/>{edge.label ? edge.label + ' · ' : ''}{title}
                 </button>
               })}</div>}

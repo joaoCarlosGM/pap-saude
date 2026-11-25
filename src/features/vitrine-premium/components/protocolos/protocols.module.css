@@ -51,3 +51,22 @@
 .mapEdges{display:grid;gap:.35rem;margin-top:.35rem}.mapEdges button{justify-content:flex-start;text-align:left}.mapEdges svg{flex-shrink:0}
 .figureViewport canvas{display:block;max-width:100%;height:auto;margin-inline:auto}
 .overviewSearch{margin-bottom:.2rem}
+
+.flowSelection {
+  padding: .75rem 1rem;
+  border: 1px solid var(--demo-neutral,#e2e8f0);
+  border-radius: .75rem;
+}
+.flowSelection p { margin: .25rem 0 0; }
+.mapNodes > li {
+  transition: border-color .2s ease, box-shadow .2s ease;
+}
+.mapNodes > li[data-visited='true'] {
+  box-shadow: inset .2rem 0 #c41469;
+}
+.mapEdges button[data-followed='true'] {
+  border-color: #c41469;
+}
+@media (prefers-reduced-motion: reduce) {
+  .mapNodes > li { transition: none; }
+}

@@ -3,7 +3,7 @@ import Input from '../ui/Input'
 import Select from '../ui/Select'
 import type {RegistrationData} from '../../types/registration'
 import {
-  edemaLocations, edemaOptions, emptyLab, outcomeOptions, proteinuriaMethods, proteinuriaOptions, referralOptions, labelFor,
+  edemaLocations, edemaOptions, hasGradedEdema, emptyLab, outcomeOptions, proteinuriaMethods, proteinuriaOptions, referralOptions, labelFor,
 } from '../../lib/registration-record'
 
 type Props = {data: RegistrationData; onChange: (patch: Partial<RegistrationData>) => void}
@@ -52,9 +52,12 @@ export function EdemaFields({data, onChange}: Props) {
     <legend className="mb-3 font-semibold">Edema</legend>
     <div className="max-w-md">
       <Select id="edema" label="Gradação do edema" className="min-h-11 text-base" value={data.edema}
-        onChange={event => onChange({edema: event.target.value})}>{options(edemaOptions, data.edema)}</Select>
+        onChange={event => {
+          const edema = event.target.value
+          onChange(hasGradedEdema(edema) ? {edema} : {edema, edemaLocations:undefined, edemaOtherLocation:undefined})
+        }}>{options(edemaOptions, data.edema)}</Select>
     </div>
-    <fieldset className="grid gap-x-4 sm:grid-cols-2">
+    {hasGradedEdema(data.edema) && <><fieldset className="grid gap-x-4 sm:grid-cols-2">
       <legend className="mt-2 text-sm font-medium">Localização do edema</legend>
       {Object.entries(edemaLocations).map(([value, label]) => <label key={value} className="flex min-h-11 items-center gap-2 text-sm">
         <input type="checkbox" checked={locations.includes(value)} onChange={event => onChange({
@@ -64,7 +67,7 @@ export function EdemaFields({data, onChange}: Props) {
       </label>)}
     </fieldset>
     {locations.includes('outro') && <Input label="Outra localização do edema" className="min-h-11 text-base" maxLength={150}
-      value={data.edemaOtherLocation ?? ''} onChange={event => onChange({edemaOtherLocation: event.target.value})}/>}
+      value={data.edemaOtherLocation ?? ''} onChange={event => onChange({edemaOtherLocation: event.target.value})}/>}</>}
   </fieldset>
 }
 

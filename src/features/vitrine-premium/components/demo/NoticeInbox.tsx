@@ -26,7 +26,7 @@ export default function NoticeInbox() {
       summary: 'O atendimento sintético foi acrescentado ao histórico.', date: encounter.dataHora, href: '/vitrine/atendimentos'})
   }
   for (const card of cards) {
-    if (card.issuedAt) items.push({id: 'card-issued-' + card.id, category: 'Documentos', title: 'Carteirinha emitida',
+    if (card.issuedAt) items.push({id: 'card-issued-' + card.id, category: 'Documentos', title: 'PAP-Gest emitida',
       summary: 'O comprovante de emissão está em Documentos.', date: card.issuedAt, href: '/vitrine/pacientes/' + card.patientId + '?aba=documentos'})
     if (card.revokedAt) items.push({id: 'card-revoked-' + card.id, category: 'Documentos', title: 'Carteirinha revogada',
       summary: 'A alteração aparece no histórico de emissões.', date: card.revokedAt, href: '/vitrine/pacientes/' + card.patientId + '?aba=documentos'})

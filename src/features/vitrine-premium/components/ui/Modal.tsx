@@ -11,6 +11,8 @@ type ModalProps = {
   description?: string
   children: ReactNode
   footer?: ReactNode
+  feedback?: ReactNode
+  role?: "dialog" | "alertdialog"
   maxWidth?: "sm" | "md" | "lg" | "xl"
 }
 
@@ -36,6 +38,8 @@ export default function Modal({
   description,
   children,
   footer,
+  feedback,
+  role = "dialog",
   maxWidth = "lg",
 }: ModalProps) {
   const client=useSyncExternalStore(subscribeToClient,clientSnapshot,serverSnapshot)
@@ -51,7 +55,7 @@ export default function Modal({
       document.body.style.overflow = 'hidden'
     }
     openDialogs.push(element)
-    const focusFirst = () => (element.querySelector<HTMLElement>(focusable) || element).focus()
+    const focusFirst = () => (element.querySelector<HTMLElement>('[data-dialog-initial-focus]') || element.querySelector<HTMLElement>(focusable) || element).focus()
     focusFirst()
     function handleKeyDown(event: KeyboardEvent) {
       if (openDialogs.at(-1) !== element || event.defaultPrevented) return
@@ -85,7 +89,7 @@ export default function Modal({
           tabIndex={-1}
           aria-label={title?undefined:'Janela demonstrativa'}
           onKeyDown={e=>{if(e.key==='Tab'){const nodes=Array.from(dialog.current?.querySelectorAll<HTMLElement>(focusable)||[]).filter(el=>el.getClientRects().length>0);const first=nodes[0],last=nodes.at(-1);if(e.shiftKey&&document.activeElement===first){e.preventDefault();last?.focus()}else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first?.focus()}}}}
-          role="dialog"
+          role={role}
           aria-modal="true"
           className={[
             "relative z-10 flex max-h-[95dvh] w-full flex-col bg-white shadow-xl",
@@ -121,6 +125,7 @@ export default function Modal({
             </div>
           )}
 
+          {feedback}
           <div className="min-h-0 flex-1 overflow-y-auto p-4 sm:p-6">
             {children}
           </div>

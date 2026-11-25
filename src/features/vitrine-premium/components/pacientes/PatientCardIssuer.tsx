@@ -21,13 +21,13 @@ export default function PatientCardIssuer({patientId, active}: {patientId: strin
     try {
       if (action === 'revoke' && ledger) {
         await service.revoke(ledger.patient.subject)
-        setStatus('Carteirinha revogada.')
+        setStatus('PAP-Gest revogada.')
       } else {
         const key = operation || crypto.randomUUID()
         setOperation(key)
         await service.issue(patientId, key)
         setOperation('')
-        setStatus('Carteirinha emitida.')
+        setStatus('PAP-Gest emitida.')
       }
       setAction(null)
     } catch {
@@ -39,12 +39,12 @@ export default function PatientCardIssuer({patientId, active}: {patientId: strin
 
   return <div className="flex flex-wrap items-center gap-2">
     <Button variant={active ? 'outline' : 'default'} onClick={() => {setError(''); setAction('issue')}}>
-      {active ? 'Reemitir carteirinha' : 'Emitir carteirinha PAP-ID'}
+      {active ? 'Reemitir PAP-Gest' : 'Emitir PAP-Gest'}
     </Button>
     {active && ledger && <Button variant="outline" onClick={() => {setError(''); setAction('revoke')}}>Revogar</Button>}
     {status && <p role="status" className="text-sm">{status}</p>}
     <Modal open={!!action} onClose={() => {if (!busy) setAction(null)}} maxWidth="sm"
-      title={action === 'revoke' ? 'Revogar carteirinha?' : active ? 'Reemitir carteirinha?' : 'Emitir carteirinha PAP-ID?'}
+      title={action === 'revoke' ? 'Revogar carteirinha?' : active ? 'Reemitir PAP-Gest?' : 'Emitir PAP-Gest?'}
       footer={<><Button variant="outline" disabled={busy} onClick={() => setAction(null)}>Cancelar</Button>
         <Button disabled={busy} onClick={() => void confirm()}>{action === 'revoke' ? 'Confirmar revogação' : 'Confirmar emissão'}</Button></>}>
       <p>{action === 'revoke' || active ? 'O QR vigente deixará de funcionar. O histórico será mantido.' : 'A carteirinha terá validade de 24 horas.'}</p>

@@ -13,20 +13,20 @@ test('visible protocol return, real sourced overviews and original flow remain u
 test('private PostgreSQL issuer shares CLI base, persists reload, revokes reissued PNG and never duplicates patient',async({page,context})=>{
  test.skip(!process.env.PAP_ID_REVIEW_PROFILE,'Run this test with an owned disposable PostgreSQL profile');
  const errors:string[]=[];page.on('pageerror',e=>errors.push(e.name));await page.goto('/vitrine/configuracoes');await ready(page);await page.locator('[data-private-review]>summary').click();await page.getByRole('button',{name:'Autorizar consulta local dos PDFs',exact:true}).click();await expect(page.locator('[data-private-review]>summary')).toContainText('consulta autorizada');await page.goto('/vitrine/pacientes');await expect(page.getByRole('button',{name:'Cadastrar nova gestante',exact:true})).toBeEnabled();const count=await page.locator('[data-patient-id]').count();const wrapper=page.locator('[data-patient-id="maria-gracas"]')
- await expect(page.getByRole('button',{name:/Emitir carteirinha PAP-ID|Reemitir carteirinha/})).toHaveCount(0)
+ await expect(page.getByRole('button',{name:/Emitir PAP-Gest|Reemitir PAP-Gest/})).toHaveCount(0)
  await wrapper.click()
  await page.getByRole('button',{name:'Documentos',exact:true}).click()
- await page.getByRole('button',{name:/Emitir carteirinha PAP-ID|Reemitir carteirinha/}).click()
+ await page.getByRole('button',{name:/Emitir PAP-Gest|Reemitir PAP-Gest/}).click()
  await page.getByRole('button',{name:'Confirmar emissão',exact:true}).click()
- await expect(page.getByText('Carteirinha emitida.',{exact:true})).toBeVisible()
- await page.getByRole('button',{name:'Visualizar carteirinha',exact:true}).click()
- const imageURL=(await page.getByRole('img',{name:'Frente da carteirinha PAP-ID',exact:true}).getAttribute('src'))!
+ await expect(page.getByText('PAP-Gest emitida.',{exact:true})).toBeVisible()
+ await page.getByRole('button',{name:'Visualizar PAP-Gest',exact:true}).click()
+ const imageURL=(await page.getByRole('img',{name:'Frente da PAP-Gest',exact:true}).getAttribute('src'))!
  const firstPng=await (await context.request.get(imageURL)).body()
  const response=await context.request.get('/homologacao/carteirinhas')
  expect(response.status()).toBe(200)
  const before=(await response.json()).ledgers.find((l:{patient:{patientId:string}})=>l.patient.patientId==='maria-gracas')
  await page.reload();await ready(page);await page.getByRole('button',{name:'Documentos',exact:true}).click()
- await expect(page.getByRole('button',{name:'Reemitir carteirinha',exact:true})).toBeEnabled()
+ await expect(page.getByRole('button',{name:'Reemitir PAP-Gest',exact:true})).toBeEnabled()
 
  // CLI issues against precisely the same profile as the fixture, without exporting the opaque code.
  const issued=spawnSync(process.execPath,[path.join(root,'node_modules/tsx/dist/cli.mjs'),path.join(root,'scripts/pap-id/review-lab.mts'),'--action','issue','--profile',process.env.PAP_ID_REVIEW_PROFILE!,'--patient','maria-gracas'],{cwd:root,encoding:'utf8',env:{...process.env,NODE_ENV:'development'}});expect(issued.status).toBe(0);const pngPath=/Cartão privado: (.+)/.exec(issued.stdout)![1];

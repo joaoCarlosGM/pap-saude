@@ -13,14 +13,15 @@ test.beforeEach(async({page})=>{await page.addInitScript(()=>sessionStorage.setI
 test('new synthetic patient persists, issues a recoverable card and versions/downloads private PDFs without crossing patient scope',async({page,context})=>{
  test.setTimeout(120000)
  expect(process.env.PAP_ID_REVIEW_PROFILE,'owned PostgreSQL profile required').toBeTruthy();const errors:string[]=[];page.on('pageerror',e=>errors.push(e.name));await authorize(page,'/vitrine/pacientes');await page.getByRole('button',{name:'Cadastrar nova gestante',exact:true}).click();const name='Gestante Sintética Browser '+randomBytes(3).toString('hex');await page.getByLabel('Nome sintético',{exact:true}).fill(name);await page.getByLabel('Confirmo que são dados inteiramente sintéticos.',{exact:true}).check();await page.getByRole('button',{name:'Salvar gestante sintética',exact:true}).click();await expect(page.getByText('Cadastro confirmado no PostgreSQL exclusivo.',{exact:true})).toBeVisible();await page.getByRole('link',{name:'Abrir prontuário e Documentos',exact:true}).click();await expect(page).toHaveURL(/\/vitrine\/pacientes\/review-[a-f0-9-]{36}\?aba=documentos$/);await expect(page.getByRole('heading',{name,exact:true})).toBeVisible();const patientId=new URL(page.url()).pathname.split('/').at(-1)!;
- await page.getByRole('button',{name:'Emitir carteirinha PAP-ID',exact:true}).click();await page.getByRole('button',{name:'Confirmar emissão',exact:true}).click();
- const openCard=()=>page.getByRole('button',{name:'Visualizar carteirinha',exact:true}).click()
- await openCard();const card=page.getByRole('img',{name:'Frente da carteirinha PAP-ID',exact:true});await expect(card).toBeVisible();const cardURL=await card.getAttribute('src');expect((await context.request.get(cardURL!)).status()).toBe(200);expect((await context.request.get(cardURL!.replace(patientId,'maria-gracas'))).status()).toBe(404);
- const viewer=page.getByRole('dialog',{name:'Carteirinha PAP-ID',exact:true})
+ await expect(page.locator('[data-private-patient-documents] > section').first()).toHaveAccessibleName('PAP-Gest')
+ await expect(page.getByText('Histórico de emissões (1)',{exact:true})).toBeVisible()
+ const openCard=()=>page.getByRole('button',{name:'Visualizar PAP-Gest',exact:true}).click()
+ await openCard();const card=page.getByRole('img',{name:'Frente da PAP-Gest',exact:true});await expect(card).toBeVisible();const cardURL=await card.getAttribute('src');expect((await context.request.get(cardURL!)).status()).toBe(200);expect((await context.request.get(cardURL!.replace(patientId,'maria-gracas'))).status()).toBe(404);
+ const viewer=page.getByRole('dialog',{name:'PAP-Gest',exact:true})
  for(const format of ['Colorida','Preto e branco']){
   await viewer.getByRole('combobox',{name:/Formato/}).selectOption({label:format})
   await viewer.getByRole('button',{name:'Verso',exact:true}).click()
-  await expect(viewer.getByRole('img',{name:'Verso da carteirinha PAP-ID'})).toBeVisible()
+  await expect(viewer.getByRole('img',{name:'Verso da PAP-Gest'})).toBeVisible()
   for(const type of ['PDF','PNG']){
    const href=(await viewer.getByRole('link',{name:'Baixar '+type,exact:true}).getAttribute('href'))!
    const response=await context.request.get(href)
@@ -46,17 +47,17 @@ test('new synthetic patient persists, issues a recoverable card and versions/dow
  await noticeTrigger.click()
  const inbox=page.getByRole('dialog',{name:'Caixa de entrada'})
  await inbox.getByRole('button',{name:'Documentos',exact:true}).click()
- await expect(inbox.getByRole('heading',{name:'Carteirinha emitida',exact:true}).first()).toBeVisible()
+ await expect(inbox.getByRole('heading',{name:'PAP-Gest emitida',exact:true}).first()).toBeVisible()
  await inbox.getByRole('button',{name:'Marcar todos como lidos',exact:true}).click()
  await expect(inbox.getByText('0 não lido(s)',{exact:true})).toBeVisible()
  await inbox.getByRole('button',{name:'Protocolos',exact:true}).click()
  await expect(inbox.getByText('Nenhum aviso nesta categoria.',{exact:true})).toBeVisible()
  await page.keyboard.press('Escape')
  await expect(noticeTrigger).toBeFocused()
- const pdf=syntheticPdf();await page.getByLabel('PDF sintético da paciente',{exact:true}).setInputFiles({name:'teste-sintetico.pdf',mimeType:'application/pdf',buffer:pdf});await page.getByLabel('Confirmo que o PDF não contém identificação pessoal ou dados clínicos reais.',{exact:true}).check();const upload=page.waitForResponse(r=>r.request().method()==='POST'&&r.url().endsWith('/documentos'));await page.getByRole('button',{name:'Enviar PDF privado',exact:true}).click();const uploaded=await upload;expect(uploaded.status()).toBe(201);const article=page.getByRole('article').filter({has:page.getByRole('heading',{name:'teste-sintetico.pdf',exact:true})});await expect(article).toBeVisible();const link=article.getByRole('link',{name:'Baixar PDF privado',exact:true}),url=await link.getAttribute('href');const response=await context.request.get(url!);expect(response.status()).toBe(200);expect(sha(await response.body())).toBe(sha(pdf));expect((await context.request.get(url!.replace(patientId,'maria-gracas'))).status()).toBe(404);
+ const pdf=syntheticPdf();await page.getByRole('button',{name:'Adicionar documento',exact:true}).click();await page.getByLabel('PDF sintético da paciente',{exact:true}).setInputFiles({name:'teste-sintetico.pdf',mimeType:'application/pdf',buffer:pdf});await page.getByLabel('Confirmo que o PDF não contém identificação pessoal ou dados clínicos reais.',{exact:true}).check();const upload=page.waitForResponse(r=>r.request().method()==='POST'&&r.url().endsWith('/documentos'));await page.getByRole('button',{name:'Enviar PDF privado',exact:true}).click();const uploaded=await upload;expect(uploaded.status()).toBe(201);const article=page.getByRole('article').filter({has:page.getByRole('heading',{name:'teste-sintetico.pdf',exact:true})});await expect(article).toBeVisible();const link=article.getByRole('link',{name:'Baixar PDF privado',exact:true}),url=await link.getAttribute('href');const response=await context.request.get(url!);expect(response.status()).toBe(200);expect(sha(await response.body())).toBe(sha(pdf));expect((await context.request.get(url!.replace(patientId,'maria-gracas'))).status()).toBe(404);
  await article.getByRole('button',{name:'Visualizar PDF privado',exact:true}).click();await expect(page.locator('canvas[data-pdf-rendered=true]')).toBeVisible();await page.getByRole('button',{name:'Texto extraído da página',exact:true}).click();await expect(page.getByRole('region',{name:'Texto original da página, rolável',exact:true})).toContainText('Documento sintetico');await page.keyboard.press('Escape');
- await page.reload();await expect(page.getByRole('heading',{name,exact:true})).toBeVisible();await page.getByRole('button',{name:'Documentos',exact:true}).click();await expect(page.getByRole('button',{name:'Visualizar carteirinha',exact:true})).toBeVisible();await expect(article).toBeVisible();expect(sha(await (await context.request.get(url!)).body())).toBe(sha(pdf));
- for(const width of [1440,390]){await page.setViewportSize({width,height:900});expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);await page.screenshot({path:process.env.PAP_PROTOCOLS_EVIDENCE+'/documents-'+width+'.png',mask:[card]})}
+ await page.reload();await expect(page.getByRole('heading',{name,exact:true})).toBeVisible();await page.getByRole('button',{name:'Documentos',exact:true}).click();await expect(page.getByRole('button',{name:'Visualizar PAP-Gest',exact:true})).toBeVisible();await expect(article).toBeVisible();expect(sha(await (await context.request.get(url!)).body())).toBe(sha(pdf));
+ for(const width of [1440,390]){await page.setViewportSize({width,height:900});expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);await page.screenshot({path:process.env.PAP_PROTOCOLS_EVIDENCE+'/documents-'+width+'.png',mask:[card,page.getByText(/^CPF /)]})}
  await article.getByRole('button',{name:'Arquivar',exact:true}).click();await page.getByRole('button',{name:'Confirmar arquivamento',exact:true}).click();await expect(article).toContainText('Arquivado');expect((await context.request.get(url!)).status()).toBe(404);expect(errors).toEqual([]);
 });
 test('camera decodes a real opaque QR from a simulated local video stream, ignores duplicates and stops every track',async({page,context})=>{

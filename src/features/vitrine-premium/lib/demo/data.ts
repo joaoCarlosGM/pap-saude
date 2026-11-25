@@ -1,4 +1,4 @@
-import {recordErrors, registrationDetails} from '../registration-record'
+import {normalizeEdema, recordErrors, registrationDetails} from '../registration-record'
 import { calculateDemoMeows } from "./meows"
 import { assessmentPresentation } from "./assessment-presentation"
 import { DEFAULT_DEMO_PROFILE, type DemoProfile } from "./profile"
@@ -87,8 +87,8 @@ export function saveDemo(state:DemoState,d:RegistrationData,recorded?:{at:string
   documents:existing?.documents||[],medications,previousNotes:[],
  }
  const assessment=calculateDemoMeows(d)
- const registration=structuredClone(d)
- if(recorded&&(d.edema||d.edemaLocations?.length))registration.edemaProvenance={author:'enfermagem',recordedAt:recorded.at,source:'Registro da Vitrine'}
+ const registration=normalizeEdema(structuredClone(d))
+ if(recorded&&registration.edema)registration.edemaProvenance={author:'enfermagem',recordedAt:recorded.at,source:'Registro da Vitrine'}
  const encounter:Atendimento={id:recorded?.encounterId??`demo-record-${state.next}`,consultaNumero:state.encounters.filter(a=>a.paciente.id===id).length+1,dataHora:recorded?.at??`${DEMO_DATE}T15:${String(state.next%60).padStart(2,'0')}:00Z`,paciente:{id,nome:patient.nome,idadeGestacional:patient.pregnancy.gestationalAge},profissional:professionals[0],score:assessment.score,classificacao:assessment.classification,assessment,assessmentSource:'PAP_MEOWS_DEMO',registration}
  return {...state,patients:[...state.patients.filter(p=>p.id!==id),patient],encounters:[...state.encounters,encounter],next:state.next+1}
 }

@@ -8,6 +8,11 @@ export const proteinuriaMethods = {fita: 'Fita reagente', outro: 'Outro teste qu
 export const edemaOptions = {
   nao_avaliado: 'Não avaliado', ausente: 'Ausente', '1+/4+': '1+/4+', '2+/4+': '2+/4+', '3+/4+': '3+/4+', '4+/4+': '4+/4+',
 }
+export const hasGradedEdema = (value: string) => /^[1-4]\+\/4\+$/.test(value)
+export function normalizeEdema<T extends Pick<RegistrationData,'edema'|'edemaLocations'|'edemaOtherLocation'>>(record: T): T {
+  if (!hasGradedEdema(record.edema)) return {...record, edemaLocations: undefined, edemaOtherLocation: undefined}
+  return record.edemaLocations?.includes('outro') ? record : {...record, edemaOtherLocation: undefined}
+}
 export const edemaLocations = {
   membros_inferiores: 'Membros inferiores', maos: 'Mãos', face: 'Face', generalizado: 'Generalizado', outro: 'Outro',
 }
@@ -30,10 +35,11 @@ export const demoAuthors = {
   psicologia: {name: 'Lívia Rocha', category: 'Psicologia'},
 } as const
 
+export const sessionSoapAuthor = 'enfermagem' as const
 export const soapFields = {subjective: 'S — Subjetivo', objective: 'O — Objetivo', assessment: 'A — Avaliação', plan: 'P — Plano'}
 export type DemoAuthor = keyof typeof demoAuthors
 export type SoapContent = Record<keyof typeof soapFields, string>
-export type SoapNote = {id: string; author: DemoAuthor; recordedAt: string; content: SoapContent}
+export type SoapNote = {id: string; author: DemoAuthor; category?: string; recordedAt: string; content: SoapContent}
 export type LabProteinuria = {value: string; unit: string; date: string; method: string}
 export type EdemaProvenance = {author: DemoAuthor; recordedAt: string; source: 'Registro da Vitrine'}
 export const emptyLab: LabProteinuria = {value: '', unit: '', date: '', method: ''}
@@ -46,7 +52,7 @@ export function createSoapNote(author: DemoAuthor, content: SoapContent): SoapNo
   if (!Object.hasOwn(demoAuthors, author) || !Object.values(content).some(value => value.trim())) throw Error('Anotação sintética inválida.')
   const trimmed = {...content}
   for (const key of Object.keys(trimmed) as Array<keyof SoapContent>) trimmed[key] = trimmed[key].trim()
-  return {id: crypto.randomUUID(), author, recordedAt: new Date().toISOString(), content: trimmed}
+  return {id: crypto.randomUUID(), author, category:demoAuthors[author].category, recordedAt: new Date().toISOString(), content: trimmed}
 }
 
 export function recordErrors(data: RegistrationData, step: number): string[] {
@@ -57,7 +63,7 @@ export function recordErrors(data: RegistrationData, step: number): string[] {
       return ['Informe valor, unidade, data e método da proteinúria laboratorial.']
     }
   }
-  if (step === 4 && data.edemaLocations?.includes('outro') && !data.edemaOtherLocation?.trim()) {
+  if (step === 4 && hasGradedEdema(data.edema) && data.edemaLocations?.includes('outro') && !data.edemaOtherLocation?.trim()) {
     return ['Descreva a outra localização do edema.']
   }
   if (step === 5 && ((data.referralChoice === 'outro' && !data.referralDetails?.trim()) ||

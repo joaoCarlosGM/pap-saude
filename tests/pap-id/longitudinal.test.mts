@@ -2,7 +2,7 @@ import test from 'node:test'
 import assert from 'node:assert/strict'
 import {randomBytes,randomUUID,randomInt} from 'node:crypto'
 import {execFileSync} from 'node:child_process'
-import {readProfile,connect} from '../../scripts/private-review/card-store'
+import {readProfile,connect,issueInitial,revoke} from '../../scripts/private-review/card-store'
 import {createPerson,uploadDocument,archiveDocument,loadDocument,upgradeRegistry} from '../../scripts/private-review/registry-store'
 import {readChart,writeChart,upgradeLongitudinal} from '../../scripts/private-review/longitudinal-store'
 import {registryResponse} from '../../scripts/private-review/registry-api'
@@ -61,6 +61,12 @@ test('H23–H28 PostgreSQL próprio: versões, autorização, Agenda e SOAP, PDF
     await upgradeLongitudinal(pool,profile)
     await upgradeLongitudinal(pool,profile)
     const a=await createPerson(pool,person(),randomUUID()),b=await createPerson(pool,person(),randomUUID())
+    await assert.rejects(issueInitial(pool,a.patientId),/INITIAL_ISSUE_UNAVAILABLE/)
+    const cardsFor = async () => (await pool.query('SELECT hash,revoked FROM review_cards WHERE subject=$1',[a.subject])).rows
+    assert.equal((await cardsFor()).length,0)
+    await Promise.all([issueInitial(pool,a.patientId,profile.cardKey),issueInitial(pool,a.patientId,profile.cardKey)])
+    assert.equal((await cardsFor()).length,1)
+    await assert.rejects(issueInitial(pool,'maria-gracas',profile.cardKey),/INITIAL_ISSUE_UNAVAILABLE/)
     const grant=await session(new Request(origin+'/homologacao/sessao',{method:'POST',headers:{
       host:new URL(origin).host,origin,'x-pap-local-review':'consent',
     },body:'{"consent":true}'}))
@@ -133,10 +139,28 @@ test('H23–H28 PostgreSQL próprio: versões, autorização, Agenda e SOAP, PDF
     const allergies=await write(command({kind:'alergia',name:'Agente simulado',reaction:'Reação relatada',status:'sob_revisao',confirmation:'relatada',source:'relato'}))
     const condition=await write(command({kind:'comorbidade',name:'Condição simulada',status:'ativa',source:'relato'}))
     await write(command({...condition.data,status:'resolvida'} as ChartData,condition.entityId,1,'Estado informado'))
-    const visit=await write(command({kind:'consulta',record:{...registration,medications:[]}}))
-    await write(command({kind:'soap',encounterId:visit.entityId,author:'enfermagem',content:{subjective:'Anotação sintética',objective:'',assessment:'',plan:''}}))
+    const forged={subjective:'Anotação sintética',objective:'',assessment:'',plan:''}
+    const visit=await write(command({kind:'consulta',record:{...registration,medications:[],edema:'ausente',
+      edemaLocations:['face'],edemaOtherLocation:'Campo incompatível',soapNotes:[{id:randomUUID(),author:'medicina',
+        category:'Categoria adulterada',recordedAt:'2020-01-01T00:00:00.000Z',content:forged}]}}))
+    assert.equal(visit.assessment?.status,'INCOMPLETO')
+    assert.equal(visit.assessment?.score,null)
+    assert.equal(visit.data.kind==='consulta' && visit.data.record.edemaLocations,undefined)
+    assert.equal(visit.data.kind==='consulta' && visit.data.record.soapNotes?.[0].author,'enfermagem')
+    assert.equal(visit.data.kind==='consulta' && visit.data.record.soapNotes?.[0].category,'Enfermagem')
+    assert.notEqual(visit.data.kind==='consulta' && visit.data.record.soapNotes?.[0].recordedAt,'2020-01-01T00:00:00.000Z')
+    const completeRecord={...registration,paSistolica:'120',paDiastolica:'75',frequenciaCardiaca:'78',
+      frequenciaRespiratoria:'16',temperatura:'36.5',oxygenMode:'air' as const,nivelConsciencia:'alerta'}
+    const zero=await write(command({kind:'consulta',record:completeRecord}))
+    const critical=await write(command({kind:'consulta',record:{...completeRecord,paSistolica:'160'}}))
+    assert.equal(zero.assessment?.score,0)
+    assert.equal(critical.assessment?.score,3)
+    const added=await write(command({kind:'soap',encounterId:visit.entityId,author:'medicina',category:'Adulterada',content:forged}))
+    assert.equal(added.data.kind==='soap' && added.data.author,'enfermagem')
+    assert.equal(added.data.kind==='soap' && added.data.category,'Enfermagem')
     assert.equal((await readChart(pool,b.patientId)).events.length,0)
     const snapshot=await readChart(pool,a.patientId)
+    const cardSnapshot=await cardsFor()
     assert.equal(snapshot.documents[0].entityId,pdf.id)
     const latest=latestChartEvents(snapshot.events)
     assert.equal(latest.filter(e=>e.data.kind==='medicacao').length,2)
@@ -149,8 +173,12 @@ test('H23–H28 PostgreSQL próprio: versões, autorização, Agenda e SOAP, PDF
       for(const action of ['stop','start'])execFileSync(process.execPath,['node_modules/tsx/dist/cli.mjs','scripts/pap-id/review-lab.mts','--action',action,'--profile',file],{stdio:'pipe'})
       pool=connect(await readProfile(file))
       assert.deepEqual(await readChart(pool,a.patientId),snapshot)
+      assert.deepEqual(await cardsFor(),cardSnapshot)
       assert.deepEqual((await loadDocument(pool,a.patientId,pdf.id))!.bytes,syntheticPdf())
     }
+    await revoke(pool,a.subject)
+    await assert.rejects(issueInitial(pool,a.patientId,profile.cardKey),/MANUAL_REISSUE_REQUIRED/)
+    assert.equal((await cardsFor()).length,1)
     assert.equal(await archiveDocument(pool,a.patientId,pdf.id),true)
     assert.equal(await loadDocument(pool,a.patientId,pdf.id),null)
     assert.equal((await readChart(pool,a.patientId)).documents[0].action,'status_changed')

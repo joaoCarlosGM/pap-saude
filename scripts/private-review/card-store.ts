@@ -1,5 +1,5 @@
 /** Local synthetic database only. Not imported by any production route. */
-import {Pool} from 'pg';import {createHash,randomUUID} from 'node:crypto';
+import {Pool} from 'pg';import {createHash,randomBytes,randomUUID} from 'node:crypto';
 import {readFile} from 'node:fs/promises';
 import {persistCard} from './registry-store';import {cardImage} from './card-image';import {execFileSync} from 'node:child_process';
 import {initialDemo} from '../../src/features/vitrine-premium/lib/demo/data';
@@ -26,14 +26,54 @@ export async function initialize(pool:Pool,p:Profile){
  for(const row of initialDemo().patients){const subject=randomUUID(),hex=subject.replaceAll('-','').slice(0,6).toUpperCase();await pool.query('INSERT INTO review_people(subject,patient_id,identity) VALUES($1,$2,$3) ON CONFLICT(patient_id) DO NOTHING',[subject,row.id,{subject,patientId:row.id,name:row.nome,birthDate:row.dataNascimento,document:row.cpf.replace(/\D/g,''),rg:{number:'DEMO-'+hex,uf:'PA',issuer:'DEMO'}}])}
 }
 export async function ledgers(pool:Pool):Promise<DemoLedger[]>{const people=(await pool.query('SELECT * FROM review_people ORDER BY patient_id')).rows;const result:DemoLedger[]=[];for(const p of people){const cards=(await pool.query('SELECT hash,expires_at,revoked FROM review_cards WHERE subject=$1 ORDER BY expires_at,hash',[p.subject])).rows;if(cards.length)result.push(demoLedgerSchema.parse({kind:'PAP_ID_DEMO_V1',revision:p.revision,patient:p.identity,cards:cards.map(c=>({hash:c.hash,expiresAt:c.expires_at.toISOString(),revoked:c.revoked}))}))}return result}
-export async function issue(pool:Pool,patientId:string,operationId:string,token:string,cardKey?:string){
+async function issueCard(pool:Pool,patientId:string,operationId:string,token:string,cardKey:string|undefined,initial:boolean) {
  if(!/^[a-z0-9-]{1,64}$/.test(patientId)||!/^\w{8}-\w{4}-4\w{3}-[89ab]\w{3}-\w{12}$/i.test(operationId)||!/^PAP-ID-DEMO-1\.[A-Za-z0-9_-]{43}$/.test(token))throw Error('INVALID_REQUEST')
- const hash=createHash('sha256').update(token).digest('hex'),db=await pool.connect()
- try{await db.query('BEGIN');const person=(await db.query('SELECT * FROM review_people WHERE patient_id=$1 FOR UPDATE',[patientId])).rows[0];if(!person)throw Error('UNKNOWN_SYNTHETIC_PERSON')
- const prior=(await db.query('SELECT subject,hash FROM review_cards WHERE operation_id=$1',[operationId])).rows[0]
- if(prior){if(prior.hash!==hash||prior.subject!==person.subject)throw Error('OPERATION_CONFLICT')}else{const count=Number((await db.query('SELECT count(*) FROM review_cards WHERE subject=$1',[person.subject])).rows[0].count);if(count>=50)throw Error('LOCAL_HISTORY_LIMIT');await db.query('UPDATE review_cards SET revoked=true,revoked_at=now() WHERE subject=$1 AND NOT revoked',[person.subject]);await db.query(`INSERT INTO review_cards(hash,subject,expires_at,operation_id,issued_at) VALUES($1,$2,now()+interval '24 hours',$3,now())`,[hash,person.subject,operationId]);await db.query('UPDATE review_people SET revision=revision+1 WHERE subject=$1',[person.subject])}
- if(cardKey){const cards=(await db.query('SELECT hash,expires_at,revoked FROM review_cards WHERE subject=$1 ORDER BY expires_at,hash',[person.subject])).rows;const ledger=demoLedgerSchema.parse({kind:'PAP_ID_DEMO_V1',revision:person.revision+(prior?0:1),patient:person.identity,cards:cards.map(c=>({hash:c.hash,expiresAt:c.expires_at.toISOString(),revoked:c.revoked}))});await persistCard(db,hash,await cardImage(ledger,token),cardKey);if(!prior)await db.query('INSERT INTO review_audit(kind,subject,actor) VALUES($1,$2,$3)',['CARD_ISSUED',person.subject,'LOCAL_OPERATOR'])}
- await db.query('COMMIT');return (await ledgers(pool)).find(l=>l.patient.subject===person.subject)!
- }catch(e){await db.query('ROLLBACK');throw e}finally{db.release()}
+ const hash=createHash('sha256').update(token).digest('hex')
+ const db=await pool.connect()
+ try {
+  await db.query('BEGIN')
+  const {rows:[person]}=await db.query('SELECT * FROM review_people WHERE patient_id=$1 FOR UPDATE',[patientId])
+  if(!person)throw Error('UNKNOWN_SYNTHETIC_PERSON')
+  const list=async()=> (await db.query('SELECT hash,expires_at,revoked FROM review_cards WHERE subject=$1 ORDER BY expires_at,hash',[person.subject])).rows
+  const previous=await list()
+  if(initial){
+   if(person.identity.kind!=='PAP_ID_REVIEW_PERSON_V2'||!cardKey)throw Error('INITIAL_ISSUE_UNAVAILABLE')
+   if(previous.length){
+    const active=previous.find(card=>!card.revoked&&card.expires_at>Date.now())
+    if(!active||!(await db.query('SELECT 1 FROM review_card_images WHERE hash=$1',[active.hash])).rowCount)throw Error('MANUAL_REISSUE_REQUIRED')
+    await db.query('COMMIT')
+    return null
+   }
+  }
+  const {rows:[prior]}=await db.query('SELECT subject,hash FROM review_cards WHERE operation_id=$1',[operationId])
+  if(prior){
+   if(prior.hash!==hash||prior.subject!==person.subject)throw Error('OPERATION_CONFLICT')
+  }else{
+   if(previous.length>=50)throw Error('LOCAL_HISTORY_LIMIT')
+   await db.query('UPDATE review_cards SET revoked=true,revoked_at=now() WHERE subject=$1 AND NOT revoked',[person.subject])
+   await db.query("INSERT INTO review_cards(hash,subject,expires_at,operation_id,issued_at) VALUES($1,$2,now()+interval '24 hours',$3,now())",[hash,person.subject,operationId])
+   await db.query('UPDATE review_people SET revision=revision+1 WHERE subject=$1',[person.subject])
+  }
+  const ledger=demoLedgerSchema.parse({kind:'PAP_ID_DEMO_V1',revision:person.revision+(prior?0:1),patient:person.identity,
+   cards:(prior?previous:await list()).map(card=>({hash:card.hash,expiresAt:card.expires_at.toISOString(),revoked:card.revoked}))})
+  if(cardKey){
+   await persistCard(db,hash,await cardImage(ledger,token),cardKey)
+   if(!prior)await db.query('INSERT INTO review_audit(kind,subject,actor) VALUES($1,$2,$3)',['CARD_ISSUED',person.subject,initial?'PRIVATE_SESSION':'LOCAL_OPERATOR'])
+  }
+  await db.query('COMMIT')
+  return ledger
+ }catch(error){await db.query('ROLLBACK');throw error}
+ finally{db.release()}
 }
+
+export async function issue(pool:Pool,patientId:string,operationId:string,token:string,cardKey?:string){
+ const ledger=await issueCard(pool,patientId,operationId,token,cardKey,false)
+ if(!ledger)throw Error('ISSUE_UNCONFIRMED')
+ return ledger
+}
+
+export async function issueInitial(pool:Pool,patientId:string,cardKey?:string){
+ await issueCard(pool,patientId,randomUUID(),'PAP-ID-DEMO-1.'+randomBytes(32).toString('base64url'),cardKey,true)
+}
+
 export async function revoke(pool:Pool,subject:string){const db=await pool.connect();try{await db.query('BEGIN');const row=await db.query('SELECT subject FROM review_people WHERE subject=$1 FOR UPDATE',[subject]);if(!row.rowCount)throw Error('UNKNOWN_SYNTHETIC_PERSON');await db.query('UPDATE review_cards SET revoked=true,revoked_at=now() WHERE subject=$1 AND NOT revoked',[subject]);await db.query('UPDATE review_people SET revision=revision+1 WHERE subject=$1',[subject]);await db.query('INSERT INTO review_audit(kind,subject,actor) VALUES($1,$2,$3)',['CARDS_REVOKED',subject,'LOCAL_OPERATOR']);await db.query('COMMIT')}catch(e){await db.query('ROLLBACK');throw e}finally{db.release()}}

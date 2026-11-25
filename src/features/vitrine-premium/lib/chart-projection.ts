@@ -16,7 +16,7 @@ export function integratedNotes(events: readonly ChartEvent[], encounterId: stri
   for (const event of events) {
     const {data} = event
     if (data.kind === 'soap' && data.encounterId === encounterId) {
-      notes.set(event.entityId,{id:event.entityId, recordedAt:event.recordedAt, author:data.author, content:data.content})
+      notes.set(event.entityId,{id:event.entityId, recordedAt:event.recordedAt, author:data.author, category:data.category, content:data.content})
     }
   }
   return [...notes.values()].toSorted((a,b) => a.recordedAt.localeCompare(b.recordedAt))
@@ -65,7 +65,7 @@ export function projectChart(patient: Patient, latest: readonly ChartEvent[]): P
     }
     const registration = {...record, cpf:patient.cpf, nomeCompleto:name, dataNascimento:birthDate,
       soapNotes:integratedNotes(latest,event.entityId,record.soapNotes)}
-    const assessment = calculateDemoMeows(registration)
+    const assessment = event.assessment ?? calculateDemoMeows(registration)
     const visit: Atendimento = {
       id:event.entityId, dataHora:event.recordedAt, consultaNumero:encounters.length+1,
       paciente:{id:patient.id,nome:name,idadeGestacional:dating.gestationalAge},

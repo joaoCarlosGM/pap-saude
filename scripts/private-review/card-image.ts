@@ -35,7 +35,7 @@ export async function cardImage(ledger: DemoLedger, token: string) {
     <rect width="1050" height="600" rx="28" fill="#c41469"/>
     <rect y="600" width="1050" height="600" rx="28" fill="white"/>
     <g font-family="sans-serif" fill="white">
-      <text x="64" y="90" font-size="33">PAP-ID / Carteirinha da Gestante</text>
+      <text x="64" y="90" font-size="33">PAP-Gest / Carteirinha da Gestante</text>
       ${name}
       <text x="64" y="430" font-size="24">IDADE</text>
       <text x="320" y="430" font-size="24">GESTAÇÃO</text>
@@ -46,7 +46,7 @@ export async function cardImage(ledger: DemoLedger, token: string) {
       <text x="64" y="550" font-size="24">${shortId}</text>
     </g>
     <g font-family="sans-serif" fill="#172033">
-      <text x="64" y="709" font-size="36" fill="#c41469" font-weight="bold">PAP-ID</text>
+      <text x="64" y="709" font-size="36" fill="#c41469" font-weight="bold">PAP-Gest</text>
       <text x="64" y="815" font-size="28">Emissão: ${date(issuedAt.toISOString())}</text>
       <text x="64" y="875" font-size="28">Validade: ${date(credential.expiresAt)}</text>
       <text x="64" y="1090" font-size="24">Confira dados atualizados no sistema.</text>

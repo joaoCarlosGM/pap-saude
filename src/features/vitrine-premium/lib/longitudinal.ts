@@ -1,3 +1,4 @@
+import type {MeowsResult} from '../types/meows'
 import {z} from 'zod'
 import {DEMO_DATE, pregnancyFrom} from './demo/validation'
 import {invalidSyntheticCpf} from './review-registry'
@@ -42,7 +43,7 @@ export const chartRegistration = z.strictObject({
   edemaLocations: z.array(short).max(6).optional(), edemaOtherLocation: registrationField.optional(),
   sangramentoVaginal: registrationField, pesoAtual: registrationField,
   queixasPrincipais: registrationField, observacoesProfissional: registrationField,
-  soapNotes: z.array(z.strictObject({id, author, recordedAt: z.iso.datetime(), content: soapContent})).max(20).optional(),
+  soapNotes: z.array(z.strictObject({id, author, category:short.optional(), recordedAt: z.iso.datetime(), content: soapContent})).max(20).optional(),
 })
 
 export const chartData = z.discriminatedUnion('kind', [
@@ -81,7 +82,7 @@ export const chartData = z.discriminatedUnion('kind', [
     slot: z.strictObject({date: day, time: hour}).nullable(),
     professional: short, unit: short, notes: z.string().trim().min(1).max(250), vaccineId: id.optional()}),
   z.strictObject({kind: z.literal('consulta'), record: chartRegistration}),
-  z.strictObject({kind: z.literal('soap'), encounterId: id, author, content: soapContent}),
+  z.strictObject({kind: z.literal('soap'), encounterId: id, author, category:short.optional(), content: soapContent}),
 ]).superRefine((data, ctx) => {
   const issue = (path: string, message: string) => ctx.addIssue({code: 'custom', path: [path], message})
   if (data.kind === 'resultado') {
@@ -118,6 +119,7 @@ export type ChartKind = ChartData['kind']
 export type ChartCommand = z.infer<typeof chartCommand>
 export type ChartAction = 'created' | 'updated' | 'corrected' | 'status_changed' | 'linked' | 'unlinked'
 export type ChartEvent = {
+  assessment?: MeowsResult
   id: string; entityId: string; patientId: string; version: number; data: ChartData; actions: ChartAction[];
   fields: string[]; occurrencePrecision: 'day' | 'time'; occurredAt: string; recordedAt: string; actor: string; source: string; reason?: string
 }
