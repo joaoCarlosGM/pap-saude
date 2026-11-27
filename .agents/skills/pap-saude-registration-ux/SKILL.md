@@ -5,6 +5,9 @@ description: Implement exactly the approved UI concepts for PAP Saúde Registrat
 
 # PAP Saúde — Registro Premium sem perda de campos
 
+**REFERÊNCIA VISUAL DEFINITIVA (OBRIGATÓRIA):** Leia `docs/release/beta1-immersive-ux-h38-h42/REGISTRO-FIDELIDADE-VISUAL-CONCEPTS-APROVADOS.md` antes de editar qualquer componente. Este documento foi comparado visualmente às três imagens aprovadas e prevalece **para composição, estilo, proporção, agrupamento, ícones e posicionamento** sobre os resumos anteriores. Os campos/validações da branch prevalecem sobre dados ilustrativos da imagem. Uma tela funcional porém visualmente distinta não pode ser declarada PASS.
+
+
 **Contrato visual normativo obrigatório:** `docs/release/beta1-immersive-ux-h38-h42/REGISTRO-CONCEPT-DEFINITIVO-UI-UX.md` (composição, ícones, dimensões, wireframes, todos os campos, estados, responsividade, checklists). Ler integralmente ANTES de editar JSX; este documento prevalece sobre resumos anteriores quando detalha o mesmo layout sem contrariar os dados reais.
 
 
