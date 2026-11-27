@@ -67,7 +67,16 @@ test('H39/H40/H41 wizard preserves fields, dating sources, live score and saved 
   await expect(field(page,'Evidência do exame')).toBeFocused()
   await field(page,'Evidência do exame').fill('Documento USG sintético')
   await expect(page.getByRole('region',{name:'Resultado da datação'})).toContainText('19 semanas e 4 dias')
-  if (evidence) await page.locator('[data-motion-step]').screenshot({path:evidence+'/registro-ultrassom-preenchido.png'})
+  if (evidence) {
+    const dimensions=page.viewportSize()!
+    await page.setViewportSize({width:1440,height:1086})
+    await page.locator('[data-registration-pregnancy]').evaluate(element=>{
+      const main=document.querySelector('main')!
+      main.scrollTop+=element.getBoundingClientRect().top-main.getBoundingClientRect().top-130
+    })
+    await page.screenshot({path:evidence+'/registro-ultrassom-preenchido.png',animations:'disabled'})
+    await page.setViewportSize(dimensions)
+  }
   await page.getByRole('button',{name:'DPP conhecida',exact:true}).click()
   await field(page,'DPP informada').fill(due)
   await field(page,'Origem da DPP').fill('Caderneta sintética')

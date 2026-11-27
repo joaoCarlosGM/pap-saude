@@ -34,7 +34,7 @@ export default function VitalSignsStep({data,onChange,onNext,onBack,history}:Pro
         <section className={registrationCard} aria-label="Medidas da consulta">
           <div className="grid grid-cols-1 gap-3 min-[370px]:grid-cols-2 md:grid-cols-3">
             {measures.map(([field,id,label,unit,Icon])=><div key={field} className="grid min-w-0 content-between gap-3 rounded-2xl border border-slate-200 bg-white p-3">
-              <div className="flex min-w-0 items-center gap-2">
+              <div className="flex min-w-0 flex-col items-start gap-2 min-[1280px]:flex-row min-[1280px]:items-center">
                 <span className="grid size-10 shrink-0 place-items-center rounded-lg bg-pink-50 text-[#C41469]"><Icon size={19} aria-hidden/></span>
                 <label htmlFor={id} className="min-w-0 break-words text-sm font-medium leading-tight text-slate-800">{label}</label>
               </div>
