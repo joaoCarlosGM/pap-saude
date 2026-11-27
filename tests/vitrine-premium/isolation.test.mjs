@@ -1,3 +1,4 @@
+import {createHash} from 'node:crypto'
 import {test} from 'node:test'
 import assert from 'node:assert/strict'
 import {readFileSync,readdirSync} from 'node:fs'
@@ -56,7 +57,11 @@ test('Beta1 preserves authentication, clinical contracts, KPIs and all historica
    assert.deepEqual(files(path+'/').sort(),historicalAuth.sort(),'auth file inventory remains frozen');
    assert.equal(execFileSync('git',['diff',base,'--',path,`:(exclude)${navigationPath}`],{encoding:'utf8'}),'','all other authentication files');
    assertNavigationContract(readFileSync(navigationPath,'utf8'),before(navigationPath));
-  }else if(path==='package-lock.json')assertPdfDependencyOnly(JSON.parse(readFileSync(path,'utf8')),JSON.parse(before(path)));
+  }else if(path==='package-lock.json'){
+   const h45=execFileSync('git',['show','1129ad72f48000bf4510e043834589386f730358:package-lock.json'],{encoding:'utf8'});
+   assertPdfDependencyOnly(JSON.parse(h45),JSON.parse(before(path)));
+   assertH46DependencyIntegrity();
+  }
   else assert.equal(execFileSync('git',['diff',base,'--',path],{encoding:'utf8'}),'',path);
  }
  const historical=execFileSync('git',['ls-tree','-r','--name-only',base,'--','prisma/migrations'],{encoding:'utf8'}).trim().split('\n');assert.equal(historical.filter(p=>p.endsWith('/migration.sql')).length,35);
@@ -117,3 +122,39 @@ function assertPdfDependencyOnly(current,baseline){
  for(const name of additions){const item=current.packages[name];assert.equal(item.version,name.endsWith('pdfjs-dist')?'6.5.438':'1.1.1');assert.equal(item.dev,true);assert.match(item.resolved,/^https:\/\/registry\.npmjs\.org\//);assert.match(item.integrity,/^sha512-/);if(!name.endsWith('pdfjs-dist'))assert.equal(item.optional,true);}
  const strip=p=>Object.fromEntries(Object.entries(p).filter(([key])=>key!=='packages'));assert.deepEqual(strip(current),strip(baseline));
 }
+
+
+// H46: closed security-patch exception.
+// Historical H45 PDF dependency contract remains independently verified.
+const H46_DEPENDENCY_HASHES = Object.freeze({
+ 'package.json':
+  '1e0a76bfbfabc9b9ccf40bb53933240402e734f3cf8c663eee446648dd968ec5',
+ 'package-lock.json':
+  '8a509548feaf0765f47e82255ab396661465f221e921089ad859c158a0b676ef',
+ 'docker/migrator/package.json':
+  '5bd5b79144fdc5b24dd58100796cd7a16b8c2ddaf0fc748df6e031268cd8ff0c',
+ 'docker/migrator/package-lock.json':
+  '3e2ee62732300a83510642d4852d631f1a868ce41fbed8abdd8cdcdc3e79257b'
+});
+
+function assertH46DependencyIntegrity(reader=readFileSync){
+ for(const [path,expected] of Object.entries(H46_DEPENDENCY_HASHES)){
+  const actual=createHash('sha256').update(reader(path)).digest('hex');
+  assert.equal(actual,expected,`Unauthorized dependency change: ${path}`);
+ }
+}
+
+test('H46 security patch rejects unauthorized dependency mutations',()=>{
+ assertH46DependencyIntegrity();
+
+ for(const target of Object.keys(H46_DEPENDENCY_HASHES)){
+  assert.throws(()=>{
+   assertH46DependencyIntegrity(path=>{
+    const content=readFileSync(path);
+    return path===target
+     ? Buffer.concat([content,Buffer.from(' ')])
+     : content;
+   });
+  },/Unauthorized dependency change/);
+ }
+});
