@@ -1,0 +1,135 @@
+Chromium 156.0.8078.79 em fixtures isoladas
+Linhas de resultado extraídas dos logs executados.
+
+Bateria ampla antes da revisão visual de cfc1a53
+
+Running 38 tests using 1 worker
+  ✓   1 tests/pap-id/final-acceptance.spec.ts:13:5 › new synthetic patient persists, issues a recoverable card and versions/downloads private PDFs without crossing patient scope (38.5s)
+  ✓   2 tests/pap-id/final-acceptance.spec.ts:63:5 › camera decodes a real opaque QR from a simulated local video stream, ignores duplicates and stops every track (8.4s)
+  ✓   3 tests/pap-id/final-acceptance.spec.ts:103:5 › camera permission denial offers a safe PNG/code fallback without releasing any identity (5.1s)
+  ✓   4 tests/pap-id/final-ux.spec.ts:41:5 › H32–H35 Resumo, MEOWS zero e crítico, calendário e Agenda privada em sete larguras (22.6s)
+  ✓   5 tests/pap-id/final-ux.spec.ts:115:7 › Android emulado › H31 descarte visível, erro no campo, foco e rascunho após falha de rede (6.5s)
+  ✓   6 tests/pap-id/final-ux.spec.ts:150:5 › H36 percorre decisões e retornos nos três mapas e mantém a figura privada (16.4s)
+  ✓   7 tests/pap-id/final-visual.spec.ts:4:5 › approved Premium runtime motion, native navigation and reduced motion remain equivalent to the reference source (6.1s)
+  ✓   8 tests/pap-id/final-visual.spec.ts:9:5 › source-backed protocol layouts fit seven widths, light/dark and accessible checklist (1.7m)
+  ✓   9 tests/pap-id/final-visual.spec.ts:16:5 › structured protocol map navigates, zooms, enters fullscreen and alternates to the authorized original (10.0s)
+  ✓  10 tests/pap-id/final-visual.spec.ts:41:5 › profile photo validates, crops, persists across refresh and resets with the demo (7.7s)
+  ✘  11 tests/pap-id/final-visual.spec.ts:78:5 › informative encounter dialog closes by backdrop and keyboard, retains focus and identifies historical gaps (19.4s)
+  ✓  12 tests/pap-id/immersive-ux.spec.ts:15:5 › H38/H41 presentation documents and calculated scenarios work without a private session (9.3s)
+  ✘  13 tests/pap-id/immersive-ux.spec.ts:45:5 › H39/H40/H41 wizard preserves fields, dating sources, live score and saved result (33.0s)
+  ✓  14 tests/pap-id/immersive-ux.spec.ts:130:7 › H42 progressive graph sindromes-hipertensivas-gestacao preserves all frames and reduced motion (20.4s)
+  ✓  15 tests/pap-id/immersive-ux.spec.ts:130:7 › H42 progressive graph hemorragia-pos-parto preserves all frames and reduced motion (25.3s)
+  ✓  16 tests/pap-id/immersive-ux.spec.ts:130:7 › H42 progressive graph sepse-obstetrica preserves all frames and reduced motion (21.3s)
+  ✓  17 tests/pap-id/immersive-ux.spec.ts:162:5 › H43 same Agenda hero geometry as Registro and Atendimentos at 390 and 1440 (15.8s)
+  ✓  18 tests/pap-id/integrated.spec.ts:19:35 › synthetic QR/document states, record and five-step encounter without duplicate identity at 1440 (21.8s)
+  ✘  19 tests/pap-id/integrated.spec.ts:19:35 › synthetic QR/document states, record and five-step encounter without duplicate identity at 390 (29.7s)
+  ✓  20 tests/pap-id/integrated.spec.ts:36:5 › expired, revoked, malformed and changed-base credentials never release synthetic actions (9.2s)
+  ✓  21 tests/pap-id/integrated.spec.ts:41:5 › three real PDFs require private consent, render pages/zoom, cite their source and download identical bytes (2.4m)
+  ✓  22 tests/pap-id/integrated.spec.ts:56:5 › responsive QR controls, keyboard and resets do not expose clinical APIs or retain credentials after reload (30.3s)
+  ✓  23 tests/pap-id/longitudinal.spec.ts:48:5 › H23–H28 jornada desktop: cadastro, prontuário, PDF, Registro, SOAP, Agenda e refresh (1.4m)
+  ✓  24 tests/pap-id/longitudinal.spec.ts:286:7 › Chromium com toque e viewport Android › H24–H27 formulários móveis, validação nativa, retrato e tema escuro (14.0s)
+  ✓  25 tests/pap-id/post-homologation.spec.ts:5:5 › multiple PNGs are deduplicated, explicitly selected before document confirmation; compact desktop/mobile (42.0s)
+  ✓  26 tests/pap-id/post-homologation.spec.ts:10:5 › visible protocol return, real sourced overviews and original flow remain under private capability (2.3m)
+  ✓  27 tests/pap-id/post-homologation.spec.ts:13:5 › private PostgreSQL issuer shares CLI base, persists reload, revokes reissued PNG and never duplicates patient (24.8s)
+  ✓  28 tests/protocols/journey.spec.ts:18:5 › library searches accents/codes, combines filters and recovers from no results (5.9s)
+  ✓  29 tests/protocols/journey.spec.ts:25:5 › all three references and four tabs have real deep links and desktop/mobile evidence (32.8s)
+  ✓  30 tests/protocols/journey.spec.ts:42:5 › checklist remains local across tabs/protocols and resets only after confirmation (6.9s)
+  ✓  31 tests/protocols/journey.spec.ts:54:5 › native history/reload and keyboard tab navigation retain validated location; flow controls are genuine (9.8s)
+  ✓  32 tests/protocols/journey.spec.ts:73:5 › paused items are noninteractive and direct HTML/RSC routes never mount old chat or course player (20.0s)
+  ✓  33 tests/protocols/journey.spec.ts:83:5 › presentation loading/empty/error states give truthful feedback (6.6s)
+  ✓  34 tests/protocols/journey.spec.ts:87:5 › responsive library/detail, dark mode and keyboard focus avoid horizontal overflow (23.5s)
+  ✓  35 tests/protocols/journey.spec.ts:95:35 › six-step help tour avoids paused routes and resumes from detail query at 1440 (5.3s)
+  ✓  36 tests/protocols/journey.spec.ts:95:35 › six-step help tour avoids paused routes and resumes from detail query at 375 (5.2s)
+  ✘  37 tests/vitrine-premium/registration-followup.spec.ts:16:5 › cadastro em tela Android, medidas independentes, autoria da sessão e fechamento com viewport reduzida (19.0s)
+  ✘  38 tests/vitrine-premium/registration-followup.spec.ts:126:5 › agenda persiste, mostra lembrete, preserva mudanças e atualiza o prontuário (9.8s)
+  5 failed
+  33 passed (18.1m)
+
+Primeira repetição focada dos recortes e do Registro
+
+Running 5 tests using 1 worker
+  ✓  1 tests/pap-id/final-ux.spec.ts:150:5 › H36 percorre decisões e retornos nos três mapas e mantém a figura privada (27.0s)
+  ✘  2 tests/pap-id/final-visual.spec.ts:78:5 › informative encounter dialog closes by backdrop and keyboard, retains focus and identifies historical gaps (21.7s)
+  ✓  3 tests/pap-id/immersive-ux.spec.ts:15:5 › H38/H41 presentation documents and calculated scenarios work without a private session (23.6s)
+  ✘  4 tests/pap-id/immersive-ux.spec.ts:45:5 › H39/H40/H41 wizard preserves fields, dating sources, live score and saved result (10.5s)
+  ✓  5 tests/pap-id/immersive-ux.spec.ts:163:5 › H43 same Agenda hero geometry as Registro and Atendimentos at 390 and 1440 (22.3s)
+  2 failed
+  3 passed (1.9m)
+
+Repetição sobre a referência atualizada
+
+Running 7 tests using 1 worker
+  ✓  1 tests/pap-id/immersive-ux.spec.ts:15:5 › H38/H41 presentation documents and calculated scenarios work without a private session (22.3s)
+  ✓  2 tests/pap-id/immersive-ux.spec.ts:46:5 › H39/H40/H41 wizard preserves fields, dating sources, live score and saved result (10.1s)
+  ✓  3 tests/pap-id/immersive-ux.spec.ts:177:5 › H43 same Agenda hero geometry as Registro and Atendimentos at 390 and 1440 (10.6s)
+  ✘  4 tests/pap-id/integrated.spec.ts:23:35 › synthetic QR/document states, record and five-step encounter without duplicate identity at 1440 (31.5s)
+  ✓  5 tests/pap-id/integrated.spec.ts:23:35 › synthetic QR/document states, record and five-step encounter without duplicate identity at 390 (11.2s)
+  ✓  6 tests/vitrine-premium/registration-followup.spec.ts:16:5 › cadastro em tela Android, medidas independentes, autoria da sessão e fechamento com viewport reduzida (23.6s)
+  ✘  7 tests/vitrine-premium/registration-followup.spec.ts:126:5 › agenda persiste, mostra lembrete, preserva mudanças e atualiza o prontuário (11.3s)
+  2 failed
+  5 passed (2.3m)
+
+Verificação do histórico e jornada completa H39–H41
+
+Running 2 tests using 1 worker
+  ✓  1 tests/pap-id/final-visual.spec.ts:78:5 › informative encounter dialog closes by backdrop and keyboard, retains focus and identifies historical gaps (21.2s)
+  ✓  2 tests/pap-id/immersive-ux.spec.ts:45:5 › H39/H40/H41 wizard preserves fields, dating sources, live score and saved result (51.9s)
+  2 passed (1.3m)
+
+Verificação final da animação e geometria dos nós
+
+Running 3 tests using 1 worker
+  ✓  1 tests/pap-id/immersive-ux.spec.ts:131:7 › H42 progressive graph sindromes-hipertensivas-gestacao preserves all frames and reduced motion (35.7s)
+  ✓  2 tests/pap-id/immersive-ux.spec.ts:131:7 › H42 progressive graph hemorragia-pos-parto preserves all frames and reduced motion (21.6s)
+  ✓  3 tests/pap-id/immersive-ux.spec.ts:131:7 › H42 progressive graph sepse-obstetrica preserves all frames and reduced motion (31.6s)
+  3 passed (1.6m)
+
+Repetição de QR em 390 px e do Registro
+
+Running 3 tests using 1 worker
+  ✓  1 tests/pap-id/immersive-ux.spec.ts:15:5 › H38/H41 presentation documents and calculated scenarios work without a private session (28.2s)
+  ✓  2 tests/pap-id/immersive-ux.spec.ts:46:5 › H39/H40/H41 wizard preserves fields, dating sources, live score and saved result (14.2s)
+  ✓  3 tests/pap-id/integrated.spec.ts:23:35 › synthetic QR/document states, record and five-step encounter without duplicate identity at 390 (24.7s)
+  3 passed (1.4m)
+
+Rodada das telas H40 com correção do seletor de Agenda
+
+Running 5 tests using 1 worker
+  ✓  1 tests/pap-id/immersive-ux.spec.ts:46:5 › H39/H40/H41 wizard preserves fields, dating sources, live score and saved result (14.2s)
+  ✘  2 tests/pap-id/integrated.spec.ts:23:35 › synthetic QR/document states, record and five-step encounter without duplicate identity at 1440 (2.3m)
+  ✓  3 tests/pap-id/integrated.spec.ts:23:35 › synthetic QR/document states, record and five-step encounter without duplicate identity at 390 (10.9s)
+  ✓  4 tests/vitrine-premium/registration-followup.spec.ts:16:5 › cadastro em tela Android, medidas independentes, autoria da sessão e fechamento com viewport reduzida (8.8s)
+  ✓  5 tests/vitrine-premium/registration-followup.spec.ts:126:5 › agenda persiste, mostra lembrete, preserva mudanças e atualiza o prontuário (6.6s)
+  1 failed
+  4 passed (3.2m)
+
+Rodada da candidata com código congelado
+
+Running 5 tests using 2 workers
+  ✓  2 tests/pap-id/integrated.spec.ts:23:35 › synthetic QR/document states, record and five-step encounter without duplicate identity at 1440 (18.2s)
+  ✓  3 tests/pap-id/integrated.spec.ts:23:35 › synthetic QR/document states, record and five-step encounter without duplicate identity at 390 (14.5s)
+  ✓  4 tests/vitrine-premium/registration-followup.spec.ts:16:5 › cadastro em tela Android, medidas independentes, autoria da sessão e fechamento com viewport reduzida (9.9s)
+  ✓  5 tests/vitrine-premium/registration-followup.spec.ts:126:5 › agenda persiste, mostra lembrete, preserva mudanças e atualiza o prontuário (8.1s)
+  ✘  1 tests/pap-id/immersive-ux.spec.ts:46:5 › H39/H40/H41 wizard preserves fields, dating sources, live score and saved result (3.0m)
+  1 failed
+  4 passed (3.1m)
+
+Jornada final isolada H39–H41 e evidências do Registro
+
+Running 1 test using 1 worker
+  ✓  1 tests/pap-id/immersive-ux.spec.ts:46:5 › H39/H40/H41 wizard preserves fields, dating sources, live score and saved result (9.2s)
+  1 passed (11.2s)
+
+Retomada de sessão após reinício real do PostgreSQL
+
+PostgreSQL sintético: exited
+PostgreSQL sintético: running
+Running 1 test using 1 worker
+  ✓  1 tests/pap-id/longitudinal.spec.ts:263:5 › H28 retomada da mesma ficha depois de reiniciar a fixture (30.8s)
+  1 passed (35.2s)
+
+Notas das sessões anteriores
+A primeira bateria encontrou seleção de uma consulta recente no teste de lacunas legadas, alert genérico no Registro, transição de rota pendente em QR mobile, seletor responsivo de proteinúria e compromisso de exemplo misturado ao compromisso persistido no teste da Agenda.
+A candidata inclui uma consulta legada sem avaliação, o teste de histórico abre esse registro, os testes do Registro usam o escopo da etapa, e a Agenda verifica o compromisso persistido pelo rótulo de origem. A suíte QR aguarda a rota desejada.
+As duas execuções intermediárias Desktop registraram erro de chunk do Next dev durante alterações de arquivo. A rodada da candidata foi executada em fixture nova com o código congelado.
+A execução concorrente da candidata também registrou uma recarga de /vitrine/registro durante o retorno ao passo de sinais vitais. A jornada isolada na mesma revisão passou.

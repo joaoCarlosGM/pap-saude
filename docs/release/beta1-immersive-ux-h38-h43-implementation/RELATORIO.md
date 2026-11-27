@@ -1,0 +1,14 @@
+# PAP-B1-UX-04 · H38–H43
+
+A branch `feature/beta1-immersive-ux-h38-h43-rc` parte de `cfc1a534ca83825eff77f444b4428c83465705bf`, SHA confirmado na referência remota. A inspeção inicial encontrou checkout limpo, sem stash, branch de implementação ou commit local H38–H43. Quando a referência avançou, os commits locais desta execução foram preservados e reaplicados sobre a nova base documental.
+
+## Entregas
+
+- **H38** · Três fichas sintéticas com exames, vacinas, consultas, compromissos e documentos de apresentação. O histórico deriva das medições da fixture. A PAP-Gest de apresentação funciona sem sessão privada, sem credencial ou QR. Compromissos de exemplo são somente leitura.
+- **H39** · DUM, ultrassom/exame e DPP conhecida com fonte, evidência e referência civil. A fonte adotada fica no evento de consulta. Foram verificados IG de 13s5d e 17s5d nas datas solicitadas e DPP de 30/04/2027. A idade de uma consulta já registrada usa o dia do evento. A idade prevista no calendário usa a data do compromisso.
+- **H40** · Composição das imagens recebidas aplicada às três etapas. Histórico somente leitura junto à datação e ajustes de fonte na etapa 2. Na etapa 3, medidas e Achados rápidos à esquerda, MEOWS e alertas à direita. Na etapa 4, faixa de datação somente leitura, avaliação/edema, SOAP completo e os três editores clínicos em painéis independentes. [Comparativo do Registro](REGISTRO-COMPARATIVO-VISUAL.md) · [Matriz de preservação](MATRIZ-CAMPOS-ANTES-DEPOIS.md)
+- **H41** · O painel usa a matriz `calculateDemoMeows` vigente. Diferencia zero, incompleto e não avaliado. Os pontos da ficha vêm de avaliações registradas. A etapa de captura só mostra uma curva na presença de avaliações registradas para aquela série.
+- **H42** · Os três fluxogramas apresentam conexões vetoriais, ramos e notas de figura, construção progressiva, pausa, retomada, reinício, visão completa, pan, zoom e tela cheia. Textos de conduta, doses e limiares estão nos recortes do PDF autorizado. As ambiguidades clínicas registradas na matriz aguardam revisão. [Matriz dos fluxogramas](MATRIZ-FLUXOGRAMAS-PDF.md)
+- **H43** · A Agenda reutiliza `SectionHero` e o SVG irmão com ícone de calendário. A geometria foi comparada com Registro e Atendimentos em 390 e 1440 px.
+
+As capturas desta entrega têm dados fictícios. As validações do laboratório rodaram em perfis exclusivos, com banco PostgreSQL local e comandos de reinício limitados ao perfil criado para a tarefa. Passaram 115 testes unitários, 14 verificações do laboratório e 39 cenários de navegador entre bateria, repetições e retomada. A primeira bateria registrou cinco falhas, com repetição bem-sucedida desses cenários. TypeScript, webpack, standalone e guard SQL passaram. O lint registrou quatro avisos preexistentes. [Checklist](CHECKLIST-RESULTADOS.md) · [Arquivos](evidence/arquivos.txt) · [Isolamento](SEGURANCA.md) · [Homologação WSL](HOMOLOGACAO-WSL.md) · [Homologação móvel](HOMOLOGACAO-MOBILE.md)

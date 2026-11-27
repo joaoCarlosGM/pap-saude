@@ -1,0 +1,76 @@
+Base de referência cfc1a534ca83825eff77f444b4428c83465705bf
+Código candidato 47b60cdb439569f9838d1df1c61f2fded8437b59
+
+$ node --import ./tests/protocols/load.mjs --test tests/vitrine-premium/*.test.mjs tests/protocols/*.test.mjs tests/pap-id/*.test.mjs
+
+✔ H39 three dating sources preserve provenance and use civil reference dates (23.697005ms)
+✔ H39 historic records retain the gestational age reported at encounter time (25.479504ms)
+✔ H38/H41 three isolated scenarios derive score and attendance chronology from recorded readings (4.427164ms)
+✔ H42 progressive reveal reaches every node, directed edge and bounded original-page crop (1.684758ms)
+ℹ tests 115
+ℹ suites 0
+ℹ pass 115
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 19493.506273
+
+$ PAP_H23_RESTART=1 tsx --test --test-concurrency=1 tests/pap-id/{longitudinal,database,final-registry,private-session,mobile-edge,card-exports,restart}.test.mts
+
+✔ the two faces keep an opaque QR in color and monochrome and export a valid PDF (3517.684132ms)
+✔ owned isolated PostgreSQL: issue/retry/concurrency/revoke/persistence and no duplicate identities (218.229462ms)
+✔ private card endpoint denies missing session, foreign origin, query traversal and unsupported methods (132.683866ms)
+✔ owned stop/status/start retains PostgreSQL history and volume data without rebuilding resources (2995.220841ms)
+✔ profile guards reject operator ports, tampered ownership and cleanup without exact confirmation (608.616841ms)
+✔ v2 additive upgrade preserves legacy rows; registration, encrypted credentials and versioned PDFs persist with audit (2326.148039ms)
+✔ PDF parser rejects corruption, oversized payload, JavaScript and unsupported embedded behavior (4.756489ms)
+✔ H23–H27 validam dados explícitos e H26/H27 preservam histórico e DPP em consulta vazia (14.130072ms)
+✔ H23–H28 PostgreSQL próprio: versões, autorização, Agenda e SOAP, PDF, idempotência e reinício real (4511.167853ms)
+✔ LAN edge rejects public/wildcard origins, operational routes and traversal without widening the allowlist (2.420059ms)
+✔ trusted HTTPS pairing, exact origin, Secure cookie, revocation, rate limiting and proxy header isolation (150.090581ms)
+✔ private backend accepts the exact TLS Origin only with its internal edge secret, never a forged proxy header (3.404596ms)
+✔ private consent expires fail-closed for original PDFs, credentials and patient documents, and cannot be silently renewed (56.761398ms)
+All private registry rows unchanged across owned database restart; exact PNG/PDF recovered.
+✔ owned PostgreSQL restart retains every registry row, new patient, recoverable card and exact private PDF bytes (4077.38791ms)
+ℹ tests 14
+ℹ suites 0
+ℹ pass 14
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 21389.594887
+
+$ npm run lint
+
+  51:6  warning  'Finalization' is defined but never used  @typescript-eslint/no-unused-vars
+   4:10  warning  'Prisma' is defined but never used                          @typescript-eslint/no-unused-vars
+  10:87  warning  'requireClinicalProvenanceScope' is defined but never used  @typescript-eslint/no-unused-vars
+  11:10  warning  'PERMISSIONS' is defined but never used                     @typescript-eslint/no-unused-vars
+✖ 4 problems (0 errors, 4 warnings)
+
+$ npm run build -- --webpack
+
+▲ Next.js 16.4.2 (webpack)
+✓ Compiled successfully in 26.0s
+  Finished TypeScript in 6.7s ...
+✓ Generating static pages using 4 workers (44/44) in 1872ms
+
+$ node tests/pap-id/production-boundary.mjs
+
+{"status":"PASS","candidateProductionBuild":true,"fixtureRoutesAbsent":true,"privateArtifactsAbsent":true,"privateHttpAndRscDenied":true,"clinicalApiDenied":true,"unauthenticatedShowcaseRedirectsToLogin":true,"databaseProvisioned":false,"ephemeralLoopback":true}
+
+$ node scripts/security/guard-sql-injection.mjs
+
+PASS no raw SQL execution outside the fingerprinted read-only row-lock helper
+PASS no direct node-postgres access in production source
+PASS Prisma query API plus closed, bound-parameter row locks; no Unsafe execution
+
+$ sha256sum docs/protocolos/documentos-originais/*.pdf
+
+f48c79881152eae50e25ebaf8d354f1219db7c8dd9d5c41b8cfb8ff2360337d2  docs/protocolos/documentos-originais/hemorragia-pos-parto.pdf
+5d4e5756b397ade0adc829cca8336eec86db14e955c22a528fa533a9a75f093b  docs/protocolos/documentos-originais/sepse-obstetrica.pdf
+63a0dc9b93bc3be45632bcf46649c92d7118884135ac2ff8a95aa565830804d1  docs/protocolos/documentos-originais/sindromes-hipertensivas-gestacao.pdf
+
+Escopo confirmado por git diff contra a base em src/app, src/server, prisma, workflows, deploy, dependências e PDFs originais.
