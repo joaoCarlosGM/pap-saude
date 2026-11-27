@@ -14,6 +14,7 @@
    - `docs/release/beta1-immersive-ux-h38-h42/REGISTRO-ETAPAS-2-3-4.md`
 
    - `docs/release/beta1-immersive-ux-h38-h42/REGISTRO-CONCEPT-DEFINITIVO-UI-UX.md` — **contrato visual mais detalhado das Etapas 2, 3 e 4; leitura prioritária e obrigatória**.
+   - **PRIORIDADE MÁXIMA PARA UI/UX DO REGISTRO:** `docs/release/beta1-immersive-ux-h38-h42/REGISTRO-FIDELIDADE-VISUAL-CONCEPTS-APROVADOS.md`. Este é o contrato comparado diretamente às três imagens; em diferenças de composição visual, este prevalece sobre os contratos genéricos, preservando todos os campos da branch. Não declarar PASS visual sem screenshots lado a lado com as imagens originais.
    - `docs/release/beta1-immersive-ux-h38-h42/FLUXOGRAMAS-CONSTRUCAO-PROGRESSIVA.md`
    - `docs/release/beta1-immersive-ux-h38-h42/AGENDA-THUMBNAIL-E-UI.md`
    - `docs/release/beta1-immersive-ux-h38-h42/CHECKLIST-VISUAL-E-REGRESSAO.md`
