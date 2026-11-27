@@ -14,7 +14,7 @@ test('support without backend is unavailable, never claims delivery',()=>{
  const html=renderToStaticMarkup(<HelpCard onTutorial={()=>{}}/>);assert.match(html,/disabled/);assert.match(html,/Integração de suporte em preparação/);assert.doesNotMatch(html,/chamado enviado/i);
 });
 test('all supplied hero assets contain only passive abstract SVG primitives',()=>{
- const files=readdirSync('public/brand/banners');assert.equal(files.length,15);
+ const files=readdirSync('public/brand/banners');assert.equal(files.length,16);
  for(const f of files){const svg=readFileSync('public/brand/banners/'+f,'utf8');assert.doesNotMatch(svg,/<(?:script|image|foreignObject|use|iframe)\b|onload=|href=|https?:\/\/(?!www.w3.org\/2000\/svg)/i);}
 });
 test('approved operational dashboard and synthetic KPI engine remain byte-identical',()=>{
