@@ -12,6 +12,8 @@
 2. Ler integralmente, **nesta ordem**:
    - `docs/release/beta1-immersive-ux-h38-h42/CONTRATO-VISUAL-APROVADO.md`
    - `docs/release/beta1-immersive-ux-h38-h42/REGISTRO-ETAPAS-2-3-4.md`
+
+   - `docs/release/beta1-immersive-ux-h38-h42/REGISTRO-CONCEPT-DEFINITIVO-UI-UX.md` — **contrato visual mais detalhado das Etapas 2, 3 e 4; leitura prioritária e obrigatória**.
    - `docs/release/beta1-immersive-ux-h38-h42/FLUXOGRAMAS-CONSTRUCAO-PROGRESSIVA.md`
    - `docs/release/beta1-immersive-ux-h38-h42/AGENDA-THUMBNAIL-E-UI.md`
    - `docs/release/beta1-immersive-ux-h38-h42/CHECKLIST-VISUAL-E-REGRESSAO.md`
