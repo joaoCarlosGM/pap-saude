@@ -37,3 +37,13 @@ test('auth denial, transport failure and missing confirmed tools digest remain F
  const digest=fixture({noDigest:true});await assert.rejects(publishBetaImages(base,digest.options),{code:'PUBLISHED_DIGEST_UNCONFIRMED'});assert.equal(digest.calls.filter(c=>c[0]==='push').length,1);
  assert.equal(sanitizedPublicationFailure(Error('private secret'),'push','pap-saude-admin-beta-tools'),'phase=push;package=pap-saude-admin-beta-tools;code=PUBLICATION_OPERATION_FAILED');
 });
+
+test('H46 exact release branch may publish validated immutable images',async()=>{
+ const f=fixture();
+ const digests=await publishBetaImages({
+  ...base,
+  GITHUB_REF:'refs/heads/feature/beta1-vitrine-release-h46'
+ },f.options);
+ assert.equal(digests.length,3);
+ assert.equal(f.calls.filter(c=>c[0]==='push').length,3);
+});

@@ -15,7 +15,10 @@ export async function publishBetaImages(env,options={}){
   const {fetcher=globalThis.fetch,exec=execFileSync,notice=console.log,recordFailure=privatePushFailure,append=appendFileSync}=options;
   const sha=env.GITHUB_SHA;let phase='context',activePackage='none';
   try{
-    if(env.GITHUB_ACTIONS!=='true'||env.GITHUB_REPOSITORY!==repository||env.GITHUB_REF!=='refs/heads/feature/admin-beta-isolated-deployment'||!/^([a-f0-9]{40})$/.test(sha||'')||env.PAP_BETA_VALIDATED_SHA!==sha||!env.GH_TOKEN||!env.GITHUB_ACTOR)throw failure('BETA_PUBLICATION_CONTEXT_REQUIRED');
+    if(env.GITHUB_ACTIONS!=='true'||env.GITHUB_REPOSITORY!==repository||![
+      'refs/heads/feature/admin-beta-isolated-deployment',
+      'refs/heads/feature/beta1-vitrine-release-h46'
+    ].includes(env.GITHUB_REF)||!/^([a-f0-9]{40})$/.test(sha||'')||env.PAP_BETA_VALIDATED_SHA!==sha||!env.GH_TOKEN||!env.GITHUB_ACTOR)throw failure('BETA_PUBLICATION_CONTEXT_REQUIRED');
     // Absence is mandatory for ALL new SHA tags, before ANY publication.
     for(const [kind,pkg]of pairs){
       phase='immutable-preflight';activePackage=pkg;
