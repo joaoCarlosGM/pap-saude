@@ -5,6 +5,9 @@ description: Implement exactly the approved UI concepts for PAP Saúde Registrat
 
 # PAP Saúde — Registro Premium sem perda de campos
 
+**Contrato visual normativo obrigatório:** `docs/release/beta1-immersive-ux-h38-h42/REGISTRO-CONCEPT-DEFINITIVO-UI-UX.md` (composição, ícones, dimensões, wireframes, todos os campos, estados, responsividade, checklists). Ler integralmente ANTES de editar JSX; este documento prevalece sobre resumos anteriores quando detalha o mesmo layout sem contrariar os dados reais.
+
+
 **Leitura obrigatória:** `docs/release/beta1-immersive-ux-h38-h42/REGISTRO-ETAPAS-2-3-4.md`, `CONTRATO-VISUAL-APROVADO.md`, `src/features/vitrine-premium/types/registration.ts`, `components/registro/steps/{PregnancyStep,VitalSignsStep,ObstetricStep}.tsx`, `components/registro/{ClinicalHistory,RecordFields,SoapNotes,RegistrationWizard}.tsx`, `lib/demo/{validation,data,meows}.ts`, `lib/registration-record.ts`, testes de registro existentes.
 
 ## Design fechado, não reinventar
