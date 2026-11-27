@@ -1,5 +1,7 @@
 name: PAP H46 Commercial Release
 on:
+  push:
+    branches: [feature/beta1-vitrine-release-h46]
   workflow_dispatch:
 permissions:
   contents: read
