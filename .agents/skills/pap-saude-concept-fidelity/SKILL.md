@@ -5,6 +5,9 @@ description: Enforce exact PAP Saúde approved visual concepts and existing UI s
 
 # PAP Saúde — fidelidade visual (contrato obrigatório)
 
+Para o Registro (etapas 2, 3 e 4), o contrato visual mais preciso é `docs/release/beta1-immersive-ux-h38-h42/REGISTRO-FIDELIDADE-VISUAL-CONCEPTS-APROVADOS.md`. **Leia antes do contrato genérico** e trate as diferenças entre imagens e campos da branch como adaptação de conteúdo, nunca licença para refazer o layout. A comparação pixel a pixel exige acesso às imagens originais no ambiente de execução.
+
+
 ## Ordem de precedência
 1. Arquivo original e comportamento funcional na branch de base; nenhum dado/validação/ação pode desaparecer.
 2. **Concept aprovado pelo operador**, descrito no documento `docs/release/beta1-immersive-ux-h38-h42/CONTRATO-VISUAL-APROVADO.md`.
