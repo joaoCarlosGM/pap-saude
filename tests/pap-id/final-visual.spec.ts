@@ -78,7 +78,7 @@ test('profile photo validates, crops, persists across refresh and resets with th
 test('informative encounter dialog closes by backdrop and keyboard, retains focus and identifies historical gaps',async({page})=>{
  await page.setViewportSize({width:1440,height:900})
  await page.goto('/vitrine/atendimentos')
- const trigger=page.getByRole('button',{name:'Ver detalhes',exact:true}).first()
+ const trigger=page.locator('tr[data-encounter-id="demo-juliana-pereira-legacy"]').getByRole('button',{name:'Ver detalhes',exact:true})
  await trigger.click()
  const dialog=page.getByRole('dialog',{name:'Detalhes do Atendimento'})
  await expect(dialog.getByText(/Sem histórico disponível/)).toBeVisible()

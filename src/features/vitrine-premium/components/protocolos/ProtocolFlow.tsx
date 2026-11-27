@@ -12,7 +12,7 @@ import {useOriginalDocument,usePrivateReviewAvailable} from './OriginalDocumentC
 import OriginalPdfViewer from './OriginalPdfViewer'
 import styles from './protocols.module.css'
 
-const mapWidth=770,cardWidth=195,cardHeight=68,rowHeight=108
+const mapWidth=770,cardWidth=208,cardHeight=94,rowHeight=132
 const motionQuery='(prefers-reduced-motion: reduce)'
 const reduceMotion=()=>window.matchMedia(motionQuery).matches
 const subscribeMotion=(refresh:()=>void)=>{
@@ -64,7 +64,7 @@ function FlowMap({slug,original,nodes}:{slug:string;original:typeof originalDocu
   const source=original.flow
   const mapHeight=lanes.length*rowHeight+20
   const sourceLabel=`${source.section} · digital ${source.digitalPage} / impressa ${source.printedPage} · v${source.version}`
-  const positions=new Map(lanes.flatMap((row,y)=>row.flatMap((node,x)=>node ? [[node,{x:24+x*263,y:22+y*rowHeight}] as const] : [])))
+  const positions=new Map(lanes.flatMap((row,y)=>row.flatMap((node,x)=>node ? [[node,{x:21+x*260,y:22+y*rowHeight}] as const] : [])))
   const selected=nodes.find(node=>node.id===path.at(-1))
   const complete=reduced || playback==='complete' || frame>=frames.length
   const visible=visibleFlow(frames,complete?frames.length:frame)

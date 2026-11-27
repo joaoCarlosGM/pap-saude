@@ -53,15 +53,14 @@
 .diagramEdge[data-note=true]{stroke-dasharray:.07 .045;opacity:.68}
 .diagramEdge[data-drawing=true]{animation:reveal-edge .28s ease backwards}
 .diagramLines [data-followed=true] .diagramEdge{stroke:#c41469;stroke-width:2.5}
-.diagramNode{position:absolute;display:flex;align-items:center;gap:.55rem;overflow-wrap:anywhere;padding:.65rem;border:1px solid var(--demo-neutral,#e2e8f0);border-radius:.75rem;background:var(--p-tint);color:var(--demo-fg,#172033);text-align:left;line-height:1.24;animation:reveal-node .28s ease backwards}
+.page .diagramNode{font-size:14px;font-weight:500;position:absolute;display:flex;align-items:center;gap:.55rem;overflow-wrap:anywhere;padding:.55rem;border:1px solid var(--demo-neutral,#e2e8f0);border-radius:.75rem;background:var(--p-tint);color:var(--demo-fg,#172033);text-align:left;line-height:1.28;animation:reveal-node .28s ease backwards}
 .diagramNode svg{flex:none;color:var(--demo-pink,#c41469)}
-.diagramNode[data-kind="decisão"]{border-color:var(--demo-pink,#c41469);font-weight:650}
+.page .diagramNode[data-kind="decisão"]{border-color:var(--demo-pink,#c41469);font-weight:650}
 .diagramNode[data-kind="referência"]{border-style:dashed;background:var(--demo-surface,#fff)}
 .diagramNode[data-focused=true]{outline:2px solid var(--demo-pink,#c41469);outline-offset:1px}
 .diagramNode[data-visited=true]{box-shadow:inset .2rem 0 #c41469}
 @keyframes reveal-edge{from{opacity:0;stroke-dasharray:1;stroke-dashoffset:1}to{opacity:1;stroke-dashoffset:0}}
 @keyframes reveal-node{from{opacity:0;transform:translateY(-4px)}}
-@media(max-width:767px){.diagramSpace{margin-left:0}}
 .panel:fullscreen .mapViewport{max-height:calc(100dvh - 16rem)}
 .figureViewport canvas{display:block;max-width:100%;height:auto;margin-inline:auto}
 .overviewSearch{margin-bottom:.2rem}
@@ -73,4 +72,4 @@
 }
 .flowSelection p { margin: .25rem 0 0; }
 
-@media(prefers-reduced-motion:reduce){.diagramNode,.diagramEdge[data-drawing=true]{animation:none}}
+@media(prefers-reduced-motion:reduce){.page .diagramNode,.diagramEdge[data-drawing=true]{animation:none}}

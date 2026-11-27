@@ -50,16 +50,16 @@ export default function VitalSignsStep({data,onChange,onNext,onBack,history}:Pro
                 <input id="oxygen-flow" inputMode="decimal" value={data.oxygenFlow||''} onChange={event=>onChange({oxygenFlow:event.target.value})} className={registrationField}/>
               </label>}
             </div>
-            <label className="grid content-start gap-2 text-sm" htmlFor="nivel-consciencia">Nível de Consciência
+            <div className="grid content-start gap-2 text-sm"><label htmlFor="nivel-consciencia">Nível de Consciência</label>
               <select id="nivel-consciencia" className={registrationField} value={data.nivelConsciencia} onChange={event=>onChange({nivelConsciencia:event.target.value})}>
                 <option value="">Selecione</option><option value="alerta">Alerta</option><option value="confusa">Confusa</option><option value="sonolenta">Sonolenta</option><option value="inconsciente">Inconsciente</option>
               </select>
-            </label>
-            <label className="grid gap-2 text-sm" htmlFor="debito-urinario">Débito Urinário
+            </div>
+            <div className="grid gap-2 text-sm"><label htmlFor="debito-urinario">Débito Urinário</label>
               <select id="debito-urinario" className={registrationField} value={data.debitoUrinario} onChange={event=>onChange({debitoUrinario:event.target.value})}>
                 <option value="">Selecione</option><option value="normal">Normal</option><option value="reduzido">Reduzido</option><option value="ausente">Ausente</option>
               </select>
-            </label>
+            </div>
             <ProteinuriaFields data={data} onChange={onChange}/>
           </div>
         </section>

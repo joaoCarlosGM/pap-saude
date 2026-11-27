@@ -29,6 +29,7 @@ test('H38/H41 presentation documents and calculated scenarios work without a pri
     await page.getByRole('button',{name:'Visualizar PAP-Gest do cenário'}).click()
     const card=page.getByRole('dialog',{name:'PAP-Gest do cenário'})
     await expect(card.locator('[data-presentation-card]')).toBeVisible()
+    if (evidence && index===0) await card.screenshot({path:evidence+'/pap-gest-apresentacao.png'})
     await card.getByRole('button',{name:'Verso',exact:true}).click()
     await expect(card).toContainText('sem QR ou credencial')
     await expect(card.locator('canvas,img')).toHaveCount(0)
@@ -62,7 +63,7 @@ test('H39/H40/H41 wizard preserves fields, dating sources, live score and saved 
   await field(page,'IG no exame (semanas)').fill('14')
   await field(page,'IG no exame (dias)').fill('4')
   await next(page).click()
-  await expect(page.getByRole('alert')).toContainText('tipo e a evidência')
+  await expect(page.getByRole('main').getByRole('alert')).toContainText('tipo e a evidência')
   await expect(field(page,'Evidência do exame')).toBeFocused()
   await field(page,'Evidência do exame').fill('Documento USG sintético')
   await expect(page.getByRole('region',{name:'Resultado da datação'})).toContainText('19 semanas e 4 dias')
@@ -71,6 +72,7 @@ test('H39/H40/H41 wizard preserves fields, dating sources, live score and saved 
   await field(page,'Origem da DPP').fill('Caderneta sintética')
   await field(page,'Justificativa ou documento').fill('Documento DPP sintético')
   await expect(page.getByRole('region',{name:'Resultado da datação'})).toContainText(formatDemoDate(due))
+  if (evidence) await page.locator('[data-motion-step]').screenshot({path:evidence+'/registro-datacao-preenchida.png'})
   await page.getByRole('button',{name:'Por DUM',exact:true}).click()
   await expect(field(page,'Data da Última Menstruação (DUM)')).toHaveValue(shiftCivilDay(today,-140))
   await page.getByRole('button',{name:'DPP conhecida',exact:true}).click()
@@ -104,6 +106,7 @@ test('H39/H40/H41 wizard preserves fields, dating sources, live score and saved 
   await expect(page.getByRole('button',{name:'Sim',exact:true})).toHaveAttribute('aria-pressed','true')
   await next(page).click()
   await expect(field(page,'Valor laboratorial')).toHaveValue('30,5')
+  if (evidence) await score.screenshot({path:evidence+'/registro-meows-calculado.png'})
   await next(page).click()
   await page.locator('#altura-uterina').fill('19');await page.locator('#bcf').fill('141');await page.locator('#peso-atual').fill('61')
   await field(page,'Movimentação Fetal').selectOption('presente');await field(page,'Sangramento Vaginal').selectOption('ausente')
@@ -141,9 +144,15 @@ for(const [index,slug] of ['sindromes-hipertensivas-gestacao','hemorragia-pos-pa
     await page.getByRole('button',{name:'Continuar',exact:true}).click()
     for(const percent of [25,50,75,100]) {
       await expect.poll(async()=>Number(await map.getAttribute('data-flow-frame')),{timeout:15000}).toBeGreaterThanOrEqual(Math.ceil(total*percent/100))
-      if(evidence) await map.screenshot({path:`${evidence}/protocolo-${index+1}-${percent}.png`,animations:'disabled'})
+      if (evidence) {
+        await map.evaluate((element,position)=>{
+          element.scrollTop=(element.scrollHeight-element.clientHeight)*Math.max(0,(position-25)/75)
+        },percent)
+        await map.screenshot({path:`${evidence}/protocolo-${index+1}-${percent}.png`,animations:'disabled'})
+      }
     }
     expect((await map.locator('[data-flow-node]').count())+(await map.locator('[data-flow-edge]').count())).toBe(total)
+    expect(await map.locator('[data-flow-node]').evaluateAll(cards=>cards.every(card=>card.scrollHeight<=card.clientHeight+1))).toBe(true)
     await page.getByRole('button',{name:'Reproduzir',exact:true}).click()
     await expect.poll(async()=>Number(await map.getAttribute('data-flow-frame'))).toBeGreaterThan(0)
     await page.getByRole('button',{name:'Pausar',exact:true}).click()
