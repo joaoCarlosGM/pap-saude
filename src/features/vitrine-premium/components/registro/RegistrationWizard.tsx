@@ -18,6 +18,20 @@ import ResultStep from "./steps/ResultStep"
 
 import type { RegistrationData } from "@/features/vitrine-premium/types/registration"
 
+const validationFields: ReadonlyArray<[RegExp,string]> = [
+  [/CPF/, '#cpf'], [/nome e sobrenome/, '#patient-name'], [/nascimento/, '#birth-date'],
+  [/DUM/, '#dum'], [/outra localização/, '#edema-other'],
+  [/paSistolica|^PAS:|Pressão sistólica/, '#pa-sistolica'], [/paDiastolica|^PAD:/, '#pa-diastolica'],
+  [/frequenciaCardiaca|^FC:/, '#frequencia-cardiaca'], [/frequenciaRespiratoria|^FR:/, '#frequencia-respiratoria'],
+  [/temperatura|^TEMPERATURA:/, '#temperatura'], [/saturacaoO2/, '#saturacao-o2'],
+  [/Fluxo suplementar|^OXIGENIO:/, '#oxygen-flow'], [/^CONSCIENCIA:/, '#nivel-consciencia'],
+  [/alturaUterina/, '#altura-uterina'], [/bcf/, '#bcf'], [/pesoAtual/, '#peso-atual'],
+  [/Partos e perdas/, '#pregnancyLosses'], [/Cesáreas/, '#cesareans'],
+  [/agente da alergia/, '#allergy-0-agent, select[aria-label="Investigação de alergias"]'],
+  [/nome de cada medicação/, 'input[id^="med-"][id$="-name"]'],
+  [/condição relatada/, '#condition-0, select[aria-label="Informação sobre comorbidades"]'],
+]
+
 const initialRegistration: RegistrationData = {
   cpf: "",
   nomeCompleto: "",
@@ -52,14 +66,25 @@ const initialRegistration: RegistrationData = {
 export default function RegistrationWizard() {
   const {save,patients}=useDemo()
   const errorRef=useRef<HTMLDivElement>(null)
+  const stepRef=useRef<HTMLDivElement>(null)
   const [errors,setErrors]=useState<string[]>([])
-  useEffect(()=>{if(errors.length)errorRef.current?.focus()},[errors])
+  const [currentStep,setCurrentStep]=useState(1)
+  useEffect(()=>{
+    if (!errors.length) return
+    const step=stepRef.current
+    const mapping=validationFields.find(([pattern])=>pattern.test(errors[0]))
+    const target=step?.querySelector<HTMLElement>('input:invalid, select:invalid, textarea:invalid') ??
+      (mapping && step?.querySelector<HTMLElement>(mapping[1])) ?? (currentStep===2 ? step?.querySelector<HTMLElement>('button') : null) ?? errorRef.current
+    const disclosure=target?.closest('details')
+    if (disclosure) disclosure.open=true
+    target?.focus({preventScroll:true})
+    target?.scrollIntoView({block:'nearest'})
+  },[errors,currentStep])
   const [saved,setSaved]=useState<false|'memory'|'private'>(false)
   const [saving,setSaving]=useState(false)
   const savingRef=useRef(false)
   const attempt=useRef({id:'',signature:''})
   const [identityEpoch,setIdentityEpoch]=useState(0)
-  const [currentStep, setCurrentStep] = useState(1)
 
   const [registration, setRegistration] =
     useState<RegistrationData>(initialRegistration)
@@ -70,6 +95,7 @@ export default function RegistrationWizard() {
   }
 
   const previousStep = () => {
+    setErrors([])
     setCurrentStep((step) => Math.max(step - 1, 1))
   }
 
@@ -114,7 +140,7 @@ export default function RegistrationWizard() {
         </p>}
         <Stepper currentStep={currentStep} />
 
-        <div key={`${currentStep}-${identityEpoch}`} data-motion-step>
+        <div ref={stepRef} key={`${currentStep}-${identityEpoch}`} data-motion-step>
         {currentStep === 1 && (
           <IdentificationStep
             onNew={restart}
@@ -136,6 +162,7 @@ export default function RegistrationWizard() {
 
         {currentStep === 3 && (
           <VitalSignsStep
+            history={patients.find(patient=>normalizeIdentifier(patient.cpf)===normalizeIdentifier(registration.cpf))?.encounters}
             data={registration}
             onChange={updateRegistration}
             onNext={nextStep}

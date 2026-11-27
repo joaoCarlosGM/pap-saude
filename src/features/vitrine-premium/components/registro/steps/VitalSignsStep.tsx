@@ -1,291 +1,86 @@
-"use client"
+'use client'
 
-import {ProteinuriaFields} from "../RecordFields"
+import {Activity,Droplet,Gauge,HeartPulse,Thermometer,Wind} from 'lucide-react'
+import {ProteinuriaFields} from '../RecordFields'
+import {RegistrationFooter,RegistrationHeading,registrationCard,registrationField} from '../RegistrationLayout'
+import {calculateDemoMeows} from '../../../lib/demo/meows'
+import {assessmentPresentation} from '../../../lib/demo/assessment-presentation'
+import AssessmentDetails from '../../demo/AssessmentDetails'
+import {formatRecordTime} from '../../../lib/registration-record'
+import type {Atendimento} from '../../../types/atendimento'
+import type {RegistrationData} from '../../../types/registration'
 
-import type { RegistrationData } from "@/features/vitrine-premium/types/registration"
+type Props = {data:RegistrationData;onChange:(value:Partial<RegistrationData>)=>void;onNext:()=>void;onBack:()=>void;history?:readonly Atendimento[]}
+const measures = [
+  ['paSistolica','pa-sistolica','PA Sistólica','mmHg',Gauge],
+  ['paDiastolica','pa-diastolica','PA Diastólica','mmHg',Gauge],
+  ['frequenciaCardiaca','frequencia-cardiaca','Frequência Cardíaca','bpm',HeartPulse],
+  ['frequenciaRespiratoria','frequencia-respiratoria','Frequência Respiratória','irpm',Wind],
+  ['temperatura','temperatura','Temperatura','°C',Thermometer],
+  ['saturacaoO2','saturacao-o2','Saturação O₂','%',Droplet],
+] as const
 
-type VitalSignsStepProps = {
-  data: RegistrationData
-  onChange: (data: Partial<RegistrationData>) => void
-  onNext: () => void
-  onBack: () => void
-}
-
-export default function VitalSignsStep({
-  data,
-  onChange,
-  onNext,
-  onBack,
-}: VitalSignsStepProps) {
-  return (
-    <div>
-      {/* Cabeçalho */}
-      <p className="mb-4 text-sm text-slate-500">Campos em branco significam não aferido. Nenhuma medição normal será criada automaticamente.</p>
-      <div className="mb-8">
-        <h2 className="text-xl font-semibold text-slate-900">
-          Sinais Vitais
-        </h2>
-
-        <p className="mt-1 text-sm text-slate-500">
-          Informe somente dados demonstrativos. PAP-MEOWS não homologado para uso assistencial; sem conduta automática.
-        </p>
-      </div>
-
-      <div className="space-y-6">
-        {/* Sinais vitais */}
-        <div className="grid gap-5 md:grid-cols-2">
-          {/* PA Sistólica */}
-          <div>
-            <label
-              htmlFor="pa-sistolica"
-              className="mb-2 block text-sm font-medium text-slate-700"
-            >
-              PA Sistólica <span className="text-pink-500">*</span>
-            </label>
-
+export default function VitalSignsStep({data,onChange,onNext,onBack,history}:Props) {
+  const result = calculateDemoMeows(data)
+  const trend = history?.filter(visit=>visit.assessmentSource==='PAP_MEOWS_DEMO'&&visit.score!==null).toSorted((a,b)=>a.dataHora.localeCompare(b.dataHora)).slice(-5) ?? []
+  return <div>
+    <RegistrationHeading icon={Activity} title="Sinais vitais da consulta">Campos em branco indicam medidas não aferidas.</RegistrationHeading>
+    <div className="grid items-start gap-4 lg:grid-cols-[2fr_1fr]">
+      <div className="grid min-w-0 gap-4">
+        <div className="grid grid-cols-1 gap-3 min-[370px]:grid-cols-2 md:grid-cols-3">
+          {measures.map(([field,id,label,unit,Icon])=><div key={field} className="min-w-0 rounded-2xl border border-slate-200 bg-white p-3">
+            <span className="mb-2 grid size-10 place-items-center rounded-lg bg-pink-50 text-[#C41469]"><Icon size={19} aria-hidden/></span>
+            <label htmlFor={id} className="mb-2 block text-sm font-medium text-slate-800">{label}</label>
             <div className="relative">
-              <input
-                id="pa-sistolica"
-                type="number"
-                value={data.paSistolica}
-                onChange={(event) =>
-                  onChange({
-                    paSistolica: event.target.value,
-                  })
-                }
-                placeholder="120"
-                className="h-11 w-full rounded-lg border border-slate-300 bg-white px-4 pr-16 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-pink-500 focus:ring-2 focus:ring-pink-100"
-              />
-
-              <span className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-xs text-slate-400">
-                mmHg
-              </span>
+              <input id={id} type={field==='temperatura'?'text':'number'} inputMode={field==='temperatura'?'decimal':'numeric'}
+                aria-describedby={id+'-unit'} value={data[field]} onChange={event=>onChange({[field]:event.target.value})} className={`${registrationField} pr-14`}/>
+              <span id={id+'-unit'} className="pointer-events-none absolute inset-y-0 right-2.5 flex items-center text-xs text-slate-600">{unit}</span>
             </div>
-          </div>
-
-          {/* PA Diastólica */}
-          <div>
-            <label
-              htmlFor="pa-diastolica"
-              className="mb-2 block text-sm font-medium text-slate-700"
-            >
-              PA Diastólica <span className="text-pink-500">*</span>
-            </label>
-
-            <div className="relative">
-              <input
-                id="pa-diastolica"
-                type="number"
-                value={data.paDiastolica}
-                onChange={(event) =>
-                  onChange({
-                    paDiastolica: event.target.value,
-                  })
-                }
-                placeholder="80"
-                className="h-11 w-full rounded-lg border border-slate-300 bg-white px-4 pr-16 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-pink-500 focus:ring-2 focus:ring-pink-100"
-              />
-
-              <span className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-xs text-slate-400">
-                mmHg
-              </span>
-            </div>
-          </div>
-
-          {/* Frequência Cardíaca */}
-          <div>
-            <label
-              htmlFor="frequencia-cardiaca"
-              className="mb-2 block text-sm font-medium text-slate-700"
-            >
-              Frequência Cardíaca <span className="text-pink-500">*</span>
-            </label>
-
-            <div className="relative">
-              <input
-                id="frequencia-cardiaca"
-                type="number"
-                value={data.frequenciaCardiaca}
-                onChange={(event) =>
-                  onChange({
-                    frequenciaCardiaca: event.target.value,
-                  })
-                }
-                placeholder="80"
-                className="h-11 w-full rounded-lg border border-slate-300 bg-white px-4 pr-14 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-pink-500 focus:ring-2 focus:ring-pink-100"
-              />
-
-              <span className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-xs text-slate-400">
-                bpm
-              </span>
-            </div>
-          </div>
-
-          {/* Frequência Respiratória */}
-          <div>
-            <label
-              htmlFor="frequencia-respiratoria"
-              className="mb-2 block text-sm font-medium text-slate-700"
-            >
-              Frequência Respiratória{" "}
-              <span className="text-pink-500">*</span>
-            </label>
-
-            <div className="relative">
-              <input
-                id="frequencia-respiratoria"
-                type="number"
-                value={data.frequenciaRespiratoria}
-                onChange={(event) =>
-                  onChange({
-                    frequenciaRespiratoria: event.target.value,
-                  })
-                }
-                placeholder="18"
-                className="h-11 w-full rounded-lg border border-slate-300 bg-white px-4 pr-14 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-pink-500 focus:ring-2 focus:ring-pink-100"
-              />
-
-              <span className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-xs text-slate-400">
-                irpm
-              </span>
-            </div>
-          </div>
-
-          {/* Temperatura */}
-          <div>
-            <label
-              htmlFor="temperatura"
-              className="mb-2 block text-sm font-medium text-slate-700"
-            >
-              Temperatura
-            </label>
-
-            <div className="relative">
-              <input
-                id="temperatura"
-                type="number"
-                step="0.1"
-                value={data.temperatura}
-                onChange={(event) =>
-                  onChange({
-                    temperatura: event.target.value,
-                  })
-                }
-                placeholder="36.5"
-                className="h-11 w-full rounded-lg border border-slate-300 bg-white px-4 pr-10 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-pink-500 focus:ring-2 focus:ring-pink-100"
-              />
-
-              <span className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-xs text-slate-400">
-                °C
-              </span>
-            </div>
-          </div>
-
-          {/* Saturação O2 */}
-          <div>
-            <label
-              htmlFor="saturacao-o2"
-              className="mb-2 block text-sm font-medium text-slate-700"
-            >
-              Saturação O₂
-            </label>
-
-            <div className="relative">
-              <input
-                id="saturacao-o2"
-                type="number"
-                value={data.saturacaoO2}
-                onChange={(event) =>
-                  onChange({
-                    saturacaoO2: event.target.value,
-                  })
-                }
-                placeholder="98"
-                className="h-11 w-full rounded-lg border border-slate-300 bg-white px-4 pr-10 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-pink-500 focus:ring-2 focus:ring-pink-100"
-              />
-
-              <span className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-xs text-slate-400">
-                %
-              </span>
-            </div>
-          </div>
-
-          <div><label htmlFor="oxygen-mode" className="mb-2 block text-sm font-medium text-slate-700">Situação de oxigenação</label><select id="oxygen-mode" value={data.oxygenMode||'unknown'} onChange={e=>onChange({oxygenMode:e.target.value as RegistrationData['oxygenMode'],oxygenFlow:''})} className="h-11 w-full rounded-lg border border-slate-300 bg-white px-4 text-sm"><option value="unknown">Desconhecido / não aferido</option><option value="air">Ar ambiente</option><option value="supplemental">Oxigênio suplementar</option></select>{data.oxygenMode==='supplemental'&&<label className="mt-3 block text-sm" htmlFor="oxygen-flow">Fluxo de O₂ (L/min)<input id="oxygen-flow" inputMode="decimal" value={data.oxygenFlow||''} onChange={e=>onChange({oxygenFlow:e.target.value})} className="mt-1 h-11 w-full rounded-lg border border-slate-300 px-4"/><span className="text-xs text-slate-500">Informe fluxo maior que zero. Ausência mantém a avaliação incompleta; valores não são arredondados.</span></label>}</div>
-          {/* Nível de Consciência */}
-          <div>
-            <label
-              htmlFor="nivel-consciencia"
-              className="mb-2 block text-sm font-medium text-slate-700"
-            >
-              Nível de Consciência
-            </label>
-
-            <select
-              id="nivel-consciencia"
-              value={data.nivelConsciencia}
-              onChange={(event) =>
-                onChange({
-                  nivelConsciencia: event.target.value,
-                })
-              }
-              className="h-11 w-full rounded-lg border border-slate-300 bg-white px-4 text-sm text-slate-900 outline-none transition focus:border-pink-500 focus:ring-2 focus:ring-pink-100"
-            >
-              <option value="">Selecione</option>
-              <option value="alerta">Alerta</option>
-              <option value="confusa">Confusa</option>
-              <option value="sonolenta">Sonolenta</option>
-              <option value="inconsciente">Inconsciente</option>
-            </select>
-          </div>
-
-          {/* Débito Urinário */}
-          <div>
-            <label
-              htmlFor="debito-urinario"
-              className="mb-2 block text-sm font-medium text-slate-700"
-            >
-              Débito Urinário
-            </label>
-
-            <select
-              id="debito-urinario"
-              value={data.debitoUrinario}
-              onChange={(event) =>
-                onChange({
-                  debitoUrinario: event.target.value,
-                })
-              }
-              className="h-11 w-full rounded-lg border border-slate-300 bg-white px-4 text-sm text-slate-900 outline-none transition focus:border-pink-500 focus:ring-2 focus:ring-pink-100"
-            >
-              <option value="">Selecione</option>
-              <option value="normal">Normal</option>
-              <option value="reduzido">Reduzido</option>
-              <option value="ausente">Ausente</option>
-            </select>
-          </div>
-
-          <ProteinuriaFields data={data} onChange={onChange}/>
+          </div>)}
         </div>
+        <section className={registrationCard} aria-labelledby="complementary-vitals">
+          <h3 id="complementary-vitals" className="mb-4 font-semibold">Avaliação complementar</h3>
+          <div className="grid gap-4 sm:grid-cols-2">
+            <div className="min-w-0">
+              <label htmlFor="oxygen-mode" className="mb-2 block text-sm font-medium">Situação de oxigenação</label>
+              <select id="oxygen-mode" className={registrationField} value={data.oxygenMode||'unknown'} onChange={event=>onChange({oxygenMode:event.target.value as RegistrationData['oxygenMode'],oxygenFlow:''})}>
+                <option value="unknown">Desconhecido / não aferido</option><option value="air">Ar ambiente</option><option value="supplemental">Oxigênio suplementar</option>
+              </select>
+              {data.oxygenMode==='supplemental'&&<label className="mt-3 grid gap-2 text-sm" htmlFor="oxygen-flow">Fluxo de O₂ (L/min)
+                <input id="oxygen-flow" inputMode="decimal" value={data.oxygenFlow||''} onChange={event=>onChange({oxygenFlow:event.target.value})} className={registrationField}/>
+              </label>}
+            </div>
+            <label className="grid content-start gap-2 text-sm" htmlFor="nivel-consciencia">Nível de Consciência
+              <select id="nivel-consciencia" className={registrationField} value={data.nivelConsciencia} onChange={event=>onChange({nivelConsciencia:event.target.value})}>
+                <option value="">Selecione</option><option value="alerta">Alerta</option><option value="confusa">Confusa</option><option value="sonolenta">Sonolenta</option><option value="inconsciente">Inconsciente</option>
+              </select>
+            </label>
+            <label className="grid gap-2 text-sm" htmlFor="debito-urinario">Débito Urinário
+              <select id="debito-urinario" className={registrationField} value={data.debitoUrinario} onChange={event=>onChange({debitoUrinario:event.target.value})}>
+                <option value="">Selecione</option><option value="normal">Normal</option><option value="reduzido">Reduzido</option><option value="ausente">Ausente</option>
+              </select>
+            </label>
+            <ProteinuriaFields data={data} onChange={onChange}/>
+          </div>
+        </section>
       </div>
-
-      {/* Footer */}
-      <div className="mt-10 flex items-center justify-between border-t border-slate-200 pt-6">
-        <button
-          type="button"
-          onClick={onBack}
-          className="rounded-lg border border-slate-300 bg-white px-5 py-2.5 text-sm font-medium text-slate-700 transition hover:bg-slate-50"
-        >
-          ← Voltar
-        </button>
-
-        <button
-          type="button"
-          onClick={onNext}
-          className="rounded-lg bg-pink-500 px-6 py-2.5 text-sm font-medium text-white transition hover:bg-pink-600"
-        >
-          Próximo →
-        </button>
-      </div>
+      <section className={registrationCard} aria-label="MEOWS da consulta" data-live-meows={result.status}>
+        <h3 className="font-semibold text-slate-900">MEOWS</h3>
+        <div className="mt-3 rounded-xl bg-pink-50 p-4" aria-live="polite">
+          <p className="text-3xl font-semibold text-pink-800">{result.score ?? '—'}</p>
+          <p className="text-sm font-medium text-slate-800">{result.status==='INCOMPLETO'?'Aguardando parâmetros':assessmentPresentation(result.classification).label}</p>
+          {result.missing.length>0&&<p className="mt-2 text-xs text-slate-600">{result.parameters.filter(item=>result.missing.includes(item.key)).map(item=>item.parameter).join(', ')}</p>}
+        </div>
+        {trend.length>0 && <div className="my-3 border-t border-slate-200 pt-3"><h4 className="text-sm font-medium">Avaliações registradas</h4>
+          {trend.length>1 && <svg viewBox="0 0 190 68" role="img" aria-label="Tendência das avaliações registradas" className="mt-2 w-full">
+            <path d="M8 7V60H182" fill="none" stroke="currentColor" className="text-slate-400"/>
+            <polyline points={trend.map((visit,index)=>`${10+index*170/(trend.length-1)},${58-visit.score!*48/Math.max(1,...trend.map(item=>item.score!))}`).join(' ')} stroke="#C41469" strokeWidth="3" fill="none"/>
+          </svg>}
+          <ol className="mt-2 grid gap-1 text-xs text-slate-600">{trend.map(visit=><li key={visit.id}>{formatRecordTime(visit.dataHora)} · {visit.score}</li>)}</ol>
+        </div>}
+        <details className="mt-3"><summary className="min-h-11 cursor-pointer content-center text-sm font-medium">Entender resultado</summary><AssessmentDetails result={result}/></details>
+      </section>
     </div>
-  )
+    <RegistrationFooter onBack={onBack} onNext={onNext}/>
+  </div>
 }

@@ -1,3 +1,4 @@
+import type {PregnancyDating} from "../lib/gestational-dating"
 import type { Atendimento } from "./atendimento"
 export type PatientRisk = Atendimento["classificacao"]
 
@@ -61,6 +62,7 @@ export type PatientDocument = {
 
 export type Patient = {
   agendaIdentity?: string
+  scenarioReference?: string
   id: string
   initials: string
   nome: string
@@ -72,6 +74,9 @@ export type Patient = {
   endereco: string
 
   pregnancy: {
+    anchor?: string
+    source?: PregnancyDating["source"]
+    reference?: string
     gestationalAge: string
     trimester: string
     dum: string

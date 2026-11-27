@@ -152,16 +152,22 @@ test('H36 percorre decisões e retornos nos três mapas e mantém a figura priva
   await authorize(page)
   await page.setViewportSize({width:390,height:900})
   const cases = [
-    {slug:'sindromes-hipertensivas-gestacao', title:/Critérios indicados/, edge:/Não · Atendimento conforme/, page:22},
-    {slug:'hemorragia-pos-parto', title:/Consultar causa · Trauma/, edge:/Voltar às causas/, page:32},
-    {slug:'sepse-obstetrica', title:/Reavaliação materna/, edge:/Estável/, page:15},
+    {slug:'sindromes-hipertensivas-gestacao', title:/Escala de alerta precoce/, via:/Critérios indicados/, edge:/Não · Atendimento conforme/, page:22},
+    {slug:'hemorragia-pos-parto', title:/Identificação da causa/, via:/Consultar causa · Trauma/, edge:/Voltar às causas/, page:32},
+    {slug:'sepse-obstetrica', title:/Reavalie · caixa/, via:/Reavaliação materna/, edge:/Estável/, page:15},
   ]
   for (const [index,item] of cases.entries()) {
     await page.goto('/vitrine/protocolos?protocolo='+item.slug+'&aba=fluxograma')
     const map = page.getByRole('region',{name:'Mapa navegável do fluxograma'})
     await map.getByRole('button',{name:item.title}).first().click()
-    await map.locator('[data-focused=true]').getByRole('button',{name:item.edge}).click()
+    const details=page.getByRole('region',{name:'Detalhes do nó'})
+    await details.getByRole('button',{name:item.via}).click()
+    await details.getByRole('button',{name:item.edge}).click()
     await expect(map.locator('[data-followed=true]')).toHaveCount(2)
+    await details.getByRole('button',{name:'Ver recorte da figura',exact:true}).click()
+    const crop=details.getByRole('img',{name:new RegExp('Recorte oficial da página '+item.page)})
+    await expect(crop).toHaveAttribute('data-pdf-rendered','true')
+    await details.getByRole('button',{name:'Fechar recorte',exact:true}).click()
     await page.getByRole('button',{name:'Ampliar zoom',exact:true}).click()
     await expect(page.getByLabel('Zoom do mapa')).toHaveText('125%')
     await map.focus()

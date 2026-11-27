@@ -1,8 +1,9 @@
 import {createHash} from 'node:crypto'
 import QRCode from 'qrcode'
 import sharp from 'sharp'
+import {unitCivilDay} from '../../src/features/vitrine-premium/lib/gestational-dating'
 import {initialDemo} from '../../src/features/vitrine-premium/lib/demo/data'
-import {DEMO_DATE, formatDemoDate} from '../../src/features/vitrine-premium/lib/demo/validation'
+import {formatDemoDate} from '../../src/features/vitrine-premium/lib/demo/validation'
 import type {DemoLedger} from '../../src/features/vitrine-premium/lib/pap-id'
 
 const escape = (text: string) => text.replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;')
@@ -12,13 +13,14 @@ const date = (value: string) => new Intl.DateTimeFormat('pt-BR', {
 
 export async function cardImage(ledger: DemoLedger, token: string) {
   const patient = ledger.patient
-  const fixture = 'patientId' in patient ? initialDemo().patients.find(entry => entry.id === patient.patientId) : undefined
-  const pregnancy = fixture?.obstetricHistory.pregnancies
-  const due = fixture?.pregnancy.dpp
   const credential = ledger.cards.find(card => card.hash === createHash('sha256').update(token).digest('hex'))
   if (!credential) throw new Error('CARD_NOT_FOUND')
   // The review issuer grants credentials for 24 hours, with both dates set by the same INSERT.
   const issuedAt = new Date(Date.parse(credential.expiresAt) - 86_400_000)
+  const fixture = 'patientId' in patient ? initialDemo(unitCivilDay(issuedAt)).patients.find(entry => entry.id === patient.patientId) : undefined
+  const pregnancy = fixture?.obstetricHistory.pregnancies
+  const due = fixture?.pregnancy.dpp
+
   const birth = new Date(patient.birthDate)
   const age = issuedAt.getUTCFullYear() - birth.getUTCFullYear() -
     Number(issuedAt.toISOString().slice(5, 10) < patient.birthDate.slice(5, 10))
@@ -64,7 +66,7 @@ export async function detailedCard(bytes: Buffer, patientId: string) {
   const dating = fixture?.pregnancy.gestationalAge
   const lines = [
     'Sem registro de alergias',
-    dating ? 'IG em ' + formatDemoDate(DEMO_DATE) + ': ' + dating : 'IG: não registrada',
+    dating ? 'IG em ' + formatDemoDate(fixture.pregnancy.reference ?? unitCivilDay()) + ': ' + dating : 'IG: não registrada',
     dating ? 'Fonte da IG: cadastro sintético inicial' : 'Sem data de referência para IG',
     'Queixa e MEOWS: sem registro verificável',
     'UBS de referência: não registrada',

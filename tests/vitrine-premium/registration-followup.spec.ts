@@ -26,7 +26,7 @@ test('cadastro em tela Android, medidas independentes, autoria da sessão e fech
   await page.locator('#birth-date').fill('1995-11-01')
   const next = page.getByRole('button',{name:'Próximo →',exact:true})
   await next.click()
-  await page.getByLabel('DUM desconhecida').check()
+  await page.getByRole('button',{name:'Por DUM',exact:true}).click();await page.getByLabel('DUM desconhecida').check()
   await next.click()
   const proteinuria = page.getByRole('combobox',{name:'Resultado qualitativo',exact:true})
   await expect(proteinuria).toHaveValue('')
@@ -66,6 +66,7 @@ test('cadastro em tela Android, medidas independentes, autoria da sessão e fech
     await page.getByText('Nova anotação SOAP',{exact:true}).scrollIntoViewIfNeeded()
     await page.screenshot({path:process.env.PAP_PROTOCOLS_EVIDENCE+'/registro-soap-390.png'})
   }
+  await page.getByText('Antecedentes obstétricos',{exact:true}).click()
   await page.getByLabel('Perdas gestacionais',{exact:true}).fill('1')
   await page.getByRole('button',{name:'Ver Resultado →'}).click()
   await page.getByRole('combobox',{name:'Conduta e encaminhamento',exact:true}).selectOption('ubs')

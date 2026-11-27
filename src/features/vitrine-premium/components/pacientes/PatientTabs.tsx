@@ -158,7 +158,7 @@ export default function PatientTabs({
         {activeTab === "exames" && (
           <>
             <LongitudinalPanel kinds={['pedido','resultado']}/>
-            {!!patient.exams.length && <h3 className="mb-2 text-sm font-medium">Exames ilustrativos da fixture</h3>}
+            {!!patient.exams.length && <h3 className="mb-2 text-sm font-medium">Exames do cenário</h3>}
             <PatientExams patient={patient}/>
           </>
         )}
@@ -166,7 +166,7 @@ export default function PatientTabs({
         {activeTab === "vacinacao" && (
           <>
             <LongitudinalPanel kinds={['vacina']} onSchedule={value => {open('agenda');setDraft(value)}}/>
-            {!!patient.vaccines.length && <h3 className="mb-2 text-sm font-medium">Doses ilustrativas da fixture</h3>}
+            {!!patient.vaccines.length && <h3 className="mb-2 text-sm font-medium">Doses do cenário</h3>}
             <PatientVaccines patient={patient}/>
           </>
         )}

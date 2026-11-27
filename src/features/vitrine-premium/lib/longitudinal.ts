@@ -1,6 +1,7 @@
 import type {MeowsResult} from '../types/meows'
 import {z} from 'zod'
-import {DEMO_DATE, pregnancyFrom} from './demo/validation'
+import {pregnancyFrom} from './demo/validation'
+import {unitCivilDay} from './gestational-dating'
 import {invalidSyntheticCpf} from './review-registry'
 import {demoAuthors} from './registration-record'
 
@@ -21,7 +22,13 @@ const soapContent = z.strictObject({
 }).refine(value => Object.values(value).some(Boolean), 'Preencha ao menos um campo SOAP.')
 
 const registrationField = z.string().max(3000)
+const dating = z.discriminatedUnion('source', [
+  z.strictObject({source:z.literal('dum')}),
+  z.strictObject({source:z.literal('ultrasound'), date:day, weeks:z.string().regex(/^\d{1,2}$/), days:z.string().regex(/^[0-6]$/), exam:short, evidence:short}),
+  z.strictObject({source:z.literal('due-date'), date:day, origin:short, evidence:short}),
+])
 export const chartRegistration = z.strictObject({
+  dating: dating.optional(),
   dumUnknown: z.boolean().optional(), primeiroAtendimento: z.boolean().nullable(), dum: z.union([day, z.literal('')]),
   allergyStatus: z.enum(['sim', 'nao', 'desconhecido']).optional(),
   allergies: z.array(z.strictObject({agent: registrationField, reaction: registrationField, notes: registrationField})).max(30).optional(),
@@ -65,9 +72,9 @@ export const chartData = z.discriminatedUnion('kind', [
     zip: z.string().regex(/^\d{5}-?\d{3}$/).optional(), source}),
   z.strictObject({kind: z.literal('identidade'), name: short.refine(name => name.split(/\s+/).length > 1).optional(),
     cpf: z.string().refine(invalidSyntheticCpf, 'Use 11 dígitos iniciados por 98 com verificador inválido.').optional(),
-    birthDate: day.refine(date => date >= '1900-01-01' && date < DEMO_DATE).optional(),
+    birthDate: day.refine(date => date >= '1900-01-01' && date < unitCivilDay()).optional(),
     cns: z.string().regex(/^DEMO-[A-Z0-9-]{3,25}$/, 'Use um identificador com prefixo DEMO-.').optional(),
-    dum: day.refine(date => !!pregnancyFrom(date), 'Informe DUM válida para a data da demonstração.').optional(), source}),
+    dum: day.refine(date => !!pregnancyFrom(date,unitCivilDay()), 'Informe DUM válida para a data atual da unidade.').optional(), source}),
   z.strictObject({kind: z.literal('medicacao'), name: short, dose: short.optional(), doseUnit: short.optional(), route: short.optional(),
     frequency: short.optional(), start: day.optional(), end: day.optional(), status: z.enum(['em_uso', 'suspensa', 'encerrada', 'desconhecida']),
     source: z.enum(['relato', 'registro_profissional', 'receita_anexada']), notes: note, ...attachment}),

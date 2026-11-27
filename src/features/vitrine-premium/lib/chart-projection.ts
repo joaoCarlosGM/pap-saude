@@ -1,15 +1,10 @@
 import {calculateDemoMeows} from './demo/meows'
-import {DEMO_DATE, pregnancyFrom} from './demo/validation'
+import {pregnancyAt,pregnancySnapshot,unitCivilDay} from './gestational-dating'
 import {professionals} from './demo/data'
 import type {ChartData, ChartEvent} from './longitudinal'
 import type {Patient} from '../types/paciente'
 import type {Atendimento} from '../types/atendimento'
 import type {SoapNote} from './registration-record'
-
-function pregnancy(dum: string): Patient['pregnancy'] | undefined {
-  const result = pregnancyFrom(dum)
-  return result && {dum, dpp:result.dueDate, gestationalAge:`${result.weeks}s ${result.days}d`, trimester:result.trimester} || undefined
-}
 
 export function integratedNotes(events: readonly ChartEvent[], encounterId: string, original?: readonly SoapNote[]): SoapNote[] {
   const notes = new Map(original?.map(note => [note.id,note]))
@@ -38,11 +33,24 @@ export function projectChart(patient: Patient, latest: readonly ChartEvent[]): P
   const inheritedMedications = new Map(patient.medications.map(item => [medicationKey(item),item]))
   let obstetricHistory = patient.obstetricHistory
   let historyStatus = patient.historyStatus
+  const today = unitCivilDay()
+  const identityEvent = latest.find(event => event.data.kind === 'identidade')
+  const correction = identity?.dum && identityEvent && pregnancySnapshot({dum:identity.dum},unitCivilDay(new Date(identityEvent.recordedAt)))
   let dating = patient.pregnancy
+  let datingDate = ''
   for (const event of visits) {
     if (event.data.kind !== 'consulta') continue
     const {record} = event.data
-    if (!record.dumUnknown && record.dum) dating = pregnancy(record.dum) ?? dating
+    const at = unitCivilDay(new Date(event.occurredAt))
+    if (correction && identityEvent && identityEvent.recordedAt > datingDate && identityEvent.recordedAt <= event.recordedAt) {
+      dating = correction
+      datingDate = identityEvent.recordedAt
+    }
+    const adopted = pregnancySnapshot(record,at)
+    if (adopted) {
+      dating = adopted
+      datingDate = event.recordedAt
+    }
     if (record.allergyStatus === 'sim') {
       for (const allergy of record.allergies ?? []) positiveAllergies.add([allergy.agent,allergy.reaction,allergy.notes].filter(Boolean).join(' — '))
     }
@@ -68,7 +76,7 @@ export function projectChart(patient: Patient, latest: readonly ChartEvent[]): P
     const assessment = event.assessment ?? calculateDemoMeows(registration)
     const visit: Atendimento = {
       id:event.entityId, dataHora:event.recordedAt, consultaNumero:encounters.length+1,
-      paciente:{id:patient.id,nome:name,idadeGestacional:dating.gestationalAge},
+      paciente:{id:patient.id,nome:name,idadeGestacional:dating.reference && dating.reference>at ? 'Desconhecida' : pregnancyAt(dating,at).gestationalAge},
       profissional:professionals[0], score:assessment.score, classificacao:assessment.classification,
       assessment, assessmentSource:'PAP_MEOWS_DEMO', registration,
     }
@@ -87,10 +95,10 @@ export function projectChart(patient: Patient, latest: readonly ChartEvent[]): P
   const last = encounters.at(-1)
   return {
     ...patient, nome:name, cpf:identity?.cpf ?? patient.cpf, sus:identity?.cns ?? patient.sus,
-    dataNascimento:birthDate, idade:identity?.birthDate ? Math.floor((Date.parse(DEMO_DATE)-Date.parse(birthDate))/31557600000) : patient.idade,
+    dataNascimento:birthDate, idade:identity?.birthDate ? Math.floor((Date.parse(today)-Date.parse(birthDate))/31557600000) : patient.idade,
     initials:identity?.name ? name.split(/\s+/).slice(0,2).map(word => word[0]).join('') : patient.initials,
     telefone:contact?.phone ?? patient.telefone, endereco:address || patient.endereco,
-    pregnancy:identity?.dum ? pregnancy(identity.dum) ?? dating : dating, allergies:[...new Set(allergies)], comorbidities:[...new Set(comorbidities)],
+    pregnancy:pregnancyAt(correction && identityEvent && identityEvent.recordedAt > datingDate ? correction : dating,today), allergies:[...new Set(allergies)], comorbidities:[...new Set(comorbidities)],
     medications:[...inheritedMedications.values()].filter(item =>
       !medRows.some(row => row.name.toLocaleLowerCase('pt-BR') === item.name.toLocaleLowerCase('pt-BR'))),
     historyStatus,obstetricHistory,

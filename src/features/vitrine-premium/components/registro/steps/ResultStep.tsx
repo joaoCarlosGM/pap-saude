@@ -1,5 +1,8 @@
 "use client"
 
+import {datingLabels,resolveDating,unitCivilDay} from "../../../lib/gestational-dating"
+import {formatDemoDate} from "../../../lib/demo/validation"
+import {SoapHistory} from "../SoapNotes"
 import {ClosureFields} from "../RecordFields"
 import {registrationDetails} from "../../../lib/registration-record"
 import AssessmentDetails from "@/features/vitrine-premium/components/demo/AssessmentDetails"
@@ -29,8 +32,12 @@ export default function ResultStep({
 }: ResultStepProps) {
   const result = calculateMeows(data)
   const details = registrationDetails(data)
+  const dating = resolveDating(data,unitCivilDay())
   const referralData: [string, string | undefined][] = [
-    ['Paciente', data.nomeCompleto], ['Data de nascimento', data.dataNascimento], ['DUM', data.dum], ['Pressão sistólica', data.paSistolica], ['Pressão diastólica', data.paDiastolica],
+    ['Paciente', data.nomeCompleto], ['Data de nascimento', data.dataNascimento], ['DUM', data.dumUnknown ? 'Desconhecida' : data.dum], ['Primeiro atendimento', data.primeiroAtendimento === null ? undefined : data.primeiroAtendimento ? 'Sim' : 'Não'],
+    ['Datação adotada', dating && `${datingLabels[dating.source]} · ${dating.weeks}s ${dating.days}d · DPP ${formatDemoDate(dating.dueDate)}` || undefined],
+    ['Procedência da datação', data.dating?.source==='ultrasound' ? `${data.dating.exam} · ${data.dating.evidence}` : data.dating?.source==='due-date' ? `${data.dating.origin} · ${data.dating.evidence}` : undefined],
+    ['Oxigenação', data.oxygenMode === 'supplemental' ? `Oxigênio suplementar${data.oxygenFlow ? ' · '+data.oxygenFlow+' L/min' : ''}` : data.oxygenMode === 'air' ? 'Ar ambiente' : undefined], ['Pressão sistólica', data.paSistolica], ['Pressão diastólica', data.paDiastolica],
     ['Frequência cardíaca', data.frequenciaCardiaca], ['Frequência respiratória', data.frequenciaRespiratoria],
     ['Temperatura', data.temperatura], ['Saturação de O₂', data.saturacaoO2], ['Nível de consciência', data.nivelConsciencia],
     ['Débito urinário', data.debitoUrinario], ['Proteinúria qualitativa', details.proteinuria],
@@ -94,6 +101,10 @@ export default function ResultStep({
             <dt className="font-medium">{label}</dt><dd className="break-words text-slate-600">{value}</dd>
           </div>)}
         </dl>
+        {(!!data.soapNotes?.length || data.observacoesProfissional.trim()) && <details className="mt-3">
+          <summary className="min-h-11 cursor-pointer content-center text-sm font-medium">Anotações do atendimento</summary>
+          <SoapHistory notes={data.soapNotes} legacy={data.observacoesProfissional}/>
+        </details>}
       </section>
       <button type="button" onClick={onBack} disabled={saved || saving} className="mt-4 min-h-11 rounded-lg border px-4 py-2 text-sm">Voltar para revisar</button>
       {/* FOOTER */}

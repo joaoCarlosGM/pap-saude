@@ -1,8 +1,9 @@
 'use client'
 import {useEffect,useRef,useState} from 'react'
 export type PdfViewerDocument={url:string;downloadUrl:string;pages:number;filename:string;bytes:number;version:string;sha256:string}
+import type {FigureCrop} from '../../lib/protocol-flow-layout'
 import styles from './protocols.module.css'
-export default function OriginalPdfViewer({document:source,initialPage=1,figureOnly=false}:{document:PdfViewerDocument;initialPage?:number;figureOnly?:boolean}){
+export default function OriginalPdfViewer({document:source,initialPage=1,figureOnly=false,crop}:{document:PdfViewerDocument;initialPage?:number;figureOnly?:boolean;crop?:FigureCrop}){
  const container=useRef<HTMLElement>(null)
  const canvas=useRef<HTMLCanvasElement>(null),[page,setPage]=useState(initialPage),[zoom,setZoom]=useState(1),[loading,setLoading]=useState(true),[error,setError]=useState(''),[notice,setNotice]=useState(''),[text,setText]=useState(''),[showText,setShowText]=useState(false)
  useEffect(()=>{
@@ -14,19 +15,22 @@ export default function OriginalPdfViewer({document:source,initialPage=1,figureO
     const loadingTask=pdfjs.getDocument({url:source.url,withCredentials:true,enableXfa:false,disableRange:true,disableStream:true,useSystemFonts:false})
     task=loadingTask;const pdf=await loadingTask.promise;if(disposed)return;if(pdf.numPages!==source.pages)throw new Error('PAGE_COUNT')
     const current=await pdf.getPage(page);if(disposed||!canvas.current)return
-    const viewport=current.getViewport({scale:1.05*zoom});canvas.current.width=viewport.width;canvas.current.height=viewport.height
-    render=current.render({canvas:canvas.current,viewport});await render.promise
+    const viewport=current.getViewport({scale:(crop ? 2 : 1.05)*zoom})
+    const [left,top,right,bottom] = crop ?? [0,0,1,1]
+    canvas.current.width=crop ? Math.ceil(viewport.width*(right-left)) : Math.floor(viewport.width)
+    canvas.current.height=crop ? Math.ceil(viewport.height*(bottom-top)) : Math.floor(viewport.height)
+    render=current.render({canvas:canvas.current,viewport,transform:crop ? [1,0,0,1,-left*viewport.width,-top*viewport.height] : undefined});await render.promise
     const content=await current.getTextContent();if(disposed)return
     setText(content.items.map(item=>'str' in item?item.str:'').join(' '));setLoading(false)
    }catch{if(!disposed){setError('Não foi possível abrir o PDF autorizado. A sessão pode ter expirado ou o documento estar indisponível. Reautorize a consulta local.');setLoading(false)}}
   }
   void draw();return()=>{disposed=true;render?.cancel();void task?.destroy()}
- },[source.url,source.pages,page,zoom])
+ },[source.url,source.pages,page,zoom,crop])
  function changePage(value:number){setLoading(true);setError('');setPage(value)}
  if(figureOnly)return <div className={styles.figureViewport} aria-busy={!error&&loading}>
   {loading&&!error&&<p role="status">Carregando figura original…</p>}
   {error&&<p role="alert">{error}</p>}
-  <canvas ref={canvas} aria-label={`Figura integral da página ${page} de ${source.filename}`} role="img" data-pdf-rendered={!loading&&!error} hidden={!!error}/>
+  <canvas ref={canvas} aria-label={`${crop ? 'Recorte oficial' : 'Figura integral'} da página ${page} de ${source.filename}`} role="img" data-pdf-rendered={!loading&&!error} hidden={!!error}/>
  </div>
  return <section ref={container} className={styles.panel} data-original-pdf onKeyDownCapture={event=>{if(event.key==='Escape'&&document.fullscreenElement===container.current){event.preventDefault();event.stopPropagation();void document.exitFullscreen().catch(()=>setNotice('Use o botão de tela cheia para sair.'))}}}>
   <h2>Documento original</h2>

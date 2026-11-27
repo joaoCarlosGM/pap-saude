@@ -10,6 +10,7 @@ import {session} from '../../scripts/private-review/documents'
 import {chartData,chartRegistration,latestChartEvents,type ChartData,type ChartCommand} from '../../src/features/vitrine-premium/lib/longitudinal'
 import {invalidSyntheticCpf} from '../../src/features/vitrine-premium/lib/review-registry'
 import {initialDemo,saveDemo} from '../../src/features/vitrine-premium/lib/demo/data'
+import {shiftCivilDay,unitCivilDay} from '../../src/features/vitrine-premium/lib/gestational-dating'
 import {syntheticPdf} from './synthetic-pdf'
 
 const registration = {
@@ -151,8 +152,15 @@ test('H23–H28 PostgreSQL próprio: versões, autorização, Agenda e SOAP, PDF
     assert.notEqual(visit.data.kind==='consulta' && visit.data.record.soapNotes?.[0].recordedAt,'2020-01-01T00:00:00.000Z')
     const completeRecord={...registration,paSistolica:'120',paDiastolica:'75',frequenciaCardiaca:'78',
       frequenciaRespiratoria:'16',temperatura:'36.5',oxygenMode:'air' as const,nivelConsciencia:'alerta'}
-    const zero=await write(command({kind:'consulta',record:completeRecord}))
-    const critical=await write(command({kind:'consulta',record:{...completeRecord,paSistolica:'160'}}))
+    const today=unitCivilDay()
+    const ultrasound={source:'ultrasound' as const, date:shiftCivilDay(today,-42),weeks:'12',days:'2',exam:'Ultrassom sintético',evidence:'US-001'}
+    const known={source:'due-date' as const,date:shiftCivilDay(today,153),origin:'Documento sintético',evidence:'DPP-002'}
+    const zero=await write(command({kind:'consulta',record:{...completeRecord,dating:ultrasound}}))
+    const critical=await write(command({kind:'consulta',record:{...completeRecord,paSistolica:'160',dating:known}}))
+    assert.deepEqual(zero.data.kind==='consulta'&&zero.data.record.dating,ultrasound)
+    assert.deepEqual(critical.data.kind==='consulta'&&critical.data.record.dating,known)
+    await assert.rejects(write(command({kind:'consulta',record:{...completeRecord,dating:{...ultrasound,date:shiftCivilDay(today,1)}}})),/INVALID_REGISTRATION/)
+
     assert.equal(zero.assessment?.score,0)
     assert.equal(critical.assessment?.score,3)
     const added=await write(command({kind:'soap',encounterId:visit.entityId,author:'medicina',category:'Adulterada',content:forged}))

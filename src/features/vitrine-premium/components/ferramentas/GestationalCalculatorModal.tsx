@@ -5,7 +5,8 @@ import {
   useState,
 } from "react"
 
-import { pregnancyFrom, DEMO_DATE } from "@/features/vitrine-premium/lib/demo/validation"
+import {unitCivilDay} from "@/features/vitrine-premium/lib/gestational-dating"
+import { pregnancyFrom } from "@/features/vitrine-premium/lib/demo/validation"
 import Modal from "@/features/vitrine-premium/components/ui/Modal"
 import { Button } from "@/features/vitrine-premium/components/ui/button"
 
@@ -22,7 +23,8 @@ export default function GestationalCalculatorModal({
   const [dum, setDum] =
     useState("")
 
-  const calculation=useMemo(()=>{const g=pregnancyFrom(dum);return g?{...g,dpp:new Date(g.dueDate+'T12:00:00Z')}:null},[dum])
+  const today=unitCivilDay()
+  const calculation=useMemo(()=>{const g=pregnancyFrom(dum,today);return g?{...g,dpp:new Date(g.dueDate+'T12:00:00Z')}:null},[dum,today])
 
   return (
     <Modal
@@ -61,7 +63,7 @@ export default function GestationalCalculatorModal({
                 event.target.value,
               )
             }
-            max={DEMO_DATE}
+            max={today}
             className="
               h-11
               w-full

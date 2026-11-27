@@ -1,6 +1,8 @@
+import type {PregnancyDating} from "../lib/gestational-dating"
 import type {EdemaProvenance, LabProteinuria, SoapNote} from "../lib/registration-record"
 
 export type RegistrationData = {
+  dating?: PregnancyDating
   dumUnknown?: boolean
   allergyStatus?: "sim" | "nao" | "desconhecido"
   allergies?: { agent: string; reaction: string; notes: string }[]

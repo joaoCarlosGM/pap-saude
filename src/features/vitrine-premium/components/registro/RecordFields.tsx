@@ -38,10 +38,10 @@ export function ProteinuriaFields({data, onChange}: Props) {
       Registrar resultado laboratorial quantitativo
     </label>
     {lab && <div className="grid gap-3 sm:grid-cols-2">
-      <Input label="Valor laboratorial" inputMode="decimal" className="min-h-11 text-base" maxLength={24} value={lab.value} onChange={event => onChange({proteinuriaLab: {...lab, value: event.target.value}})}/>
-      <Input label="Unidade laboratorial" placeholder="Ex.: mg/24 h" className="min-h-11 text-base" maxLength={40} value={lab.unit} onChange={event => onChange({proteinuriaLab: {...lab, unit: event.target.value}})}/>
-      <Input label="Data do exame" type="date" className="min-h-11 text-base" value={lab.date} onChange={event => onChange({proteinuriaLab: {...lab, date: event.target.value}})}/>
-      <Input label="Método laboratorial" className="min-h-11 text-base" maxLength={100} value={lab.method} onChange={event => onChange({proteinuriaLab: {...lab, method: event.target.value}})}/>
+      <Input required label="Valor laboratorial" inputMode="decimal" className="min-h-11 text-base" maxLength={24} value={lab.value} onChange={event => onChange({proteinuriaLab: {...lab, value: event.target.value}})}/>
+      <Input required label="Unidade laboratorial" placeholder="Ex.: mg/24 h" className="min-h-11 text-base" maxLength={40} value={lab.unit} onChange={event => onChange({proteinuriaLab: {...lab, unit: event.target.value}})}/>
+      <Input required label="Data do exame" type="date" className="min-h-11 text-base" value={lab.date} onChange={event => onChange({proteinuriaLab: {...lab, date: event.target.value}})}/>
+      <Input required label="Método laboratorial" className="min-h-11 text-base" maxLength={100} value={lab.method} onChange={event => onChange({proteinuriaLab: {...lab, method: event.target.value}})}/>
     </div>}
   </fieldset>
 }
@@ -66,7 +66,7 @@ export function EdemaFields({data, onChange}: Props) {
         })}/>{label}
       </label>)}
     </fieldset>
-    {locations.includes('outro') && <Input label="Outra localização do edema" className="min-h-11 text-base" maxLength={150}
+    {locations.includes('outro') && <Input required id="edema-other" label="Outra localização do edema" className="min-h-11 text-base" maxLength={150}
       value={data.edemaOtherLocation ?? ''} onChange={event => onChange({edemaOtherLocation: event.target.value})}/>}</>}
   </fieldset>
 }

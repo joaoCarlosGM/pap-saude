@@ -1,6 +1,8 @@
 "use client"
 
 import {useState} from "react"
+import {ClipboardList} from "lucide-react"
+import {RegistrationFooter,RegistrationHeading,registrationCard} from "../RegistrationLayout"
 import Input from "../../ui/Input"
 import {EdemaFields} from "../RecordFields"
 import {SoapEditor, SoapHistory} from "../SoapNotes"
@@ -32,21 +34,12 @@ export default function ObstetricStep({
   }
   return (
     <div>
-      {/* Cabeçalho */}
-      <div className="mb-8">
-        <h2 className="text-xl font-semibold text-slate-900">
-          Dados Obstétricos e Clínicos
-        </h2>
-
-        <p className="mt-1 text-sm text-slate-500">
-          Informe os dados obstétricos e clínicos relevantes para o
-          atendimento.
-        </p>
-      </div>
-
-      <div className="space-y-6">
-        {/* Dados obstétricos */}
-        <div className="grid gap-5 md:grid-cols-2">
+      <RegistrationHeading icon={ClipboardList} title="Dados Obstétricos e Clínicos"/>
+      <div className="space-y-4">
+        <div className="grid items-start gap-4 lg:grid-cols-[55fr_45fr]">
+          <section className={registrationCard}>
+            <h3 className="mb-4 font-semibold">Avaliação obstétrica</h3>
+            <div className="grid gap-4 sm:grid-cols-2">
           {/* Altura uterina */}
           <div>
             <label
@@ -67,7 +60,6 @@ export default function ObstetricStep({
                     alturaUterina: event.target.value,
                   })
                 }
-                placeholder="32"
                 className="h-11 w-full rounded-lg border border-slate-300 bg-white px-4 pr-12 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-pink-500 focus:ring-2 focus:ring-pink-100"
               />
 
@@ -96,7 +88,6 @@ export default function ObstetricStep({
                     bcf: event.target.value,
                   })
                 }
-                placeholder="140"
                 className="h-11 w-full rounded-lg border border-slate-300 bg-white px-4 pr-14 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-pink-500 focus:ring-2 focus:ring-pink-100"
               />
 
@@ -179,7 +170,6 @@ export default function ObstetricStep({
                     pesoAtual: event.target.value,
                   })
                 }
-                placeholder="65.5"
                 className="h-11 w-full rounded-lg border border-slate-300 bg-white px-4 pr-10 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-pink-500 focus:ring-2 focus:ring-pink-100"
               />
 
@@ -188,11 +178,12 @@ export default function ObstetricStep({
               </span>
             </div>
           </div>
+            </div>
+          </section>
+          <section className={registrationCard}><EdemaFields data={data} onChange={onChange}/></section>
         </div>
-
-        <EdemaFields data={data} onChange={onChange}/>
-        <section className="grid gap-3 border-t border-slate-200 pt-5">
-          <h3 className="font-semibold">Registro Multiprofissional</h3>
+        <section className={`${registrationCard} grid gap-3`}>
+          <h3 className="font-semibold">Registro clínico do atendimento</h3>
           <Input id="queixas-principais" label="Queixa principal" value={data.queixasPrincipais} maxLength={200}
             className="min-h-11 text-base" onChange={event => onChange({queixasPrincipais: event.target.value})}/>
           <SoapEditor onPendingChange={pending => {setPendingNote(pending); if (!pending) setNoteError(false)}}
@@ -203,24 +194,7 @@ export default function ObstetricStep({
       </div>
 
       <ClinicalHistory data={data} onChange={onChange} />
-      {/* Footer */}
-      <div className="mt-8 flex flex-wrap gap-3 items-center justify-between border-t border-slate-200 pt-6">
-        <button
-          type="button"
-          onClick={() => navigate(onBack)}
-          className="rounded-lg border border-slate-300 bg-white px-5 py-2.5 text-sm font-medium text-slate-700 transition hover:bg-slate-50"
-        >
-          ← Voltar
-        </button>
-
-        <button
-          type="button"
-          onClick={() => navigate(onNext)}
-          className="rounded-lg bg-pink-500 px-6 py-2.5 text-sm font-medium text-white transition hover:bg-pink-600"
-        >
-          Ver Resultado →
-        </button>
-      </div>
+      <RegistrationFooter onBack={() => navigate(onBack)} onNext={() => navigate(onNext)} next="Ver Resultado →"/>
     </div>
   )
 }

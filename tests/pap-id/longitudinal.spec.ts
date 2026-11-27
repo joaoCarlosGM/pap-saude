@@ -199,7 +199,7 @@ test('H23–H28 jornada desktop: cadastro, prontuário, PDF, Registro, SOAP, Age
   await page.locator('#patient-name').fill(name)
   await page.locator('#birth-date').fill('1998-08-14')
   await button(page,'Próximo →').click()
-  await page.getByLabel('DUM desconhecida').check()
+  await page.getByRole('button',{name:'Por DUM',exact:true}).click();await page.getByLabel('DUM desconhecida').check()
   await button(page,'Próximo →').click()
   await button(page,'Próximo →').click()
   await page.getByLabel('Queixa principal',{exact:true}).fill('Consulta fictícia sem atualização de antecedentes')

@@ -4,6 +4,7 @@ import {useId, useMemo, useState} from 'react'
 import {CalendarDays, ChevronLeft, ChevronRight, FlaskConical, Stethoscope, Syringe} from 'lucide-react'
 import {assessmentFlags, completeAssessments, recordedAssessments} from '../../lib/chart-assessment'
 import {assessmentPresentation} from '../../lib/demo/assessment-presentation'
+import {datingLabels,pregnancyAt} from '../../lib/gestational-dating'
 import {formatDemoDate} from '../../lib/demo/validation'
 import {appointmentKinds, appointmentStatuses, describeSlot, isPending, nextAppointments, useAgendaClock} from '../../lib/demo-agenda'
 import {formatRecordTime} from '../../lib/registration-record'
@@ -47,21 +48,22 @@ function ScoreTrend({visits}: {visits: Atendimento[]}) {
   </svg>
 }
 
-function AppointmentItem({event, open}: {event: PatientAppointment; open: (id: string) => void}) {
+function AppointmentItem({event, open,pregnancy}: {event: PatientAppointment; open: (id: string) => void; pregnancy?:Patient['pregnancy']}) {
   const {Icon,color} = category(event.kind)
+  const age = event.slot && pregnancy && pregnancyAt(pregnancy,event.slot.date).gestationalAge
   return <li className="min-w-0">
     <button type="button" onClick={() => open(event.id)} className="flex min-h-11 w-full min-w-0 items-start gap-2 rounded-lg px-1 py-2 text-left hover:bg-slate-50 focus-visible:outline-pink-600">
       <span className={`mt-0.5 grid h-6 w-6 shrink-0 place-items-center rounded-md text-white ${color}`}><Icon size={13} aria-hidden/></span>
       <span className="min-w-0">
         <span className="block break-words text-sm font-medium text-slate-900">{appointmentKinds[event.kind]}</span>
         <span className="block break-words text-xs text-slate-600">{describeSlot(event.slot)} · {appointmentStatuses[event.status]}</span>
-        <span className="block text-xs text-slate-600">{event.origin}</span>
+        <span className="block text-xs text-slate-600">{event.origin}{age && age!=='Desconhecida' ? ' · IG prevista '+age : ''}</span>
       </span>
     </button>
   </li>
 }
 
-function Calendar({items, now, open}: {items: PatientAppointment[]; now: string; open: (id:string) => void}) {
+function Calendar({items, now, open,pregnancy}: {items: PatientAppointment[]; now: string; open: (id:string) => void; pregnancy:Patient['pregnancy']}) {
   const [month,setMonth] = useState(() => now.slice(0,7)+'-01')
   const [selected,setSelected] = useState(now)
   const date = new Date(month+'T12:00:00Z')
@@ -109,7 +111,7 @@ function Calendar({items, now, open}: {items: PatientAppointment[]; now: string;
     </ul>
     <div className="mt-3 border-t border-slate-200 pt-2">
       <p className="text-xs font-medium">{formatDemoDate(selected)}</p>
-      {events.has(selected) ? <ul>{events.get(selected)!.map(event => <AppointmentItem key={event.id} event={event} open={open}/>)}</ul> :
+      {events.has(selected) ? <ul>{events.get(selected)!.map(event => <AppointmentItem key={event.id} event={event} open={open} pregnancy={pregnancy}/>)}</ul> :
         <p className="mt-1 text-xs text-slate-600">Nenhum compromisso nesta data.</p>}
     </div>
   </section>
@@ -139,9 +141,9 @@ export default function PatientSummary({patient, onOpenAgenda}: {patient:Patient
             <p className={muted}>{formatRecordTime(score.dataHora)}</p>
             {delta !== undefined && <p className="text-xs text-slate-600">{delta===0 ? 'Sem variação entre os dois últimos scores' : `Variação de ${delta>0?'+':''}${delta} no score`}</p>}
           </div>
-        </div> : <p data-current-meows className="mt-4 text-lg font-medium">Não avaliado</p>}
+        </div> : <p data-current-meows className="mt-4 text-lg font-medium">{latest ? assessmentPresentation(latest.classificacao).label : 'Não avaliado'}</p>}
         {latest && latest.assessment?.status !== 'CALCULADO' && <p className="mt-2 text-xs text-slate-600">Último registro {assessmentPresentation(latest.classificacao).label.toLocaleLowerCase('pt-BR')} · {formatRecordTime(latest.dataHora)}</p>}
-        <p className="mt-3 text-xs text-slate-600">PAP-MEOWS demonstrativo · Uso assistencial não homologado.</p>
+        <details className="mt-2 text-xs text-slate-600"><summary className="min-h-11 cursor-pointer content-center">Origem do cálculo</summary><p>PAP-MEOWS v1.0, calculado a partir das medidas da consulta. Uso assistencial não homologado.</p></details>
       </section>
       <section className={panel}>
         <h2 className={title}>Tendência MEOWS</h2>
@@ -150,17 +152,17 @@ export default function PatientSummary({patient, onOpenAgenda}: {patient:Patient
       </section>
     </div>
     <div className="grid min-w-0 gap-4 md:grid-cols-2 xl:grid-cols-[minmax(0,1.25fr)_minmax(0,1fr)_minmax(0,1fr)]">
-      <Calendar items={items} now={civil.format(new Date(now))} open={onOpenAgenda}/>
+      <Calendar items={items} now={civil.format(new Date(now))} open={onOpenAgenda} pregnancy={patient.pregnancy}/>
       <section className={panel}>
         <h2 className={title}>Próximos compromissos</h2>
-        {next.length ? <ul className="mt-2 divide-y divide-slate-100">{next.map(event => <AppointmentItem key={event.id} event={event} open={onOpenAgenda}/>)}</ul>
+        {next.length ? <ul className="mt-2 divide-y divide-slate-100">{next.map(event => <AppointmentItem key={event.id} event={event} open={onOpenAgenda} pregnancy={patient.pregnancy}/>)}</ul>
           : <p className="mt-3 text-sm text-slate-600">Nenhum compromisso futuro registrado.</p>}
         <Button type="button" variant="ghost" onClick={() => onOpenAgenda()} className="mt-2 min-h-11 text-pink-700">Abrir agenda da paciente</Button>
       </section>
       <section className={panel}>
         <h2 className={title}>Resumo assistencial</h2>
         <dl className="mt-3 grid gap-3 text-sm">
-          <div><dt className="font-medium">DPP</dt><dd className="text-slate-600">{patient.pregnancy.dpp ? formatDemoDate(patient.pregnancy.dpp)+' · DUM '+formatDemoDate(patient.pregnancy.dum) : 'Datação não informada'}</dd></div>
+          <div><dt className="font-medium">DPP</dt><dd className="text-slate-600">{patient.pregnancy.dpp ? formatDemoDate(patient.pregnancy.dpp)+' · '+(patient.pregnancy.source && patient.pregnancy.source!=='dum' ? datingLabels[patient.pregnancy.source] : 'DUM '+formatDemoDate(patient.pregnancy.dum)) : 'Datação não informada'}</dd></div>
           <div><dt className="font-medium">Última avaliação</dt><dd className="text-slate-600">{latest ? formatRecordTime(latest.dataHora)+' · '+assessmentPresentation(latest.classificacao).label : 'Sem avaliação registrada'}</dd></div>
           <div><dt className="font-medium">Alergias conhecidas</dt><dd className="break-words text-slate-600">{patient.allergies.join(' · ') || 'Sem informação registrada'}</dd></div>
           <div><dt className="font-medium">Medicações em uso</dt><dd className="break-words text-slate-600">{activeMeds.join(' · ') || 'Sem registro longitudinal de uso atual'}</dd></div>

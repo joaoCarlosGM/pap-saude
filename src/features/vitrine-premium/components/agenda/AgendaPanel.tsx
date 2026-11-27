@@ -1,5 +1,6 @@
 'use client'
 
+import {scenarioAppointments} from '../../lib/scenario-appointments'
 import {useId, useRef, useState, type FormEvent} from 'react'
 import Link from 'next/link'
 import {Eye} from 'lucide-react'
@@ -96,8 +97,8 @@ function AppointmentForm({patients, target, actor, unit, onCreated, onClose, dra
   </FormDialog>
 }
 
-function AppointmentCard({item, actor, onUpdate, showPatient, linkedPatientId, persist, vaccineId, onClose}: {
-  item: Appointment; actor: string; onUpdate: (message: string) => void; showPatient: boolean; linkedPatientId?: string; persist?: (command: ChartCommand) => Promise<void>; vaccineId?: string; onClose: () => void
+function AppointmentCard({readOnly,item, actor, onUpdate, showPatient, linkedPatientId, persist, vaccineId, onClose}: {
+  readOnly?:boolean; item: Appointment; actor: string; onUpdate: (message: string) => void; showPatient: boolean; linkedPatientId?: string; persist?: (command: ChartCommand) => Promise<void>; vaccineId?: string; onClose: () => void
 }) {
   const id = useId()
   const [slotDirty,setSlotDirty] = useState(false)
@@ -108,7 +109,7 @@ function AppointmentCard({item, actor, onUpdate, showPatient, linkedPatientId, p
   const [busy, setBusy] = useState(false)
   const attempt = useRef<{key:string;command:ChartCommand} | undefined>(undefined)
   const first = item.events[0]
-  const statuses = availableStatuses(item)
+  const statuses = readOnly ? [] : availableStatuses(item)
 
   async function update(change: Parameters<typeof changeAppointment>[1], success: string) {
     if (busy) return
@@ -149,7 +150,7 @@ function AppointmentCard({item, actor, onUpdate, showPatient, linkedPatientId, p
     <p className="break-words text-sm text-slate-600">{item.professional} · {item.unit}</p>
     <p className="break-words text-sm">{item.reason}</p>
     <p className="break-words text-xs text-slate-600">Agendado por {first.actor} · {formatRecordTime(first.at)}</p>
-    {isPending(item) && <Button type="button" variant="outline" aria-expanded={reschedule} className="min-h-11 justify-self-start" onClick={() => {setReschedule(value => !value);setSlotDirty(false)}}>
+    {!readOnly && isPending(item) && <Button type="button" variant="outline" aria-expanded={reschedule} className="min-h-11 justify-self-start" onClick={() => {setReschedule(value => !value);setSlotDirty(false)}}>
       {item.slot ? 'Reagendar' : 'Agendar exame'}
     </Button>}
     {reschedule && isPending(item) && <form className="grid gap-2" onChange={() => setSlotDirty(true)} onSubmit={event => {
@@ -207,7 +208,8 @@ export default function AgendaPanel({patient,draft,focusId}: {patient?: Patient;
   }
   const all = [...new Map([...visibleAppointments(appointments, authorized).filter(item =>
     !patient || item.patient.key === selected?.key),...durable].map(item => [item.id,item])).values()]
-  const focused = all.find(item => item.id === opened)
+  const examples = patient ? scenarioAppointments(patient) : []
+  const focused = [...all,...examples].find(item => item.id === opened)
   const items = all.filter(item => {
     if (filters.status && item.status !== filters.status) return false
     if (filters.kind && item.kind !== filters.kind) return false
@@ -279,7 +281,13 @@ export default function AgendaPanel({patient,draft,focusId}: {patient?: Patient;
         </table>
       </div>
     </>}
-    {focused && <AppointmentCard key={focused.id} item={focused} actor={actor} onUpdate={setMessage}
+    {!!examples.length && <details className="rounded-xl border border-slate-200 bg-white p-4">
+      <summary className="min-h-11 cursor-pointer content-center text-sm font-medium">Exemplos do cenário</summary>
+      <ul className="space-y-2">{examples.map(item=><li key={item.id} className="flex flex-wrap items-center justify-between gap-2 text-sm">
+        <span>{appointmentKinds[item.kind]} · {describeSlot(item.slot)}</span>{details(item)}
+      </li>)}</ul>
+    </details>}
+    {focused && <AppointmentCard readOnly={examples.some(item=>item.id===focused.id)} key={focused.id} item={focused} actor={actor} onUpdate={setMessage}
       onClose={() => setOpened('')} showPatient={!patient}
       persist={privateAppointment(focused) ? command => savePrivate(focused.patient.id,command) : undefined}
       vaccineId={(privateAppointment(focused)?.data as Extract<ChartCommand['data'],{kind:'agenda'}> | undefined)?.vaccineId}
