@@ -5,7 +5,7 @@ import AgendaPanel from "../agenda/AgendaPanel"
 import { useDemo } from "@/features/vitrine-premium/components/demo/DemoProvider"
 import { registrationErrors } from "@/features/vitrine-premium/lib/demo/data"
 import { normalizeIdentifier } from "@/features/vitrine-premium/lib/demo/validation"
-import { useState,useRef,useEffect } from "react"
+import { useState,useRef,useEffect,type ReactNode } from "react"
 
 import { Card, CardContent } from "@/features/vitrine-premium/components/ui/Card"
 
@@ -63,7 +63,7 @@ const initialRegistration: RegistrationData = {
   observacoesProfissional: "",
 }
 
-export default function RegistrationWizard() {
+export default function RegistrationWizard({heading}:{heading:ReactNode}) {
   const {save,patients}=useDemo()
   const errorRef=useRef<HTMLDivElement>(null)
   const stepRef=useRef<HTMLDivElement>(null)
@@ -110,6 +110,7 @@ export default function RegistrationWizard() {
   const updateRegistration = (
     data: Partial<RegistrationData>,
   ) => {
+    if (currentStep < 5 && errors.length) setErrors([])
     setRegistration((current) => ({
       ...current,
       ...data,
@@ -129,18 +130,23 @@ export default function RegistrationWizard() {
     finally {savingRef.current=false;setSaving(false)}
   }
 
-  const savedPatient = saved ? patients.find(patient => normalizeIdentifier(patient.cpf) === normalizeIdentifier(registration.cpf)) : undefined
+  const currentPatient = registration.cpf ? patients.find(patient => normalizeIdentifier(patient.cpf) === normalizeIdentifier(registration.cpf)) : undefined
+  const savedPatient = saved ? currentPatient : undefined
+  const conceptStep = currentStep>=2&&currentStep<=4
 
-  return (
+  return <>
+    {!conceptStep && <div className="mb-4 sm:mb-6">{heading}</div>}
     <Card className="mx-auto w-full max-w-5xl" data-registration-wizard>
       <CardContent className="p-4 sm:p-6 lg:p-8">
         {errors.length>0 && <div ref={errorRef} tabIndex={-1} role="alert" className="mb-4 rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-700">{errors.map(e=><p key={e}>{e}</p>)}</div>}
         {saved && <p role="status" className="mb-4 text-sm text-emerald-700">
           Registro demonstrativo salvo {saved==='private'?'no laboratório privado.':'na memória desta aba.'} {savedPatient && <Link prefetch={false} className="underline" href={"/vitrine/pacientes/"+savedPatient.id}>Abrir ficha da paciente</Link>}
         </p>}
-        <Stepper currentStep={currentStep} />
+        {conceptStep ? <div className="mb-4 grid items-center gap-4 min-[1100px]:grid-cols-[auto_minmax(0,1fr)] min-[1100px]:gap-8">
+          {heading}<Stepper currentStep={currentStep} compact/>
+        </div>:<Stepper currentStep={currentStep}/> }
 
-        <div ref={stepRef} key={`${currentStep}-${identityEpoch}`} data-motion-step>
+        <div className={conceptStep ? "border-t border-slate-200 pt-5" : undefined} ref={stepRef} key={`${currentStep}-${identityEpoch}`} data-motion-step>
         {currentStep === 1 && (
           <IdentificationStep
             onNew={restart}
@@ -153,6 +159,7 @@ export default function RegistrationWizard() {
 
         {currentStep === 2 && (
           <PregnancyStep
+            history={currentPatient?.obstetricHistory}
             data={registration}
             onChange={updateRegistration}
             onNext={nextStep}
@@ -162,7 +169,7 @@ export default function RegistrationWizard() {
 
         {currentStep === 3 && (
           <VitalSignsStep
-            history={patients.find(patient=>normalizeIdentifier(patient.cpf)===normalizeIdentifier(registration.cpf))?.encounters}
+            history={currentPatient?.encounters}
             data={registration}
             onChange={updateRegistration}
             onNext={nextStep}
@@ -197,5 +204,5 @@ export default function RegistrationWizard() {
         </details>}
       </CardContent>
     </Card>
-  )
+  </>
 }

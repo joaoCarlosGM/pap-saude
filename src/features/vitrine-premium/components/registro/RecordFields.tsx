@@ -18,16 +18,27 @@ function options(entries: Record<string, string>, current?: string) {
   </>
 }
 
-export function ProteinuriaFields({data, onChange}: Props) {
+export function ProteinuriaFields({data, onChange, segmented}: Props & {segmented?:boolean}) {
   const methodId = useId()
   const lab = data.proteinuriaLab
-  return <fieldset className="grid min-w-0 gap-3 md:col-span-2">
+  const currentKnown = !data.proteinuria || Object.hasOwn(proteinuriaOptions,data.proteinuria)
+  const selectValue = (value: string) => onChange({proteinuria:value,
+    proteinuriaMethod:value && value!=='nao_realizado' ? data.proteinuriaMethod : undefined})
+  return <fieldset className={`grid min-w-0 gap-3 ${segmented ? '@container/proteinuria' : 'md:col-span-2'}`}>
     <legend className="mb-3 font-semibold">Proteinúria</legend>
-    <div className="grid gap-3 sm:grid-cols-2">
-      <Select id="proteinuria" label="Resultado qualitativo" className="min-h-11 text-base" value={data.proteinuria} onChange={event => {
-        const value = event.target.value
-        onChange({proteinuria: value, proteinuriaMethod: value && value !== 'nao_realizado' ? data.proteinuriaMethod : undefined})
-      }}>{options(proteinuriaOptions, data.proteinuria)}</Select>
+    <div className="grid min-w-0 gap-3">
+      <div className={segmented && currentKnown ? 'md:@[16rem]/proteinuria:hidden' : undefined}>
+        <Select id="proteinuria" label="Resultado qualitativo" className="min-h-11 text-base" value={data.proteinuria} onChange={event=>selectValue(event.target.value)}>
+          {options(proteinuriaOptions,data.proteinuria)}
+        </Select>
+      </div>
+      {segmented && currentKnown && <div className="hidden md:@[16rem]/proteinuria:grid" role="group" aria-label="Resultado qualitativo">
+        <p className="mb-2 text-sm font-medium">Resultado qualitativo</p>
+        <div className="grid grid-cols-3 gap-1">{Object.entries(proteinuriaOptions).map(([value,label])=><button key={value} type="button"
+          className="min-h-11 rounded-[10px] border border-slate-200 px-1 text-xs font-medium aria-pressed:border-pink-500 aria-pressed:bg-pink-50 aria-pressed:text-pink-800"
+          aria-pressed={data.proteinuria===value} onClick={()=>selectValue(value)}>{label}</button>)}</div>
+        {data.proteinuria && <button type="button" onClick={()=>selectValue('')} className="min-h-11 justify-self-start text-xs font-medium text-pink-800 underline">Limpar seleção</button>}
+      </div>}
       {data.proteinuria && data.proteinuria !== 'nao_realizado' && <Select id={methodId} label="Modalidade do teste qualitativo" className="min-h-11 text-base"
         value={data.proteinuriaMethod ?? ''} onChange={event => onChange({proteinuriaMethod: event.target.value})}>
         {options(proteinuriaMethods, data.proteinuriaMethod)}
@@ -46,11 +57,11 @@ export function ProteinuriaFields({data, onChange}: Props) {
   </fieldset>
 }
 
-export function EdemaFields({data, onChange}: Props) {
+export function EdemaFields({data, onChange, compact}: Props & {compact?:boolean}) {
   const locations = data.edemaLocations ?? []
   return <fieldset className="grid min-w-0 gap-2 md:col-span-2">
-    <legend className="mb-3 font-semibold">Edema</legend>
-    <div className="max-w-md">
+    <legend className={compact?"sr-only":"mb-3 font-semibold"}>Edema</legend>
+    <div className={compact?"min-w-0":"max-w-md"}>
       <Select id="edema" label="Gradação do edema" className="min-h-11 text-base" value={data.edema}
         onChange={event => {
           const edema = event.target.value

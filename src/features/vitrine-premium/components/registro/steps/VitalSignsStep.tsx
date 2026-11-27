@@ -1,8 +1,8 @@
 'use client'
 
-import {Activity,Droplet,Gauge,HeartPulse,Thermometer,Wind} from 'lucide-react'
+import {Activity,ClipboardList,Droplet,Gauge,HeartPulse,Lightbulb,Shield, Thermometer,TrendingUp,Wind} from 'lucide-react'
 import {ProteinuriaFields} from '../RecordFields'
-import {RegistrationFooter,RegistrationHeading,registrationCard,registrationField} from '../RegistrationLayout'
+import {RegistrationCardHeading,RegistrationFooter,RegistrationHeading,registrationCard,registrationField} from '../RegistrationLayout'
 import {calculateDemoMeows} from '../../../lib/demo/meows'
 import {assessmentPresentation} from '../../../lib/demo/assessment-presentation'
 import AssessmentDetails from '../../demo/AssessmentDetails'
@@ -21,65 +21,101 @@ const measures = [
 ] as const
 
 export default function VitalSignsStep({data,onChange,onNext,onBack,history}:Props) {
-  const result = calculateDemoMeows(data)
-  const trend = history?.filter(visit=>visit.assessmentSource==='PAP_MEOWS_DEMO'&&visit.score!==null).toSorted((a,b)=>a.dataHora.localeCompare(b.dataHora)).slice(-5) ?? []
+  const flow=data.oxygenFlow?.trim()
+  const pendingOxygen=data.oxygenMode==='supplemental'&&flow&&Number(flow.replace(',','.'))===0
+  const result=calculateDemoMeows(pendingOxygen ? {...data,oxygenFlow:''} : data)
+  const complete=result.status==='CALCULADO'
+  const flagged=complete ? result.parameters.filter(item=>item.points!==null&&item.points>0) : []
+  const trend=history?.filter(visit=>visit.assessmentSource==='PAP_MEOWS_DEMO'&&visit.score!==null).toSorted((a,b)=>a.dataHora.localeCompare(b.dataHora)).slice(-5) ?? []
   return <div>
     <RegistrationHeading icon={Activity} title="Sinais vitais da consulta">Campos em branco indicam medidas não aferidas.</RegistrationHeading>
-    <div className="grid items-start gap-4 lg:grid-cols-[2fr_1fr]">
+    <div className="grid items-start gap-4 min-[1100px]:grid-cols-[64fr_36fr]">
       <div className="grid min-w-0 gap-4">
-        <div className="grid grid-cols-1 gap-3 min-[370px]:grid-cols-2 md:grid-cols-3">
-          {measures.map(([field,id,label,unit,Icon])=><div key={field} className="min-w-0 rounded-2xl border border-slate-200 bg-white p-3">
-            <span className="mb-2 grid size-10 place-items-center rounded-lg bg-pink-50 text-[#C41469]"><Icon size={19} aria-hidden/></span>
-            <label htmlFor={id} className="mb-2 block text-sm font-medium text-slate-800">{label}</label>
-            <div className="relative">
-              <input id={id} type={field==='temperatura'?'text':'number'} inputMode={field==='temperatura'?'decimal':'numeric'}
-                aria-describedby={id+'-unit'} value={data[field]} onChange={event=>onChange({[field]:event.target.value})} className={`${registrationField} pr-14`}/>
-              <span id={id+'-unit'} className="pointer-events-none absolute inset-y-0 right-2.5 flex items-center text-xs text-slate-600">{unit}</span>
-            </div>
-          </div>)}
-        </div>
-        <section className={registrationCard} aria-labelledby="complementary-vitals">
-          <h3 id="complementary-vitals" className="mb-4 font-semibold">Avaliação complementar</h3>
-          <div className="grid gap-4 sm:grid-cols-2">
-            <div className="min-w-0">
-              <label htmlFor="oxygen-mode" className="mb-2 block text-sm font-medium">Situação de oxigenação</label>
+        <section className={registrationCard} aria-label="Medidas da consulta">
+          <div className="grid grid-cols-1 gap-3 min-[370px]:grid-cols-2 md:grid-cols-3">
+            {measures.map(([field,id,label,unit,Icon])=><div key={field} className="grid min-w-0 content-between gap-3 rounded-2xl border border-slate-200 bg-white p-3">
+              <div className="flex min-w-0 items-center gap-2">
+                <span className="grid size-10 shrink-0 place-items-center rounded-lg bg-pink-50 text-[#C41469]"><Icon size={19} aria-hidden/></span>
+                <label htmlFor={id} className="min-w-0 break-words text-sm font-medium leading-tight text-slate-800">{label}</label>
+              </div>
+              <div className="relative">
+                <input id={id} type={field==='temperatura'?'text':'number'} inputMode={field==='temperatura'?'decimal':'numeric'}
+                  aria-describedby={id+'-unit'} value={data[field]} onChange={event=>onChange({[field]:event.target.value})} className={`${registrationField} pr-12`}/>
+                <span id={id+'-unit'} className="pointer-events-none absolute inset-y-0 right-2.5 flex items-center text-xs text-slate-600">{unit}</span>
+              </div>
+            </div>)}
+          </div>
+          <div className="mt-4 grid items-start gap-3 sm:grid-cols-2">
+            <div className="grid min-w-0 gap-2 rounded-xl border border-slate-200 p-3">
+              <label htmlFor="oxygen-mode" className="text-sm font-medium">Situação de oxigenação</label>
               <select id="oxygen-mode" className={registrationField} value={data.oxygenMode||'unknown'} onChange={event=>onChange({oxygenMode:event.target.value as RegistrationData['oxygenMode'],oxygenFlow:''})}>
                 <option value="unknown">Desconhecido / não aferido</option><option value="air">Ar ambiente</option><option value="supplemental">Oxigênio suplementar</option>
               </select>
-              {data.oxygenMode==='supplemental'&&<label className="mt-3 grid gap-2 text-sm" htmlFor="oxygen-flow">Fluxo de O₂ (L/min)
+              {data.oxygenMode==='supplemental'&&<>
+                <label className="mt-1 text-sm" htmlFor="oxygen-flow">Fluxo de O₂ (L/min)</label>
                 <input id="oxygen-flow" inputMode="decimal" value={data.oxygenFlow||''} onChange={event=>onChange({oxygenFlow:event.target.value})} className={registrationField}/>
-              </label>}
+              </>}
             </div>
-            <div className="grid content-start gap-2 text-sm"><label htmlFor="nivel-consciencia">Nível de Consciência</label>
-              <select id="nivel-consciencia" className={registrationField} value={data.nivelConsciencia} onChange={event=>onChange({nivelConsciencia:event.target.value})}>
-                <option value="">Selecione</option><option value="alerta">Alerta</option><option value="confusa">Confusa</option><option value="sonolenta">Sonolenta</option><option value="inconsciente">Inconsciente</option>
-              </select>
-            </div>
-            <div className="grid gap-2 text-sm"><label htmlFor="debito-urinario">Débito Urinário</label>
+            <div className="grid min-w-0 gap-2 rounded-xl border border-slate-200 p-3">
+              <label htmlFor="debito-urinario" className="text-sm font-medium">Débito Urinário</label>
               <select id="debito-urinario" className={registrationField} value={data.debitoUrinario} onChange={event=>onChange({debitoUrinario:event.target.value})}>
                 <option value="">Selecione</option><option value="normal">Normal</option><option value="reduzido">Reduzido</option><option value="ausente">Ausente</option>
               </select>
             </div>
-            <ProteinuriaFields data={data} onChange={onChange}/>
+          </div>
+        </section>
+        <section className={registrationCard} aria-label="Achados rápidos">
+          <RegistrationCardHeading icon={ClipboardList} title="Achados rápidos">Registre os achados disponíveis na consulta.</RegistrationCardHeading>
+          <div className="grid min-w-0 items-start gap-4 sm:grid-cols-[56fr_44fr]">
+            <ProteinuriaFields data={data} onChange={onChange} segmented/>
+            <div className="grid min-w-0 gap-2 border-t border-slate-200 pt-4 sm:border-l sm:border-t-0 sm:pl-4 sm:pt-0">
+              <label htmlFor="nivel-consciencia" className="text-sm font-medium">Nível de Consciência</label>
+              <select id="nivel-consciencia" className={registrationField} value={data.nivelConsciencia} onChange={event=>onChange({nivelConsciencia:event.target.value})}>
+                <option value="">Selecione</option><option value="alerta">Alerta</option><option value="confusa">Confusa</option><option value="sonolenta">Sonolenta</option><option value="inconsciente">Inconsciente</option>
+              </select>
+            </div>
           </div>
         </section>
       </div>
-      <section className={registrationCard} aria-label="MEOWS da consulta" data-live-meows={result.status}>
-        <h3 className="font-semibold text-slate-900">MEOWS</h3>
-        <div className="mt-3 rounded-xl bg-pink-50 p-4" aria-live="polite">
-          <p className="text-3xl font-semibold text-pink-800">{result.score ?? '—'}</p>
-          <p className="text-sm font-medium text-slate-800">{result.status==='INCOMPLETO'?'Aguardando parâmetros':assessmentPresentation(result.classification).label}</p>
-          {result.missing.length>0&&<p className="mt-2 text-xs text-slate-600">{result.parameters.filter(item=>result.missing.includes(item.key)).map(item=>item.parameter).join(', ')}</p>}
-        </div>
-        {trend.length>0 && <div className="my-3 border-t border-slate-200 pt-3"><h4 className="text-sm font-medium">Avaliações registradas</h4>
-          {trend.length>1 && <svg viewBox="0 0 190 68" role="img" aria-label="Tendência das avaliações registradas" className="mt-2 w-full">
-            <path d="M8 7V60H182" fill="none" stroke="currentColor" className="text-slate-400"/>
-            <polyline points={trend.map((visit,index)=>`${10+index*170/(trend.length-1)},${58-visit.score!*48/Math.max(1,...trend.map(item=>item.score!))}`).join(' ')} stroke="#C41469" strokeWidth="3" fill="none"/>
-          </svg>}
-          <ol className="mt-2 grid gap-1 text-xs text-slate-600">{trend.map(visit=><li key={visit.id}>{formatRecordTime(visit.dataHora)} · {visit.score}</li>)}</ol>
-        </div>}
-        <details className="mt-3"><summary className="min-h-11 cursor-pointer content-center text-sm font-medium">Entender resultado</summary><AssessmentDetails result={result}/></details>
-      </section>
+      <div className="grid min-w-0 gap-4">
+        <section className={registrationCard} aria-label="MEOWS da consulta" data-live-meows={result.status}>
+          <RegistrationCardHeading icon={TrendingUp} title="MEOWS em tempo real">Calculado a partir das medidas desta consulta.</RegistrationCardHeading>
+          <div className="grid grid-cols-[auto_1fr] items-center gap-4 rounded-xl bg-pink-50 p-4" aria-live="polite">
+            <p className="min-w-12 text-center text-[3.5rem] font-semibold leading-none text-[#C41469]">{result.score ?? '—'}</p>
+            <div className="border-l border-pink-200 pl-4">
+              <p className="text-sm font-semibold text-slate-900">{result.status==='INCOMPLETO'?'Aguardando parâmetros':assessmentPresentation(result.classification).label.replace(/ \(demo\)$/,'')}</p>
+              {result.missing.length>0&&<p className="mt-2 text-xs text-slate-600">{result.parameters.filter(item=>result.missing.includes(item.key)).map(item=>item.parameter).join(', ')}</p>}
+            </div>
+          </div>
+          <div className="mt-4 rounded-xl border border-slate-200 p-3">
+            <h4 className="text-sm font-semibold">Evolução do escore na consulta</h4>
+            <svg aria-hidden="true" viewBox="0 0 280 52" preserveAspectRatio="none" className="my-2 h-12 w-full text-slate-200">
+              <path d="M2 4v46h276M2 12h276M2 25h276M2 38h276" fill="none" stroke="currentColor"/>
+            </svg>
+            <p className="text-center text-xs text-slate-600">A evolução aparecerá após novas avaliações.</p>
+          </div>
+          <div className="mt-4 flex items-start gap-2 rounded-xl bg-pink-50 p-3">
+            <Lightbulb size={19} className="shrink-0 text-[#C41469]" aria-hidden/>
+            <div className="min-w-0">
+              <p className="text-sm font-semibold">Interpretação dos parâmetros</p>
+              <details><summary className="min-h-11 cursor-pointer content-center text-sm font-medium text-pink-800">Ver detalhes</summary>
+                <AssessmentDetails result={result}/>
+                {trend.length>0&&<div className="mt-3 border-t border-pink-200 pt-3">
+                  <h4 className="text-sm font-semibold">Avaliações anteriores registradas</h4>
+                  <ol className="mt-2 grid gap-1 text-xs text-slate-600">{trend.map(visit=><li key={visit.id}>{formatRecordTime(visit.dataHora)} · {visit.score}</li>)}</ol>
+                </div>}
+              </details>
+            </div>
+          </div>
+        </section>
+        <section className={registrationCard} aria-label="Sinais de alerta">
+          <RegistrationCardHeading icon={Shield} title="Sinais de alerta"/>
+          <div className={`rounded-xl p-3 text-sm ${complete&&result.score===0?'bg-emerald-50 text-emerald-800':flagged.length?'bg-amber-50 text-amber-900':'bg-slate-50 text-slate-700'}`}>
+            {flagged.length>0 ? <ul className="grid gap-1">{flagged.map(parameter=><li key={parameter.key}>{parameter.parameter} · {parameter.value}</li>)}</ul> :
+              <p>{complete?'Sem parâmetros sinalizados':result.status==='INVALIDO'?'Avaliação inválida':'Avaliação incompleta'}</p>}
+          </div>
+        </section>
+      </div>
     </div>
     <RegistrationFooter onBack={onBack} onNext={onNext}/>
   </div>

@@ -164,7 +164,7 @@ test('agenda persiste, mostra lembrete, preserva mudanças e atualiza o prontuá
   await detail.getByRole('link',{name:patient,exact:true}).click()
   await expect(page.getByRole('heading',{name:'Próximos compromissos'})).toBeVisible()
   const upcoming = page.locator('section').filter({has:page.getByRole('heading',{name:'Próximos compromissos',exact:true})})
-  await expect(upcoming.getByRole('button',{name:/Exame/})).toBeVisible()
+  await expect(upcoming.getByRole('button',{name:/Exame.*Demonstração local/})).toBeVisible()
   await page.getByRole('button',{name:'Abrir agenda da paciente'}).click()
   await page.getByRole('article').filter({hasText:'Exame sintético de acompanhamento'}).getByRole('button',{name:'Detalhes'}).click()
   const inChart = page.getByRole('dialog',{name:'Detalhes do compromisso'})

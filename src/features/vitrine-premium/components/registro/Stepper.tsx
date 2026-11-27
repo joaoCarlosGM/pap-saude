@@ -10,16 +10,18 @@ const steps = [
 
 type StepperProps = {
   currentStep: number
+  compact?:boolean
 }
 
 export default function Stepper({
-  currentStep,
+  currentStep,compact,
 }: StepperProps) {
-  const currentLabel = steps[currentStep - 1]
+  const labels=compact ? steps.map((step,index)=>index===3 ? "Dados Obstétricos e Clínicos" : step) : steps
+  const currentLabel = labels[currentStep - 1]
   const progress = (currentStep / steps.length) * 100
 
   return (
-    <div data-tour="registration" className="mb-6 sm:mb-8">
+    <div data-tour="registration" className={compact?"min-w-0":"mb-6 sm:mb-8"}>
       {/* MOBILE */}
       <div className="sm:hidden">
         <div className="flex items-center justify-between gap-3">
@@ -50,7 +52,7 @@ export default function Stepper({
 
       {/* TABLET / DESKTOP */}
       <div className="hidden items-start sm:flex">
-        {steps.map((step, index) => {
+        {labels.map((step, index) => {
           const stepNumber = index + 1
           const completed = stepNumber < currentStep
           const active = stepNumber === currentStep
@@ -66,7 +68,7 @@ export default function Stepper({
                     "flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-sm font-semibold",
                     completed || active
                       ? "bg-pink-500 text-white"
-                      : "bg-slate-100 text-slate-500",
+                      : compact ? "border border-slate-200 bg-white text-slate-500" : "bg-slate-100 text-slate-500",
                   ].join(" ")}
                 >
                   {completed ? (

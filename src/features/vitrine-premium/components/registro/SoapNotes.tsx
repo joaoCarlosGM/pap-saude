@@ -58,7 +58,7 @@ export function SoapEditor({onAppend, onPendingChange}: {
       </label>)}
     </div>
     {error && <p role="alert" className="text-sm text-rose-700">Não foi possível confirmar a anotação. Confira a sessão e tente novamente.</p>}
-    <Button type="button" variant="outline" className="min-h-11 justify-self-start" disabled={!hasText} onClick={() => void append()}>Adicionar anotação</Button>
+    <Button type="button" variant="outline" className="min-h-11 justify-self-start border-pink-300 text-pink-800" disabled={!hasText} onClick={() => void append()}>Adicionar anotação</Button>
   </fieldset>
 }
 
